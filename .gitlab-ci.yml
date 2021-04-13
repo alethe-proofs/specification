@@ -1,0 +1,19 @@
+image: dockershelf/latex:full
+
+before_script:
+    - apt-get install -qy python3-pygments
+
+build:
+    script:
+    - cd spec
+    - pdflatex  -shell-escape -recorder  "doc.tex"
+    - bibtex  "doc"
+    - pdflatex  -shell-escape -recorder  "doc.tex"
+    - bibtex  "doc"
+    - pdflatex  -shell-escape -recorder  "doc.tex"
+    - cd ..
+    - cp spec/doc.pdf specification.pdf
+    artifacts:
+        paths:
+        - specification.pdf
+

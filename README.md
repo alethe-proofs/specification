@@ -18,3 +18,6 @@ Syntax highlighting uses the `pygments` tool.  Hence, this tool must
 be installed.  Furthermore, Latex must be compiled with shell escaping
 allowed.  To do this the argument `-shell-escape` must be given to the
 Latex command. `latexmk` also accepts this argument and hands it to Latex.
+
+The continuous integration pipeline also builds the document. Hence,
+the pdf is available in the artifact browser of the CI pipelines.
