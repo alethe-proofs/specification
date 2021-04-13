@@ -1,0 +1,2219 @@
+%
+% This document is licenced under Creative Commons 4.0 Attribution International
+%
+
+\documentclass{scrartcl}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{scrlayer-scrpage}
+
+\usepackage{hyperref}
+\usepackage{breakurl}
+\usepackage{underscore}
+\usepackage{siunitx}
+\usepackage{ccicons}
+
+\usepackage{tabularx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{environ}
+\usepackage{mathtools}
+\usepackage[mathcal]{eucal}
+
+\usepackage{tikz}
+\usepackage{scalerel}
+
+\usepackage{listings}
+\usepackage{minted}
+\usemintedstyle{trac}
+
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\usepackage{cite}
+\usepackage{url}
+
+\usepackage[english]{babel}
+\nonfrenchspacing
+
+\usepackage{empheq}
+\usepackage{longfbox}
+
+\usepackage[final,tracking=true,kerning=true,spacing=true,stretch=10,shrink=10]{microtype}
+\microtypecontext{spacing=nonfrench}
+
+\hyphenation{Isa-belle Nieuw-en-huis meta-logic multi-set multi-sets non-unit Mini-Sat}
+
+% ========================================
+% Commands
+% ========================================
+ 
+\newcommand{\proofRule}[1]{\microtypesetup{tracking=false}\texttt{#1}\microtypesetup{tracking=true}}
+\newcommand{\isaTac}[1]{\texttt{#1}}
+\newcommand\IfThenElse[3]{\ensuremath{\mathit{if}~#1~\mathit{then}~#2~\mathit{else}~#3}}
+
+\newcommand{\proofsep}{\;\vartriangleright\;}
+\newcommand{\proofsepI}{\;\blacktriangleright\;}
+\newcommand{\lcl}{\dot{\lor}}
+
+\newcommand{\smtinline}[1]{\mintinline{smtlib2.py -x}{#1}}
+
+\newcommand{\plLine}{&&\vdots&}
+
+\newcolumntype{Y}{>{\centering\arraybackslash\(}X<{\)}}
+\newcolumntype{L}{>{\(}l<{\)}}
+\newcolumntype{R}{>{\(}r<{\)}}
+\NewEnviron{plList}{%
+\par\noindent%
+\centering\begin{tabularx}{\textwidth}{L@{\,}RYR}%
+  \BODY
+\end{tabularx}\\%
+}
+\NewEnviron{plSubList}{%
+\setlength{\arrayrulewidth}{1pt}%
+\par\noindent%
+\centering\begin{tabularx}{\textwidth}{|L@{\,}RYR}%
+  \BODY
+  \hline
+\end{tabularx}\\%
+}
+
+\NewEnviron{plContainer}{%
+\setlength{\topsep}{0.2\baselineskip}%
+\begin{center}
+    \BODY
+\end{center}
+}
+
+\NewEnviron{plListEq}{%
+\[\begin{array}{r@{\,}lcr}%
+  \BODY
+\end{array}\]%
+}
+
+\NewEnviron{plListEqAlgn}{%
+\[\begin{array}{r@{\,}lr@{\,}lr}%
+  \BODY
+\end{array}\]%
+}
+
+\NewEnviron{plCompact}{%
+\begingroup\abovedisplayskip=0pt \belowdisplayskip=0pt%
+  \begin{align*}%
+    \BODY
+  \end{align*}%
+\endgroup
+}
+
+% == Commands for Grammar ==
+\definecolor{SmtBlue}{HTML}{00007f}
+\definecolor{SmtGreen}{HTML}{3b7f31}
+\newcommand{\grNT}[1]{\textcolor{SmtGreen}{\langle\texttt{#1}\rangle}}
+\newcommand{\grT}[1]{\textcolor{SmtBlue}{\texttt{#1}}}
+\newcommand{\grRule}{\quad\Coloneqq\quad}
+\newcommand{\grOr}{\quad|\quad}
+
+% == Tikz Setup ==
+\usetikzlibrary{tikzmark,positioning}
+\usetikzlibrary{shapes,arrows,fit, scopes}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{svg.path}
+\tikzstyle{every picture}+=[remember picture]
+
+\tikzset{
+     std/.style={draw, thin, fill=blue!20},
+     system/.style={draw, thin, fill=red!20, rounded corners},
+     code/.style={red, inner sep=0.15cm, text=black, draw, thick, rounded corners, fill=red!20}
+}
+
+% == Theorem environments ==
+
+%TODO sampe space as \paragraph
+\newtheoremstyle{simple}
+    {\topsep}   % ABOVESPACE
+    {\topsep}   % BELOWSPACE
+    {}          % BODYFONT
+    {}          % INDENT (empty value is the same as 0pt)
+    {\sffamily\bfseries} % HEADFONT
+    {.}         % HEADPUNCT
+    {5pt plus 1pt minus 1pt} % HEADSPACE
+    {}          % CUSTOM-HEAD-SPEC
+
+%\theoremstyle{definition}
+\theoremstyle{simple}
+\newtheorem{exmp}{Example}
+
+\newpairofpagestyles{titlestyle}{
+\ofoot{Version 0.0.1}%
+\ifoot{\ccby}%
+}
+\renewcommand*{\titlepagestyle}{titlestyle}
+
+% ========================================
+% Document
+% ========================================
+
+\title{\includegraphics[width=10cm]{Title.jpg}}
+\subtitle{A Reference of the veriT Proof Format}
+\author{The veriT Team and Contributors}
+
+\makeatletter
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
+\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+\DeclareOldFontCommand{\it}{\normalfont\itshape}{\mathit}
+\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\@nomath\sl}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}
+\makeatother
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\clearpage
+
+\section{Introduction}
+
+This document is a reference manual for the format used by the SMT
+solver veriT to print proofs of the unsatisfiability of the input problem.
+It is part of the veriT repository and represents the format as generated
+by the corresponding source code. Currently the introduction gives a general
+overview of the proof format and lacks a complete formal definition of the
+calculus. Section~\ref{sec:rules} gives a complete lists of proof rules
+currently used by veriT. This section is probably the one of greatest utility
+to the reader.
+
+\subsection{Overview}
+veriT~\cite{verit} is a CDCL($T$)-based satisfiability modulo theories
+solver.  It uses the SMT-LIB language as input and output language and
+also utilizes the many-sorted classical first-order logic defined by
+this language.  If requested by the user, veriT outputs a proof if it
+can deduce that the input problem is unsatisfiable. In proof production
+mode, veriT supports the theory of uninterpreted functions, the theory
+of linear integer and real arithmetic, and quantifiers.
+
+Similar to the proofs generated by Z3, veriT's proofs are based on the
+SMT-LIB language, but are otherwise different. Proofs are not terms,
+but a list of indexed steps. Steps without references are tautologies
+and assumptions. The last step is always the deduction of the empty
+clause. Furthermore, steps can be marked as subproofs, which are used
+for local assumptions and to reason about bound variables. To shorten
+the proof length, veriT uses term sharing. This is implemented using
+the standard SMT-LIB name annotation mechanism.  Major differences to
+the proof format used by Z3 are the fine-grained steps for Skolemization
+and the presence of steps for the manipulations of bound variables.
+
+In addition to this reference, the proof format used by veriT
+has been discussed in publications which provide valuable background
+information: the fundamental ideas behind the proof format have
+been published in~\cite{besson-2011}; proposed rules for quantifier
+instantiation can be found in~\cite{deharbe-2011}; and the proof rules to
+express reasoning typically used for processing, such as Skolemization,
+renaming of variables, and other manipulations of bound variables have
+been published in~\cite{barbosa-2019}.
+A complete reconstruction of the proofs generated by veriT in Isabelle/HOL
+has recently been reported in~\cite{fleury-2019}.
+Parts of this manual have been taken from this publication.
+
+\section{Notation}
+\label{sec:notation}
+
+veriT uses the SMT-LIB language~\cite{SMTLIB} as both its input and
+output language. Hence, this document builds on the concept introduced
+there. This includes the concrete syntax and the multi-sorted first-order
+logic.
+
+The notation used throughout this manual follows the notation of the
+SMT-LIB standard.  To simplify the notation we will omit the sort of
+terms when possible. The available sorts depend on
+the selected SMT-LIB theory and can also be extended by the user, but
+a distinguished $\mathbf{Bool}$ sort is always available.  We use the
+symbols $x$, $y$, $z$ for variables, $f$, $g$, $h$ for functions, and $P$,
+$Q$ for predicates, i.e., functions with result sort $\mathbf{Bool}$. The
+symbols $r$, $s$, $t$, $u$ stand for terms. The symbols $\varphi, \psi$
+denote formulas, i.e., terms of sort $\mathbf{Bool}$.  We use $\sigma$
+to denote substitutions and $t\sigma$ to denote the application of the
+substitution on the term $t$.  To denote the substitution which maps $x$
+to $t$ we write $[t/x]$.  We use $=$ to denote syntactic equality and
+$\simeq$ to denote the sorted equality predicate. We also use the notion
+of complementary literals very liberally: $\varphi = \bar{\psi}$ holds if
+the terms obtained after removing all leading negations from $\varphi$
+and $\bar{\psi}$ are syntactically equal and the number of leading
+negations is even for $\varphi$ and odd for $\bar{\psi}$, or vice versa.
+
+A proof generated by veriT is a list of steps.  A step consists of
+an index $i\in\mathbb{N}$, a formula $\varphi$, a rule name $R$ taken
+from a set of possible rules, a possibly empty set of premises $\{p_1,
+\dots, p_n\}$ with $p_i\in\mathbb{N}$, a rule-dependent and possibly
+empty list of arguments $[a_1, \dots, a_m]$, and a context $\Gamma$.
+The arguments $a_i$ are either terms or tuples $(x_i, t_i)$ where $x_i$
+is a variable and $t_i$ is a term. The interpretation of the arguments
+is rule specific. The context is a possible empty
+list $[c_1, \dots, c_l]$, where $c_i$ stands for either a variable
+or a variable-term tuple $(x_i, t_i)$. A context denotes a substitution
+as described in section~\ref{sec:coreconcepts}. Every proof ends with a step
+with the empty clause as the step term and empty context. The list of
+premises only references earlier steps, such that the proof forms a
+directed acyclic graph.
+In section~\ref{sec:rules} we provide an overview of all proof rules
+used by veriT.
+
+To mimic the actual proof text generated by
+veriT we will use the following notation to denote a step:
+\begin{plListEq}
+	c_1,\,\dots,\, c_l &\proofsep \mathfrak{i}. & \varphi &
+		(\proofRule{rule};\: p_1,\,\dots,\, p_n;\: a_1,\,\dots,\,a_m)
+\end{plListEq}
+
+If an element of the context $c_i$ is of the form $(x_i, t_i)$, we
+will write $x_i\mapsto t_i$. If an element of the arguments $a_i$
+is of this form we will write $x_i \coloneqq t_i$.  Furthermore, the
+proofs can utilize Hilbert's choice operator $\epsilon$. Choice acts
+like a binder. The term $\epsilon x. \varphi$ stands for a value $v$,
+such that $\varphi[v/x]$ is true if such a value exists. Any value is
+possible otherwise. Thorough this document, we use $\mathfrak{i, j, k, l, m, n}$
+for step indices.
+
+\section{Core Concepts of the Proof Format}
+\label{sec:coreconcepts}
+
+\paragraph{Assumptions.}
+The \proofRule{assume} rule introduces a term as an assumption. The
+proof starts with a number of \proofRule{assume} steps. Each step
+corresponds to an assertion. Additional assumptions can be introduced
+too. In this case each assumption must be discharged with an appropriate
+step. The only rule to do so is the \proofRule{subproof} rule. From an
+assumption $\varphi$ and a formula $\psi$ proved by intermediate steps
+from $\varphi$, the \proofRule{subproof} step deduces $\neg \varphi \lor
+\psi$ and discharges $\varphi$.
+
+\paragraph{Tautologous rules and simple deduction.}
+Most rules emitted by veriT introduce tautologies. One example is
+the \proofRule{and\_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
+\dots \land \varphi_n) \lor \varphi_i$.  Other rules operate on only
+one premise. Those rules are primarily used to simplify Boolean
+connectives during preprocessing. For example, the \proofRule{implies}
+rule removes an implication: From $\varphi_1 \implies\varphi_2$
+it deduces $\neg \varphi_1 \lor \varphi_2$.
+
+\paragraph{Resolution.}
+The proofs produced by veriT use a generalized propositional
+resolution rule with the rule name \proofRule{resolution} or
+\proofRule{th\_resolution}. Both names denote the same rule. The
+difference only serves to distinguish if the rule was introduced by
+the SAT solver or by a theory solver. The resolution step is purely
+propositional; there is currently no notion of a unifier.
+
+The premises of a resolution step are clauses and the conclusion
+is a clause that has been derived from the premises by some binary
+resolution steps.
+
+\paragraph{Quantifier Instantiation.}
+To express quantifier instantiation, the rule \proofRule{forall\_inst}
+is used. It produces a formula of the form $(\neg \forall x_1 \dots
+x_n. \varphi)\lor \varphi[t_1/x_1]\dots[t_n/x_n]$, where $\varphi$ is
+a term containing the free variables $(x_i)_{1\leq i\leq n}$, and $t_i$
+are new variable free terms with the same sort as $x_i$.
+
+The arguments of a \proofRule{forall\_inst} step are the list $x_1
+\coloneqq t_1, \dots, x_n \coloneqq t_n$. While this information can
+be recovered from the term, providing this information explicitly
+aids reconstruction because the implicit reordering of equalities
+(see below) obscure which terms have been used as instances.
+Existential quantifiers are handled by Skolemization.
+
+\paragraph{Skolemization and other preprocessing steps.}
+veriT uses the notion of a \emph{context} to reason about bound variables.
+As defined above, a context is a (possibly empty) list of variables or
+variable term pairs. The context is modified like a stack: rules can
+either append elements to the right of the current context or remove
+elements from the right. A context $\Gamma$ corresponds to a substitution
+$\sigma_{\Gamma}$. This substitution is recursively defined.  If $\Gamma$
+is the empty list, then $\sigma_{\Gamma}$ is the empty substitution,
+i.e., the identity function. If $\Gamma$ is of the form $\Gamma', x$
+then $\sigma_{\Gamma}(v) = \sigma_{\Gamma'}(v) \text{ if } v\neq x,
+\text{ otherwise } \sigma_{\Gamma}(v) = x$. Finally, if $\Gamma =
+\Gamma', x\mapsto \varphi$ then  $\sigma_{\Gamma', x\mapsto \varphi}
+= \sigma_{\Gamma'}\circ [\varphi/x]$. Hence, the context allows one to
+build a substitution with the additional possibility to overwrite prior
+substitutions for a variable.
+
+Contexts are processed step by step: If one step extends the context this
+new context is used in all subsequent steps in the step list until the
+context is modified again. Only a limited number of rules can be applied
+when the context is non-empty. All of those rules have equalities as
+premises and conclusion. A step with term $\varphi_1 \simeq \varphi_2$ and
+context $\Gamma$ expresses the judgment that $\varphi_1\sigma_{\Gamma}
+= \varphi_2$.
+
+One typical example for a rule with context is the \proofRule{sko\_ex}
+rule, which is used to express Skolemization of an existentially
+quantified variable. It is a applied to a premise $n$ with a context
+that maps a variable $x$ to the appropriate Skolem term and produces
+a step $m$ ($m > n$) where the veriable is quantified.
+
+\begin{plListEq}
+  \Gamma, x\mapsto (\epsilon x.\varphi) &\proofsep \mathfrak{n}.&\varphi \simeq \psi &(\proofRule{\dots})\\
+  \plLine \\
+  \Gamma &\proofsep \mathfrak{m}.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko\_ex};\: \mathfrak{n})
+\end{plListEq}
+
+\begin{exmp}
+To illustrate how such a rule is applied, consider the following example
+taken from~\cite{barbosa-2019}. Here the term $\neg p(\epsilon x.\neg
+p(x))$ is Skolemized. The \proofRule{refl} rule expresses
+a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
+is functional congruence, and \proofRule{sko\_forall} works like
+\proofRule{sko\_ex}, except that the choice term is $\epsilon x.\neg\varphi$.
+\begin{plListEqAlgn}
+  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \epsilon x.\neg p(x)  &(\proofRule{refl})\\
+  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 1)\\
+                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{sko\_forall};\: 2)\\
+                                  \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 3)
+ \end{plListEqAlgn}
+\end{exmp}
+
+\paragraph{Linear arithmetic.}
+%TODO: Update!
+Proofs for linear arithmetic use a number of straightforward rules,
+such as \proofRule{la\_totality}: $t_1 \leq t_2 \lor t_2 \leq t_1$
+and the main rule \proofRule{la\_generic}.
+The conclusion of an \proofRule{la\_generic} step is a tautology of the
+form $(\neg \varphi_1)\lor (\neg \varphi_2)\lor\dots\lor(\neg \varphi_n)$ where the $\varphi_i$
+are linear (in)equalities. Checking the validity of this formula amounts
+to checking the unsatisfiability of the system of linear equations $\varphi_1,
+\varphi_2, \dots, \varphi_n$.
+
+\begin{exmp}
+The following example is the proof generated by veriT for the unsatisfiability
+of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
+\begin{plListEq}
+\proofsep& 1.& (3 < x) \lor (x + y < 1)           &(\proofRule{assume})\\
+\proofsep& 2.& x\simeq 2                          &(\proofRule{assume})\\
+\proofsep& 3.& 0\simeq y                          &(\proofRule{assume})\\
+\proofsep& 4.& \neg (3<x) \lor \neg (x\simeq 2)   &(\proofRule{la\_generic};\: ;1.0, 1.0)\\
+\proofsep& 5.& \neg (3<x)                         &(\proofRule{resolution}; 2, 4)\\
+\proofsep& 6.& x + y < 1                          &(\proofRule{resolution}; 1, 5)\\
+\proofsep& 7.& \neg (x + y < 1) \lor \neg (x\simeq 2) \lor \neg (0 \simeq y)
+&(\proofRule{la\_generic};\: ;1.0, 1.0, 1.0)\\
+\proofsep& 8.& \bot                               &(\proofRule{resolution};\:\; 7, 6, 2, 3)
+\end{plListEq}
+\end{exmp}
+
+\paragraph{Implicit transformations reordering of equalities.}
+% TODO: improve
+In addition to the explicit steps, veriT might reorder equalities, i.e. apply
+symmetry of the equality predicate, without generating steps. When this happens
+is somewhat restricted. Equalities are only reordered when the term below
+the equality change during proof search. One such case is the instantiation of
+universally quantified variables. If the variable that appears below an equality,
+then the equality might have an arbitrary order after the variable is instantiated.
+
+\section{The Concrete Syntax}
+\label{sec:syntax}
+
+% Hack to make line numbers less ugly
+\renewcommand{\theFancyVerbLine}{\footnotesize{\arabic{FancyVerbLine}}\hspace{-0.5em}}
+\begin{figure}[t]
+\begin{minted}[linenos]{smtlib2.py -x}
+(assume h1 (not (p a)))
+(assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
+...
+(anchor :step t9 :args ((:= z2 vr4)))
+(step t9.t1 (cl (= z2 vr4)) :rule refl)
+(step t9.t2 (cl (= (p z2) (p vr4))) :rule cong :premises (t9.t1))
+(step t9 (cl (= (forall ((z2 U)) (p z2)) (forall ((vr4 U)) (p vr4))))
+         :rule bind)
+...
+(step t14 (cl (forall ((vr5 U)) (p vr5)))
+          :rule th_resolution :premises (t11 t12 t13))
+(step t15 (cl (or (not (forall ((vr5 U)) (p vr5))) (p a)))
+          :rule forall_inst :args ((:= vr5 a)))
+(step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
+          :rule or :premises (t15))
+(step t17 (cl) :rule resolution :premises (t16 h1 t14))
+\end{minted}
+\caption{Example proof output. Assumptions are introduced (line 1--2);
+a subproof renames bound variables (line 4--8); the proof finishes with
+instantiaton and resolution steps (line 10--15)}\label{fig:proof_ex}
+\end{figure}
+
+
+The concrete text representation of the proofs generated by veriT
+is based on the SMT-LIB standard. Figure~\ref{fig:proof_ex} shows an
+exemplary proof as printed by veriT lightly edited for readability.
+The format follows the SMT-LIB standard when possible.
+
+Figure~\ref{fig:grammar} shows the grammar of the proof text generated
+by veriT. It is based on the SMT-LIB grammar, as defined in the
+SMT-LIB standard version 2.6 Appendix~B\footnote{Available online at:
+\url{http://smtlib.cs.uiowa.edu/language.shtml}}.  The nonterminals
+$\grNT{symbol}$, $\grNT{function\_def}$, $\grNT{sorted\_var}$, and
+$\grNT{term}$ are as defined in the standard. The $\grNT{proof_term}$
+is the recursive $\grNT{term}$ nonterminal redefined with the additional
+production for the $\grT{choice}$ binder.
+
+\begin{figure}[t]
+  {\centering
+  { % TODO typesetting hack: align adds an empty line break
+    \setlength{\belowdisplayskip}{0pt}
+    \setlength{\belowdisplayshortskip}{0pt}
+    \[\begin{array}{rcl}
+      \grNT{proof}          &\grRule& \grNT{proof\_command}^{*}\\
+      \grNT{proof\_command} &\grRule& \grT{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\; \grT{)}\\
+                            &\grOr  & \grT{(step}\; \grNT{symbol}\; \grNT{clause}
+                                      \; \grT{:rule}\; \grNT{symbol}\\
+                            &       & \quad\grNT{step\_annotation}\; \grT{)}\\
+                            & \grOr & \grT{(anchor}\; \grT{:step}\; \grNT{symbol}\; \grT{)}\\
+                            & \grOr & \grT{(anchor}\; \grT{:step}\; \grNT{symbol}\;
+                                      \grT{:args}\; \grNT{proof\_args}\; \grT{)}\\
+                            & \grOr & \grT{(define-fun}\; \grNT{function\_def}\; \grT{)}\\
+      \grNT{clause}         &\grRule& \grT{(cl}\; \grNT{proof\_term}^{*}\; \grT{)}\\
+      \grNT{step\_annotation} &\grRule&
+                                      \grT{:premises (}\; \grNT{symbol}^{+}\; \grT{)}\;\\
+                            & \grOr & \grT{:args}\; \grNT{proof_args}\\
+                            & \grOr & \grT{:premises (}\; \grNT{symbol}^{+}\; \grT{)}\;
+                                      \grT{:args}\; \grNT{proof_args}\\
+      \grNT{proof\_args}    &\grRule& \grT{(}\; \grNT{proof\_arg}^{+}\; \grT{)}\\
+      \grNT{proof\_arg}     &\grRule& \grNT{symbol} \grOr
+                                      \grT{(}\; \grNT{symbol}\; \grNT{proof\_term}\; \grT{)}\\
+      \grNT{proof\_term}    &\grRule& \grNT{term}\text{ extended with }\\
+                            &       & \grT{(choice (}\; \grNT{sorted\_var}^{+}\;\grT{)}\; \grNT{proof\_term}\; \grT{)}
+    \end{array}\]
+  }\par}
+\caption{The proof grammar}\label{fig:grammar}
+\end{figure}
+
+Input problems in the SMT-LIB standard contain a list of \emph{commands}
+that modify the internal state of the solver. In agreement
+with this approach veriT's proofs are also formed by a list of commands.
+The $\grT{assume}$ command introduces a new assumption. While this
+command could also be expressed using the $\grT{step}$ command with
+a special rule, the special semantic of an assumption justifies the
+presence of a dedicated command: assumptions are neither tautological nor
+derived from premises.  The $\grT{step}$ command, on the other hand,
+introduces a derived or tautological term.  Both commands $\grT{assume}$
+and $\grT{step}$ require an index as the first argument to later
+refer back to it. This index is an arbitrary SMT-LIB symbol. The only
+restriction is that it must be unique for each $\grT{assume}$ and
+$\grT{step}$ command.  The second argument is the term introduced by the
+command.
+For a $\grT{step}$, this term is always a clause.
+To express disjunctions in SMT-LIB the $\grT{or}$ operator is used.
+Unfortunately, this operator needs at least two arguments and cannot
+represent unary or empty clauses. To circumvent this we introduce a new
+$\grT{cl}$ operator.  It corresponds the standard $\grT{or}$ function
+extended to one argument, where it is equal to the identity, and zero
+arguments, where it is equal to $\grT{false}$.
+The $\grT{:premises}$ annotation denotes the premises and is skipped
+if they are none. If the rule carries arguments, the
+$\grT{:args}$ annotation is used to denote them.
+
+The $\grT{anchor}$ and $\grT{define-fun}$ commands are used for
+subproofs and sharing, respectively. The $\grT{define-fun}$ command
+corresponds exactly to the $\grT{define-fun}$ command of the
+SMT-LIB language.
+
+\subsection{Subproofs}
+As the name suggests, the \proofRule{subproof} rule
+expresses subproofs. This is possible because its application is
+restricted: the assumption used as premise
+for the \proofRule{subproof} step must be the assumption introduced
+last. Hence, the \proofRule{assume}, \proofRule{subproof} pairs are
+nested.  The context is manipulated in the same way: if a step
+pops $c_1,\dots, c_n$ from a context $\Gamma$, there is a earlier step which
+pushes precisely $c_1,\dots, c_n$ onto the context. Since
+contexts can only be manipulated by push and pop, context manipulations
+are also nested.
+
+Because of this nesting, veriT uses the concept of subproofs.  A subproof
+is started right before an \proofRule{assume} command or a command which
+pushes onto the context. We call this point the \emph{anchor}.   The
+subproof ends with the matching \proofRule{subproof} command or
+command which pops from the context, respectively. The $\grT{:step}$
+annotation of the anchor command is used to indicate the $\grT{step}$
+command which will end the subproof. The term of this $\grT{step}$
+command is the conclusion of the subproof.  If the subproof uses a
+context, the $\grT{:args}$ annotation of the $\grT{anchor}$ command
+indicates the arguments added to the context for this subproof.
+In the example proof (Figure~\ref{fig:proof_ex}) a subproof starts on line four.
+It ends on line seven with the $\proofRule{bind}$ steps which finished the
+proof for the renaming of the bound variable \smtinline{z2}
+to \smtinline{vr4}.
+
+A further restriction applies: only the conclusion of a subproof can be used
+as a premise outside of the subproof. Hence, a proof checking tool can
+remove the steps of the subproof from memory after checking it.
+
+\subsection{Sharing and Skolem Terms}
+The proof output generated by veriT is generally large. One reason
+for this is that veriT can store terms internally much more efficiently.
+By utilizing a perfect sharing data structure, every term is stored in
+memory precisely once. When printing the proof this compact storage
+is unfolded.
+
+The user of veriT can optionally activate sharing\footnote{By using
+the command-line option \texttt{--proof-with-sharing}.} to print common
+subterms only once.  This is realized using the standard naming mechanism
+of SMT-LIB. In the language of SMT-LIB it is possible to annotate every
+term $t$ with a name $n$ by writing $\grT{(! }t\grT{ :named }n\grT{ )}$
+where $n$ is a symbol. After a term is annotated with a name, the name can
+be used in place of the term. This is a purely syntactical replacement.
+
+To simplify reconstruction veriT can optionally\footnote{By using the
+command-line option \texttt{--proof-define-skolems}.} define Skolem
+constants as functions. If activated, this option adds a list of
+$\grT{define-fun}$ command to define shorthand 0-ary functions for
+the $\grT{(choice }\dots\grT{)}$ terms needed. Without this option,
+no $\grT{define-fun}$ commands are issued and the constants are inlined.
+
+%TODO: Add proof-relevante options
+
+\newcommand\currule{\proofRule{none}}
+\newcounter{ProofRuleCounter}
+\newenvironment{proof-rule}[2]%
+{%
+\renewcommand\currule{\proofRule{#1}}%
+\stepcounter{ProofRuleCounter}%
+\par\vspace{\baselineskip}\noindent
+\sffamily%
+%{\textbf{\arabic{ProofRuleCounter}. \texttt{#1}}} {\tiny [#2]}%
+{\textbf{\arabic{ProofRuleCounter}. \texttt{#1}}}%
+\par\vspace{\baselineskip}\noindent\ignorespaces
+}%
+{%
+}
+
+\newtheorem{example}{Example}[ProofRuleCounter]
+
+\section{List of Proof Rules}
+\label{sec:rules}
+
+The following lists all rules produced by veriT. When $n$-ary operators are
+in the form $t_1 \lor \dots \lor t_n$ this corresponds to the
+SMT-LIB string \smtinline{(or t1 ... tn)}. Hence, we explicitly bracket to
+clarify the application. To differentiate between \smtinline{or} from
+\smtinline{cl}, we use $\lcl$ for the second operator. Nevertheless, since
+proof steps always start with \smtinline{cl}, we write the literal of unit
+clauses directly. Furthermore, premises can be ordered arbitrarily and need
+not follow the order given in the rule definition.
+
+\begin{proof-rule}{assume}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \phi &(\currule)\\
+\end{plList}
+\end{plContainer}
+where $\varphi$ is equivalent to a formula asserted in the input problem.
+\end{proof-rule}
+
+\begin{proof-rule}{true}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \top  &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{false}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg \bot &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{not_not}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\neg \neg \varphi) \lcl \varphi &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{and_pos}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\varphi_1 \land \dots \land \varphi_n) \lcl \varphi_i &(\currule)\\
+\end{plList}
+\end{plContainer}
+with $1 \leq i \leq n$.
+\end{proof-rule}
+
+\begin{proof-rule}{and_neg}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& (\varphi_1 \land \dots \land \varphi_n) \lcl (\neg\varphi_1)
+	\lcl \dots \lcl (\neg\varphi_n) &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{or_pos}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\varphi_1 \lor \dots \lor \varphi_n) \lcl \varphi_1 \lcl \dots
+	\lcl \varphi_n &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{or_neg}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& (\varphi_1 \lor \dots \lor \varphi_n) \lcl (\neg \varphi_i) &(\currule)\\
+\end{plList}
+\end{plContainer}
+with $1 \leq i \leq n$.
+\end{proof-rule}
+
+\begin{proof-rule}{xor_pos1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\varphi_1 \operatorname{xor} \varphi_2) \lcl \varphi_1 \lcl \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{xor_pos2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\varphi_1 \operatorname{xor} \varphi_2)
+\lcl (\neg \varphi_1) \lcl (\neg \varphi_2) &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{xor_neg1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& (\varphi_1 \operatorname{xor} \varphi_2)
+\lcl \varphi_1 \lcl (\neg \varphi_2) &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{xor_neg2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& (\varphi_1 \operatorname{xor} \varphi_2)
+\lcl (\neg \varphi_1) \lcl \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{implies_pos}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\varphi_1 \rightarrow \varphi_2)
+\lcl (\neg \varphi_1) \lcl \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{implies_neg1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& (\varphi_1 \rightarrow \varphi_2)
+\lcl \varphi_1 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{implies_neg2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& (\varphi_1 \rightarrow \varphi_2)
+\lcl (\neg \varphi_2) &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv_pos1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\neg (\varphi_1 \leftrightarrow \varphi_2) \lcl \varphi_1 \lcl (\neg \varphi_2)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv_pos2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\neg (\varphi_1 \leftrightarrow \varphi_2) \lcl (\neg \varphi_1) \lcl \varphi_2
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv_neg1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\varphi_1 \leftrightarrow \varphi_2 \lcl (\neg \varphi_1) \lcl (\neg \varphi_2)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv_neg2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\varphi_1 \leftrightarrow \varphi_2 \lcl \varphi_1 \lcl \varphi_2
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{ite_pos1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\neg (\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3) \lcl \varphi_1 \lcl \varphi_3
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{ite_pos2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\neg (\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3) \lcl (\neg \varphi_1) \lcl \varphi_2
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{ite_neg1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3 \lcl \varphi_1 \lcl (\neg \varphi_3)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{ite_neg2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3 \lcl (\neg \varphi_1) \lcl (\neg \varphi_2)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{eq_reflexive}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+t \simeq t
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{eq_transitive}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\neg (t_1 \simeq t_2) \lcl \dots \lcl \neg (t_{n-1} \simeq t_n) \lcl
+t_1 \simeq t_n
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{eq_congruent}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\neg (t_1 \simeq u_1) \lcl \dots \lcl \neg (t_n \simeq u_n) \lcl
+f(t_1, \dots, t_n) \simeq f(u_1, \dots, u_n)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{eq_congruent_pred}{veriT}
+%\begin{compactproof}
+%\begingroup\abovedisplayskip=0pt \belowdisplayskip=0pt%
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\neg (t_1 \simeq u_1) \lcl \dots \lcl \neg (t_n \simeq u_n) \lcl
+P(t_1, \dots, t_n) \simeq P(u_1, \dots, u_n)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+%\endgroup
+%\end{compactproof}
+%
+\end{proof-rule}
+
+\begin{proof-rule}{distinct_elim}{veriT}
+This rule eliminates the $\operatorname{distinct}$ predicate. If called with one
+argument this predicate always holds:
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+(\operatorname{distinct} t) \leftrightarrow \top
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+
+If applied to terms of type $\mathbf{Bool}$ more than two terms can never be
+distinct, hence only two cases are possible:
+
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+(\operatorname{distinct} \varphi\;\psi) \leftrightarrow \neg (\varphi \leftrightarrow \psi)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+and
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+(\operatorname{distinct} \varphi_1\;\varphi_2\;\varphi_3\dots) \leftrightarrow \bot
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+
+The general case is:
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+(\operatorname{distinct} t_1 \dots t_n) \leftrightarrow
+\bigwedge_{i=1}^{n}\bigwedge_{j=i+1}^{n} t_i\;{\not\simeq}\;t_j
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{la_rw_eq}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+(t \simeq u) \simeq (t \leq u \land u \leq t)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+
+\paragraph{Remark.} While the connective could be an $\leftrightarrow$,
+currently an equality is used.
+\end{proof-rule}
+
+\begin{proof-rule}{la_generic}{veriT}
+A step of the $\currule$ rule represents a tautological clause of linear
+disequalities.  It can be checked by showing that the conjunction of
+the negated disequalities is unsatisfiable. After the application of
+some strengthening rules, the resulting conjunction is unsatisfiable,
+even if integer variables are assumed to be real variables.
+
+A linear inequality is of term of the form $\sum_{i=0}^{n}c_i\times{}t_i +
+d_1\bowtie \sum_{i=n+1}^{m} c_i\times{}t_i + d_2$ where $\bowtie\;\in \{=, <,
+>, \leq, \geq\}$, where $m\geq n$, $c_i, d_1, d_2$ are either integer or real
+constants, and for each $i$ $c_i$ and $t_i$ have the same sort. We will write
+$s_1 \bowtie s_2$.
+
+Let $l_1,\dots, l_n$ be linear inequalities and $a_1, \dots, a_n$
+rational numbers, then a $\currule$ step has the form:
+
+\begin{plListEq}
+\proofsep& \mathfrak{i}.&
+\varphi_1\lcl \dots \lcl \varphi_o
+&(\currule; ; a_1, \dots, a_o)\\
+\end{plListEq}
+
+where $\varphi_i$ is either $\neg l_i$ or $l_i$, but never $s_1
+\simeq s_2$.
+
+If the current theory does not have rational numbers, then the $a_i$ are
+printed using integer division. They should, nevertheless, be interpreted
+as rational numbers. If $d_1$ or $d_2$ are $0$, they might not be printed.
+
+To check the unsatisfiability of the negation of $\varphi_1\lor \dots
+\lor \varphi_o$ one performs the following steps for each literal. For
+each $i$, let $\varphi := \varphi_i$ and $a := a_i$.
+
+\begin{enumerate}
+    \item If $\varphi = s_1 > s_2$, then let $\varphi := s_1 \leq s_2$.
+    	If $\varphi = s_1 \geq s_2$, then let $\varphi := s_1 < s_2$.
+    	If $\varphi = s_1 < s_2$, then let $\varphi := s_1 \geq s_2$. 
+    	If $\varphi = s_1 \leq s_2$, then let $\varphi := s_1 > s_2$.
+   	\item If $\varphi = \neg (s_1 \bowtie s_2)$, then let $\varphi := s_1 \bowtie s_2$. 
+    \item Replace $\varphi$ by $\sum_{i=0}^{n}c_i\times{}t_i - \sum_{i=n+1}^{m} c_i\times{}t_i
+    \bowtie d$ where $d := d_2 - d_1$.
+    \item Now $\varphi$ has the form $s_1 \bowtie d$. If all
+    variables in $s_1$ are integer sorted: replace $\bowtie d$ according to
+    table~\ref{tb:lageneric}.
+    \item If $\bowtie$ is $\simeq$ replace $l$ by
+    $\sum_{i=0}^{m}a\times{}c_i\times{}t_i \simeq a\times{}d$, otherwise replace it by
+    $\sum_{i=0}^{m}|a|\times{}c_i\times{}t_i \simeq |a|\times{}d$.
+\end{enumerate}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{c|l l}
+$\bowtie$ & If $d$ is an integer & Otherwise \\
+\hline
+$>$       & $\geq d + 1$ & $\geq \lfloor d\rfloor + 1$  \\
+$\geq$    & $\geq d$     & $\geq \lfloor d\rfloor + 1$  \\
+\end{tabular}
+\caption{Strengthening rules for \texttt{la\_generic}.}
+\label{tb:lageneric}
+\end{table}
+
+Finally, the sum of the resulting literals is trivially contradictory.
+The sum
+\begin{equation*}
+    \sum_{k=1}^{o}\sum_{i=1}^{m^o}c_i^o*t_i^o \bowtie \sum_{k=1}^{o}d^k
+\end{equation*}
+where $c_i^k$ is the constant $c_i$ of literal $l_k$, $t_i^k$ is the term
+$t_i$ of $l_k$, and $d^k$ is the constant $d$ of $l_k$. The operator
+$\bowtie$ is $\simeq$ if all operators are $\simeq$, $>$ if all are
+either $\simeq$ or $>$, and $\geq$ otherwise. The $a_i$ must be sucht
+that the sum on the left-hand side is $0$ and the right-hand side is $>0$ (or
+$\geq 0$ if $\bowtie is >$).
+
+\begin{example}
+A simple $\currule$ step in the logic \texttt{LRA} might look like this:
+\begin{minted}{smtlib2.py -x}
+(step t10 (cl (not (> (f a) (f b))) (not (= (f a) (f b))))
+    :rule la_generic :args (1.0 (- 1.0)))
+\end{minted}
+To verify this we have to check the insatisfiability of $f(a) > f(b) \land
+f(a) = f(b)$ (Step 2). After step 3 we get $f(a) - f(b) > 0 \land
+f(a) - f(b) = 0$. Since we don't have an integer sort in this logic step~4 does
+not apply. Finally, after step~5 the conjunction is $f(a) - f(b) > 0 \land
+- f(a) + f(b) = 0$. This sums to $0 > 0$, which is a contradiction.
+\end{example}
+
+\begin{example}
+The following $\currule$ step is from a \texttt{QF_UFLIA} problem:
+\begin{minted}{smtlib2.py -x}
+(step t11 (cl (not (<= f3 0)) (<= (+ 1 (* 4 f3)) 1))
+    :rule la_generic :args (1 (div 1 4)))
+\end{minted}
+After normalization we get $-f_3 \geq 0 \land 4\times f_3 > 0$.
+This time step~4 applies and we can strengthen this to
+$-f_3 \geq 0 \land 4\times f_3 \geq 1$ and after multiplication we get
+$-f_3 \geq 0 \land f_3 \geq \frac{1}{4}$. Which sums to the contradiction
+$\frac{1}{4} \geq 0$.
+\end{example}
+
+\end{proof-rule}
+
+\begin{proof-rule}{lia_generic}{veriT}
+This rule is a placeholder rule for integer arithmetic solving. It takes the
+same form as \texttt{la\_generic}, without the additional arguments.
+
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\varphi_1\lcl \dots \lcl \varphi_n
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $\varphi_i$ being linear inequalities. The disjunction
+$\varphi_1\lor \dots \lor \varphi_n$ is a tautology in the theory of linear
+integer arithmetic.
+\end{proof-rule}
+
+\begin{proof-rule}{la_disequality}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+t_1 \simeq t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{la_totality}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+t_1 \leq t_2 \lor t_2 \leq t_1
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{la_tautology}{veriT}
+This rule is a linear arithmetic tautology which can be checked without
+sophisticated reasoning. It has either the form:
+
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\varphi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+where $\varphi$ is either a linear inequality $s_1 \bowtie s_2$
+or $\neg(s_1 \bowtie s_2)$. After performing step 1 to 3 of the process for
+checking the \proofRule{la\_generic} the result is trivially unsatisfiable.
+
+The second form handles bounds on linear combinations. It is binary clause:
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\varphi_1 \lor \varphi_2 % Checked: this is a proper disjunction not a cl
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+
+It can be checked by using the procedure for \proofRule{la\_generic} with
+while setting the arguments to $1$. Informally, the rule follows one of several
+cases:
+\begin{itemize}
+    \item $\neg (s_1 \leq d_1) \lor s_1 \leq d_2$ where $d_1 \leq d_2$
+    \item $s_1 \leq d_1 \lor \neg (s_1 \leq d_2)$ where $d_1 = d_2$
+    \item $\neg (s_1 \geq d_1) \lor s_1 \geq d_2$ where $d_1 \geq d_2$
+    \item $s_1 \geq d_1 \lor \neg (s_1 \geq d_2)$ where $d_1 = d_2$
+    \item $\neg (s_1 \leq d_1) \lor \neg(s_1 \geq d_2)$ where $d_1 < d_2$
+\end{itemize}
+The inequalities $s_1 \bowtie d$ are are the result of applying normalization
+as for the rule \proofRule{la\_generic}.
+
+\end{proof-rule}
+
+\begin{proof-rule}{forall_inst}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\neg (\forall x_1, \dots, x_n. P) \lor P[t_1/x_1]\dots[t_n/x_n]
+&(\currule; ; x_{k_1} := t_{k_1}, \dots, x_{k_n} := t_{k_n})\\
+\end{plList}
+\end{plContainer}
+where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_i$ and
+$k_i$ have the same sort. The arguments $x_{k_i} := t_{k_i}$ are printed as
+\smtinline{(:= xki tki)}.
+
+\paragraph{Remark.} A rule simmilar to the \proofRule{let} rule would be
+more appropriate.  The resulting proof would be more fine grained and this
+would also be an opportunity to provide a proof for the clausification
+as currently done by \proofRule{qnt_cnf}.
+
+\end{proof-rule}
+
+\begin{proof-rule}{qnt_join}{veriT}
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep& \mathfrak{i}.&
+Q x_1, \dots, x_n. Q x_{n+1}, \dots, x_{m}. \varphi
+\leftrightarrow
+Q x_{k_1}, \dots, x_{k_o}. \varphi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+where $m > n$, $Q\in\{\forall, \exists\}$, $k_1, \dots, k_o$ is monotonic
+map to $1, \dots, m$ such that $x_{k_1}, \dots, x_{k_o}$ are pairwise
+distinct, and $\{x_1, \dots, x_m\} = \{x_{k_1}, \dots, x_{k_o}\}$.
+\end{proof-rule}
+
+\begin{proof-rule}{qnt_rm_unused}{veriT}
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep& \mathfrak{i}.&
+Q x_1, \dots, x_n. \varphi \leftrightarrow Q x_{k_1}, \dots, x_{k_m}.\varphi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+where $m \leq n$, $Q\in\{\forall, \exists\}$ , $k_1, \dots, k_m$ is
+monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
+n\} \land j\not\in \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
+
+\end{proof-rule}
+
+\begin{proof-rule}{th_resolution}{veriT}
+This rule is the resolution of two or more clauses.
+
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}^1.& \varphi^{1}_{1} \lcl \dots \lcl \varphi^{1}_{k^1} &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{i}^n.& \varphi^{n}_{1} \lcl \dots \lcl \varphi^{n}_{k^n} &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.&
+\varphi^{r_1}_{s_1} \lcl \dots \lcl \varphi^{r_m}_{s_m} 
+&(\currule; \mathfrak{i}^1, \dots, \mathfrak{i}^n)\\
+\end{plList}
+\end{plContainer}
+where $\varphi^{r_1}_{s_1} \lcl \dots \lcl \varphi^{r_m}_{s_m}$ are from $\varphi^{i}_{j}$ and
+are the result of a chain of predicate resolution steps on the clauses
+$\mathfrak{i}^1$ to $\mathfrak{i}^n$. It is possible that $m = 0$, i.e. that
+the result is the empty clause.
+
+This rule is only used when the resolution step is not emitted by the SAT solver.
+See the equivalent \proofRule{resolution} rule for the rule emitted by the
+SAT solver.
+
+\paragraph{Remark.} While checking this rule is NP-complete, the \currule-steps
+produced by veriT are simple. Experience with reconstructing the step in
+Isabelle/HOL shows that checking can done by naive decision procedures. The
+vast majority of \currule-steps are binary resolution steps.
+\end{proof-rule}
+
+\begin{proof-rule}{resolution}{veriT}
+This rule is equivalent to the \proofRule{the\_resolution} rule, but it is
+emitted by the SAT solver instead of theory reasoners. The differentiation
+serves only informational purpose.
+
+\end{proof-rule}
+
+\begin{proof-rule}{refl}{veriT}
+Either
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep& \mathfrak{j}.& t_1 \simeq t_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+or
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep& \mathfrak{j}.& \varphi_1 \leftrightarrow \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+where $\varphi_1$ and $\varphi_2$ ($P_1$ and $P_2$) are equal after
+applying the substitution induced by $\Gamma$.
+
+\begin{proof-rule}{trans}{veriT}
+Either
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep& \mathfrak{i}.& t_1 \simeq t_2 &(\dots)\\
+\plLine\\
+\Gamma\proofsep& \mathfrak{j}.& t_2 \simeq t_3 &(\dots)\\
+\plLine\\
+\Gamma\proofsep& \mathfrak{k}.& t_1 \simeq t_3 &(\currule; \mathfrak{i}, \mathfrak{j})\\
+\end{plList}
+\end{plContainer}
+or
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep& \mathfrak{i}.& \varphi_1 \leftrightarrow \varphi_2 &(\dots)\\
+\plLine\\
+\Gamma\proofsep& \mathfrak{j}.& \varphi_2 \leftrightarrow \varphi_3 &(\dots)\\
+\plLine\\
+\Gamma\proofsep& \mathfrak{k}.& \varphi_1 \leftrightarrow \varphi_3 &(\currule; \mathfrak{i}, \mathfrak{j})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{cong}{veriT}
+Either
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep& \mathfrak{i}_1.& t_1 \simeq u_1 &(\dots)\\
+\plLine\\
+\Gamma\proofsep& \mathfrak{i}_n.& t_n \simeq u_n &(\dots)\\
+\plLine\\
+\Gamma\proofsep& \mathfrak{j}.& \operatorname{f}(t_1, \dots, t_n) \simeq
+\operatorname{f}(u_1, \dots, u_n) &(\currule;\mathfrak{i}_1, \dots, \mathfrak{i}_n)\\
+\end{plList}
+\end{plContainer}
+where $\operatorname{f}$ is an $n$-ary function symbol,
+or
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep& \mathfrak{i}_1.& \varphi_1 \simeq \psi_1 &(\dots)\\
+\plLine\\
+\Gamma\proofsep& \mathfrak{i}_n.& \varphi_n \simeq \psi_n &(\dots)\\
+\plLine\\
+\Gamma\proofsep& \mathfrak{j}.& \operatorname{P}(\varphi_1, \dots, \varphi_n) \leftrightarrow
+\operatorname{P}(\psi_1, \dots, \psi_n) &(\currule;\mathfrak{i}_1, \dots, \mathfrak{i}_n)\\
+\end{plList}
+\end{plContainer}
+where $\operatorname{P}$ is an $n$-ary predicate symbol.
+\end{proof-rule}
+
+\begin{proof-rule}{and}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \varphi_1 \land \dots \land \varphi_n&(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_i &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{tautology}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\varphi_1 \lcl \dots \lcl \varphi_i \lcl \dots \lcl \varphi_j \lcl\dots \lcl \varphi_n
+&(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \top &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+and $\varphi_i = \bar\varphi_j$.
+\end{proof-rule}
+
+\begin{proof-rule}{not_or}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\varphi_1 \lor \dots \lor \varphi_n) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg \varphi_i &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{or}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \varphi_1 \lor \dots \lor \varphi_n &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_1 \lcl \dots \lcl \varphi_n &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+
+\paragraph{Remark.} This rule deconstructs the \smtinline{or} operator
+into a $\smtinline{cl}$.
+
+\begin{example}
+An application of the \currule{} rule.
+
+\begin{minted}{smtlib2.py -x}
+(step t15 (cl (or (= a b) (not (<= a b)) (not (<= b a))))
+    :rule la_disequality)
+(step t16 (cl     (= a b) (not (<= a b)) (not (<= b a)))
+    :rule or :premises (t15))
+\end{minted}
+\end{example}
+\end{proof-rule}
+
+\begin{proof-rule}{not_and}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\varphi_1 \land \dots \land \varphi_n) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg\varphi_1 \lcl \dots \lcl \neg\varphi_n &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+
+\end{proof-rule}
+
+\begin{proof-rule}{xor1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \operatorname{xor} \varphi_1\;\varphi_2 &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_1 \lcl \varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{xor2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \operatorname{xor} \varphi_1\;\varphi_2 &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg\varphi_1 \lcl \neg\varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{not_xor1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg(\operatorname{xor} \varphi_1\;\varphi_2) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_1 \lcl \neg\varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{not_xor2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg(\operatorname{xor} \varphi_1\;\varphi_2) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg\varphi_1 \lcl \varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{implies}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \varphi_1\rightarrow\varphi_2 &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg\varphi_1 \lcl \varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{not_implies1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\varphi_1\rightarrow\varphi_2) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_1 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{not_implies2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg (\varphi_1\rightarrow\varphi_2) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg\varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \varphi_1\leftrightarrow\varphi_2 &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg\varphi_1 \lcl \varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \varphi_1\leftrightarrow\varphi_2 &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_1 \lcl \neg\varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{not_equiv1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg(\varphi_1\leftrightarrow\varphi_2) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_1 \lcl \varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{not_equiv2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg(\varphi_1\leftrightarrow\varphi_2) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg\varphi_1 \lcl \neg\varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{ite1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \operatorname{ite}\varphi_1\;\varphi_2\;\varphi_3 &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_1 \lcl \varphi_3 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{ite2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \operatorname{ite}\varphi_1\;\varphi_2\;\varphi_3 &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg\varphi_1 \lcl \varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{not_ite1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg(\operatorname{ite}\varphi_1\;\varphi_2\;\varphi_3) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_1 \lcl \neg\varphi_3 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{not_ite2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \neg(\operatorname{ite}\varphi_1\;\varphi_2\;\varphi_3) &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \neg\varphi_2 \lcl \neg\varphi_2 &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{ite_intro}{veriT}
+Either 
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& t \simeq (t' \land u_1 \land \dots \land u_n) &(\dots)\\
+\end{plList}
+\end{plContainer}
+or
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\varphi \leftrightarrow (\varphi' \land u_1 \land \dots \land u_n) &(\dots)\\
+\end{plList}
+\end{plContainer}
+
+The term $t$ (the formula $\varphi$) contains the $\operatorname{ite}$ operator.
+Let $s_1, \dots, s_n$ be the terms starting with $\operatorname{ite}$, i.e.
+$s_i := \operatorname{ite} \psi_i\;r_i\;r'_i$, then $u_i$ has the form:
+\begin{equation*}
+	\operatorname{ite} \psi_i\;(s_i \simeq r_i)\;(s_i \simeq r'_i)
+\end{equation*}
+or 
+\begin{equation*}
+	\operatorname{ite} \psi_i\;(s_i \leftrightarrow r_i)\;(s_i \leftrightarrow r'_i)
+\end{equation*}
+if $s_i$ is of sort $\mathbf{Bool}$. The term $t'$ (the formular
+$\varphi'$) is equal to the term $t$ (the formular $\varphi'$) up to the
+reordering of equalities where one argument is an $\operatorname{ite}$
+term.
+
+\paragraph{Remark.} This rule stems from the introduction of fresh
+constants for if-then-else terms inside veriT. Internally $s_i$ is a new
+constant symbol and the $\varphi$ on the right side of the equality is
+$\varphi$ with the if-then-else terms replaced by the constants. Those
+constants are unfolded during proof printing. Hence, the slightly strange
+form and the reordering of equalities.
+\end{proof-rule}
+
+\begin{proof-rule}{contraction}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \varphi_1 \lcl \dots \lcl \varphi_n &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi_{k_1} \lcl \dots \lcl \varphi_{k_m}
+&(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+where $m \leq n$ and  $k_1 \dots k_m$ is a monotonic map to $1 \dots n$
+such that $\varphi_{k_1} \dots \varphi_{k_m}$ are pairwise distinct and
+$\{\varphi_1, \dots, \varphi_n\} = \{\varphi_{k_1} \dots \varphi_{k_m}\}$.
+Hence, this rule remove duplicated literals.
+\end{proof-rule}
+
+\begin{proof-rule}{connective_def}{veriT}
+This rule is used to replace connectives by their definition. It can be one
+of the following:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \varphi_1\operatorname{xor}\varphi_2 \leftrightarrow
+(\neg\varphi_1 \land \varphi_2) \lor (\varphi_1 \land \neg\varphi_2)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \varphi_1\leftrightarrow\varphi_2 \leftrightarrow
+(\varphi_1 \rightarrow \varphi_2) \land (\varphi_2 \rightarrow \varphi_1)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3 \leftrightarrow
+(\varphi_1 \rightarrow \varphi_2) \land (\neg\varphi_1 \rightarrow \neg\varphi_3)
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{ite_simplify}{veriT}
+This rule simplifies an if-then-else term by applying equivalent
+transformations as long as possible. Depending on the sort of the
+$\operatorname{ite}$-term the rule can have one of two forms. If the sort
+is $\mathbf{Bool}$ it has the form
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \operatorname{ite} \varphi\;t_1;t_2 \leftrightarrow \psi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $\psi$ being the transformed term.
+
+Otherwise, it has the form
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \operatorname{ite} \varphi\;t_1\;t_2 \simeq u
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $u$ being the transformed term.
+
+The possible transformations are:
+\begin{itemize}
+    \item $\operatorname{ite} \top      \; t_1 \; t_2 \leftrightarrow t_1$
+    \item $\operatorname{ite} \bot      \; t_1 \; t_2 \leftrightarrow t_2$
+    \item $\operatorname{ite} \psi      \; t \; t \leftrightarrow t$
+    \item $\operatorname{ite} \neg \varphi \; t_1 \; t_2 \leftrightarrow \operatorname{ite} \varphi \; t_2 \; t_1$
+    \item $\operatorname{ite} \top \; t_1 \; t_2 \leftrightarrow t_1$
+    \item $\operatorname{ite} \bot \; t_1 \; t_2 \leftrightarrow t_2$
+    \item $\operatorname{ite} \psi \; (\operatorname{ite} \psi\;t_1\;t_2)\; t_3 \leftrightarrow
+			\operatorname{ite} \psi\; t_1\; t_3$
+    \item $\operatorname{ite} \psi \; t_1\; (\operatorname{ite} \psi\;t_2\;t_3) \leftrightarrow
+			\operatorname{ite} \psi\; t_1\; t_3$
+    \item $\operatorname{ite} \psi \; \top\; \bot \leftrightarrow \psi$
+    \item $\operatorname{ite} \psi \; \bot\; \top \leftrightarrow \neg\psi$
+    \item $\operatorname{ite} \psi \; \top \; \varphi \leftrightarrow \psi\lor\varphi$
+    \item $\operatorname{ite} \psi \; \varphi\;\bot \leftrightarrow \psi\land\varphi$
+    \item $\operatorname{ite} \psi \; \bot\; \varphi \leftrightarrow \neg\psi\land\varphi$
+    \item $\operatorname{ite} \psi \; \varphi\;\top \leftrightarrow \neg\psi\lor\varphi$
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{eq_simplify}{veriT}
+This rule simplifies an $\simeq$ term by applying equivalent
+transformations as long as possible. Hence, the general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& t_1\simeq t_2 \leftrightarrow \varphi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $\psi$ being the transformed term.
+
+The possible transformations are:
+\begin{itemize}
+    \item $t \simeq t \leftrightarrow \top$
+    \item $t_1 \simeq t_2 \leftrightarrow \bot$ if $t_1$ and $t_2$ are different numeric constants.
+    \item $\neg (t \simeq t) \leftrightarrow \bot$ if $t$ is a numeric constant.
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{and_simplify}{veriT}
+This rule simplifies an $\land$ term by applying equivalent
+transformations as long as possible. Hence, the general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \varphi_1\land \dots\land\varphi_n \leftrightarrow \psi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $\psi$ being the transformed term.
+
+The possible transformations are:
+\begin{itemize}
+    \item $\top \land \dots \land \top \leftrightarrow \top$
+    \item $\varphi_1 \land \dots \land \varphi_n \leftrightarrow \varphi_1
+    \land \dots \land \varphi_{n'} $ where the right hand side has all
+    $\top$ literals removed.
+    \item $\varphi_1 \land \dots \land \varphi_n \leftrightarrow \varphi_1
+    \land \dots \land \varphi_{n'} $ where the right hand side has all
+    repeated literals removed.
+    \item $\varphi_1 \land\dots\land \bot\land\dots \land \varphi_n \leftrightarrow \bot$
+    \item $\varphi_1 \land\dots\land \varphi_i\land \dots \land \varphi_j\land\dots \land \varphi_n \leftrightarrow \bot$ if
+      $\varphi_i = \bar{\varphi_j}$
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{or_simplify}{veriT}
+This rule simplifies an $\lor$ term by applying equivalent
+transformations as long as possible. Hence, the general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& (\varphi_1\lor \dots\lor\varphi_n) \leftrightarrow \psi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $\psi$ being the transformed term.
+
+The possible transformations are:
+\begin{itemize}
+    \item $\bot \lor \dots \lor \bot \leftrightarrow \bot$
+    \item $\varphi_1 \lor \dots \lor \varphi_n \leftrightarrow \varphi_1
+    \lor \dots \lor \varphi_{n'} $ where the right hand side has all
+    $\bot$ literals removed.
+    \item $\varphi_1 \lor \dots \lor \varphi_n \leftrightarrow \varphi_1
+    \lor \dots \lor \varphi_{n'} $ where the right hand side has all
+    repeated literals removed.
+    \item $\varphi_1 \lor\dots\lor \top\lor\dots \lor \varphi_n \leftrightarrow \top$
+    \item $\varphi_1 \lor\dots\lor \varphi_i\lor \dots \lor \varphi_j\lor\dots \lor \varphi_n \leftrightarrow \top$ if
+    	$\varphi_i = \bar{\varphi_j}$
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{not_simplify}{veriT}
+This rule simplifies an $\neg$ term by applying equivalent
+transformations as long as possible. Hence, the general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \neg\varphi \leftrightarrow \psi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $\psi$ being the transformed term.
+
+The possible transformations are:
+\begin{itemize}
+    \item $\neg (\neg \varphi) \leftrightarrow \varphi$
+    \item $\neg \bot \leftrightarrow \top$
+    \item $\neg \top \leftrightarrow \bot$
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{implies_simplify}{veriT}
+This rule simplifies an $\rightarrow$ term by applying equivalent
+transformations as long as possible. Hence, the general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \varphi_1\rightarrow \varphi_2 \leftrightarrow \psi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $\psi$ being the transformed term.
+
+The possible transformations are:
+\begin{itemize}
+    \item $\neg \varphi_1 \rightarrow \neg \varphi_2 \leftrightarrow  \varphi_2\rightarrow \varphi_1$
+    \item $\bot \rightarrow  \varphi \leftrightarrow \top$
+    \item $ \varphi \rightarrow \top \leftrightarrow \top$
+    \item $\top \rightarrow  \varphi \leftrightarrow  \varphi$
+		\item $ \varphi \rightarrow \bot \leftrightarrow \neg \varphi$
+		\item $ \varphi \rightarrow  \varphi \leftrightarrow \top$
+		\item $\neg \varphi \rightarrow  \varphi \leftrightarrow  \varphi$
+		\item $ \varphi \rightarrow \neg \varphi \leftrightarrow \neg \varphi$
+		\item $( \varphi_1\rightarrow \varphi_2)\rightarrow \varphi_2 \leftrightarrow  \varphi_1\lor \varphi_2$
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv_simplify}{veriT}
+This rule simplifies an $\leftrightarrow$ term by applying equivalent
+transformations as long as possible. Hence, the general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.&  \varphi_1\leftrightarrow \varphi_2 \leftrightarrow \psi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $\psi$ being the transformed term.
+
+The possible transformations are:
+\begin{itemize}
+    \item $(\neg \varphi_1 \leftrightarrow \neg \varphi_2) \leftrightarrow ( \varphi_1\leftrightarrow \varphi_2)$
+    \item $( \varphi\leftrightarrow \varphi) \leftrightarrow \top$
+    \item $( \varphi\leftrightarrow \neg \varphi) \leftrightarrow \bot$
+    \item $(\neg \varphi\leftrightarrow  \varphi) \leftrightarrow \bot$
+    \item $(\top \leftrightarrow  \varphi) \leftrightarrow  \varphi$
+    \item $( \varphi \leftrightarrow \top) \leftrightarrow  \varphi$
+    \item $(\bot \leftrightarrow  \varphi) \leftrightarrow \neg \varphi$
+    \item $( \varphi \leftrightarrow \bot) \leftrightarrow \neg \varphi$
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{bool_simplify}{veriT}
+This rule simplifies a boolean term by applying equivalent
+transformations as long as possible. Hence, the general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \varphi\leftrightarrow \psi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+with $\psi$ being the transformed term.
+
+The possible transformations are:
+\begin{itemize}
+	\item $\neg(\varphi_1\rightarrow \varphi_2) \leftrightarrow (\varphi_1 \land \neg \varphi_2)$
+	\item $\neg(\varphi_1\lor \varphi_2) \leftrightarrow (\neg \varphi_1 \land \neg \varphi_2)$
+	\item $\neg(\varphi_1\land \varphi_2) \leftrightarrow (\neg \varphi_1 \lor \neg \varphi_2)$
+	\item $(\varphi_1 \rightarrow (\varphi_2\rightarrow \varphi_3)) \leftrightarrow (\varphi_1\land \varphi_2) \rightarrow \varphi_3$
+	\item $((\varphi_1\rightarrow \varphi_2)\rightarrow \varphi_2)  \leftrightarrow (\varphi_1\lor \varphi_2)$
+	\item $(\varphi_1 \land (\varphi_1\rightarrow \varphi_2)) \leftrightarrow (\varphi_1 \land \varphi_2)$
+	\item $((\varphi_1\rightarrow \varphi_2) \land \varphi_1) \leftrightarrow (\varphi_1 \land \varphi_2)$
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{qnt_simplify}{veriT}
+This rule simplifies a $\forall$ term with a constant predicate.
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.&  \forall x_1, \dots, x_n. \varphi \leftrightarrow \varphi
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+where $\varphi$ is either $\top$ or $\bot$.
+\end{proof-rule}
+
+\begin{proof-rule}{div_simplify}{veriT}
+This rule simplifies a division by applying equivalent
+transformations. The general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \frac{t_1}{t_2} \simeq t_3
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+
+The possible transformations are:
+\begin{itemize}
+  \item $\frac{t}{t} = 1$
+  \item $\frac{t}{1} = t$
+	\item $\frac{t_1}{t_2} = t_3$
+		if $t_1$ and $t_2$ are constants and $t_3$ is $t_1$
+		divided by $t_2$ according to the semantic of the current theory.
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{prod_simplify}{veriT}
+This rule simplifies a product by applying equivalent
+transformations as long as possible. The general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& t_1\times\dots\times t_n \simeq u
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+where $u$ is either a constant or a product.
+
+The possible transformations are:
+\begin{itemize}
+    \item $t_1\times\dots\times t_n = u$ where all
+    $t_i$ are constants and $u$ is their product.
+    \item $t_1\times\dots\times t_n = 0$ if any
+    $t_i$ is $0$.
+    \item $t_1\times\dots\times t_n =
+			c \times t_{k_1}\times\dots\times t_{k_n}$ where $c$
+			ist the product of the constants of $t_1, \dots, t_n$ and
+			$t_{k_1}, \dots, t_{k_n}$ is $t_1, \dots, t_n$
+			with the constants removed.
+    \item $t_1\times\dots\times t_n =
+			t_{k_1}\times\dots\times t_{k_n}$: same as above if $c$ is
+			$1$.
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{unary_minus_simplify}{veriT}
+This rule is either
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& - (-t) \simeq t &(\currule)\\
+\end{plList}
+\end{plContainer}
+or
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& -t \simeq u &(\currule)\\
+\end{plList}
+\end{plContainer}
+where $u$ is the negated numerical constant $t$.
+\end{proof-rule}
+
+\begin{proof-rule}{minus_simplify}{veriT}
+This rule simplifies a subtraction by applying equivalent
+transformations. The general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& t_1 - t_2 \simeq u &(\currule)\\
+\end{plList}
+\end{plContainer}
+
+The possible transformations are:
+\begin{itemize}
+    \item $t - t = 0$
+    \item $t_1 - t_2 = t_3$ where $t_1$
+    and $t_2$ are numerical constants and $t_3$ is $t_2$ subtracted
+    from~$t_1$.
+    \item $t - 0 = t$
+    \item $0 - t = -t$
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{sum_simplify}{veriT}
+This rule simplifies a sum by applying equivalent
+transformations as long as possible. The general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& t_1+\dots+t_n \simeq u &(\currule)\\
+\end{plList}
+\end{plContainer}
+where $u$ is either a constant or a product.
+
+The possible transformations are:
+\begin{itemize}
+    \item $t_1+\dots+t_n = c$ where all
+    $t_i$ are constants and $c$ is their sum.
+    \item $t_1+\dots+t_n =
+			c + t_{k_1}+\dots+t_{k_n}$ where $c$
+			ist the sum of the constants of $t_1, \dots, t_n$ and
+			$t_{k_1}, \dots, t_{k_n}$ is $t_1, \dots, t_n$
+			with the constants removed.
+    \item $t_1+\dots+t_n =
+			t_{k_1}+\dots+t_{k_n}$: same as above if $c$ is
+			$0$.
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{comp_simplify}{veriT}
+This rule simplifies a comparison by applying equivalent
+transformations as long as possible. The general form is:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& t_1 \bowtie t_n \leftrightarrow \psi &(\currule)\\
+\end{plList}
+\end{plContainer}
+where $\bowtie$ is as for the proof rule \proofRule{la_generic}, but never
+$\simeq$.
+
+The possible transformations are:
+\begin{itemize}
+    \item $t_1 < t_2 \leftrightarrow \varphi$ where $t_1$ and
+    $t_2$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
+    strictly greater than $t_2$ and $\bot$ otherwise.
+    \item $t < t \leftrightarrow \bot$
+    \item $t_1 \leq t_2 \leftrightarrow \varphi$ where $t_1$ and
+    $t_2$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
+    greater than $t_2$ or equal and $\bot$ otherwise.
+    \item $t \leq t \leftrightarrow \top$
+    \item $t_1 \geq t_2 \leftrightarrow t_2 \leq t_1$
+    \item $t_1 < t_2 \leftrightarrow \neg (t_2 \leq t_1)$
+    \item $t_1 > t_2 \leftrightarrow \neg (t_1 \leq t_2)$
+\end{itemize}
+\end{proof-rule}
+
+\begin{proof-rule}{nary_elim}{veriT}
+This rule replaces $n$-ary operators with their equivalent
+application of the binary operator. It is never applied to $\land$ or $\lor$.
+
+Thre cases are possible.
+If the operator $\circ$ is left associative, then the rule has the form
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
+(\dots( t_1\circ  t_2) \circ  t_3)\circ \dots  t_n) &(\currule)\\
+\end{plList}
+\end{plContainer}
+
+If the operator $\circ$ is right associative, then the rule has the form
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
+( t_1 \circ \dots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n)\dots) &(\currule)\\
+\end{plList}
+\end{plContainer}
+
+If the operator is \emph{chainable}, then it has the form
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
+( t_1\circ t_2) \land ( t_2 \circ  t_3) \land \dots
+\land ( t_{n-1}\circ t_n) &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{ac_simp}{veriT}
+This rule simplifies nested occurences of $\lor$ or $\land$:
+
+\begin{plContainer}
+\begin{plList}
+\Gamma\proofsep&
+\mathfrak{i}.& \psi  \leftrightarrow \varphi_1 \circ\dots\circ\varphi_n
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+where $\circ \in \{\lor, \land\}$ and $\psi$ is a nested application of $\circ$.
+The literals $\varphi_i$ are literals of the flattening of $\psi$ with duplicates
+removed.
+\end{proof-rule}
+
+\begin{proof-rule}{bfun_elim}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.& \psi &(\dots)\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi &(\currule; \mathfrak{i})\\
+\end{plList}
+\end{plContainer}
+
+The formula $\varphi$ is $\psi$ after boolean functions have been simplified.
+This happens in a two step process. Both steps recursively iterate over $\psi$.
+The first step expands quantified variable of type $\mathbf{Bool}$. Hence,
+$\exists x.t$ becomes $t[\bot/x]\lor t[\top/x]$ and
+$\forall x.t$ becomes $t[\bot/x]\land t[\top/x]$. If $n$ variables of sort
+$\mathbf{Bool}$ appear in a quantifier, the disjunction (conjunction) has
+$2^n$ terms. Each term replaces the variables in $t$ according
+to the bits of a number which is increased by one for each subsequent
+term starting from zero. The left-most variable corresponds to the
+least significant bit.
+
+The second step expands function argument of boolean types by introducing
+appropriate if-then-else terms. For example, consider $f(x, P, y)$ where
+$P$ is some formula. Then we replace this term by $\operatorname{ite} P\;
+f(x, \top, y)\;f(x, \bot, y)$. If the argument is already the constant $\top$
+or $\bot$ it is ignored.
+
+\end{proof-rule}
+
+\begin{proof-rule}{deep_skolemize}{veriT}
+This rule is only emitted when the option \texttt{--enable-deep-skolem}
+is given. This option is experimental and should not be used.
+\end{proof-rule}
+
+\begin{proof-rule}{qnt_cnf}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& \mathfrak{i}.&
+\neg(\forall x_1, \dots, x_n. \varphi) \lor \forall x_{k_1}, \dots, x_{k_m}.\varphi'
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+This is a placeholder rule for clausification of a term under a universal
+quantifier. This is used by conflicting instantiation. $\varphi'$ is one of the clause
+of the clause normal form of $\varphi$. The variables $x_{k_1}, \dots, x_{k_m}$ are
+a permutation of $x_1, \dots, x_n$ plus additional variables added by prenexing
+$\varphi$. Normalization is performed in two phases. First, the negative normal form
+is formed, then the result is prenexed. The result of the first step is $\Phi(\varphi, 1)$
+where:
+\begin{align*}
+  \Phi(\neg \varphi, 1) &:= \Phi(\varphi, 0)\\
+  \Phi(\neg \varphi, 0) &:= \Phi(\varphi, 1)\\
+  \Phi(\varphi_1 \lor\dots\lor\varphi_n, 1) &:= \Phi(\varphi_1, 1)\lor\dots\lor\Phi(\varphi_n, 1)\\
+  \Phi(\varphi_1 \land\dots\land\varphi_n, 1) &:= \Phi(\varphi_1, 1)\land\dots\land\Phi(\varphi_n, 1)\\
+  \Phi(\varphi_1 \lor\dots\lor\varphi_n, 0) &:= \Phi(\varphi_1, 0)\land\dots\land\Phi(\varphi_n, 0)\\
+  \Phi(\varphi_1 \land\dots\land\varphi_n, 0) &:= \Phi(\varphi_1, 0)\lor\dots\lor\Phi(\varphi_n, 0)\\
+  \Phi(\varphi_1 \rightarrow \varphi_2, 1) &:= (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land
+    (\Phi(\varphi_2, 0) \lor \Phi(\varphi_1, 1))\\
+  \Phi(\varphi_1 \rightarrow \varphi_2, 0) &:= (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor
+    (\Phi(\varphi_2, 1) \land \Phi(\varphi_1, 0))\\
+  \Phi(\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3, 1) &:=
+    (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land (\Phi(\varphi_1, 1) \lor \Phi(\varphi_3, 1))\\
+  \Phi(\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3, 0) &:=
+    (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor (\Phi(\varphi_1, 0) \land \Phi(\varphi_3, 0))\\
+  \Phi(\forall x_1, \dots, x_n. \varphi, 1) &:= \forall x_1, \dots, x_n. \Phi(\varphi, 1)\\
+  \Phi(\exists x_1, \dots, x_n. \varphi, 1) &:= \exists x_1, \dots, x_n. \Phi(\varphi, 1)\\
+  \Phi(\forall x_1, \dots, x_n. \varphi, 0) &:= \exists x_1, \dots, x_n. \Phi(\varphi, 0)\\
+  \Phi(\exists x_1, \dots, x_n. \varphi, 0) &:= \forall x_1, \dots, x_n. \Phi(\varphi, 0)\\
+  \Phi(\varphi, 1) &:= \varphi\\
+  \Phi(\varphi, 0) &:= \neg\varphi\\
+\end{align*}
+
+\end{proof-rule}
+
+\begin{proof-rule}{subproof}{veriT}
+The \currule{} rule completes a subproof and discharges local
+assumptions. Every subproof starts with some \proofRule{input} steps. The
+last step of the subproof is the conclusion.
+
+\begin{plContainer}
+\begin{plSubList}
+\proofsep& \mathfrak{i}_1.& \psi_1 &(\proofRule{input})\\
+\plLine\\
+\proofsep& \mathfrak{i}_n.& \psi_n &(\proofRule{input})\\
+\plLine\\
+\proofsep& \mathfrak{j}.& \varphi &(\dots)\\
+\end{plSubList}
+\begin{plList}
+\proofsep& \mathfrak{k}.& \neg\psi_1 \lcl \dots \lcl \neg \psi_n \lcl\varphi &(\currule)\\
+\end{plList}
+\end{plContainer}
+
+\end{proof-rule}
+
+\begin{proof-rule}{bind}{veriT}
+The \currule{} rule is used to rename bound variables.
+
+\begin{plContainer}
+\begin{plSubList}
+\plLine\\
+\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n,
+\proofsep& \mathfrak{j}.& \varphi \leftrightarrow \varphi' &(\dots)\\
+\end{plSubList}
+\begin{plList}
+\Gamma \proofsep& \mathfrak{k}.&
+\forall x_1, \dots, x_n.\varphi \leftrightarrow \forall y_1, \dots, y_n. \varphi'  &(\currule)\\
+\end{plList}
+\end{plContainer}
+where the variables $y_1, \dots, y_n$ is not free in $\forall x_1,
+\dots, x_n.\varphi$.
+\end{proof-rule}
+
+\begin{proof-rule}{let}{veriT}
+This rule eliminats $\operatorname{let}$. It has the form
+
+\begin{plContainer}
+\begin{plList}
+\Gamma \proofsep& \mathfrak{i}_1.& t_{1} \simeq s_{1} &(\dots)\\
+\plLine\\
+\Gamma \proofsep& \mathfrak{i}_n.& t_{n} \simeq s_{n} &(\dots)\\
+\plLine\\
+\end{plList}
+\begin{plSubList}
+\plLine\\
+\Gamma, x_1 \mapsto s_1, \dots,  x_n \mapsto s_n,
+\proofsep& \mathfrak{j}.& u\simeq u' &(\dots)\\
+\end{plSubList}
+\begin{plList}
+\Gamma \proofsep& \mathfrak{k}.&
+(\operatorname{let} x_1 := t_1, \dots, x_n := t_n. u) \simeq
+u'
+&(\currule;\mathfrak{i}_1 \dots \mathfrak{i}_n)\\
+\end{plList}
+\end{plContainer}
+where $\simeq$ is replaced by $\leftrightarrow$ where necessary.
+
+If for $t_i\simeq s_i$ the $t_i$ and $s_i$ are syntactically equal, the premise
+is skipped.
+
+\end{proof-rule}
+
+\begin{proof-rule}{onepoint}{veriT}
+The {\currule} rule is the ``one-point-rule''. That is: it eliminates quantified
+variables that can only have one value.
+
+\begin{plContainer}
+\begin{plContainer}
+\begin{plSubList}
+\plLine\\
+\Gamma, x_{k_1},\dots, x_{k_m},  x_{j_1} \mapsto t_{j_1}, \dots ,  x_{j_o} \mapsto t_{j_o},
+\proofsep& \mathfrak{j}.& \varphi \leftrightarrow \varphi' &(\dots)\\
+\end{plSubList}
+\begin{plList}
+\Gamma \proofsep& \mathfrak{k}.&
+Q x_1, \dots, x_n.\varphi \leftrightarrow Q x_{k_1}, \dots, x_{k_m}. \varphi'  &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{plContainer}
+where $Q\in\{\forall, \exists\}$,  $n = m + o$,  $k_1, \dots, k_m$ and
+$j_1, \dots, j_o$ are monotone
+mappings to $1, \dots, n$, and no $x_{k_i}$ appears in $x_{j_1}, \dots, x_{j_o}$.
+
+The terms $t_{j_1}, \dots, t_{j_o}$ are the points of the variables
+$x_{j_1}, \dots, x_{j_o}$. Points are defined by equalities $x_i\simeq t_i$
+with positive polarity in the term $\varphi$.
+
+\paragraph{Remark.} Since an eliminated variable $x_i$ might appear free in a
+term $t_j$, it is necessary to replace $x_i$ with $t_i$ inside $t_j$. While
+this substitution is performed correctly, the proof for it is currently
+missing.
+
+\begin{example}
+An applichtion of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
+\rightarrow \operatorname{f}(x)\land\operatorname{f}(y)$ look like this:
+
+\begin{minted}{smtlib2.py -x}
+(anchor :step t3 :args ((:= y x)))
+(step t3.t1 (cl (= x y)) :rule refl)
+(step t3.t2 (cl (= (= x y) (= x x)))
+    :rule cong :premises (t3.t1))
+(step t3.t3 (cl (= x y)) :rule refl)
+(step t3.t4 (cl (= (f y) (f x)))
+    :rule cong :premises (t3.t3))
+(step t3.t5 (cl (= (and (f x) (f y)) (and (f x) (f x))))
+    :rule cong :premises (t3.t4))
+(step t3.t6 (cl (=
+        (=> (= x y) (and (f x) (f y)))
+        (=> (= x x) (and (f x) (f x)))))
+    :rule cong :premises (t3.t2 t3.t5))
+(step t3 (cl (=
+        (forall ((x S) (y S)) (=> (= x y) (and (f x) (f y))))
+        (forall ((x S)) (=> (= x x) (and (f x) (f x))))))
+    :rule qnt_simplify)
+\end{minted}
+\end{example}
+
+\end{proof-rule}
+
+\begin{proof-rule}{sko_ex}{veriT}
+The \currule{} rule skolemizes existential quantifiers.
+
+\begin{plContainer}
+\begin{plSubList}
+\plLine\\
+\Gamma, x_1 \mapsto (\epsilon x_1.\varphi), \dots ,  x_n \mapsto (\epsilon x_n.\varphi),
+\proofsep& \mathfrak{j}.&
+\varphi \leftrightarrow \psi &(\dots)\\
+\end{plSubList}
+\begin{plList}
+\Gamma \proofsep& \mathfrak{k}.&
+\exists x_1, \dots, x_n.\varphi \leftrightarrow \psi  &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{sko_forall}{veriT}
+The \currule{} rule skolemizes universal quantifiers.
+
+\begin{plContainer}
+\begin{center}
+\parbox{\textwidth}{
+\begin{plSubList}
+\plLine\\
+\Gamma, x_1 \mapsto (\epsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\epsilon x_n.\neg\varphi),
+\proofsep& \mathfrak{j}.&
+\varphi \leftrightarrow \psi
+&(\dots)\\
+\end{plSubList}
+\begin{plList}
+\Gamma \proofsep& \mathfrak{k}.&
+\forall x_1, \dots, x_n.\varphi \leftrightarrow \psi  &(\currule)\\
+\end{plList}}
+\end{center}
+\end{plContainer}
+\end{proof-rule}
+
+\bibliographystyle{acm}
+\bibliography{bib}
+
+\end{document}
