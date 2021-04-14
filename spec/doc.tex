@@ -288,6 +288,15 @@ provides an overview of all proof rules used by veriT.
 there can be arbitrary steps between premise and subproof, find good
 way to say that the premise can not be in a subproof.}
 
+\paragraph{Disjunctions.}
+To guide the reconstruction, our format distinguishes between the clauses (as
+known by the SAT part) and the disjuction (as known by the theory part). The
+syntax for the former uses ``cl'' while the latter uses ``or'' (as in the SMTLIB
+syntax). While seemingly not important, the distinction helps the reconstruction
+of steps by the SAT solver, by giving means to see what are the literals of the
+current formula. The \proofRule{or} is responsible for converting theory ``or''
+to SAT clauses.
+
 \paragraph{Assumptions.}
 The \proofRule{assume} rule introduces a term as an assumption. The
 proof starts with a number of \proofRule{assume} steps. Each step

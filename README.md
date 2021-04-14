@@ -12,7 +12,8 @@ and especially the rules as we gather experience.
 ## Building the Specifications
 
 The specification are in the folder `spec`.  The main source file is the
-`doc.tex` file.
+`doc.tex` file. You can use `make` in the `spec` directory to compile
+the document.
 
 Syntax highlighting uses the `pygments` tool.  Hence, this tool must
 be installed.  Furthermore, Latex must be compiled with shell escaping
