@@ -669,7 +669,12 @@ no $\grT{define-fun}$ commands are issued and the constants are inlined.
 \section{List of Proof Rules}
 \label{sec:rules}
 
-The following lists all rules produced by veriT.
+The following lists all rules produced by veriT (Sect.~{sec:standard-rules}) and
+one experimental rule that is not yet properly defined
+(Sect~\ref{sec:exp-rules}).
+
+\subsection{Standard Proof Rules}
+\label{sec:standard-rules}
 
 \begin{proof-rule}{assume}{veriT}
 \begin{plContainer}
@@ -2048,10 +2053,6 @@ or $\bot$ it is ignored.
 
 \end{proof-rule}
 
-\begin{proof-rule}{deep_skolemize}{veriT}
-This rule is only emitted when the option \texttt{--enable-deep-skolem}
-is given. This option is experimental and should not be used.
-\end{proof-rule}
 
 \begin{proof-rule}{qnt_cnf}{veriT}
 \begin{plContainer}
@@ -2252,6 +2253,15 @@ The \currule{} rule skolemizes universal quantifiers.
 \end{plList}}
 \end{center}
 \end{plContainer}
+\end{proof-rule}
+
+
+\subsection{Experimental Proof Rules}
+\label{sec:exp-rules}
+
+\begin{proof-rule}{deep_skolemize}{veriT}
+  This rule is only emitted when the option \texttt{--enable-deep-skolem}
+  is given. This option is experimental and should not be used.
 \end{proof-rule}
 
 \bibliographystyle{plain}
