@@ -307,18 +307,6 @@ are syntactically equal and the number of leading negations is even
 for $\varphi$ and odd for $\bar{\psi}$, or vice versa.  To simplify the
 notation we will omit the sort of terms when possible.
 
-\paragraph{Clauses and Disjunctions.}
-
-CDCL($T$)-based SMT solvers, and especially their SAT solvers,
-are fundamentally based on clauses. Hence, {\formatName} also uses
-clauses.  Nevertheless, since SMT solvers do not enforce a strict
-clausal normal-form, usual disjunction is also used. The usage of
-clauses simplifies checking the rules.  For example, in the case of
-resolution there is a clear distinction between unit clauses where
-the sole literal starts with a disjunction, and non-unit clauses.  The
-syntax for clauses uses the \smtinline{cl} operator, while disjunctions
-use the standard SMT-LIB \smtinline{or} operator. The \proofRule{or}
-\emph{rule} is responsible for converting disjunctions to clauses.
 
 \paragraph{Steps.}
 A proof in the {\formatName} format is an indexed list of steps.
@@ -372,6 +360,18 @@ rule removes an implication: From $\varphi_1 \implies\varphi_2$
 it deduces $\neg \varphi_1 \lor \varphi_2$.
 
 \paragraph{Resolution.}
+
+CDCL($T$)-based SMT solvers, and especially their SAT solvers,
+are fundamentally based on clauses. Hence, {\formatName} also uses
+clauses.  Nevertheless, since SMT solvers do not enforce a strict
+clausal normal-form, usual disjunction is also usedhttps://bugs.launchpad.net/ubuntu/+source/unity/+bug/1463112. The usage of
+clauses simplifies checking the rules.  For example, in the case of
+resolution there is a clear distinction between unit clauses where
+the sole literal starts with a disjunction, and non-unit clauses.  The
+syntax for clauses uses the \smtinline{cl} operator, while disjunctions
+use the standard SMT-LIB \smtinline{or} operator. The \proofRule{or}
+\emph{rule} is responsible for converting disjunctions to clauses.
+
 The {\formatName} proofs use a generalized propositional
 resolution rule with the rule name \proofRule{resolution} or
 \proofRule{th\_resolution}. Both names denote the same rule. The
