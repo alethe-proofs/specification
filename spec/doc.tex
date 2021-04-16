@@ -1211,28 +1211,31 @@ a permutation of $x_1, \dots, x_n$ plus additional variables added by prenexing
 $\varphi$. Normalization is performed in two phases. First, the negative normal form
 is formed, then the result is prenexed. The result of the first step is $\Phi(\varphi, 1)$
 where:
-\begin{align*}
-  \Phi(\neg \varphi, 1) &:= \Phi(\varphi, 0)\\
-  \Phi(\neg \varphi, 0) &:= \Phi(\varphi, 1)\\
-  \Phi(\varphi_1 \lor\dots\lor\varphi_n, 1) &:= \Phi(\varphi_1, 1)\lor\dots\lor\Phi(\varphi_n, 1)\\
-  \Phi(\varphi_1 \land\dots\land\varphi_n, 1) &:= \Phi(\varphi_1, 1)\land\dots\land\Phi(\varphi_n, 1)\\
-  \Phi(\varphi_1 \lor\dots\lor\varphi_n, 0) &:= \Phi(\varphi_1, 0)\land\dots\land\Phi(\varphi_n, 0)\\
-  \Phi(\varphi_1 \land\dots\land\varphi_n, 0) &:= \Phi(\varphi_1, 0)\lor\dots\lor\Phi(\varphi_n, 0)\\
-  \Phi(\varphi_1 \rightarrow \varphi_2, 1) &:= (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land
-    (\Phi(\varphi_2, 0) \lor \Phi(\varphi_1, 1))\\
-  \Phi(\varphi_1 \rightarrow \varphi_2, 0) &:= (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor
-    (\Phi(\varphi_2, 1) \land \Phi(\varphi_1, 0))\\
-  \Phi(\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3, 1) &:=
-    (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land (\Phi(\varphi_1, 1) \lor \Phi(\varphi_3, 1))\\
-  \Phi(\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3, 0) &:=
-    (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor (\Phi(\varphi_1, 0) \land \Phi(\varphi_3, 0))\\
-  \Phi(\forall x_1, \dots, x_n. \varphi, 1) &:= \forall x_1, \dots, x_n. \Phi(\varphi, 1)\\
-  \Phi(\exists x_1, \dots, x_n. \varphi, 1) &:= \exists x_1, \dots, x_n. \Phi(\varphi, 1)\\
-  \Phi(\forall x_1, \dots, x_n. \varphi, 0) &:= \exists x_1, \dots, x_n. \Phi(\varphi, 0)\\
-  \Phi(\exists x_1, \dots, x_n. \varphi, 0) &:= \forall x_1, \dots, x_n. \Phi(\varphi, 0)\\
-  \Phi(\varphi, 1) &:= \varphi\\
-  \Phi(\varphi, 0) &:= \neg\varphi\\
-\end{align*}
+
+{\allowdisplaybreaks
+  \begin{align*}
+    \Phi(\neg \varphi, 1) &:= \Phi(\varphi, 0)\\
+    \Phi(\neg \varphi, 0) &:= \Phi(\varphi, 1)\\
+    \Phi(\varphi_1 \lor\dots\lor\varphi_n, 1) &:= \Phi(\varphi_1, 1)\lor\dots\lor\Phi(\varphi_n, 1)\\
+    \Phi(\varphi_1 \land\dots\land\varphi_n, 1) &:= \Phi(\varphi_1, 1)\land\dots\land\Phi(\varphi_n, 1)\\
+    \Phi(\varphi_1 \lor\dots\lor\varphi_n, 0) &:= \Phi(\varphi_1, 0)\land\dots\land\Phi(\varphi_n, 0)\\
+    \Phi(\varphi_1 \land\dots\land\varphi_n, 0) &:= \Phi(\varphi_1, 0)\lor\dots\lor\Phi(\varphi_n, 0)\\
+    \Phi(\varphi_1 \rightarrow \varphi_2, 1) &:= (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land
+                                               (\Phi(\varphi_2, 0) \lor \Phi(\varphi_1, 1))\\
+    \Phi(\varphi_1 \rightarrow \varphi_2, 0) &:= (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor
+                                               (\Phi(\varphi_2, 1) \land \Phi(\varphi_1, 0))\\
+    \Phi(\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3, 1) &:=
+                                                                  (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land (\Phi(\varphi_1, 1) \lor \Phi(\varphi_3, 1))\\
+    \Phi(\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3, 0) &:=
+                                                                  (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor (\Phi(\varphi_1, 0) \land \Phi(\varphi_3, 0))\\
+    \Phi(\forall x_1, \dots, x_n. \varphi, 1) &:= \forall x_1, \dots, x_n. \Phi(\varphi, 1)\\
+    \Phi(\exists x_1, \dots, x_n. \varphi, 1) &:= \exists x_1, \dots, x_n. \Phi(\varphi, 1)\\
+    \Phi(\forall x_1, \dots, x_n. \varphi, 0) &:= \exists x_1, \dots, x_n. \Phi(\varphi, 0)\\
+    \Phi(\exists x_1, \dots, x_n. \varphi, 0) &:= \forall x_1, \dots, x_n. \Phi(\varphi, 0)\\
+    \Phi(\varphi, 1) &:= \varphi\\
+    \Phi(\varphi, 0) &:= \neg\varphi\\
+  \end{align*}
+}
 
 \end{proof-rule}
 
