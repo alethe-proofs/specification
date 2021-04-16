@@ -998,36 +998,6 @@ as currently done by \proofRule{qnt_cnf}.
 
 \end{proof-rule}
 
-\begin{proof-rule}{qnt_join}{veriT}
-\begin{plContainer}
-\begin{plList}
-\Gamma\proofsep& i.&
-Q x_1, \dots, x_n. Q x_{n+1}, \dots, x_{m}. \varphi
-\leftrightarrow
-Q x_{k_1}, \dots, x_{k_o}. \varphi
-&(\currule)\\
-\end{plList}
-\end{plContainer}
-where $m > n$, $Q\in\{\forall, \exists\}$, $k_1, \dots, k_o$ is monotonic
-map to $1, \dots, m$ such that $x_{k_1}, \dots, x_{k_o}$ are pairwise
-distinct, and $\{x_1, \dots, x_m\} = \{x_{k_1}, \dots, x_{k_o}\}$.
-\end{proof-rule}
-
-\begin{proof-rule}{qnt_rm_unused}{veriT}
-\begin{plContainer}
-\begin{plList}
-\Gamma\proofsep& i.&
-Q x_1, \dots, x_n. \varphi \leftrightarrow Q x_{k_1}, \dots, x_{k_m}.\varphi
-&(\currule)\\
-\end{plList}
-\end{plContainer}
-where $m \leq n$, $Q\in\{\forall, \exists\}$ , $k_1, \dots, k_m$ is
-monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
-n\} \land j\not\in \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
-
-\end{proof-rule}
-
-
 \subsection{Resolution Rules and Clause Simplifications}
 \label{sec:resolution-rules}
 
@@ -1101,143 +1071,6 @@ serves only informational purpose.
 \label{sec:equality-rules}
 
 
-\begin{proof-rule}{and_pos}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& \neg (\varphi_1 \land \dots \land \varphi_n) , \varphi_k &(\currule)\\
-\end{plList}
-\end{plContainer}
-with $1 \leq k \leq n$.
-\end{proof-rule}
-
-\begin{proof-rule}{and_neg}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& (\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1
-	, \dots , \neg\varphi_n &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{or_pos}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& \neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots
-	, \varphi_n &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{or_neg}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k &(\currule)\\
-\end{plList}
-\end{plContainer}
-with $1 \leq k \leq n$.
-\end{proof-rule}
-
-\begin{proof-rule}{xor_pos1}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& \neg (\varphi_1 \operatorname{xor} \varphi_2) , \varphi_1 , \varphi_2 &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{xor_pos2}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& \neg (\varphi_1 \operatorname{xor} \varphi_2)
-, \neg \varphi_1, \neg \varphi_2 &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{xor_neg1}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& \varphi_1 \operatorname{xor} \varphi_2
-, \varphi_1 , \neg \varphi_2 &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{xor_neg2}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& \varphi_1 \operatorname{xor} \varphi_2
-, \neg \varphi_1 , \varphi_2 &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{implies_pos}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& \neg (\varphi_1 \rightarrow \varphi_2)
-, \neg \varphi_1 , \varphi_2 &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{implies_neg1}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& \varphi_1 \rightarrow \varphi_2
-, \varphi_1 &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{implies_neg2}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& \varphi_1 \rightarrow \varphi_2
-, \neg \varphi_2 &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{equiv_pos1}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.&
-\neg (\varphi_1 \leftrightarrow \varphi_2) , \varphi_1 , \neg \varphi_2
-&(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{equiv_pos2}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.&
-\neg (\varphi_1 \leftrightarrow \varphi_2) , \neg \varphi_1 , \varphi_2
-&(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{equiv_neg1}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.&
-\varphi_1 \leftrightarrow \varphi_2 , \neg \varphi_1 , \neg \varphi_2
-&(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{equiv_neg2}{veriT}
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.&
-\varphi_1 \leftrightarrow \varphi_2 , \varphi_1 , \varphi_2
-&(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
 
 
 \begin{proof-rule}{refl}{veriT}
@@ -1558,6 +1391,146 @@ An application of the \currule{} rule.
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
+
+
+\begin{proof-rule}{and_pos}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \neg (\varphi_1 \land \dots \land \varphi_n) , \varphi_k &(\currule)\\
+\end{plList}
+\end{plContainer}
+with $1 \leq k \leq n$.
+\end{proof-rule}
+
+\begin{proof-rule}{and_neg}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& (\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1
+	, \dots , \neg\varphi_n &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{or_pos}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots
+	, \varphi_n &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{or_neg}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k &(\currule)\\
+\end{plList}
+\end{plContainer}
+with $1 \leq k \leq n$.
+\end{proof-rule}
+
+\begin{proof-rule}{xor_pos1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \neg (\varphi_1 \operatorname{xor} \varphi_2) , \varphi_1 , \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{xor_pos2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \neg (\varphi_1 \operatorname{xor} \varphi_2)
+, \neg \varphi_1, \neg \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{xor_neg1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \varphi_1 \operatorname{xor} \varphi_2
+, \varphi_1 , \neg \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{xor_neg2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \varphi_1 \operatorname{xor} \varphi_2
+, \neg \varphi_1 , \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{implies_pos}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \neg (\varphi_1 \rightarrow \varphi_2)
+, \neg \varphi_1 , \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{implies_neg1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \varphi_1 \rightarrow \varphi_2
+, \varphi_1 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{implies_neg2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \varphi_1 \rightarrow \varphi_2
+, \neg \varphi_2 &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv_pos1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.&
+\neg (\varphi_1 \leftrightarrow \varphi_2) , \varphi_1 , \neg \varphi_2
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv_pos2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.&
+\neg (\varphi_1 \leftrightarrow \varphi_2) , \neg \varphi_1 , \varphi_2
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv_neg1}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.&
+\varphi_1 \leftrightarrow \varphi_2 , \neg \varphi_1 , \neg \varphi_2
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{equiv_neg2}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.&
+\varphi_1 \leftrightarrow \varphi_2 , \varphi_1 , \varphi_2
+&(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
 
 \subsection{If-Then-Else Rules}
 \label{sec:ite-rules}
@@ -2015,6 +1988,36 @@ An applichtion of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
     :rule qnt_simplify)
 \end{minted}
 \end{example}
+
+\end{proof-rule}
+
+
+\begin{proof-rule}{qnt_join}{veriT}
+  \begin{plContainer}
+    \begin{plList}
+      \Gamma\proofsep& i.&
+      Q x_1, \dots, x_n. Q x_{n+1}, \dots, x_{m}. \varphi
+      \leftrightarrow
+      Q x_{k_1}, \dots, x_{k_o}. \varphi
+      &(\currule)\\
+    \end{plList}
+  \end{plContainer}
+  where $m > n$, $Q\in\{\forall, \exists\}$, $k_1, \dots, k_o$ is monotonic
+  map to $1, \dots, m$ such that $x_{k_1}, \dots, x_{k_o}$ are pairwise
+  distinct, and $\{x_1, \dots, x_m\} = \{x_{k_1}, \dots, x_{k_o}\}$.
+\end{proof-rule}
+
+\begin{proof-rule}{qnt_rm_unused}{veriT}
+  \begin{plContainer}
+    \begin{plList}
+      \Gamma\proofsep& i.&
+      Q x_1, \dots, x_n. \varphi \leftrightarrow Q x_{k_1}, \dots, x_{k_m}.\varphi
+      &(\currule)\\
+    \end{plList}
+  \end{plContainer}
+  where $m \leq n$, $Q\in\{\forall, \exists\}$ , $k_1, \dots, k_m$ is
+  monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
+  n\} \land j\not\in \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
 
 \end{proof-rule}
 
