@@ -207,6 +207,11 @@
      code/.style={red, inner sep=0.15cm, text=black, draw, thick, rounded corners, fill=red!20}
 }
 
+
+% 
+% Hack to make line numbers less ugly
+\renewcommand{\theFancyVerbLine}{\footnotesize{\arabic{FancyVerbLine}}\hspace{-0.5em}}
+
 % == Theorem environments ==
 
 %TODO sampe space as \paragraph
@@ -783,9 +788,21 @@ case is the instantiation of universally quantified variables. If an
 instantiated variable appears below an equality, then the equality might
 have an arbitrary order after instantiation.
 
-%
-% Hack to make line numbers less ugly
-\renewcommand{\theFancyVerbLine}{\footnotesize{\arabic{FancyVerbLine}}\hspace{-0.5em}}
+\paragraph{Lemmas}
+Our proof format supports lemmas that introduces local assumption and derives a
+new theorems, like:
+
+\begin{minted}[linenos]{smtlib2.py -x}
+(anchor :step t9 :args ())
+(assume t9.t1 (cl (= (+ 2 2) 5)))
+(step   t9.t2 (cl (= (+ 2 2) 4)) :plus_simplify)
+(step   t9.t3 (cl (= 4 5)) :rule trans :premises (t9.t1 t9.t2))
+(step   t9 (cl (not (= (+2 2) 5)) (= 4 5)))
+\end{minted}
+
+While not part of our rules, such lemmas trivially compile down to the rules by
+inlining all assumptions in each step.
+
 \begin{figure}[t]
 \begin{minted}[linenos]{smtlib2.py -x}
 (assume h1 (not (p a)))
