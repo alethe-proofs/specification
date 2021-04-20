@@ -172,20 +172,6 @@ break
   \end{align*}%
 \endgroup
 }
-\newcommand\currule{\proofRule{none}}
-\newcounter{ProofRuleCounter}
-\newenvironment{proof-rule}[2]%
-{%
-  \renewcommand\currule{\proofRule{#1}}%
-  \stepcounter{ProofRuleCounter}%
-  \par\vspace{\baselineskip}\noindent
-  \sffamily%
-  % {\textbf{\arabic{ProofRuleCounter}. \texttt{#1}}} {\tiny [#2]}%
-  {\textbf{\arabic{ProofRuleCounter}. \texttt{#1}}}%
-  \par\vspace{\baselineskip}\noindent\ignorespaces
-}%
-{%
-}
 
 \newtheorem{example}{Example}
 \newtheorem{theorem}{Theorem}[example]
