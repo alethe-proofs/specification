@@ -423,148 +423,11 @@ assumption $\varphi$ and a formula $\psi$ proved by intermediate steps
 from $\varphi$, the \proofRule{subproof} step deduces $\neg \varphi \lor
 \psi$ and discharges $\varphi$.
 
-\paragraph{Tautologous Rules and Simple Deduction.}
-Most rules introduce tautologies. One example is
-the \proofRule{and\_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
-\dots \land \varphi_n) \lor \varphi_i$.  Other rules operate on only
-one premise. Those rules are primarily used to simplify Boolean
-connectives during preprocessing. For example, the \proofRule{implies}
-rule removes an implication: From $\varphi_1 \implies\varphi_2$
-it deduces $\neg \varphi_1 \lor \varphi_2$.
-
-\paragraph{Resolution.}
-
-CDCL($T$)-based SMT solvers, and especially their SAT solvers,
-are fundamentally based on clauses. Hence, {\formatName} also uses
-clauses.  Nevertheless, since SMT solvers do not enforce a strict
-clausal normal-form, usual disjunction is also usedhttps://bugs.launchpad.net/ubuntu/+source/unity/+bug/1463112. The usage of
-clauses simplifies checking the rules.  For example, in the case of
-resolution there is a clear distinction between unit clauses where
-the sole literal starts with a disjunction, and non-unit clauses.  The
-syntax for clauses uses the \smtinline{cl} operator, while disjunctions
-use the standard SMT-LIB \smtinline{or} operator. The \proofRule{or}
-\emph{rule} is responsible for converting disjunctions to clauses.
-
-The {\formatName} proofs use a generalized propositional
-resolution rule with the rule name \proofRule{resolution} or
-\proofRule{th\_resolution}. Both names denote the same rule. The
-difference only serves to distinguish if the rule was introduced by
-the SAT solver or by a theory solver. The resolution step is purely
-propositional; there is currently no notion of a unifier.
-
-The premises of a resolution step are clauses and the conclusion
-is a clause that has been derived from the premises by some binary
-resolution steps.
-
-\paragraph{Quantifier Instantiation.}
-To express quantifier instantiation, the rule \proofRule{forall\_inst}
-is used. It produces a formula of the form $(\neg \forall x_1 \dots
-x_n. \varphi)\lor \varphi[t_1/x_1]\dots[t_n/x_n]$, where $\varphi$ is
-a term containing the free variables $(x_i)_{1\leq i\leq n}$, and $t_i$
-are new variable free terms with the same sort as $x_i$.
-
-The arguments of a \proofRule{forall\_inst} step is the list \((x_1
-, t_1), \dots, (x_n, t_n)\). While this information can
-be recovered from the term, providing this information explicitly
-aids reconstruction because the implicit reordering of equalities
-(see below) obscure which terms have been used as instances.
-Existential quantifiers are handled by Skolemization.
-
-\paragraph{Skolemization and Other Preprocessing Steps.}
-The format uses the notion of a \emph{context} to reason about bound variables.
-As defined above, a context is a (possibly empty) list of variables or
-variable term pairs. The context is modified like a stack: rules can
-either append elements to the right of the current context or remove
-elements from the right. A context $\Gamma$ corresponds to a substitution
-$\sigma_{\Gamma}$. This substitution is recursively defined.  If $\Gamma$
-is the empty list, then $\sigma_{\Gamma}$ is the empty substitution,
-i.e., the identity function. If $\Gamma$ is of the form $\Gamma', x$
-then $\sigma_{\Gamma}(v) = \sigma_{\Gamma'}(v) \text{ if } v\neq x,
-\text{ otherwise } \sigma_{\Gamma}(v) = x$. Finally, if $\Gamma =
-\Gamma', x\mapsto \varphi$ then  $\sigma_{\Gamma', x\mapsto \varphi}
-= \sigma_{\Gamma'}\circ [\varphi/x]$. Hence, the context allows one to
-build a substitution with the additional possibility to overwrite prior
-substitutions for a variable.
-
-Contexts are processed step by step: If one step extends the context this
-new context is used in all subsequent steps in the step list until the
-context is modified again. Only a limited number of rules can be applied
-when the context is non-empty. All of those rules have equalities as
-premises and conclusion. A step with term $\varphi_1 \simeq \varphi_2$ and
-context $\Gamma$ expresses the judgment that $\varphi_1\sigma_{\Gamma}
-= \varphi_2$.
-
-One typical example for a rule with context is the \proofRule{sko\_ex}
-rule, which is used to express Skolemization of an existentially
-quantified variable. It is a applied to a premise $n$ with a context
-that maps a variable $x$ to the appropriate Skolem term and produces
-a step $m$ ($m > n$) where the variable is quantified.
-
-\begin{plListEq}
-  \Gamma, x\mapsto (\epsilon x.\varphi) &\proofsep n.&\varphi \simeq \psi &(\proofRule{\dots})\\
-  \Gamma &\proofsep m.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko\_ex};\: n)
-\end{plListEq}
-
-\begin{example}
-To illustrate how such a rule is applied, consider the following example
-taken from~\cite{barbosa-2019}. Here the term $\neg p(\epsilon x.\neg
-p(x))$ is Skolemized. The \proofRule{refl} rule expresses
-a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
-is functional congruence, and \proofRule{sko\_forall} works like
-\proofRule{sko\_ex}, except that the choice term is $\epsilon x.\neg\varphi$.
-\begin{plListEqAlgn}
-  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \epsilon x.\neg p(x)  &(\proofRule{refl})\\
-  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 1)\\
-                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{sko\_forall};\: 2)\\
-                                  \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 3)
- \end{plListEqAlgn}
-\end{example}
-
-\paragraph{Linear Arithmetic.}
-Proofs for linear arithmetic use a number of straightforward rules,
-such as \proofRule{la\_totality}: $t_1 \leq t_2 \lor t_2 \leq t_1$
-and the main rule \proofRule{la\_generic}.  The conclusion of an
-\proofRule{la\_generic} step is a tautology $\neg \varphi_1, \neg
-\varphi_2, \dots, \neg \varphi_n$ where the $\varphi_i$ are linear
-(in)equalities. Checking the validity of this formula amounts to
-checking the unsatisfiability of the system of linear equations
-$\varphi_1, \varphi_2, \dots, \varphi_n$.  The annotation of an
-\proofRule{la\_generic} step contains a coefficient for each (in)equality.
-The result of forming the linear combination of the literals with
-the coefficients is a trivial inequality between constants.
-
-\begin{example}
-The following example is the proof generated by veriT for the unsatisfiability
-of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
-\begin{plListEq}
-\proofsep& 1.& (3 < x) \lor (x + y < 1)           &(\proofRule{assume})\\
-\proofsep& 2.& x\simeq 2                          &(\proofRule{assume})\\
-\proofsep& 3.& 0\simeq y                          &(\proofRule{assume})\\
-\proofsep& 4.& \neg (3<x) \lor \neg (x\simeq 2)   &(\proofRule{la\_generic};\: ;1.0, 1.0)\\
-\proofsep& 5.& \neg (3<x)                         &(\proofRule{resolution}; 2, 4)\\
-\proofsep& 6.& x + y < 1                          &(\proofRule{resolution}; 1, 5)\\
-\proofsep& 7.& \neg (x + y < 1) \lor \neg (x\simeq 2) \lor \neg (0 \simeq y)
-&(\proofRule{la\_generic};\: ;1.0, 1.0, 1.0)\\
-\proofsep& 8.& \bot                               &(\proofRule{resolution};\:\; 7, 6, 2, 3)
-\end{plListEq}
-\end{example}
-
-\paragraph{Implicit Reordering of Equalities.}
-In addition to the explicit steps, veriT might reorder equalities, i.e.,
-apply symmetry of the equality predicate, without generating steps. When
-this happens is somewhat restricted: equalities are only reordered
-when the term below the equality change during proof search. One such
-case is the instantiation of universally quantified variables. If an
-instantiated variable appears below an equality, then the equality might
-have an arbitrary order after instantiation.
 
 \section{The Concrete Semantics}
 \label{sec:semantic}
 
-\todo[inline]{Write!}
-
-
-\subsection{Inference System}  % or Rules, or Rules of Inference
+\subsection{Abstract Inference System}  % or Rules, or Rules of Inference
 \label{sec:inference-system}
 
 The inference rules used by our framework depend on a notion of
@@ -795,9 +658,132 @@ The following derivation tree justifies the expansion of a `let' expression:
   See~\cite[Theorem 11]{barbosa-2019}
 \end{proof}
 
-\section{The Concrete Syntax}
-\label{sec:syntax}
 
+\subsection{More Concrete Rules}
+\label{sec:concrete-rules}
+
+The high-level rules presented in the previous paragraph are useful for
+presentation purpose, but they are hard to check. We specialize them by reducing
+applicability. In particular the \Taut rule is very hard to check und is
+specialized.
+
+
+\paragraph{Tautologous Rules and Simple Deduction.}
+Most rules introduce tautologies. One example is
+the \proofRule{and\_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
+\dots \land \varphi_n) \lor \varphi_i$.  Other rules operate on only
+one premise. Those rules are primarily used to simplify Boolean
+connectives during preprocessing. For example, the \proofRule{implies}
+rule removes an implication: From $\varphi_1 \implies\varphi_2$
+it deduces $\neg \varphi_1 \lor \varphi_2$.
+
+
+\paragraph{Skolemization and Other Preprocessing Steps.}
+One typical example for a rule with context is the \proofRule{sko\_ex}
+rule, which is used to express Skolemization of an existentially
+quantified variable. It is a applied to a premise $n$ with a context
+that maps a variable $x$ to the appropriate Skolem term and produces
+a step $m$ ($m > n$) where the variable is quantified.
+
+\begin{plListEq}
+  \Gamma, x\mapsto (\epsilon x.\varphi) &\proofsep n.&\varphi \simeq \psi &(\proofRule{\dots})\\
+  \Gamma &\proofsep m.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko\_ex};\: n)
+\end{plListEq}
+
+\begin{example}
+To illustrate how such a rule is applied, consider the following example
+taken from~\cite{barbosa-2019}. Here the term $\neg p(\epsilon x.\neg
+p(x))$ is Skolemized. The \proofRule{refl} rule expresses
+a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
+is functional congruence, and \proofRule{sko\_forall} works like
+\proofRule{sko\_ex}, except that the choice term is $\epsilon x.\neg\varphi$.
+\begin{plListEqAlgn}
+  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \epsilon x.\neg p(x)  &(\proofRule{refl})\\
+  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 1)\\
+                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{sko\_forall};\: 2)\\
+                                  \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 3)
+ \end{plListEqAlgn}
+\end{example}
+
+
+\paragraph{Linear Arithmetic.}
+Proofs for linear arithmetic use a number of straightforward rules,
+such as \proofRule{la\_totality}: $t_1 \leq t_2 \lor t_2 \leq t_1$
+and the main rule \proofRule{la\_generic}.  The conclusion of an
+\proofRule{la\_generic} step is a tautology $\neg \varphi_1, \neg
+\varphi_2, \dots, \neg \varphi_n$ where the $\varphi_i$ are linear
+(in)equalities. Checking the validity of this formula amounts to
+checking the unsatisfiability of the system of linear equations
+$\varphi_1, \varphi_2, \dots, \varphi_n$.  The annotation of an
+\proofRule{la\_generic} step contains a coefficient for each (in)equality.
+The result of forming the linear combination of the literals with
+the coefficients is a trivial inequality between constants.
+
+\begin{example}
+The following example is the proof generated by veriT for the unsatisfiability
+of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
+\begin{plListEq}
+\proofsep& 1.& (3 < x) \lor (x + y < 1)           &(\proofRule{assume})\\
+\proofsep& 2.& x\simeq 2                          &(\proofRule{assume})\\
+\proofsep& 3.& 0\simeq y                          &(\proofRule{assume})\\
+\proofsep& 4.& \neg (3<x) \lor \neg (x\simeq 2)   &(\proofRule{la\_generic};\: ;1.0, 1.0)\\
+\proofsep& 5.& \neg (3<x)                         &(\proofRule{resolution}; 2, 4)\\
+\proofsep& 6.& x + y < 1                          &(\proofRule{resolution}; 1, 5)\\
+\proofsep& 7.& \neg (x + y < 1) \lor \neg (x\simeq 2) \lor \neg (0 \simeq y)
+&(\proofRule{la\_generic};\: ;1.0, 1.0, 1.0)\\
+\proofsep& 8.& \bot                               &(\proofRule{resolution};\:\; 7, 6, 2, 3)
+\end{plListEq}
+\end{example}
+
+
+\paragraph{Resolution.}
+
+CDCL($T$)-based SMT solvers, and especially their SAT solvers,
+are fundamentally based on clauses. Hence, {\formatName} also uses
+clauses.  Nevertheless, since SMT solvers do not enforce a strict
+clausal normal-form, usual disjunction is also used
+clauses simplifies checking the rules.  For example, in the case of
+resolution there is a clear distinction between unit clauses where
+the sole literal starts with a disjunction, and non-unit clauses.  The
+syntax for clauses uses the \smtinline{cl} operator, while disjunctions
+use the standard SMT-LIB \smtinline{or} operator. The \proofRule{or}
+\emph{rule} is responsible for converting disjunctions to clauses.
+
+The {\formatName} proofs use a generalized propositional
+resolution rule with the rule name \proofRule{resolution} or
+\proofRule{th\_resolution}. Both names denote the same rule. The
+difference only serves to distinguish if the rule was introduced by
+the SAT solver or by a theory solver. The resolution step is purely
+propositional; there is currently no notion of a unifier.
+
+The premises of a resolution step are clauses and the conclusion
+is a clause that has been derived from the premises by some binary
+resolution steps.
+
+\paragraph{Quantifier Instantiation.}
+To express quantifier instantiation, the rule \proofRule{forall\_inst}
+is used. It produces a formula of the form $(\neg \forall x_1 \dots
+x_n. \varphi)\lor \varphi[t_1/x_1]\dots[t_n/x_n]$, where $\varphi$ is
+a term containing the free variables $(x_i)_{1\leq i\leq n}$, and $t_i$
+are new variable free terms with the same sort as $x_i$.
+
+The arguments of a \proofRule{forall\_inst} step is the list \((x_1
+, t_1), \dots, (x_n, t_n)\). While this information can
+be recovered from the term, providing this information explicitly
+aids reconstruction because the implicit reordering of equalities
+(see below) obscure which terms have been used as instances.
+Existential quantifiers are handled by Skolemization.
+
+\paragraph{Implicit Reordering of Equalities.}
+In addition to the explicit steps, veriT might reorder equalities, i.e.,
+apply symmetry of the equality predicate, without generating steps. When
+this happens is somewhat restricted: equalities are only reordered
+when the term below the equality change during proof search. One such
+case is the instantiation of universally quantified variables. If an
+instantiated variable appears below an equality, then the equality might
+have an arbitrary order after instantiation.
+
+%
 % Hack to make line numbers less ugly
 \renewcommand{\theFancyVerbLine}{\footnotesize{\arabic{FancyVerbLine}}\hspace{-0.5em}}
 \begin{figure}[t]
@@ -823,6 +809,9 @@ The following derivation tree justifies the expansion of a `let' expression:
 a subproof renames bound variables (line 4--8); the proof finishes with
 instantiaton and resolution steps (line 10--15)}\label{fig:proof_ex}
 \end{figure}
+
+\section{The Concrete Syntax}
+\label{sec:syntax}
 
 The concrete text representation of the {\formatName}  proofs
 is based on the SMT-LIB standard. Figure~\ref{fig:proof_ex} shows an
