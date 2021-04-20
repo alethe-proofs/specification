@@ -13,6 +13,8 @@
 \usepackage{underscore}
 \usepackage{siunitx}
 \usepackage{ccicons}
+\usepackage{mdframed}
+\usepackage{etoolbox}
 
 \usepackage{tabularx}
 \usepackage{amssymb}
@@ -27,7 +29,6 @@
 \usepackage{tikz}
 \usepackage{scalerel}
 
-\usepackage{listings}
 \usepackage{minted}
 \usemintedstyle{trac}
 
@@ -56,8 +57,23 @@
  
 \newcommand{\formatName}{Alethe}
 
-% Environment for proof-rules
+% Environment for discussion, conditional
+\ifdef{\withcomments}
+{\global\mdfdefinestyle{commentstyle}{%
+frametitlebackgroundcolor=gray!20,%
+frametitlefont={\sffamily\bfseries},%
+linecolor=gray!90,%
+linewidth=1pt,%
+}
 
+\NewEnviron{comment}[1]{%
+\begin{mdframed}[style=commentstyle, frametitle={\small Comment by #1}]%
+  \BODY
+\end{mdframed}%
+}}
+{\NewEnviron{comment}[1]{}}
+
+% Environment for proof-rules
 \newcommand\currule{\proofRule{none}}
 \newcounter{ProofRuleCounter}
 \newenvironment{proof-rule}[2]%
@@ -1103,14 +1119,16 @@ or
 \end{plList}
 \end{plContainer}
 
-\paragraph{Remark.} The trans rules comes in three flavors that can be distinguished by the attribute:
-\begin{description}
-\item[ordered and oriented] the equalities are given in the correct order and are oriented in the right direction;
-\item[ordered and unoriented] the equalities are given in the correct order, but
-  the equalitis like ``\(t_1\simeq t_2\)'' can be used as ``\(t_1\simeq t_2\)''
-  or ``\(t_2\simeq t_1\)'';
+\begin{comment}{Mathias Fleury} The \proofRule{trans} rules comes in three
+flavors that can be distinguished by the attribute: \begin{description}
+\item[ordered and oriented] the equalities are given in the correct order
+and are oriented in the right direction; \item[ordered and unoriented]
+the equalities are given in the correct order, but
+  the equalitis like ``\(t_1\simeq t_2\)'' can be used as ``\(t_1\simeq
+  t_2\)'' or ``\(t_2\simeq t_1\)'';
 \item[unordered and unoriented] the equalities are not ordered either.
 \end{description}
+\end{comment}
 
 \end{proof-rule}
 
