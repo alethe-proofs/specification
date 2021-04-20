@@ -56,6 +56,25 @@
  
 \newcommand{\formatName}{Alethe}
 
+% Environment for proof-rules
+
+\newcommand\currule{\proofRule{none}}
+\newcounter{ProofRuleCounter}
+\newenvironment{proof-rule}[2]%
+{%
+\renewcommand\currule{\proofRule{#1}}%
+\stepcounter{ProofRuleCounter}%
+\filbreak%
+\noindent%
+{\sffamily\textbf{\arabic{ProofRuleCounter}. #1}}%
+\list{}{%
+\leftmargin0pt
+\itemindent0pt
+\listparindent15pt
+}\item\relax%
+}%
+{\endlist}
+
 \newcommand{\proofRule}[1]{\microtypesetup{tracking=false}\texttt{#1}\microtypesetup{tracking=true}}
 \newcommand{\isaTac}[1]{\texttt{#1}}
 \newcommand\IfThenElse[3]{\ensuremath{\mathit{if}~#1~\mathit{then}~#2~\mathit{else}~#3}}
@@ -149,6 +168,7 @@
 %\theoremstyle{definition}
 \theoremstyle{simple}
 \newtheorem{exmp}{Example}
+\newtheorem{rule-example}{Example}[ProofRuleCounter]
 
 \newpairofpagestyles{titlestyle}{
 \ofoot{Typeset on {\today} from \input{|"./version.sh"}}%
@@ -647,25 +667,6 @@ $\grT{define-fun}$ command to define shorthand 0-ary functions for
 the $\grT{(choice }\dots\grT{)}$ terms needed. Without this option,
 no $\grT{define-fun}$ commands are issued and the constants are inlined.
 
-%TODO: Add proof-relevante options
-
-\newcommand\currule{\proofRule{none}}
-\newcounter{ProofRuleCounter}
-\newenvironment{proof-rule}[2]%
-{%
-\renewcommand\currule{\proofRule{#1}}%
-\stepcounter{ProofRuleCounter}%
-\par\vspace{\baselineskip}\noindent
-\sffamily%
-%{\textbf{\arabic{ProofRuleCounter}. \texttt{#1}}} {\tiny [#2]}%
-{\textbf{\arabic{ProofRuleCounter}. \texttt{#1}}}%
-\par\vspace{\baselineskip}\noindent\ignorespaces
-}%
-{%
-}
-
-\newtheorem{example}{Example}[ProofRuleCounter]
-
 \section{List of Proof Rules}
 \label{sec:rules}
 
@@ -873,7 +874,7 @@ either $\simeq$ or $>$, and $\geq$ otherwise. The $a_i$ must be sucht
 that the sum on the left-hand side is $0$ and the right-hand side is $>0$ (or
 $\geq 0$ if $\bowtie is >$).
 
-\begin{example}
+\begin{rule-example}
 A simple $\currule$ step in the logic \texttt{LRA} might look like this:
 \begin{minted}{smtlib2.py -x}
 (step t10 (cl (not (> (f a) (f b))) (not (= (f a) (f b))))
@@ -884,9 +885,9 @@ f(a) = f(b)$ (Step 2). After step 3 we get $f(a) - f(b) > 0 \land
 f(a) - f(b) = 0$. Since we don't have an integer sort in this logic step~4 does
 not apply. Finally, after step~5 the conjunction is $f(a) - f(b) > 0 \land
 - f(a) + f(b) = 0$. This sums to $0 > 0$, which is a contradiction.
-\end{example}
+\end{rule-example}
 
-\begin{example}
+\begin{rule-example}
 The following $\currule$ step is from a \texttt{QF_UFLIA} problem:
 \begin{minted}{smtlib2.py -x}
 (step t11 (cl (not (<= f3 0)) (<= (+ 1 (* 4 f3)) 1))
@@ -897,7 +898,7 @@ This time step~4 applies and we can strengthen this to
 $-f_3 \geq 0 \land 4\times f_3 \geq 1$ and after multiplication we get
 $-f_3 \geq 0 \land f_3 \geq \frac{1}{4}$. Which sums to the contradiction
 $\frac{1}{4} \geq 0$.
-\end{example}
+\end{rule-example}
 
 \end{proof-rule}
 
@@ -1036,8 +1037,6 @@ serves only informational purpose.
 
 \end{proof-rule}
 
-
-
 \begin{proof-rule}{tautology}{veriT}
   \begin{plContainer}
     \begin{plList}
@@ -1065,13 +1064,8 @@ serves only informational purpose.
   Hence, this rule remove duplicated literals.
 \end{proof-rule}
 
-
-
 \subsection{Equality and Congruence Reasonning}
 \label{sec:equality-rules}
-
-
-
 
 \begin{proof-rule}{refl}{veriT}
 Either
@@ -1104,9 +1098,7 @@ or
 \begin{plContainer}
 \begin{plList}
 \Gamma\proofsep& i.& \varphi_1 \leftrightarrow \varphi_2 &(\dots)\\
-\plLine\\
 \Gamma\proofsep& j.& \varphi_2 \leftrightarrow \varphi_3 &(\dots)\\
-\plLine\\
 \Gamma\proofsep& k.& \varphi_1 \leftrightarrow \varphi_3 &(\currule; i, j)\\
 \end{plList}
 \end{plContainer}
@@ -1273,7 +1265,7 @@ where:
 \paragraph{Remark.} This rule deconstructs the \smtinline{or} operator
 into a clause denoted by $\smtinline{cl}$.
 
-\begin{example}
+\begin{rule-example}
 An application of the \currule{} rule.
 
 \begin{minted}{smtlib2.py -x}
@@ -1282,7 +1274,7 @@ An application of the \currule{} rule.
 (step t16 (cl     (= a b) (not (<= a b)) (not (<= b a)))
     :rule or :premises (t15))
 \end{minted}
-\end{example}
+\end{rule-example}
 \end{proof-rule}
 
 \begin{proof-rule}{not_and}{veriT}
@@ -1353,7 +1345,6 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg (\varphi_1\rightarrow\varphi_2) &(\dots)\\
-\plLine\\
 \proofsep& j.& \neg\varphi_2 &(\currule; i)\\
 \end{plList}
 \end{plContainer}
@@ -1711,7 +1702,7 @@ i.& \varphi_1\land \dots\land\varphi_n \leftrightarrow \psi
 &(\currule)\\
 \end{plList}
 \end{plContainer}
-with $\psi$ being the transformed term.
+where $\psi$ is the transformed term.
 
 The possible transformations are:
 \begin{itemize}
@@ -1739,7 +1730,7 @@ i.& (\varphi_1\lor \dots\lor\varphi_n) \leftrightarrow \psi
 &(\currule)\\
 \end{plList}
 \end{plContainer}
-with $\psi$ being the transformed term.
+where $\psi$ is the transformed term.
 
 The possible transformations are:
 \begin{itemize}
@@ -1767,7 +1758,7 @@ i.& \neg\varphi \leftrightarrow \psi
 &(\currule)\\
 \end{plList}
 \end{plContainer}
-with $\psi$ being the transformed term.
+where $\psi$ is the transformed term.
 
 The possible transformations are:
 \begin{itemize}
@@ -1788,7 +1779,7 @@ i.& \varphi_1\rightarrow \varphi_2 \leftrightarrow \psi
 &(\currule)\\
 \end{plList}
 \end{plContainer}
-with $\psi$ being the transformed term.
+where $\psi$ is the transformed term.
 
 The possible transformations are:
 \begin{itemize}
@@ -1815,7 +1806,7 @@ i.&  \varphi_1\leftrightarrow \varphi_2 \leftrightarrow \psi
 &(\currule)\\
 \end{plList}
 \end{plContainer}
-with $\psi$ being the transformed term.
+where $\psi$ is the transformed term.
 
 The possible transformations are:
 \begin{itemize}
@@ -1841,7 +1832,7 @@ i.& \varphi\leftrightarrow \psi
 &(\currule)\\
 \end{plList}
 \end{plContainer}
-with $\psi$ being the transformed term.
+where $\psi$ is the transformed term.
 
 The possible transformations are:
 \begin{itemize}
@@ -1886,7 +1877,7 @@ i.& \operatorname{ite} \varphi\;t_1;t_2 \leftrightarrow \psi
 &(\currule)\\
 \end{plList}
 \end{plContainer}
-with $\psi$ being the transformed term.
+where $\psi$ is the transformed term.
 
 Otherwise, it has the form
 \begin{plContainer}
@@ -1896,7 +1887,7 @@ i.& \operatorname{ite} \varphi\;t_1\;t_2 \simeq u
 &(\currule)\\
 \end{plList}
 \end{plContainer}
-with $u$ being the transformed term.
+where $u$ is the transformed term.
 
 The possible transformations are:
 \begin{itemize}
@@ -1967,8 +1958,8 @@ term $t_j$, it is necessary to replace $x_i$ with $t_i$ inside $t_j$. While
 this substitution is performed correctly, the proof for it is currently
 missing.
 
-\begin{example}
-An applichtion of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
+\begin{rule-example}
+An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
 \rightarrow f(x)\land f(y)$ look like this:
 
 \begin{minted}{smtlib2.py -x}
@@ -1990,7 +1981,7 @@ An applichtion of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
         (forall ((x S)) (=> (= x x) (and (f x) (f x))))))
     :rule qnt_simplify)
 \end{minted}
-\end{example}
+\end{rule-example}
 
 \end{proof-rule}
 
@@ -2005,7 +1996,7 @@ An applichtion of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
       &(\currule)\\
     \end{plList}
   \end{plContainer}
-  where $m > n$, $Q\in\{\forall, \exists\}$, $k_1, \dots, k_o$ is monotonic
+  where $m > n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_o$ is a monotonic
   map to $1, \dots, m$ such that $x_{k_1}, \dots, x_{k_o}$ are pairwise
   distinct, and $\{x_1, \dots, x_m\} = \{x_{k_1}, \dots, x_{k_o}\}$.
 \end{proof-rule}
@@ -2018,8 +2009,8 @@ An applichtion of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
       &(\currule)\\
     \end{plList}
   \end{plContainer}
-  where $m \leq n$, $Q\in\{\forall, \exists\}$ , $k_1, \dots, k_m$ is
-  monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
+  where $m \leq n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_m$ is
+  a monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
   n\} \land j\not\in \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
 
 \end{proof-rule}
@@ -2039,7 +2030,7 @@ An applichtion of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
       &(\currule)\\
     \end{plList}
   \end{plContainer}
-  with $\psi$ being the transformed term.
+  where $\psi$ is the transformed term.
 
   The possible transformations are:
   \begin{itemize}
