@@ -20,6 +20,7 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{thmtools}
 \usepackage{environ}
 \usepackage{mathtools}
 \usepackage[mathcal]{eucal}
@@ -73,23 +74,42 @@ linewidth=1pt,%
 }}
 {\NewEnviron{comment}[1]{}}
 
-% Environment for proof-rules
-\newcommand\currule{\proofRule{none}}
 \newcounter{ProofRuleCounter}
-\newenvironment{proof-rule}[2]%
-{%
+
+% Environment for proof-rules
+\declaretheoremstyle[
+bodyfont=\normalfont,%
+headfont=\sffamily\bfseries,%
+notebraces={(}{)},%
+headformat={\NAME~\NUMBER \NOTE},%
+]{simple}
+
+\theoremstyle{simple}
+\declaretheorem[name=Example,style=simple]{exmp}
+\declaretheorem[name=Example,parent=ProofRuleCounter,style=simple]{rule-example}
+
+\newcommand\currule{\proofRule{none}}
+
+\declaretheoremstyle[
+headfont=\sffamily\bfseries,%
+notefont=\sffamily\bfseries,%
+notebraces={}{},%
+bodyfont=\normalfont,%
+headpunct={},%
+headformat={\NAME~\NUMBER: \NOTE},%
+break
+]{proof-rule-style}
+
+\declaretheorem[name=Rule,style=proof-rule-style,sibling=ProofRuleCounter]{inner-rule}
+
+\newenvironment{proof-rule}[2]{%
+\begin{inner-rule}[#1]
 \renewcommand\currule{\proofRule{#1}}%
-\stepcounter{ProofRuleCounter}%
-\filbreak%
-\noindent%
-{\sffamily\textbf{\arabic{ProofRuleCounter}. #1}}%
-\list{}{%
-\leftmargin0pt
-\itemindent0pt
-\listparindent15pt
-}\item\relax%
-}%
-{\endlist}
+}{%
+\end{inner-rule}
+}
+
+% == Theorem environments ==
 
 \newcommand{\proofRule}[1]{\microtypesetup{tracking=false}\texttt{#1}\microtypesetup{tracking=true}}
 \newcommand{\isaTac}[1]{\texttt{#1}}
@@ -120,11 +140,14 @@ linewidth=1pt,%
 \end{tabularx}\\%
 }
 
-\NewEnviron{plContainer}{%
+\NewEnviron{plContainer}{% The following line break is important!
+
+\parbox{\textwidth}{%
 \setlength{\topsep}{0.2\baselineskip}%
 \begin{center}
     \BODY
 \end{center}
+}\leavevmode\newline%
 }
 
 \NewEnviron{plListEq}{%
@@ -167,24 +190,6 @@ linewidth=1pt,%
      system/.style={draw, thin, fill=red!20, rounded corners},
      code/.style={red, inner sep=0.15cm, text=black, draw, thick, rounded corners, fill=red!20}
 }
-
-% == Theorem environments ==
-
-%TODO sampe space as \paragraph
-\newtheoremstyle{simple}
-    {\topsep}   % ABOVESPACE
-    {\topsep}   % BELOWSPACE
-    {}          % BODYFONT
-    {}          % INDENT (empty value is the same as 0pt)
-    {\sffamily\bfseries} % HEADFONT
-    {.}         % HEADPUNCT
-    {5pt plus 1pt minus 1pt} % HEADSPACE
-    {}          % CUSTOM-HEAD-SPEC
-
-%\theoremstyle{definition}
-\theoremstyle{simple}
-\newtheorem{exmp}{Example}
-\newtheorem{rule-example}{Example}[ProofRuleCounter]
 
 \newpairofpagestyles{titlestyle}{
 \ofoot{Typeset on {\today} from \input{|"./version.sh"}}%
@@ -831,7 +836,7 @@ constants, and for each $i$ $c_i$ and $t_i$ have the same sort. We will write
 $s_1 \bowtie s_2$.
 
 Let $l_1,\dots, l_n$ be linear inequalities and $a_1, \dots, a_n$
-rational numbers, then a $\currule$ step has the form:
+rational numbers, then a $\currule$ step has the form
 
 \begin{plListEq}
 \proofsep& i.&
@@ -956,7 +961,7 @@ t_1 \leq t_2 \lor t_2 \leq t_1
 
 \begin{proof-rule}{la_tautology}{veriT}
 This rule is a linear arithmetic tautology which can be checked without
-sophisticated reasoning. It has either the form:
+sophisticated reasoning. It has either the form
 
 \begin{plContainer}
 \begin{plList}
@@ -1642,11 +1647,11 @@ or
 
 The term $t$ (the formula $\varphi$) contains the $\operatorname{ite}$ operator.
 Let $s_1, \dots, s_n$ be the terms starting with $\operatorname{ite}$, i.e.
-$s_i := \operatorname{ite} \psi_i\;r_i\;r'_i$, then $u_i$ has the form:
+$s_i := \operatorname{ite} \psi_i\;r_i\;r'_i$, then $u_i$ has the form
 \begin{equation*}
 	\operatorname{ite} \psi_i\;(s_i \simeq r_i)\;(s_i \simeq r'_i)
 \end{equation*}
-or 
+or
 \begin{equation*}
 	\operatorname{ite} \psi_i\;(s_i \leftrightarrow r_i)\;(s_i \leftrightarrow r'_i)
 \end{equation*}
@@ -1711,7 +1716,7 @@ to do so for only one single theory at a time.
 
 \begin{proof-rule}{and_simplify}{veriT}
 This rule simplifies an $\land$ term by applying equivalent
-transformations as long as possible. Hence, the general form is:
+transformations as long as possible. Hence, the general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -1739,7 +1744,7 @@ The possible transformations are:
 
 \begin{proof-rule}{or_simplify}{veriT}
 This rule simplifies an $\lor$ term by applying equivalent
-transformations as long as possible. Hence, the general form is:
+transformations as long as possible. Hence, the general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -1767,7 +1772,7 @@ The possible transformations are:
 
 \begin{proof-rule}{not_simplify}{veriT}
 This rule simplifies an $\neg$ term by applying equivalent
-transformations as long as possible. Hence, the general form is:
+transformations as long as possible. Hence, the general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -1788,7 +1793,7 @@ The possible transformations are:
 
 \begin{proof-rule}{implies_simplify}{veriT}
 This rule simplifies an $\rightarrow$ term by applying equivalent
-transformations as long as possible. Hence, the general form is:
+transformations as long as possible. Hence, the general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -1815,7 +1820,7 @@ The possible transformations are:
 
 \begin{proof-rule}{equiv_simplify}{veriT}
 This rule simplifies an $\leftrightarrow$ term by applying equivalent
-transformations as long as possible. Hence, the general form is:
+transformations as long as possible. Hence, the general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -1841,7 +1846,7 @@ The possible transformations are:
 
 \begin{proof-rule}{bool_simplify}{veriT}
 This rule simplifies a boolean term by applying equivalent
-transformations as long as possible. Hence, the general form is:
+transformations as long as possible. Hence, the general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -2039,7 +2044,7 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
 
 \begin{proof-rule}{eq_simplify}{veriT}
   This rule simplifies an $\simeq$ term by applying equivalent
-  transformations as long as possible. Hence, the general form is:
+  transformations as long as possible. Hence, the general form is
 
   \begin{plContainer}
     \begin{plList}
@@ -2064,7 +2069,7 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
 
 \begin{proof-rule}{div_simplify}{veriT}
 This rule simplifies a division by applying equivalent
-transformations. The general form is:
+transformations. The general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -2074,7 +2079,7 @@ i.& (t_1 / t_2) \simeq t_3
 \end{plList}
 \end{plContainer}
 
-The possible transformations are:
+\noindent The possible transformations are:
 \begin{itemize}
   \item $t/t = 1$
   \item $t/1 = t$
@@ -2086,7 +2091,7 @@ The possible transformations are:
 
 \begin{proof-rule}{prod_simplify}{veriT}
 This rule simplifies a product by applying equivalent
-transformations as long as possible. The general form is:
+transformations as long as possible. The general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -2135,7 +2140,7 @@ where $u$ is the negated numerical constant $t$.
 
 \begin{proof-rule}{minus_simplify}{veriT}
 This rule simplifies a subtraction by applying equivalent
-transformations. The general form is:
+transformations. The general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -2144,7 +2149,7 @@ i.& t_1 - t_2 \simeq u &(\currule)\\
 \end{plList}
 \end{plContainer}
 
-The possible transformations are:
+\noindent The possible transformations are:
 \begin{itemize}
     \item $t - t = 0$
     \item $t_1 - t_2 = t_3$ where $t_1$
@@ -2157,7 +2162,7 @@ The possible transformations are:
 
 \begin{proof-rule}{sum_simplify}{veriT}
 This rule simplifies a sum by applying equivalent
-transformations as long as possible. The general form is:
+transformations as long as possible. The general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -2184,7 +2189,7 @@ The possible transformations are:
 
 \begin{proof-rule}{comp_simplify}{veriT}
 This rule simplifies a comparison by applying equivalent
-transformations as long as possible. The general form is:
+transformations as long as possible. The general form is
 
 \begin{plContainer}
 \begin{plList}
@@ -2274,7 +2279,7 @@ and
 \end{plList}
 \end{plContainer}
 
-The general case is:
+The general case is
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.&
@@ -2294,7 +2299,7 @@ The general case is:
 \end{plList}
 \end{plContainer}
 
-\paragraph{Remark.} While the connective could be an $\leftrightarrow$,
+\paragraph{Remark.} While the connective could be $\leftrightarrow$,
 currently an equality is used.
 \end{proof-rule}
 
