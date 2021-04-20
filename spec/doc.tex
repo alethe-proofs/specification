@@ -40,6 +40,9 @@
 \usepackage{cite}
 \usepackage{url}
 
+\usepackage{bussproofs}
+\EnableBpAbbreviations
+
 \usepackage[english]{babel}
 \nonfrenchspacing
 
@@ -169,6 +172,24 @@ break
   \end{align*}%
 \endgroup
 }
+\newcommand\currule{\proofRule{none}}
+\newcounter{ProofRuleCounter}
+\newenvironment{proof-rule}[2]%
+{%
+  \renewcommand\currule{\proofRule{#1}}%
+  \stepcounter{ProofRuleCounter}%
+  \par\vspace{\baselineskip}\noindent
+  \sffamily%
+  % {\textbf{\arabic{ProofRuleCounter}. \texttt{#1}}} {\tiny [#2]}%
+  {\textbf{\arabic{ProofRuleCounter}. \texttt{#1}}}%
+  \par\vspace{\baselineskip}\noindent\ignorespaces
+}%
+{%
+}
+
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}[example]
+
 
 % == Commands for Grammar ==
 \definecolor{SmtBlue}{HTML}{00007f}
@@ -177,6 +198,59 @@ break
 \newcommand{\grT}[1]{\textcolor{SmtBlue}{\texttt{#1}}}
 \newcommand{\grRule}{\quad\Coloneqq\quad}
 \newcommand{\grOr}{\quad|\quad}
+
+
+\newcommand\vvthinspace{\kern+0.041667em}
+\newcommand\vthinspace{\kern+0.083333em}
+\newcommand\negvthinspace{\kern-0.083333em}
+\newcommand\negvvthinspace{\kern-0.041667em}
+
+\newcommand\metafun[1]{\ensuremath{\mathit{#1}}}
+\newcommand\sort[1]{\mathsf{#1}}
+\newcommand\sym[1]{\mathsf{#1}}
+\newcommand\GAMMA{\mathrm{\Gamma}}
+\newcommand\emptyctx{\varnothing}
+\newcommand\substname{\metafun{subst}}
+\newcommand\subname{\metafun{repl}}
+\newcommand\subst[1]{\substname(#1)}
+\newcommand\substapp[2]{#1(#2)}
+
+\newcommand\judgei[1]{\proofsep#1}
+\newcommand\judge[2]{#1\;\vthinspace\proofsep#2}
+\newcommand\judgealti[1]{\proofsepI#1}
+\newcommand\judgealt[2]{#1\;\vthinspace\proofsepI#2}
+
+
+\newcommand\eqa{=_{\alpha}}
+\newcommand\eqb{=_{\beta}}
+\newcommand\eqab{=_{\alpha\beta}}
+
+\newcommand\Refl{\textsc{Refl}}
+\newcommand\Taut{\textsc{Taut}}
+\newcommand\Tautof[1]{\Taut\smash{\ensuremath{_{#1}}}}
+\newcommand\TautT{\Tautof{\mathcal T}}
+\newcommand\Trans{\textsc{Trans}}
+\newcommand\Cong{\textsc{Cong}}
+\newcommand\Bind{\textsc{Bind}}
+\newcommand\Sko{\textsc{Sko}}
+\newcommand\SkoEx{\Sko\smash{\ensuremath{_{\,\exists}}}}
+\newcommand\SkoAll{\Sko\smash{\ensuremath{_{\,\forall}}}}
+
+\newcommand\Choicename{\varepsilon}
+\newcommand\Choice[2]{\Choicename #1.\>#2}
+\newcommand\All[2]{\forall #1.\;#2}
+\newcommand\Ex[2]{\exists #1.\;#2}
+\newcommand\Not{{\lnot}\,}
+\newcommand\Let{\textsc{Let}}
+
+\newcommand\FV[1]{\metafun{FV}(#1)}
+\newcommand\BV[1]{\metafun{BV}(#1)}
+\newcommand\var[1]{\metafun{V}(#1)}
+\newcommand\intro[1]{\metafun{intr}(#1)}
+
+\newcommand\axiomstrut{\vrule height 1.25ex depth 0pt width 0pt} %% TYPESETTING
+
+\DeclareDocumentCommand{\enum}{ O{n} m O{,} O{} O{1}}{#2_#5#4#3\dots #3#2_{#1}#4}
 
 % == Tikz Setup ==
 \usetikzlibrary{tikzmark,positioning}
@@ -190,6 +264,25 @@ break
      system/.style={draw, thin, fill=red!20, rounded corners},
      code/.style={red, inner sep=0.15cm, text=black, draw, thick, rounded corners, fill=red!20}
 }
+
+% Hack to make line numbers less ugly
+\renewcommand{\theFancyVerbLine}{\footnotesize{\arabic{FancyVerbLine}}\hspace{-0.5em}}
+
+% == Theorem environments ==
+
+%TODO sampe space as \paragraph
+\newtheoremstyle{simple}
+    {\topsep}   % ABOVESPACE
+    {\topsep}   % BELOWSPACE
+    {}          % BODYFONT
+    {}          % INDENT (empty value is the same as 0pt)
+    {\sffamily\bfseries} % HEADFONT
+    {.}         % HEADPUNCT
+    {5pt plus 1pt minus 1pt} % HEADSPACE
+    {}          % CUSTOM-HEAD-SPEC
+
+%\theoremstyle{definition}
+\theoremstyle{simple}
 
 \newpairofpagestyles{titlestyle}{
 \ofoot{Typeset on {\today} from \input{|"./version.sh"}}%
@@ -391,6 +484,251 @@ assumption $\varphi$ and a formula $\psi$ proved by intermediate steps
 from $\varphi$, the \proofRule{subproof} step deduces $\neg \varphi \lor
 \psi$ and discharges $\varphi$.
 
+
+\section{The Concrete Semantics}
+\label{sec:semantic}
+
+\subsection{Abstract Inference System}  % or Rules, or Rules of Inference
+\label{sec:inference-system}
+
+The inference rules used by our framework depend on a notion of
+\emph{context} defined by the grammar
+\[\GAMMA \,::=\, \emptyctx \,\mid\, \GAMMA,\, x \,\mid\, \GAMMA,\,\bar x_n\mapsto \bar s_n\]
+The empty context $\emptyctx$ is also denoted by a blank.
+Each context entry either \emph{fixes} a variable~$x$ or defines a
+\emph{substitution} $\{\bar x_n \mapsto \bar s_n\}$.  Any variables arising in
+the terms $\bar s_n$
+will typically have been introduced in the context $\GAMMA$ on the left, but
+this is not required.
+If a context introduces the same variable several times, the rightmost
+entry shadows the others.
+\par
+Abstractly, a context $\GAMMA$ fixes a set of variables
+and specifies a substitution
+$\subst{\GAMMA}$%
+. The substitution is the identity for $\emptyctx$ and is
+defined as follows in the other cases:
+%
+\begin{align*}
+  \subst{\GAMMA,\, x} & = \subst{\GAMMA}[x \mapsto x]
+  \, %%% TYPESETTING
+&
+  \subst{\GAMMA,\, \bar x_n \mapsto \bar t_n} & = \subst{\GAMMA} \mathrel\circ \{\bar x_n \mapsto \bar t_n\}
+\end{align*}
+In the first equation,
+the $[x \mapsto x]$ update shadows any
+replacement of $x$ induced by $\GAMMA$.
+The examples below illustrate this subtlety:
+\begin{align*}
+\subst{x \mapsto 7,\, x \mapsto \sym{g}(x)} & = \{x \mapsto \sym{g}(7)\}
+\\
+\subst{x \mapsto 7,\, x,\, x \mapsto \sym{g}(x)} & = \{x \mapsto \sym{g}(x)\}
+%\\
+%\subst{x,\, y \mapsto x,\, x,\, z \mapsto x} & = \{x \mapsto \sym{g}(x)\}
+\end{align*}%
+We write $\substapp{\GAMMA}{t}$ to abbreviate
+the capture-avoiding substitution $\subst{\GAMMA}(t)$.
+
+Transformations of terms (and formulas) are justified by judgments of
+the form $\judge{\GAMMA}{\allowbreak t\simeq\nobreak u}$, where $\GAMMA$ is a context, $t$ is an unprocessed term, and $u$ is the
+corresponding processed term. The free variables in $t$ and $u$ must appear in
+the context $\GAMMA$. Semantically, the judgment expresses the equality of the
+terms $\substapp{\GAMMA}{t}$ and $u$, universally quantified on variables fixed by~$\GAMMA$.
+Crucially, the substitution applies only on the left-hand side of the equality.
+
+The inference rules for the transformations rely on equations that are presented here, then the rules are
+presented below, followed by explanations.
+\begin{gather}
+  \label{eq:choicei}
+  \models (\Ex{x}{\varphi[x]}) \implies \varphi[\Choice{x}{\varphi}]
+  \tag{\ensuremath{\Choicename_1}}
+  \\
+  \label{eq:choiceii}
+  \models (\forall x.\;\varphi \simeq \psi) \implies (\Choice{x}{\varphi}) \simeq (\Choice{x}{\psi})
+  \tag{\ensuremath{\Choicename_2}}
+  \\
+  % \intertext{and}
+  \label{eq:let}
+  \models (\mathrm{let}~\bar x_n \simeq \bar s_n~\mathrm{in}~t[\bar x_n])
+  \simeq t[\bar s_n]
+  \tag{\ensuremath{\mathrm{let}}}
+\end{gather}
+
+The rules are:
+%
+\noindent
+\begin{center}
+    \AXC{\strut}
+    \RL{{\footnotesize \TautT}%
+      \quad\mbox{if\vthinspace{} $\models_{\!\!{\mathcal T}} {\substapp{\GAMMA}{t} \simeq u}$}}
+    \UIC{\strut$\judge{\GAMMA}{t\simeq u}$}
+    \DP
+    \qquad
+    \AXC{\strut$\judge{\GAMMA}{s\simeq t}\quad\judge{\GAMMA}{t\simeq u}$}
+    \RL{{\footnotesize \Trans}\quad\mbox{if\vthinspace{} $\substapp{\GAMMA}{t} = t$}}
+    \UIC{\strut$\judge{\GAMMA}{s\simeq u}$}
+    \DP
+
+\vskip.7\abovedisplayskip
+
+    \AXC{\strut$\bigl(\judge{\GAMMA}{t_i\simeq u_i}\bigr){}_{i=1}^n$}
+    \RL{{\footnotesize \Cong}}
+    \UIC{\strut$\judge{\GAMMA}{\sym{f}(\bar t_n)\simeq \sym{f}(\bar u_n)}$}
+    \DP
+    \ \ \
+    \AXC{\strut$\judge{\GAMMA,\,y,\,x\mapsto y}{\varphi\simeq\psi}$}
+    \RL{{\footnotesize \Bind}\quad\mbox{if\vthinspace{} $y \notin \FV{Qx.\>\varphi} \mathrel\cup \var{\GAMMA}$}}
+    \UIC{\strut$\judge{\GAMMA}{(Qx.\>\varphi)\simeq (Qy.\>\psi)}$}
+    \DP
+
+\vskip.7\abovedisplayskip
+
+    \AXC{\strut$\judge{\GAMMA,\, x\mapsto (\Choice{x}{\varphi})}{\varphi\simeq \psi}$}
+    \RL{{\footnotesize \SkoEx}}
+    \UIC{\strut$\judge{\GAMMA}{(\Ex{x}{\varphi})\simeq \psi}$}
+    \DP
+    \qquad
+    \AXC{\strut$\judge{\GAMMA,\, x\mapsto (\Choice{x}{\Not\varphi})}{\varphi\simeq \psi}$}
+    \RL{{\footnotesize \SkoAll}}
+    \UIC{\strut$\judge{\GAMMA}{(\All{x}{\varphi})\simeq \psi}$}
+    \DP
+
+\vskip.7\abovedisplayskip
+
+    \AXC{\strut$\bigl(\judge{\GAMMA}{r_i \simeq s_i}\bigr){}_{i=1}^n
+    \quad
+    \judge{\GAMMA,\,\bar x_n\mapsto \bar s_n}{t\simeq u}$}
+    \RL{{\footnotesize \Let}\quad\mbox{if\vthinspace{}
+    $\substapp{\GAMMA}{s_i} = s_i$ \,for all $i \in [n]$}}
+    \UIC{\strut$\judge{\GAMMA}{(\mathrm{let}\ \bar x_n \simeq \bar r_n\ \mathrm{in}\ t)\simeq u}$}
+    \DP
+\end{center}
+
+\noindent
+%These rules deserve some explanation:
+%
+\begin{itemize}
+\item \TautT{} relies on an oracle $\models_{\mathcal T}$
+to derive arbitrary lemmas in a theory $\mathcal T\!$.
+In practice, the oracle will produce some
+kind of certificate to justify the inference.
+An important special case, for
+which we use the name \Refl{}, is syntactic equality up to renaming of bound
+variables; the side condition
+is then $\substapp{\GAMMA}{t} \eqa u$.
+(We use $\eqa$ instead of $=$ because applying a substitution can
+rename bound variables.)
+
+
+\smallskip
+
+\item \Trans{} needs the side condition because the term $t$ appears both on
+the left-hand side of $\simeq$ (where it is subject to $\GAMMA$'s substitution)
+and on the right-hand side (where it is not).
+Without it, the two occurrences of $t$ in the
+antecedent could denote different terms.
+
+\smallskip
+
+\item \Cong{} can be used for any function symbol $\sym{f}$,
+  including the logical connectives. % and other predicates.
+
+\smallskip
+
+\item \Bind{} is a congruence rule for quantifiers. The rule
+also justifies the renaming of the bound variable
+(from $x$ to $y$).  In the antecedent, the
+renaming is expressed by a substitution in the context.
+If $x = y$,
+the context is $\GAMMA,\, x,\, x \mapsto x$, which has the same meaning as
+$\GAMMA,\, x$. The side condition prevents an unwarranted variable
+capture: The new variable should not be a free variable in the formula where the
+renaming occurs ($y \notin \FV{Qx.\>\varphi}$), and should be fresh in the
+context ($y\notin \var{\GAMMA}$, where $\var{\GAMMA}$ denotes the set of all
+variables occurring in $\GAMMA$).  In particular, $y$ should not appear fixed
+or on either side of a substitution in the context.
+\smallskip
+
+\item \SkoEx{} and \SkoAll{} exploit (\ref{eq:choicei})
+to replace a quantified variable with a suitable witness, simulating
+skolemization. We can think of the $\Choicename$ expression in each rule
+abstractly as a fresh function symbol that takes any fixed variables it
+depends on as arguments. In the antecedents, the replacement is performed
+by the context.
+
+\smallskip
+
+\item \Let{} exploits (\ref{eq:let}) to expand a `let'
+expression. Again, a substitution is used. 
+The terms~$\bar r_n$ assigned to the variables $\bar x_n$
+can be transformed into terms $\bar s_n$.
+\end{itemize}
+
+The antecedents of all the rules inspect subterms structurally, without
+modifying them. Modifications to the term on the left-hand side are delayed;
+the substitution is applied only in \Taut{}. This is crucial to obtain compact
+proofs that can be checked efficiently.
+Some of the side conditions may look computationally expensive,
+but there are techniques to compute them fairly efficiently. Furthermore, by
+systematically renaming variables in \Bind, we can satisfy most of the side conditions
+trivially.
+
+The set of rules can be extended to cater for arbitrary transformations that
+can be expressed as equalities, using Hilbert choice to represent fresh
+symbols if necessary. The usefulness of Hilbert choice for proof
+reconstruction is well known
+\cite{de-nivelle-2005,paulson-susanto-2007,boehme-weber-2010}, but we push
+the idea further and use it to simplify the inference system and make it more
+uniform.
+
+\begin{example}
+\label{ex:let}
+The following derivation tree justifies the expansion of a `let' expression:
+%
+\[
+    \AXC{\axiomstrut}
+    \RL{{\footnotesize $\Cong$}}
+    \UIC{\strut$\judgei{\sym{a} \simeq \sym{a}}$}
+      \AXC{\axiomstrut}
+      \RL{{\footnotesize \Refl}}
+      \UIC{\strut$\judge{x\mapsto\sym{a}}{x\simeq \sym{a}}$}
+        \AXC{\axiomstrut}
+        \RL{{\footnotesize \Refl}}
+        \UIC{\strut$\judge{x\mapsto\sym{a}}{x\simeq \sym{a}}$}
+      \RL{{\footnotesize \Cong}}
+      \BIC{\strut$\judge{x\mapsto\sym{a}}{\sym{p}(x, x)\simeq \sym{p}(\sym{a}, \sym{a})}$}
+    \RL{{\footnotesize \Let}}
+    \BIC{\strut$\judgei{(\mathrm{let}\ x\simeq \sym{a}\ \mathrm{in}\ \sym{p}(x
+        , x))\simeq \sym{p}(\sym{a},\sym{a})}$}
+    \DP
+\]
+\end{example}
+
+\subsection{Correctness}
+\label{sec:correctness}
+\newcommand\thys{\mathcal T_1 \mathrel\cup \cdots \mathrel\cup \mathcal T_n \mathrel\cup {\simeq} \mathrel\cup \Choicename \mathrel\cup \mathrm{let}}
+
+\begin{theorem}[Soundness of Inferences~{\cite[Theorem 11]{barbosa-2019}}]
+  \label{thm:sound-calc}
+  \,If the judgment\/ $\judge{\GAMMA}{t\simeq u}$ is derivable
+  using the original inference system
+  with the theories $\enum{\mathcal T}${\rm,} then\/
+  $\models_{\mathcal T}{\substapp{\GAMMA}{t} \simeq u}$ with\/ $\mathcal T = \thys$.
+\end{theorem}
+\begin{proof}
+  See~\cite[Theorem 11]{barbosa-2019}
+\end{proof}
+
+
+\subsection{More Concrete Rules}
+\label{sec:concrete-rules}
+
+The high-level rules presented in the previous paragraph are useful for
+presentation purpose, but they are hard to check. We specialize them by reducing
+applicability. In particular the \Taut rule is very hard to check und is
+specialized.
+
+
 \paragraph{Tautologous Rules and Simple Deduction.}
 Most rules introduce tautologies. One example is
 the \proofRule{and\_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
@@ -400,12 +738,71 @@ connectives during preprocessing. For example, the \proofRule{implies}
 rule removes an implication: From $\varphi_1 \implies\varphi_2$
 it deduces $\neg \varphi_1 \lor \varphi_2$.
 
+
+\paragraph{Skolemization and Other Preprocessing Steps.}
+One typical example for a rule with context is the \proofRule{sko\_ex}
+rule, which is used to express Skolemization of an existentially
+quantified variable. It is a applied to a premise $n$ with a context
+that maps a variable $x$ to the appropriate Skolem term and produces
+a step $m$ ($m > n$) where the variable is quantified.
+
+\begin{plListEq}
+  \Gamma, x\mapsto (\epsilon x.\varphi) &\proofsep n.&\varphi \simeq \psi &(\proofRule{\dots})\\
+  \Gamma &\proofsep m.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko\_ex};\: n)
+\end{plListEq}
+
+\begin{example}
+To illustrate how such a rule is applied, consider the following example
+taken from~\cite{barbosa-2019}. Here the term $\neg p(\epsilon x.\neg
+p(x))$ is Skolemized. The \proofRule{refl} rule expresses
+a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
+is functional congruence, and \proofRule{sko\_forall} works like
+\proofRule{sko\_ex}, except that the choice term is $\epsilon x.\neg\varphi$.
+\begin{plListEqAlgn}
+  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \epsilon x.\neg p(x)  &(\proofRule{refl})\\
+  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 1)\\
+                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{sko\_forall};\: 2)\\
+                                  \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 3)
+ \end{plListEqAlgn}
+\end{example}
+
+
+\paragraph{Linear Arithmetic.}
+Proofs for linear arithmetic use a number of straightforward rules,
+such as \proofRule{la\_totality}: $t_1 \leq t_2 \lor t_2 \leq t_1$
+and the main rule \proofRule{la\_generic}.  The conclusion of an
+\proofRule{la\_generic} step is a tautology $\neg \varphi_1, \neg
+\varphi_2, \dots, \neg \varphi_n$ where the $\varphi_i$ are linear
+(in)equalities. Checking the validity of this formula amounts to
+checking the unsatisfiability of the system of linear equations
+$\varphi_1, \varphi_2, \dots, \varphi_n$.  The annotation of an
+\proofRule{la\_generic} step contains a coefficient for each (in)equality.
+The result of forming the linear combination of the literals with
+the coefficients is a trivial inequality between constants.
+
+\begin{example}
+The following example is the proof generated by veriT for the unsatisfiability
+of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
+\begin{plListEq}
+\proofsep& 1.& (3 < x) \lor (x + y < 1)           &(\proofRule{assume})\\
+\proofsep& 2.& x\simeq 2                          &(\proofRule{assume})\\
+\proofsep& 3.& 0\simeq y                          &(\proofRule{assume})\\
+\proofsep& 4.& \neg (3<x) \lor \neg (x\simeq 2)   &(\proofRule{la\_generic};\: ;1.0, 1.0)\\
+\proofsep& 5.& \neg (3<x)                         &(\proofRule{resolution}; 2, 4)\\
+\proofsep& 6.& x + y < 1                          &(\proofRule{resolution}; 1, 5)\\
+\proofsep& 7.& \neg (x + y < 1) \lor \neg (x\simeq 2) \lor \neg (0 \simeq y)
+&(\proofRule{la\_generic};\: ;1.0, 1.0, 1.0)\\
+\proofsep& 8.& \bot                               &(\proofRule{resolution};\:\; 7, 6, 2, 3)
+\end{plListEq}
+\end{example}
+
+
 \paragraph{Resolution.}
 
 CDCL($T$)-based SMT solvers, and especially their SAT solvers,
 are fundamentally based on clauses. Hence, {\formatName} also uses
 clauses.  Nevertheless, since SMT solvers do not enforce a strict
-clausal normal-form, usual disjunction is also usedhttps://bugs.launchpad.net/ubuntu/+source/unity/+bug/1463112. The usage of
+clausal normal-form, usual disjunction is also used
 clauses simplifies checking the rules.  For example, in the case of
 resolution there is a clear distinction between unit clauses where
 the sole literal starts with a disjunction, and non-unit clauses.  The
@@ -438,85 +835,6 @@ aids reconstruction because the implicit reordering of equalities
 (see below) obscure which terms have been used as instances.
 Existential quantifiers are handled by Skolemization.
 
-\paragraph{Skolemization and Other Preprocessing Steps.}
-The format uses the notion of a \emph{context} to reason about bound variables.
-As defined above, a context is a (possibly empty) list of variables or
-variable term pairs. The context is modified like a stack: rules can
-either append elements to the right of the current context or remove
-elements from the right. A context $\Gamma$ corresponds to a substitution
-$\sigma_{\Gamma}$. This substitution is recursively defined.  If $\Gamma$
-is the empty list, then $\sigma_{\Gamma}$ is the empty substitution,
-i.e., the identity function. If $\Gamma$ is of the form $\Gamma', x$
-then $\sigma_{\Gamma}(v) = \sigma_{\Gamma'}(v) \text{ if } v\neq x,
-\text{ otherwise } \sigma_{\Gamma}(v) = x$. Finally, if $\Gamma =
-\Gamma', x\mapsto \varphi$ then  $\sigma_{\Gamma', x\mapsto \varphi}
-= \sigma_{\Gamma'}\circ [\varphi/x]$. Hence, the context allows one to
-build a substitution with the additional possibility to overwrite prior
-substitutions for a variable.
-
-Contexts are processed step by step: If one step extends the context this
-new context is used in all subsequent steps in the step list until the
-context is modified again. Only a limited number of rules can be applied
-when the context is non-empty. All of those rules have equalities as
-premises and conclusion. A step with term $\varphi_1 \simeq \varphi_2$ and
-context $\Gamma$ expresses the judgment that $\varphi_1\sigma_{\Gamma}
-= \varphi_2$.
-
-One typical example for a rule with context is the \proofRule{sko\_ex}
-rule, which is used to express Skolemization of an existentially
-quantified variable. It is a applied to a premise $n$ with a context
-that maps a variable $x$ to the appropriate Skolem term and produces
-a step $m$ ($m > n$) where the variable is quantified.
-
-\begin{plListEq}
-  \Gamma, x\mapsto (\epsilon x.\varphi) &\proofsep n.&\varphi \simeq \psi &(\proofRule{\dots})\\
-  \Gamma &\proofsep m.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko\_ex};\: n)
-\end{plListEq}
-
-\begin{exmp}
-To illustrate how such a rule is applied, consider the following example
-taken from~\cite{barbosa-2019}. Here the term $\neg p(\epsilon x.\neg
-p(x))$ is Skolemized. The \proofRule{refl} rule expresses
-a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
-is functional congruence, and \proofRule{sko\_forall} works like
-\proofRule{sko\_ex}, except that the choice term is $\epsilon x.\neg\varphi$.
-\begin{plListEqAlgn}
-  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \epsilon x.\neg p(x)  &(\proofRule{refl})\\
-  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 1)\\
-                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{sko\_forall};\: 2)\\
-                                  \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 3)
- \end{plListEqAlgn}
-\end{exmp}
-
-\paragraph{Linear Arithmetic.}
-Proofs for linear arithmetic use a number of straightforward rules,
-such as \proofRule{la\_totality}: $t_1 \leq t_2 \lor t_2 \leq t_1$
-and the main rule \proofRule{la\_generic}.  The conclusion of an
-\proofRule{la\_generic} step is a tautology $\neg \varphi_1, \neg
-\varphi_2, \dots, \neg \varphi_n$ where the $\varphi_i$ are linear
-(in)equalities. Checking the validity of this formula amounts to
-checking the unsatisfiability of the system of linear equations
-$\varphi_1, \varphi_2, \dots, \varphi_n$.  The annotation of an
-\proofRule{la\_generic} step contains a coefficient for each (in)equality.
-The result of forming the linear combination of the literals with
-the coefficients is a trivial inequality between constants.
-
-\begin{exmp}
-The following example is the proof generated by veriT for the unsatisfiability
-of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
-\begin{plListEq}
-\proofsep& 1.& (3 < x) \lor (x + y < 1)           &(\proofRule{assume})\\
-\proofsep& 2.& x\simeq 2                          &(\proofRule{assume})\\
-\proofsep& 3.& 0\simeq y                          &(\proofRule{assume})\\
-\proofsep& 4.& \neg (3<x) \lor \neg (x\simeq 2)   &(\proofRule{la\_generic};\: ;1.0, 1.0)\\
-\proofsep& 5.& \neg (3<x)                         &(\proofRule{resolution}; 2, 4)\\
-\proofsep& 6.& x + y < 1                          &(\proofRule{resolution}; 1, 5)\\
-\proofsep& 7.& \neg (x + y < 1) \lor \neg (x\simeq 2) \lor \neg (0 \simeq y)
-&(\proofRule{la\_generic};\: ;1.0, 1.0, 1.0)\\
-\proofsep& 8.& \bot                               &(\proofRule{resolution};\:\; 7, 6, 2, 3)
-\end{plListEq}
-\end{exmp}
-
 \paragraph{Implicit Reordering of Equalities.}
 In addition to the explicit steps, veriT might reorder equalities, i.e.,
 apply symmetry of the equality predicate, without generating steps. When
@@ -526,16 +844,21 @@ case is the instantiation of universally quantified variables. If an
 instantiated variable appears below an equality, then the equality might
 have an arbitrary order after instantiation.
 
-\section{The Concrete Semantics}
-\label{sec:semantic}
+\paragraph{Lemmas}
+Our proof format supports lemmas that introduces local assumption and derives a
+new theorems, like:
 
-\todo[inline]{Write!}
+\begin{minted}[linenos]{smtlib2.py -x}
+(anchor :step t9 :args ())
+(assume t9.t1 (cl (= (+ 2 2) 5)))
+(step   t9.t2 (cl (= (+ 2 2) 4)) :plus_simplify)
+(step   t9.t3 (cl (= 4 5)) :rule trans :premises (t9.t1 t9.t2))
+(step   t9 (cl (not (= (+2 2) 5)) (= 4 5)))
+\end{minted}
 
-\section{The Concrete Syntax}
-\label{sec:syntax}
+While not part of our rules, such lemmas trivially compile down to the rules by
+inlining all assumptions in each step.
 
-% Hack to make line numbers less ugly
-\renewcommand{\theFancyVerbLine}{\footnotesize{\arabic{FancyVerbLine}}\hspace{-0.5em}}
 \begin{figure}[t]
 \begin{minted}[linenos]{smtlib2.py -x}
 (assume h1 (not (p a)))
@@ -559,6 +882,9 @@ have an arbitrary order after instantiation.
 a subproof renames bound variables (line 4--8); the proof finishes with
 instantiaton and resolution steps (line 10--15)}\label{fig:proof_ex}
 \end{figure}
+
+\section{The Concrete Syntax}
+\label{sec:syntax}
 
 The concrete text representation of the {\formatName}  proofs
 is based on the SMT-LIB standard. Figure~\ref{fig:proof_ex} shows an
@@ -688,6 +1014,7 @@ $\grT{define-fun}$ command to define shorthand 0-ary functions for
 the $\grT{(choice }\dots\grT{)}$ terms needed. Without this option,
 no $\grT{define-fun}$ commands are issued and the constants are inlined.
 
+%TODO: Add proof-relevante options
 \section{List of Proof Rules}
 \label{sec:rules}
 
