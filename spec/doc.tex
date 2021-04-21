@@ -1007,7 +1007,7 @@ no $\grT{define-fun}$ commands are issued and the constants are inlined.
 \section{List of Proof Rules}
 \label{sec:rules}
 
-The following lists all rules produced by veriT. We have sorted them:
+The following lists all rules produced by veriT. We have sorted them by type:
 
 
 \begin{description}
@@ -1154,6 +1154,10 @@ where $\varphi$ is equivalent to a formula asserted in the input problem.
 \proofsep& i.& \neg (\neg \neg \varphi) , \varphi &(\currule)\\
 \end{plList}
 \end{plContainer}
+
+\paragraph{Remark.} This rule is useful to remove double negations from a
+clause. Take the clause with the double negation and resolve on \(\varphi\).
+
 \end{proof-rule}
 
 \subsection{Arithmetic Rules}
