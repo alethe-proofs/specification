@@ -474,6 +474,9 @@ from $\varphi$, the \proofRule{subproof} step deduces $\neg \varphi \lor
 \section{The Concrete Semantics}
 \label{sec:semantic}
 
+Most of the content is taken from the presentation and the correctness proof of
+the format~\cite{barbosa-2019}.
+
 \subsection{Abstract Inference System}  % or Rules, or Rules of Inference
 \label{sec:inference-system}
 
@@ -1004,9 +1007,30 @@ no $\grT{define-fun}$ commands are issued and the constants are inlined.
 \section{List of Proof Rules}
 \label{sec:rules}
 
-The following lists all rules produced by veriT (Sect.~{sec:standard-rules}) and
-one experimental rule that is not yet properly defined
-(Sect~\ref{sec:exp-rules}).
+The following lists all rules produced by veriT. We have sorted them:
+
+
+\begin{description}
+\item[Main Rules (Sect.~\ref{sec:main-rules})] contains the rules that justify
+  the existence of the proof format, namely the \proofRule{bind} and
+  \proofRule{Subproof} rules.
+\item[Skolemization Rules (Sect.~\ref{sec:skolem-rules})] that uses Hilbert choice.
+\item[Basic Proof Rules (Sect.~\ref{sec:basic-rules}).]
+\item[Arithmetic Rules (Sect.~\ref{sec:arith-rules}).]
+\item[Quantifier Rules (Sect.~\ref{sec:quantifier-rules})] that shows how to instantiate a formula.
+\item[SAT handling (Sect.~\ref{sec:resolution-rules})] where resolution and
+  removal of duplicated literals are presented.
+\item[Clausification of] Boolean operators
+  (Sect.~\ref{sec:clausification-bools}) and IfThenElse
+  (Sect.~\ref{sec:ite-rules}) where structure is moved from terms to the clause
+  structure.
+\item[Simplifications (Sect.~\ref{sec:simplification-rules})] are a very
+  important part of any SMT solver. veriT provides very detailed rules. To
+  simplify checking, we encourage users to write one step per theory instead of
+  combining all simplifications in a single step.
+\item[Term Reshaping (Sect.~\ref{sec:unsorted-rules})] that transform a term by
+  adding or removing variables.
+\end{description}
 
 
 \subsection{Main Rules}
@@ -1862,9 +1886,8 @@ with $1 \leq k \leq n$.
 \end{proof-rule}
 
 
-\subsection{If-Then-Else Rules}
+\subsection{Clausification of If-Then-Else}
 \label{sec:ite-rules}
-
 
 
 \begin{proof-rule}{ite1}{veriT}
@@ -1943,43 +1966,6 @@ with $1 \leq k \leq n$.
 \end{plContainer}
 \end{proof-rule}
 
-\begin{proof-rule}{ite_intro}{veriT}
-Either 
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.& t \simeq (t' \land u_1 \land \dots \land u_n) &(\currule)\\
-\end{plList}
-\end{plContainer}
-or
-\begin{plContainer}
-\begin{plList}
-\proofsep& i.&
-\varphi \leftrightarrow (\varphi' \land u_1 \land \dots \land u_n) &(\currule)\\
-\end{plList}
-\end{plContainer}
-
-The term $t$ (the formula $\varphi$) contains the $\operatorname{ite}$ operator.
-Let $s_1, \dots, s_n$ be the terms starting with $\operatorname{ite}$, i.e.
-$s_i := \operatorname{ite} \psi_i\;r_i\;r'_i$, then $u_i$ has the form
-\begin{equation*}
-	\operatorname{ite} \psi_i\;(s_i \simeq r_i)\;(s_i \simeq r'_i)
-\end{equation*}
-or
-\begin{equation*}
-	\operatorname{ite} \psi_i\;(s_i \leftrightarrow r_i)\;(s_i \leftrightarrow r'_i)
-\end{equation*}
-if $s_i$ is of sort $\mathbf{Bool}$. The term $t'$ (the formular
-$\varphi'$) is equal to the term $t$ (the formular $\varphi'$) up to the
-reordering of equalities where one argument is an $\operatorname{ite}$
-term.
-
-\paragraph{Remark.} This rule stems from the introduction of fresh
-constants for if-then-else terms inside veriT. Internally $s_i$ is a new
-constant symbol and the $\varphi$ on the right side of the equality is
-$\varphi$ with the if-then-else terms replaced by the constants. Those
-constants are unfolded during proof printing. Hence, the slightly strange
-form and the reordering of equalities.
-\end{proof-rule}
 
 
 \subsection{Simplifications}
@@ -2650,7 +2636,7 @@ i.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
 \end{plContainer}
 \end{proof-rule}
 
-\subsection{Unsorted}
+\subsection{Term Reshaping}
 \label{sec:unsorted-rules}
 
 
@@ -2682,13 +2668,51 @@ or $\bot$ it is ignored.
 \end{proof-rule}
 
 
-\subsection{Experimental Proof Rules}
-\label{sec:exp-rules}
+\begin{proof-rule}{ite_intro}{veriT}
+Either 
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& t \simeq (t' \land u_1 \land \dots \land u_n) &(\currule)\\
+\end{plList}
+\end{plContainer}
+or
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.&
+\varphi \leftrightarrow (\varphi' \land u_1 \land \dots \land u_n) &(\currule)\\
+\end{plList}
+\end{plContainer}
 
-\begin{proof-rule}{deep_skolemize}{veriT}
-  This rule is only emitted when the option \texttt{--enable-deep-skolem}
-  is given. This option is experimental and should not be used.
+The term $t$ (the formula $\varphi$) contains the $\operatorname{ite}$ operator.
+Let $s_1, \dots, s_n$ be the terms starting with $\operatorname{ite}$, i.e.
+$s_i := \operatorname{ite} \psi_i\;r_i\;r'_i$, then $u_i$ has the form
+\begin{equation*}
+	\operatorname{ite} \psi_i\;(s_i \simeq r_i)\;(s_i \simeq r'_i)
+\end{equation*}
+or
+\begin{equation*}
+	\operatorname{ite} \psi_i\;(s_i \leftrightarrow r_i)\;(s_i \leftrightarrow r'_i)
+\end{equation*}
+if $s_i$ is of sort $\mathbf{Bool}$. The term $t'$ (the formular
+$\varphi'$) is equal to the term $t$ (the formular $\varphi'$) up to the
+reordering of equalities where one argument is an $\operatorname{ite}$
+term.
+
+\paragraph{Remark.} This rule stems from the introduction of fresh
+constants for if-then-else terms inside veriT. Internally $s_i$ is a new
+constant symbol and the $\varphi$ on the right side of the equality is
+$\varphi$ with the if-then-else terms replaced by the constants. Those
+constants are unfolded during proof printing. Hence, the slightly strange
+form and the reordering of equalities.
 \end{proof-rule}
+
+% \subsection{Experimental Proof Rules}
+% \label{sec:exp-rules}
+
+% \begin{proof-rule}{deep_skolemize}{veriT}
+%   This rule is only emitted when the option \texttt{--enable-deep-skolem}
+%   is given. This option is experimental and should not be used.
+% \end{proof-rule}
 
 \bibliographystyle{plain}
 \bibliography{bib}
