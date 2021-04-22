@@ -99,7 +99,7 @@ notefont=\sffamily\bfseries,%
 notebraces={}{},%
 bodyfont=\normalfont,%
 headpunct={},%
-headformat={\NAME~\NUMBER: \NOTE},%
+headformat={\NAME~\NUMBER:\NOTE},%
 break
 ]{proof-rule-style}
 
@@ -255,21 +255,6 @@ break
 \renewcommand{\theFancyVerbLine}{\footnotesize{\arabic{FancyVerbLine}}\hspace{-0.5em}}
 
 % == Theorem environments ==
-
-%TODO sampe space as \paragraph
-\newtheoremstyle{simple}
-    {\topsep}   % ABOVESPACE
-    {\topsep}   % BELOWSPACE
-    {}          % BODYFONT
-    {}          % INDENT (empty value is the same as 0pt)
-    {\sffamily\bfseries} % HEADFONT
-    {.}         % HEADPUNCT
-    {5pt plus 1pt minus 1pt} % HEADSPACE
-    {}          % CUSTOM-HEAD-SPEC
-
-%\theoremstyle{definition}
-\theoremstyle{simple}
-
 \newpairofpagestyles{titlestyle}{
 \ofoot{Typeset on {\today} from \input{|"./version.sh"}}%
 \ifoot{\ccby}%
@@ -389,7 +374,7 @@ for processing, such as Skolemization, renaming of variables, and other
 manipulations of bound variables~\cite{barbosa-2019}.
 
 At the end of a document Section~\ref{sec:rules} contains a full list
-of all proof rules used by SMT solvers using {\formatName}.
+of all proof rules used by SMT solvers supporting {\formatName}.
 
 \section{Core Concepts of {\formatName}}
 \label{sec:coreconcepts}
@@ -714,7 +699,7 @@ The following derivation tree justifies the expansion of a `let' expression:
 
 The high-level rules presented in the previous paragraph are useful for
 presentation purpose, but they are hard to check. We specialize them by reducing
-applicability. In particular the \Taut rule is very hard to check und is
+applicability. In particular the {\Taut} rule is very hard to check und is
 specialized.
 
 
@@ -724,7 +709,7 @@ the \proofRule{and\_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
 \dots \land \varphi_n) \lor \varphi_i$.  Other rules operate on only
 one premise. Those rules are primarily used to simplify Boolean
 connectives during preprocessing. For example, the \proofRule{implies}
-rule removes an implication: From $\varphi_1 \implies\varphi_2$
+rule removes an implication: From $\varphi_1 \Rightarrow \varphi_2$
 it deduces $\neg \varphi_1 \lor \varphi_2$.
 
 
@@ -762,7 +747,7 @@ such as \proofRule{la\_totality}: $t_1 \leq t_2 \lor t_2 \leq t_1$
 and the main rule \proofRule{la\_generic}.  The conclusion of an
 \proofRule{la\_generic} step is a tautology $\neg \varphi_1, \neg
 \varphi_2, \dots, \neg \varphi_n$ where the $\varphi_i$ are linear
-(in)equalities. Checking the validity of this formula amounts to
+(in)equalities. Checking the validity of these formulas amounts to
 checking the unsatisfiability of the system of linear equations
 $\varphi_1, \varphi_2, \dots, \varphi_n$.  The annotation of an
 \proofRule{la\_generic} step contains a coefficient for each (in)equality.
@@ -825,13 +810,16 @@ aids reconstruction because the implicit reordering of equalities
 Existential quantifiers are handled by Skolemization.
 
 \paragraph{Implicit Reordering of Equalities.}
-In addition to the explicit steps, veriT might reorder equalities, i.e.,
-apply symmetry of the equality predicate, without generating steps. When
-this happens is somewhat restricted: equalities are only reordered
+In addition to the explicit steps, solvers might reorder equalities, i.e.,
+apply symmetry of the equality predicate, without generating steps.
+The SMT solver veriT currently applies this liberty in a restricted
+form: equalities are only reordered
 when the term below the equality change during proof search. One such
 case is the instantiation of universally quantified variables. If an
 instantiated variable appears below an equality, then the equality might
 have an arbitrary order after instantiation.
+Nevertheless, consumers of {\formatName} must consider the possible
+implicit reordering of equalities.
 
 \paragraph{Lemmas}
 Our proof format supports lemmas that introduces local assumption and derives a
@@ -877,7 +865,7 @@ instantiaton and resolution steps (line 10--15)}\label{fig:proof_ex}
 
 The concrete text representation of the {\formatName}  proofs
 is based on the SMT-LIB standard. Figure~\ref{fig:proof_ex} shows an
-exemplary proof as printed by veriT lightly edited for readability.
+exemplary proof as printed by veriT with light edits for readability.
 The format follows the SMT-LIB standard when possible.
 
 Figure~\ref{fig:grammar} shows the grammar of the proof text. It
@@ -928,7 +916,7 @@ command could also be expressed using the $\grT{step}$ command with
 a special rule, the special semantic of an assumption justifies the
 presence of a dedicated command: assumptions are neither tautological nor
 derived from premises.  The $\grT{step}$ command, on the other hand,
-introduces a derived or tautological term.  Both commands $\grT{assume}$
+introduces a derived or tautological formula.  Both commands $\grT{assume}$
 and $\grT{step}$ require an index as the first argument to later
 refer back to it. This index is an arbitrary SMT-LIB symbol. The only
 restriction is that it must be unique for each $\grT{assume}$ and
@@ -936,7 +924,7 @@ $\grT{step}$ command.  The second argument is the term introduced by the
 command.
 For a $\grT{step}$, this term is always a clause.
 To express disjunctions in SMT-LIB the $\grT{or}$ operator is used.
-Unfortunately, this operator needs at least two arguments and cannot
+This operator, however, needs at least two arguments and cannot
 represent unary or empty clauses. To circumvent this we introduce a new
 $\grT{cl}$ operator.  It corresponds the standard $\grT{or}$ function
 extended to one argument, where it is equal to the identity, and zero
@@ -957,7 +945,7 @@ restricted: the assumption used as premise
 for the \proofRule{subproof} step must be the assumption introduced
 last. Hence, the \proofRule{assume}, \proofRule{subproof} pairs are
 nested.  The context is manipulated in the same way: if a step
-pops $c_1,\dots, c_n$ from a context $\Gamma$, there is a earlier step which
+pops $c_1,\dots, c_n$ from a context $\Gamma$, there is an earlier step which
 pushes precisely $c_1,\dots, c_n$ onto the context. Since
 contexts can only be manipulated by push and pop, context manipulations
 are also nested.
@@ -991,7 +979,7 @@ is unfolded.
 The user of veriT can optionally activate sharing\footnote{By using
 the command-line option \texttt{--proof-with-sharing}.} to print common
 subterms only once.  This is realized using the standard naming mechanism
-of SMT-LIB. In the language of SMT-LIB it is possible to annotate every
+of SMT-LIB. In the language of SMT-LIB it is possible to annotate any
 term $t$ with a name $n$ by writing $\grT{(! }t\grT{ :named }n\grT{ )}$
 where $n$ is a symbol. After a term is annotated with a name, the name can
 be used in place of the term. This is a purely syntactical replacement.
@@ -1001,7 +989,7 @@ command-line option \texttt{--proof-define-skolems}.} define Skolem
 constants as functions. If activated, this option adds a list of
 $\grT{define-fun}$ command to define shorthand 0-ary functions for
 the $\grT{(choice }\dots\grT{)}$ terms needed. Without this option,
-no $\grT{define-fun}$ commands are issued and the constants are inlined.
+no $\grT{define-fun}$ commands are issued and the constants are expanded.
 
 %TODO: Add proof-relevante options
 \section{List of Proof Rules}
