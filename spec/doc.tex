@@ -995,13 +995,12 @@ no $\grT{define-fun}$ commands are issued and the constants are expanded.
 \section{List of Proof Rules}
 \label{sec:rules}
 
-The following lists all rules produced by veriT. We have sorted them by type:
-
+The following lists all rules of {\formatName}. They are categorized by type:
 
 \begin{description}
 \item[Main Rules (Sect.~\ref{sec:main-rules})] contains the rules that justify
   the existence of the proof format, namely the \proofRule{bind} and
-  \proofRule{Subproof} rules.
+  \proofRule{subproof} rules.
 \item[Skolemization Rules (Sect.~\ref{sec:skolem-rules})] that uses Hilbert choice.
 \item[Basic Proof Rules (Sect.~\ref{sec:basic-rules}).]
 \item[Arithmetic Rules (Sect.~\ref{sec:arith-rules}).]
@@ -1009,7 +1008,7 @@ The following lists all rules produced by veriT. We have sorted them by type:
 \item[SAT handling (Sect.~\ref{sec:resolution-rules})] where resolution and
   removal of duplicated literals are presented.
 \item[Clausification of] Boolean operators
-  (Sect.~\ref{sec:clausification-bools}) and IfThenElse
+  (Sect.~\ref{sec:clausification-bools}) and if-then-else
   (Sect.~\ref{sec:ite-rules}) where structure is moved from terms to the clause
   structure.
 \item[Simplifications (Sect.~\ref{sec:simplification-rules})] are a very
@@ -1019,7 +1018,6 @@ The following lists all rules produced by veriT. We have sorted them by type:
 \item[Term Reshaping (Sect.~\ref{sec:unsorted-rules})] that transform a term by
   adding or removing variables.
 \end{description}
-
 
 \subsection{Main Rules}
 \label{sec:main-rules}
@@ -1362,7 +1360,7 @@ This rule is the resolution of two or more clauses.
 \proofsep& i_n.& \varphi^{n}_{1} , \dots , \varphi^{n}_{k^n} &(\dots)\\
 \proofsep& j.&
 \varphi^{r_1}_{s_1} , \dots , \varphi^{r_m}_{s_m} 
-&(\currule; i^1, \dots, i^n)\\
+&(\currule; i_1, \dots, i_n)\\
 \end{plList}
 \end{plContainer}
 where $\varphi^{r_1}_{s_1} , \dots , \varphi^{r_m}_{s_m}$ are from $\varphi^{i}_{j}$ and
