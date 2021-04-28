@@ -425,8 +425,11 @@ To mimic the concrete syntax we will write a step
 		(\proofRule{rule};\: p_1,\,\dots,\, p_m;\: a_1,\,\dots,\,a_n)
 \end{plListEq}
 \noindent
-Each step is indexed by \(i \in \mathbb{N}\) and has a clause \(\varphi_1,
-\dots ,\varphi_l\) has its conclusion. If a step has the empty clause
+Each step has an index \(i \in \mathbb{I}\) where \(\mathbb{I}\) is a countable
+infinite set of valid indices. In the concrete syntax all SMT-LIB symbols are
+valid indices, but for examples we will use natural numbers. No two steps have
+the same index. Furthermore, a step has a clause \(\varphi_1,
+\dots ,\varphi_l\) as its conclusion. If a step has the empty clause
 as its conclusion (i.e., \(l = 0\)) we will write \(\bot\).  While this
 muddles the water a bit with regards to steps which have the unit clause
 with the unit literal \(\bot\) as their conclusion, it simplifies the
@@ -532,8 +535,9 @@ of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
 
 
 \paragraph{Subproofs and Lemmas.}
-The proof format supports subproofs to prove lemmas. A subproof can
-contain local assumptions. The subproof \emph{rule} discharges the
+The proof format uses subproof to prove lemmas and to manipulate the context.
+To prove lemmas, a subproof can
+introduce local assumptions. The subproof \emph{rule} discharges the
 local assumptions by concluding with an implication (written as a clause)
 which has the local assumptions as its antecedents. 
 A step can only use steps from the same subproof as its premise. It
