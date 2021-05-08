@@ -309,7 +309,7 @@ This specification is speculative in the sense that it is not yet cast
 in stone. It developed from a list of proof rules used by the SMT solver
 veriT collected in a document called ``Proofonomicon''. Following the
 fate presupposed by its name, it informally circulated among researchers
-interested in the proofs produced by veriT for a few month.  We now
+interested in the proofs produced by veriT after a few months.  We now
 polished this document and gave it a respectable name.
 
 Instead of aiming for theoretical purity, our approach
@@ -422,7 +422,7 @@ A proof in the {\formatName} format is an indexed list of steps.
 To mimic the concrete syntax we will write a step
 \begin{plListEq}
 	c_1,\,\dots,\, c_k &\proofsep i. & \varphi_1,\dots ,\varphi_l &
-		(\proofRule{rule};\: p_1,\,\dots,\, p_m;\: a_1,\,\dots,\,a_n)
+		(\proofRule{rule};\: p_1,\,\dots,\, p_n;\: a_1,\,\dots,\,a_m)
 \end{plListEq}
 \noindent
 Each step has an index \(i \in \mathbb{I}\) where \(\mathbb{I}\) is a countable
@@ -1104,7 +1104,7 @@ The \currule{} rule skolemizes existential quantifiers.
 \begin{plContainer}
 \begin{plSubList}
 \plLine\\
-\Gamma, x_1 \mapsto (\epsilon x_1.\varphi), \dots ,  x_n \mapsto (\epsilon x_n.\varphi),
+\Gamma, x_1 \mapsto (\epsilon x_1.\varphi), \dots ,  x_n \mapsto (\epsilon x_n.\varphi)
 \proofsep& j.&
 \varphi \leftrightarrow \psi &(\dots)\\
 \end{plSubList}
@@ -1123,7 +1123,7 @@ The \currule{} rule skolemizes universal quantifiers.
 \parbox{\textwidth}{
 \begin{plSubList}
 \plLine\\
-\Gamma, x_1 \mapsto (\epsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\epsilon x_n.\neg\varphi),
+\Gamma, x_1 \mapsto (\epsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\epsilon x_n.\neg\varphi)
 \proofsep& j.&
 \varphi \leftrightarrow \psi
 &(\dots)\\
@@ -1243,12 +1243,12 @@ $\geq$    & $\geq d$     & $\geq \lfloor d\rfloor + 1$  \\
 Finally, the sum of the resulting literals is trivially contradictory.
 The sum
 \begin{equation*}
-    \sum_{k=1}^{o}\sum_{i=1}^{m^o}c_i^o*t_i^o \bowtie \sum_{k=1}^{o}d^k
+    \sum_{k=1}^{o}\sum_{i=1}^{m^o}c_i^k*t_i^k \bowtie \sum_{k=1}^{o}d^k
 \end{equation*}
 where $c_i^k$ is the constant $c_i$ of literal $l_k$, $t_i^k$ is the term
 $t_i$ of $l_k$, and $d^k$ is the constant $d$ of $l_k$. The operator
 $\bowtie$ is $\simeq$ if all operators are $\simeq$, $>$ if all are
-either $\simeq$ or $>$, and $\geq$ otherwise. The $a_i$ must be sucht
+either $\simeq$ or $>$, and $\geq$ otherwise. The $a_i$ must be such
 that the sum on the left-hand side is $0$ and the right-hand side is $>0$ (or
 $\geq 0$ if $\bowtie is >$).
 
@@ -1439,7 +1439,7 @@ serves only informational purpose.
   where $m \leq n$ and  $k_1 \dots k_m$ is a monotonic map to $1 \dots n$
   such that $\varphi_{k_1} \dots \varphi_{k_m}$ are pairwise distinct and
   $\{\varphi_1, \dots, \varphi_n\} = \{\varphi_{k_1} \dots \varphi_{k_m}\}$.
-  Hence, this rule remove duplicated literals.
+  Hence, this rule removes duplicated literals.
 \end{proof-rule}
 
 \subsection{Equality and Congruence Reasonning}
@@ -2215,7 +2215,7 @@ is $\mathbf{Bool}$ it has the form
 \begin{plContainer}
 \begin{plList}
 \Gamma\proofsep&
-i.& \operatorname{ite} \varphi\;t_1;t_2 \leftrightarrow \psi
+i.& \operatorname{ite} \varphi\;t_1\;t_2 \leftrightarrow \psi
 &(\currule)\\
 \end{plList}
 \end{plContainer}
