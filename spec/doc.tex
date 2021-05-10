@@ -542,8 +542,10 @@ local assumptions by concluding with an implication (written as a clause)
 which has the local assumptions as its antecedents. 
 A step can only use steps from the same subproof as its premise. It
 is not possible to have premises from either a subproof at a deeper
-level or from an outer level.\todo{We could technically allow premises from
-outside. Do we allow this?} 
+level or from an outer level.\todo{TODO: Allow premises from
+outside.} 
+\todo{In a subproof is the last step only exported or can the conclusion depend
+on any intermediate step? (Possible use case: pattern with proof of conversion)} 
 
 As the example below shows, our notation for subproofs is a
 frame around the rules within the subproof. Subproofs are also used to
