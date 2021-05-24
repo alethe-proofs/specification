@@ -1043,7 +1043,7 @@ no $\grT{define-fun}$ commands are issued and the constants are expanded.
 In the next section we provide a list of all proof rules supported by
 {\formatName}.  To make this long list more accessible, this section
 first lists multiple classes of proof rules.  The classes are not
-mutually exclusive: for example, the \ruleName{la\_generic} rule is
+mutually exclusive: for example, the \proofRule{la\_generic} rule is
 both a linear arithmetic rule and introduces a tautology.
 
 \begin{table}[h!]
@@ -1175,7 +1175,7 @@ The following lists all rules of {\formatName}. They are categorized by type:
   adding or removing variables.
 \end{description}
 
-\subsection{Main Rules}
+\subsection*{Main Rules}
 \label{sec:main-rules}
 The following rules are the raison-d'\^etre of the proof format: providing
 detailed reasoning under quantifiers.
@@ -1221,7 +1221,7 @@ last step of the subproof is the conclusion.
 \end{proof-rule}
 
 
-\subsection{Skolemization Rules}
+\subsection*{Skolemization Rules}
 \label{sec:skolem-rules}
 
 \begin{proof-rule}{sko_ex}{veriT}
@@ -1262,7 +1262,7 @@ The \currule{} rule skolemizes universal quantifiers.
 \end{plContainer}
 \end{proof-rule}
 
-\subsection{Basic Proof Rules}
+\subsection*{Basic Proof Rules}
 \label{sec:basic-rules}
 
 \begin{proof-rule}{assume}{veriT}
@@ -1302,7 +1302,7 @@ clause. Take the clause with the double negation and resolve on \(\varphi\).
 
 \end{proof-rule}
 
-\subsection{Arithmetic Rules}
+\subsection*{Arithmetic Rules}
 \label{sec:arith-rules}
 
 \begin{proof-rule}{la_generic}{veriT}
@@ -1481,7 +1481,7 @@ as for the rule \proofRule{la\_generic}.
 
 \end{proof-rule}
 
-\subsection{Quantifier Rules}
+\subsection*{Quantifier Rules}
 \label{sec:quantifier-rules}
 
 \begin{proof-rule}{forall_inst}{veriT}
@@ -1503,7 +1503,7 @@ as currently done by \proofRule{qnt_cnf}.
 
 \end{proof-rule}
 
-\subsection{Resolution Rules and Clause Simplifications}
+\subsection*{Resolution Rules and Clause Simplifications}
 \label{sec:resolution-rules}
 
 \begin{proof-rule}{th_resolution}{veriT}
@@ -1568,7 +1568,7 @@ serves only informational purpose.
   Hence, this rule removes duplicated literals.
 \end{proof-rule}
 
-\subsection{Equality and Congruence Reasonning}
+\subsection*{Equality and Congruence Reasonning}
 \label{sec:equality-rules}
 
 \begin{proof-rule}{refl}{veriT}
@@ -1692,7 +1692,7 @@ P(t_1, \dots, t_n) \simeq P(u_1, \dots, u_n)
 %
 \end{proof-rule}
 
-\subsection{Clausification of Quantifiers}
+\subsection*{Clausification of Quantifiers}
 
 \begin{proof-rule}{qnt_cnf}{veriT}
 \begin{plContainer}
@@ -1738,7 +1738,7 @@ where:
 \end{proof-rule}
 
 
-\subsection{Clausification of Boolean Operators}
+\subsection*{Clausification of Boolean Operators}
 \label{sec:clausification-bools}
 
 \begin{proof-rule}{and}{veriT}
@@ -2032,7 +2032,7 @@ with $1 \leq k \leq n$.
 \end{proof-rule}
 
 
-\subsection{Clausification of If-Then-Else}
+\subsection*{Clausification of If-Then-Else}
 \label{sec:ite-rules}
 
 
@@ -2114,7 +2114,7 @@ with $1 \leq k \leq n$.
 
 
 
-\subsection{Simplifications}
+\subsection*{Simplifications}
 \label{sec:simplification-rules}
 
 The following rules are pure simplification rules. We give a very detailed list.
@@ -2123,7 +2123,7 @@ to do so for only one single theory at a time.
 
 
 
-\subsubsection{Boolean Operators}
+\subsubsection*{Boolean Operators}
 \label{sec:bool-simp-rules}
 
 \begin{proof-rule}{connective_def}{veriT}
@@ -2330,7 +2330,7 @@ The possible transformations are:
   removed.
 \end{proof-rule}
 
-\subsubsection{If-Then-Else Operators}
+\subsubsection*{If-Then-Else Operators}
 \label{sec:ite-simp-rules}
 
 \begin{proof-rule}{ite_simplify}{veriT}
@@ -2379,7 +2379,7 @@ The possible transformations are:
 \end{proof-rule}
 
 
-\subsubsection{Quantifiers}
+\subsubsection*{Quantifiers}
 \label{sec:qnt-simp-rules}
 
 \begin{proof-rule}{qnt_simplify}{veriT}
@@ -2484,7 +2484,7 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
 \end{proof-rule}
 
 
-\subsubsection{Equalities}
+\subsubsection*{Equalities}
 \label{sec:equality-simp-rules}
 
 \begin{proof-rule}{eq_simplify}{veriT}
@@ -2509,7 +2509,7 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
 \end{proof-rule}
 
 
-\subsubsection{Arithmetic Operators}
+\subsubsection*{Arithmetic Operators}
 \label{sec:arith-simp-rules}
 
 \begin{proof-rule}{div_simplify}{veriT}
@@ -2662,7 +2662,7 @@ The possible transformations are:
 \end{proof-rule}
 
 
-\subsubsection{Other Simplifications}
+\subsubsection*{Other Simplifications}
 \label{sec:other-simp-rules}
 
 \begin{proof-rule}{let}{veriT}
@@ -2782,7 +2782,7 @@ i.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
 \end{plContainer}
 \end{proof-rule}
 
-\subsection{Term Reshaping}
+\subsection*{Term Reshaping}
 \label{sec:unsorted-rules}
 
 
@@ -2852,7 +2852,7 @@ constants are unfolded during proof printing. Hence, the slightly strange
 form and the reordering of equalities.
 \end{proof-rule}
 
-% \subsection{Experimental Proof Rules}
+% \subsection*{Experimental Proof Rules}
 % \label{sec:exp-rules}
 
 % \begin{proof-rule}{deep_skolemize}{veriT}
