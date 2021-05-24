@@ -576,8 +576,25 @@ lemma \(((2 + 2) \simeq 5) \Rightarrow 4 \simeq 5\).
 A specialty of the veriT proof
 format is the step context. The context is a possible empty list $[c_1,
 \dots, c_l]$, where $c_i$ is either a variable or a variable-term tuple
-denoted $x_i\mapsto t_i$. Throughout this document $\Gamma$ denotes
-an arbitrary context. The context denotes a substitution.\todo{Extend} 
+denoted $x_i\mapsto t_i$. In the first case, we say that $c_i$ \emph{fixes} its
+variable. Throughout this document $\Gamma$ denotes
+an arbitrary context. Alethe contexts are a general mechanism to write
+substitutions and to change them by attaching new elements to the list.
+
+Hence, every context $\Gamma$ induces a substitution
+\(\operatorname{subst}(\Gamma)\). If $\Gamma$ is the empty list,
+\(\operatorname{subst}(\Gamma)\) is the empty substitution, i.e, the
+identity function. When $\Gamma$ ends in a mapping, the substitution is extended
+with this mapping: \(\operatorname{subst}([c_1,\dots, c_{n-1}, x_n\mapsto t_n]) =
+        \operatorname{subst}([c_1,\dots, c_{n-1}])\circ [t_n/x_n]\).
+Finally, \(\operatorname{subst}([c_1,\dots, c_{n-1}, x_n])\)
+is \(\operatorname{subst}([c_1,\dots, c_{n-1}])\), but $x_n$ maps to $x_n$.
+The last case fixes $x_n$ and allows the context to shadow a previously defined
+substitution for $x_n$. The following example illustrates this idea:
+\begin{align*}
+    \operatorname{subst}([x\mapsto 7, x \mapsto g(x)]) &= [g(7)/x]\\
+    \operatorname{subst}([x\mapsto 7, x, x \mapsto g(x)]) &= [g(x)/x]\\
+\end{align*}
 
 \paragraph{Skolemization and Other Preprocessing Steps.}
 One typical example for a rule with context is the \proofRule{sko\_ex}
