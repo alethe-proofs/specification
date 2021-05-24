@@ -106,11 +106,13 @@ break
 \declaretheorem[name=Rule,style=proof-rule-style,sibling=ProofRuleCounter]{inner-rule}
 
 \newenvironment{proof-rule}[2]{%
-\begin{inner-rule}[#1]
+\begin{inner-rule}[#1]\label{rule:#1}
 \renewcommand\currule{\proofRule{#1}}%
 }{%
 \end{inner-rule}
 }
+
+\newcommand{\ruleref}[1]{\autoref{rule:#1}:~\proofRule{\nameref{rule:#1}}}
 
 % == Theorem environments ==
 
@@ -1034,6 +1036,116 @@ constants as functions. If activated, this option adds a list of
 $\grT{define-fun}$ command to define shorthand 0-ary functions for
 the $\grT{(choice }\dots\grT{)}$ terms needed. Without this option,
 no $\grT{define-fun}$ commands are issued and the constants are expanded.
+
+\section{Classifications of the Proof Rules}
+\label{sec:rules-overview}
+
+In the next section we provide a list of all proof rules supported by
+{\formatName}.  To make this long list more accessible, this section
+first lists multiple classes of proof rules.  The classes are not
+mutually exclusive: for example, the \ruleName{la\_generic} rule is
+both a linear arithmetic rule and introduces a tautology.
+
+\begin{table}[h!]
+\caption{Special Rules}
+\centering
+\begin{tabular}{l c}
+Rule & Description \\
+\hline
+\ruleref{assume} & Repeats an input assumption. \\
+\ruleref{subproof} & Concludes a subproof with assumptions. \\
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\caption{Rules Introducing Tautologies}
+\centering
+\begin{tabular}{l c}
+Rule & Conclusion \\
+\hline
+1 & 6 \\
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\caption{Linear Arithmetic}
+\centering
+\begin{tabular}{c c}
+Rule & Description \\
+\hline
+1 & 6 \\
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\caption{Quantifier Handling}
+\centering
+\begin{tabular}{l c}
+Rule & Description \\
+\hline
+\ruleref{forall_inst} & Instantiation of an universal variable. \\
+\ruleref{bind} & Renaming of bound variables. \\
+\ruleref{sko_ex} & Skolemization of existential variables. \\
+\ruleref{sko_forall} & Skolemization of universal variables. \\
+\ruleref{qnt_cnf} & Clausification of quantified formulas. \\
+\ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
+\ruleref{onepoint} & The one-point rule. \\
+\ruleref{qnt_join} & Joining of consecutive quantifiers. \\
+\ruleref{qnt_rm_unused} & Removal of unused quantified variables. \\
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\caption{Skolemization Rules}
+\centering
+\begin{tabular}{l c}
+Rule & Description \\
+\hline
+\ruleref{sko_ex} & Skolemization of existential variables. \\
+\ruleref{sko_forall} & Skolemization of universal variables. \\
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\caption{Clausification Rules}
+\centering
+\begin{tabular}{l c}
+Rule & Description \\
+\hline
+1 & 6 \\
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\caption{Resolution and Clause Simplification}
+\centering
+\begin{tabular}{l c}
+Rule & Description \\
+\hline
+1 & 6 \\
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\caption{Simplification Rules}
+\centering
+\begin{tabular}{l c}
+Rule & Description \\
+\hline
+1 & 6 \\
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\caption{Recommend Rules.  Some rules are very similar.  This table lists
+which rule should be used in this case.}
+\centering
+\begin{tabular}{l c}
+Rule & Description \\
+\hline
+1 & 6 \\
+\end{tabular}
+\end{table}
 
 %TODO: Add proof-relevante options
 \section{List of Proof Rules}
