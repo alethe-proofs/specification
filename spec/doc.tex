@@ -305,18 +305,19 @@ by resolution. This is combined with an elegant way to reason about
 bound variables and cast into a text format based on the widespread
 SMT-LIB format.
 
-This specification is speculative in the sense that it is not yet cast
-in stone. It developed from a list of proof rules used by the SMT solver
-veriT collected in a document called ``Proofonomicon''. Following the
-fate presupposed by its name, it informally circulated among researchers
-interested in the proofs produced by veriT after a few months.  We now
-polished this document and gave it a respectable name.
+The specification is speculative in the sense that it is not yet
+cast in stone, but will evolve over time. It emerged from a list
+of proof rules used by the SMT solver veriT collected in a document
+called ``Proofonomicon''. Following the fate presupposed by its name,
+it informally circulated among researchers interested in the proofs
+produced by veriT after a few months.  We now polished this document
+and gave it a respectable name.
 
 Instead of aiming for theoretical purity, our approach
 is pragmatic: the specification describes the format as it is in use
 right now. It will develop in parallel with practical support for the
 format within SMT solvers, proof checkers, and other tools.  We believe
-it is not a clean specification that fosters the adaption of a format,
+it is not a perfect specification that fosters the adaption of a format,
 but great tooling. This document will be a guide to develop
 such tools.
 
@@ -535,21 +536,18 @@ of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
 
 
 \paragraph{Subproofs and Lemmas.}
-The proof format uses subproof to prove lemmas and to manipulate the context.
+{\formatName} uses subproof to prove lemmas and to manipulate the context.
 To prove lemmas, a subproof can
 introduce local assumptions. The subproof \emph{rule} discharges the
 local assumptions by concluding with an implication (written as a clause)
-which has the local assumptions as its antecedents. 
-A step can only use steps from the same subproof as its premise. It
-is not possible to have premises from either a subproof at a deeper
-level or from an outer level.\todo{TODO: Allow premises from
-outside.} 
+that has the local assumptions as its antecedents.
+A step can not use premise from a subproof nested within the current subproof.
 \todo{In a subproof is the last step only exported or can the conclusion depend
-on any intermediate step? (Possible use case: pattern with proof of conversion)} 
+on any intermediate step? (Possible use case: pattern with proof of conversion)}
+Subproofs are also used to manipulate the context.
 
-As the example below shows, our notation for subproofs is a
-frame around the rules within the subproof. Subproofs are also used to
-manipulate the context.
+As the example below shows, within this document we denote subproofs by a
+frame around the rules within the subproof.
 
 \begin{example} This example show a contradiction proof for the
 formula \((2 + 2) \simeq 5\). The proof uses a subproof to prove the
