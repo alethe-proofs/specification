@@ -303,10 +303,9 @@ break
 This document is a speculative specification and reference of a proof
 format for SMT solvers. The basic elements of the format should not be
 surprising to anyone: a natural-deduction style calculus driven mostly
-by resolution. This is combined with an elegant way to reason about
-bound variables and cast into a text format based on the widespread
-SMT-LIB format.
-% PF elegant: this is self-congratulation.  Try to find a more objective algorithm: unified, clean, simple,...
+by resolution and a text format based on the widely used SMT-LIB format.
+Furthermore, the format also includes a flexible mechanism to reason about
+bound variables which allows fine-grained preprocessing proofs.
 
 The specification is speculative in the sense that it is not yet
 cast in stone, but it will evolve over time. It emerged from a list
@@ -398,12 +397,11 @@ depend on the selected SMT-LIB theory/logic and they can also be extended by the
 user, but a distinguished $\mathbf{Bool}$ sort is always available.
 
 In addition to the multi-sorted first-order logic used by SMT-LIB,
-{\formatName} also uses Hilbert's choice operator $\epsilon$. Choice acts
-like a binder. The term $\epsilon x. \varphi$ stands for a value $v$,
+{\formatName} also uses Hilbert's choice operator $\varepsilon$. Choice acts
+like a binder. The term $\varepsilon x. \varphi$ stands for a value $v$,
 such that $\varphi[v/x]$ is true if such a value exists. Any value is
 possible otherwise.
-% PF TODO \epsilon vs varepsilon
-% PF it might be useful to say that \epsilon is functional, i.e., if \varphi is logically equivalent to \varpsi then \epsilon gives the same result
+% PF it might be useful to say that \varepsilon is functional, i.e., if \varphi is logically equivalent to \varpsi then \varepsilon gives the same result
 
 As a matter of notation, we use the symbols $x$, $y$, $z$ for variables,
 $f$, $g$, $h$ for functions, and $P$, $Q$ for predicates, i.e.,
@@ -439,8 +437,7 @@ with the unit literal \(\bot\) as their conclusion, it simplifies the
 notation.  We will remark on the difference if it is relevant.  The rule
 name \(\proofRule{rule}\) is taken from a set of possible proof rules.
 Furthermore, each step has a possibly empty set of premises $\{p_1,
-\dots, p_n\}$ with $p_i\in\mathbb{N}$,
-% PF TODO really, N?  not indices?
+\dots, p_n\}$ with $p_i\in\mathbb{I}$,
 and a rule-dependent and possibly
 empty list of arguments $[a_1, \dots, a_m]$. The list of premises
 only references earlier steps, such that the proof forms a directed
@@ -457,14 +454,74 @@ all proof rules used by veriT.
 
 \paragraph{Assumptions.}
 The \proofRule{assume} rule introduces a term as an assumption. The
-proof starts with a number of \proofRule{assume} steps. Each step
+proof starts with a number of \proofRule{assume} steps. Each step such
 corresponds to an assertion. Additional assumptions can be introduced
 too. In this case each assumption must be discharged with an appropriate
-step. The only rule to do so is the \proofRule{subproof} rule. From an
+step. The only rule to do so is the \proofRule{subproof} rule.
+ 
+\paragraph{Subproofs and Lemmas.}
+{\formatName} uses subproof to prove lemmas and to manipulate the context.
+To prove lemmas, a subproof can
+introduce local assumptions. The subproof \emph{rule} discharges the
+local assumptions.
+From an
 assumption $\varphi$ and a formula $\psi$ proved by intermediate steps
-from $\varphi$, the \proofRule{subproof} step deduces $\neg \varphi \lor
-\psi$ and discharges $\varphi$.
-% PF TODO aren't you confusing clauses and disjunctions above?
+from $\varphi$, the \proofRule{subproof} rule deduces the clause $\neg \varphi, 
+\psi$ that discharges the local assumption $\varphi$.
+A \proofRule{subproof} step can not use premise from a subproof nested within the current subproof.
+\todo{In a subproof is the last step only exported or can the conclusion depend
+on any intermediate step? (Possible use case: pattern with proof of conversion)}
+
+Subproofs are also used to manipulate the context.
+As the example below shows, within this document we denote subproofs by a
+frame around the rules within the subproof.
+
+\begin{example} This example show a contradiction proof for the
+formula \((2 + 2) \simeq 5\). The proof uses a subproof to prove the
+lemma \(((2 + 2) \simeq 5) \Rightarrow 4 \simeq 5\).
+
+\begin{plContainer}
+\begin{plList}
+\proofsep& 1.& (2 + 2) \simeq 5                   &(\proofRule{assume})\\
+\end{plList}
+\begin{plSubList}
+\proofsep& 2.& (2 + 2) \simeq 5                   &(\proofRule{assume})\\
+\proofsep& 3.& (2 + 2) \simeq 4                   &(\proofRule{plus\_simplify})\\
+\proofsep& 4.& 4 \simeq 5                         &(\proofRule{trans}; 1, 2)\\
+\end{plSubList}
+\begin{plList}
+\proofsep& 5.& \neg((2 + 2) \simeq 5), 4 \simeq 5 &(\proofRule{subproof})\\
+\proofsep& 6.& (4 \simeq 5)\leftrightarrow \bot &(\proofRule{eq\_simplify})\\
+\proofsep& 7.& \neg((4 \simeq 5)\leftrightarrow \bot), \neg(4\simeq 5), \bot  &(\proofRule{equiv\_pos2})\\
+\proofsep& 8.& \bot  &(\proofRule{resolution}; 1, 5, 7, 8)\\
+\end{plList}
+\end{plContainer}
+
+\end{example}
+
+\paragraph{Contexts.}
+A specialty of the veriT proof
+format is the step context. The context is a possible empty list $[c_1,
+\dots, c_l]$, where $c_i$ is either a variable or a variable-term tuple
+denoted $x_i\mapsto t_i$. In the first case, we say that $c_i$ \emph{fixes} its
+variable. Throughout this document $\Gamma$ denotes
+an arbitrary context. Alethe contexts are a general mechanism to write
+substitutions and to change them by attaching new elements to the list.
+
+Hence, every context $\Gamma$ induces a substitution
+\(\operatorname{subst}(\Gamma)\). If $\Gamma$ is the empty list,
+\(\operatorname{subst}(\Gamma)\) is the empty substitution, i.e, the
+identity function. When $\Gamma$ ends in a mapping, the substitution is extended
+with this mapping: \(\operatorname{subst}([c_1,\dots, c_{n-1}, x_n\mapsto t_n]) =
+        \operatorname{subst}([c_1,\dots, c_{n-1}])\circ [t_n/x_n]\).
+Finally, \(\operatorname{subst}([c_1,\dots, c_{n-1}, x_n])\)
+is \(\operatorname{subst}([c_1,\dots, c_{n-1}])\), but $x_n$ maps to $x_n$.
+The last case fixes $x_n$ and allows the context to shadow a previously defined
+substitution for $x_n$. The following example illustrates this idea:
+\begin{align*}
+    \operatorname{subst}([x\mapsto 7, x \mapsto g(x)]) &= [g(7)/x]\\
+    \operatorname{subst}([x\mapsto 7, x, x \mapsto g(x)]) &= [g(x)/x]\\
+\end{align*}
 
 \paragraph{Tautologous Rules and Simple Deduction.}
 Most rules introduce tautologies. One example is
@@ -479,9 +536,9 @@ it deduces $\neg \varphi_1 \lor \varphi_2$.
 CDCL($T$)-based SMT solvers, and especially their SAT solvers,
 are fundamentally based on clauses. Hence, {\formatName} also uses
 clauses.  Nevertheless, since SMT solvers do not enforce a strict
-clausal normal-form, usual disjunction is also used
-% PF TODO: check this sentence, something is wrong
-clauses simplifies checking the rules.  For example, in the case of
+clausal normal-form, ordinary disjunction is also used.
+Keeping clauses and disjunctions distinct, simplifies rule checking.
+For example, in the case of
 resolution there is a clear distinction between unit clauses where
 the sole literal starts with a disjunction, and non-unit clauses.  The
 syntax for clauses uses the \smtinline{cl} operator, while disjunctions
@@ -548,68 +605,6 @@ of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
 % x < 0 , 1 = x --> 1 1  gives 1 < 0
 % this should somehow be fixed
 
-
-\paragraph{Subproofs and Lemmas.}
-{\formatName} uses subproof to prove lemmas and to manipulate the context.
-To prove lemmas, a subproof can
-introduce local assumptions. The subproof \emph{rule} discharges the
-local assumptions by concluding with an implication (written as a clause)
-that has the local assumptions as its antecedents.
-A step can not use premise from a subproof nested within the current subproof.
-\todo{In a subproof is the last step only exported or can the conclusion depend
-on any intermediate step? (Possible use case: pattern with proof of conversion)}
-Subproofs are also used to manipulate the context.
-
-As the example below shows, within this document we denote subproofs by a
-frame around the rules within the subproof.
-
-\begin{example} This example show a contradiction proof for the
-formula \((2 + 2) \simeq 5\). The proof uses a subproof to prove the
-lemma \(((2 + 2) \simeq 5) \Rightarrow 4 \simeq 5\).
-
-\begin{plContainer}
-\begin{plList}
-\proofsep& 1.& (2 + 2) \simeq 5                   &(\proofRule{assume})\\
-\end{plList}
-\begin{plSubList}
-\proofsep& 2.& (2 + 2) \simeq 5                   &(\proofRule{assume})\\
-\proofsep& 3.& (2 + 2) \simeq 4                   &(\proofRule{plus\_simplify})\\
-\proofsep& 4.& 4 \simeq 5                         &(\proofRule{trans}; 1, 2)\\
-\end{plSubList}
-\begin{plList}
-\proofsep& 5.& \neg((2 + 2) \simeq 5), 4 \simeq 5 &(\proofRule{subproof})\\
-\proofsep& 6.& (4 \simeq 5)\leftrightarrow \bot &(\proofRule{eq\_simplify})\\
-\proofsep& 7.& \neg((4 \simeq 5)\leftrightarrow \bot), \neg(4\simeq 5), \bot  &(\proofRule{equiv\_pos2})\\
-\proofsep& 8.& \bot  &(\proofRule{resolution}; 1, 5, 7, 8)\\
-\end{plList}
-\end{plContainer}
-
-\end{example}
-
-\paragraph{Contexts.}
-A specialty of the veriT proof
-format is the step context. The context is a possible empty list $[c_1,
-\dots, c_l]$, where $c_i$ is either a variable or a variable-term tuple
-denoted $x_i\mapsto t_i$. In the first case, we say that $c_i$ \emph{fixes} its
-variable. Throughout this document $\Gamma$ denotes
-an arbitrary context. Alethe contexts are a general mechanism to write
-substitutions and to change them by attaching new elements to the list.
-
-Hence, every context $\Gamma$ induces a substitution
-\(\operatorname{subst}(\Gamma)\). If $\Gamma$ is the empty list,
-\(\operatorname{subst}(\Gamma)\) is the empty substitution, i.e, the
-identity function. When $\Gamma$ ends in a mapping, the substitution is extended
-with this mapping: \(\operatorname{subst}([c_1,\dots, c_{n-1}, x_n\mapsto t_n]) =
-        \operatorname{subst}([c_1,\dots, c_{n-1}])\circ [t_n/x_n]\).
-Finally, \(\operatorname{subst}([c_1,\dots, c_{n-1}, x_n])\)
-is \(\operatorname{subst}([c_1,\dots, c_{n-1}])\), but $x_n$ maps to $x_n$.
-The last case fixes $x_n$ and allows the context to shadow a previously defined
-substitution for $x_n$. The following example illustrates this idea:
-\begin{align*}
-    \operatorname{subst}([x\mapsto 7, x \mapsto g(x)]) &= [g(7)/x]\\
-    \operatorname{subst}([x\mapsto 7, x, x \mapsto g(x)]) &= [g(x)/x]\\
-\end{align*}
-
 \paragraph{Skolemization and Other Preprocessing Steps.}
 One typical example for a rule with context is the \proofRule{sko\_ex}
 rule, which is used to express Skolemization of an existentially
@@ -618,22 +613,22 @@ that maps a variable $x$ to the appropriate Skolem term and produces
 a step $m$ ($m > n$) where the variable is quantified.
 
 \begin{plListEq}
-  \Gamma, x\mapsto (\epsilon x.\varphi) &\proofsep n.&\varphi \simeq \psi &(\proofRule{\dots})\\
+  \Gamma, x\mapsto (\varepsilon x.\varphi) &\proofsep n.&\varphi \simeq \psi &(\proofRule{\dots})\\
   \Gamma &\proofsep m.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko\_ex};\: n)
 \end{plListEq}
 
 \begin{example}
 To illustrate how such a rule is applied, consider the following example
-taken from~\cite{barbosa-2019}. Here the term $\neg p(\epsilon x.\neg
+taken from~\cite{barbosa-2019}. Here the term $\neg p(\varepsilon x.\neg
 p(x))$ is Skolemized. The \proofRule{refl} rule expresses
 a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
 is functional congruence, and \proofRule{sko\_forall} works like
-\proofRule{sko\_ex}, except that the choice term is $\epsilon x.\neg\varphi$.
+\proofRule{sko\_ex}, except that the choice term is $\varepsilon x.\neg\varphi$.
 \begin{plListEqAlgn}
-  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \epsilon x.\neg p(x)  &(\proofRule{refl})\\
-  x\mapsto (\epsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 1)\\
-                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\epsilon x.\neg p(x)) &(\proofRule{sko\_forall};\: 2)\\
-                                  \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\epsilon x.\neg p(x)) &(\proofRule{cong};\: 3)
+  x\mapsto (\varepsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \varepsilon x.\neg p(x)  &(\proofRule{refl})\\
+  x\mapsto (\varepsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\varepsilon x.\neg p(x)) &(\proofRule{cong};\: 1)\\
+                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\varepsilon x.\neg p(x)) &(\proofRule{sko\_forall};\: 2)\\
+                                  \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\varepsilon x.\neg p(x)) &(\proofRule{cong};\: 3)
  \end{plListEqAlgn}
 \end{example}
 
@@ -1309,7 +1304,7 @@ The \currule{} rule skolemizes existential quantifiers.
 \begin{plContainer}
 \begin{plSubList}
 \plLine\\
-\Gamma, x_1 \mapsto (\epsilon x_1.\varphi), \dots ,  x_n \mapsto (\epsilon x_n.\varphi)
+\Gamma, x_1 \mapsto (\varepsilon x_1.\varphi), \dots ,  x_n \mapsto (\varepsilon x_n.\varphi)
 \proofsep& j.&
 \varphi \leftrightarrow \psi &(\dots)\\
 \end{plSubList}
@@ -1328,7 +1323,7 @@ The \currule{} rule skolemizes universal quantifiers.
 \parbox{\textwidth}{
 \begin{plSubList}
 \plLine\\
-\Gamma, x_1 \mapsto (\epsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\epsilon x_n.\neg\varphi)
+\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)
 \proofsep& j.&
 \varphi \leftrightarrow \psi
 &(\dots)\\
