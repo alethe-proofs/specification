@@ -306,9 +306,10 @@ surprising to anyone: a natural-deduction style calculus driven mostly
 by resolution. This is combined with an elegant way to reason about
 bound variables and cast into a text format based on the widespread
 SMT-LIB format.
+% PF elegant: this is self-congratulation.  Try to find a more objective algorithm: unified, clean, simple,...
 
 The specification is speculative in the sense that it is not yet
-cast in stone, but will evolve over time. It emerged from a list
+cast in stone, but it will evolve over time. It emerged from a list
 of proof rules used by the SMT solver veriT collected in a document
 called ``Proofonomicon''. Following the fate presupposed by its name,
 it informally circulated among researchers interested in the proofs
@@ -352,20 +353,20 @@ semantic of the concepts introduced before.
 
 The concrete syntax and semantic is based on the SMT-LIB~\cite{SMTLIB}
 format, which is widely used as input and output format of SMT
-solvers. Hence, the base logic is the many-sorted first order logic of
+solvers. Hence, the base logic is the many-sorted first-order logic of
 SMT-LIB. This document assumes the reader is familiar with the SMT-LIB
 standard.  As discussed in Section~\ref{sec:syntax} the concrete syntax
 of {\formatName} is based on the SMT-LIB syntax.
 
 The format is currently used by the CDCL($T$)-based SMT solver
-veriT~\cite{verit}. If requested by the user, veriT outputs a proof if it
-can deduce that the input problem is unsatisfiable. In proof production
-mode, veriT supports the theory of uninterpreted functions, the theory of
-linear integer and real arithmetic, and quantifiers.  The {\formatName}
-proofs can be reconstructed by the \texttt{smt} tactic of the proof
-assistant Isabelle/HOL~\cite{fleury-2019,schurr-2021}.  Furthermore,
-in the future the SMT solver CVC4~\cite{CVC4} will support {\formatName}
-as one of multiple proof output formats.
+veriT~\cite{verit}. If requested by the user, veriT outputs a proof if it can
+deduce that the input problem is unsatisfiable. In proof production mode, veriT
+supports the theory of uninterpreted functions, the theory of linear integer and
+real arithmetic, and quantifiers.  The {\formatName} proofs can be reconstructed
+by the \texttt{smt} tactic of the proof assistant
+Isabelle/HOL~\cite{fleury-2019,schurr-2021}.  Furthermore, in the future the SMT
+solver cvc5 (the successor of CVC4~\cite{CVC4}) will support {\formatName} as
+one of multiple proof output formats.
 
 In addition to this reference, the proof format has been discussed in past
 publications which provide valuable background information.  The core of
@@ -376,7 +377,7 @@ More recently the format has gained support for reasoning typically used
 for processing, such as Skolemization, renaming of variables, and other
 manipulations of bound variables~\cite{barbosa-2019}.
 
-At the end of a document Section~\ref{sec:rules} contains a full list
+At the end of the document Section~\ref{sec:rules} contains a full list
 of all proof rules used by SMT solvers supporting {\formatName}.
 
 \section{Core Concepts of {\formatName}}
@@ -393,7 +394,7 @@ practitioners.
 Many SMT solvers use the SMT-LIB language~\cite{SMTLIB} as both its
 input and output language and {\formatName} builds on this language.
 This includes its multi-sorted first-order logic.  The available sorts
-depend on the selected SMT-LIB theory and can also be extended by the
+depend on the selected SMT-LIB theory/logic and they can also be extended by the
 user, but a distinguished $\mathbf{Bool}$ sort is always available.
 
 In addition to the multi-sorted first-order logic used by SMT-LIB,
@@ -401,11 +402,13 @@ In addition to the multi-sorted first-order logic used by SMT-LIB,
 like a binder. The term $\epsilon x. \varphi$ stands for a value $v$,
 such that $\varphi[v/x]$ is true if such a value exists. Any value is
 possible otherwise.
+% PF TODO \epsilon vs varepsilon
+% PF it might be useful to say that \epsilon is functional, i.e., if \varphi is logically equivalent to \varpsi then \epsilon gives the same result
 
 As a matter of notation, we use the symbols $x$, $y$, $z$ for variables,
 $f$, $g$, $h$ for functions, and $P$, $Q$ for predicates, i.e.,
 functions with result sort $\mathbf{Bool}$. The symbols $r$, $s$, $t$,
-$u$ stand for terms. The symbols $\varphi, \psi$ denote formulas, i.e.,
+$u$ stand for terms. The symbols $\varphi$, $\psi$ denote formulas, i.e.,
 terms of sort $\mathbf{Bool}$.  We use $\sigma$ to denote substitutions
 and $t\sigma$ to denote the application of the substitution on the term
 $t$.  To denote the substitution which maps $x$ to $t$ we write $[t/x]$.
@@ -414,7 +417,7 @@ equality predicate. We also use the notion of complementary literals
 very liberally: $\varphi = \bar{\psi}$ holds if the terms obtained
 after removing all leading negations from $\varphi$ and $\bar{\psi}$
 are syntactically equal and the number of leading negations is even
-for $\varphi$ and odd for $\bar{\psi}$, or vice versa.  To simplify the
+for $\varphi$ and odd for $\psi$, or vice versa.  To simplify the
 notation we will omit the sort of terms when possible.
 
 \paragraph{Steps.}
@@ -436,7 +439,9 @@ with the unit literal \(\bot\) as their conclusion, it simplifies the
 notation.  We will remark on the difference if it is relevant.  The rule
 name \(\proofRule{rule}\) is taken from a set of possible proof rules.
 Furthermore, each step has a possibly empty set of premises $\{p_1,
-\dots, p_n\}$ with $p_i\in\mathbb{N}$, and a rule-dependent and possibly
+\dots, p_n\}$ with $p_i\in\mathbb{N}$,
+% PF TODO really, N?  not indices?
+and a rule-dependent and possibly
 empty list of arguments $[a_1, \dots, a_m]$. The list of premises
 only references earlier steps, such that the proof forms a directed
 acyclic graph.  The arguments $a_i$ are either terms or tuples $(x_i,
@@ -447,6 +452,8 @@ the \emph{context} of the step.  Contexts have their own section below.
 Every proof ends with a step that has the empty clause as the conclusion
 and an empty context. Section~\ref{sec:rules} provides an overview of
 all proof rules used by veriT.
+% PF TODO this above is quite abstract.  A figure with a full well-chosen
+% concrete example would be helpful to illustrate this, and the following too
 
 \paragraph{Assumptions.}
 The \proofRule{assume} rule introduces a term as an assumption. The
@@ -457,6 +464,7 @@ step. The only rule to do so is the \proofRule{subproof} rule. From an
 assumption $\varphi$ and a formula $\psi$ proved by intermediate steps
 from $\varphi$, the \proofRule{subproof} step deduces $\neg \varphi \lor
 \psi$ and discharges $\varphi$.
+% PF TODO aren't you confusing clauses and disjunctions above?
 
 \paragraph{Tautologous Rules and Simple Deduction.}
 Most rules introduce tautologies. One example is
@@ -472,13 +480,16 @@ CDCL($T$)-based SMT solvers, and especially their SAT solvers,
 are fundamentally based on clauses. Hence, {\formatName} also uses
 clauses.  Nevertheless, since SMT solvers do not enforce a strict
 clausal normal-form, usual disjunction is also used
+% PF TODO: check this sentence, something is wrong
 clauses simplifies checking the rules.  For example, in the case of
 resolution there is a clear distinction between unit clauses where
 the sole literal starts with a disjunction, and non-unit clauses.  The
 syntax for clauses uses the \smtinline{cl} operator, while disjunctions
 use the standard SMT-LIB \smtinline{or} operator. The \proofRule{or}
-\emph{rule} is responsible for converting disjunctions to clauses.
+\emph{rule} is responsible for converting disjunctions into clauses.
 
+% PF TODO: I would fix that just now, using an attribute to distinguish, and a
+% unique rule
 The {\formatName} proofs use a generalized propositional
 resolution rule with the rule name \proofRule{resolution} or
 \proofRule{th\_resolution}. Both names denote the same rule. The
@@ -493,15 +504,14 @@ resolution steps.
 \paragraph{Quantifier Instantiation.}
 To express quantifier instantiation, the rule \proofRule{forall\_inst}
 is used. It produces a formula of the form $(\neg \forall x_1 \dots
-x_n. \varphi)\lor \varphi[t_1/x_1]\dots[t_n/x_n]$, where $\varphi$ is
-a term containing the free variables $(x_i)_{1\leq i\leq n}$, and $t_i$
-are new variable free terms with the same sort as $x_i$.
+x_n\,.\,\varphi)\lor \varphi[t_1/x_1]\dots[t_n/x_n]$, where $\varphi$ is
+a term containing the free variables $x_1$, \dots $x_n$, and $t_i$
+is a new variable free term with the same sort as $x_i$ for each $i$.
 
-The arguments of a \proofRule{forall\_inst} step is the list \((x_1
-, t_1), \dots, (x_n, t_n)\). While this information can
-be recovered from the term, providing this information explicitly
-aids reconstruction because the implicit reordering of equalities
-(see below) obscure which terms have been used as instances.
+The arguments of a \proofRule{forall\_inst} step is the list \((x_1 , t_1),
+\dots, (x_n, t_n)\). While this information can be recovered from the term,
+providing it explicitly helps reconstruction because the implicit reordering of
+equalities (see below) obscures which terms have been used as instances.
 Existential quantifiers are handled by Skolemization.
 
 \paragraph{Linear Arithmetic.}
@@ -532,6 +542,11 @@ of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
 \proofsep& 8.& \bot                               &(\proofRule{resolution};\:\; 7, 6, 2, 3)
 \end{plListEq}
 \end{example}
+
+% PF TODO 1 or -1 depends on the orientation of the equality...
+% x < 0 , x = 1 --> 1 1  gives 2x < 1
+% x < 0 , 1 = x --> 1 1  gives 1 < 0
+% this should somehow be fixed
 
 
 \paragraph{Subproofs and Lemmas.}
