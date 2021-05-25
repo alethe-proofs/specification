@@ -1083,7 +1083,7 @@ Rule & Conclusion \\
 \ruleref{false} & \(\neg\bot\) \\
 \ruleref{not_not} & \(\neg(\neg\neg\varphi), \varphi\) \\
 \ruleref{la_generic} & Tautologous disjunction of linear inequalities. \\
-\ruleref{lia_generic} & Tautologous disjunction of linear inequalities with integer. \\
+\ruleref{lia_generic} & Tautologous disjunction of linear integer inequalities. \\
 \ruleref{la_disequality} & \(t_1 \simeq t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)\) \\
 \ruleref{la_totality} & \(t_1 \leq t_2 \lor t_2 \leq t_1\) \\
 \ruleref{la_tautology} & A trivial linear tautology. \\
@@ -1147,7 +1147,18 @@ P(t_1, \dots, t_n) \simeq P(u_1, \dots, u_n)\) \\
 \begin{tabular}{l l}
 Rule & Description \\
 \hline
-1 & 6 \\
+\ruleref{la_generic} & Tautologous disjunction of linear inequalities. \\
+\ruleref{lia_generic} & Tautologous disjunction of linear integer inequalities. \\
+\ruleref{la_disequality} & \(t_1 \simeq t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)\) \\
+\ruleref{la_totality} & \(t_1 \leq t_2 \lor t_2 \leq t_1\) \\
+\ruleref{la_tautology} & A trivial linear tautology. \\
+\ruleref{la_rw_eq} & \((t \simeq u) \simeq (t \leq u \land u \leq t)\) \\
+\ruleref{div_simplify} & Simplification of division. \\
+\ruleref{prod_simplify} & Simplification of products. \\
+\ruleref{unary_minus_simplify} & Simplification of the unary minus. \\
+\ruleref{minus_simplify} & Simplification of subtractions. \\
+\ruleref{sum_simplify} & Simplification of sums. \\
+\ruleref{comp_simplify} & Simplification of arithmetic comparisons. \\
 \end{tabular}
 \end{table}
 
@@ -1211,7 +1222,7 @@ Rule & Description \\
 \end{table}
 
 \begin{table}[h!]
-\caption{Recommend Rules.  Some rules are very similar.  This table lists
+\caption{Recommended Rules.  Some rules are very similar.  This table lists
 which rule should be used in this case.}
 \centering
 \begin{tabular}{l l}
