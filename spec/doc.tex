@@ -976,6 +976,8 @@ production for the $\grT{choice}$ binder.
   }\par}
 \caption{The proof grammar}\label{fig:grammar}
 \end{figure}
+% PF TODO: factorize <arg_annotation> and <premise_annotation>
+% PF TODO: introduce ^? to denote optional non-terminal
 
 Input problems in the SMT-LIB standard contain a list of \emph{commands}
 that modify the internal state of the solver. In agreement
@@ -1007,6 +1009,21 @@ subproofs and sharing, respectively. The $\grT{define-fun}$ command
 corresponds exactly to the $\grT{define-fun}$ command of the
 SMT-LIB language.
 
+\begin{table}[ht]\label{rule-tab:special}
+\caption{Special Rules}
+\centering
+\begin{tabular}{l l}
+Rule & Description \\
+\hline
+\ruleref{assume}   & Repetition of an input assumption. \\
+\ruleref{subproof} & Concludes a subproof and discharges local assumptions. \\
+\end{tabular}
+\end{table}
+
+% PF TODO: the following lets think there is a subproof command, whereas it is
+% only the identified step in the anchor.  This comes from the fact that
+% assume is a command too, and proofrules have the same font as grT.
+% I have not thought of a solution, we can discuss if needed.
 \subsection*{Subproofs}
 As the name suggests, the \proofRule{subproof} rule
 expresses subproofs. This is possible because its application is
@@ -1068,21 +1085,7 @@ In the next section we provide a list of all proof rules supported by
 first lists multiple classes of proof rules.  The classes are not
 mutually exclusive: for example, the \proofRule{la\_generic} rule is
 both a linear arithmetic rule and introduces a tautology.
-
 Table~\ref{rule-tab:special} lists rules that serve a special purpose.
-
-\begin{table}[h!]\label{rule-tab:special}
-\caption{Special Rules}
-\centering
-\begin{tabular}{l l}
-Rule & Description \\
-\hline
-\ruleref{assume}   & Repetition of an input assumption. \\
-\ruleref{subproof} & Concludes a subproof and discharges local assumptions. \\
-\end{tabular}
-\end{table}
-
-\noindent
 Table~\ref{rule-tab:tautologies} lists all rules that introduce
 tautologies.  That is, regular rules that do not use premises.
 
