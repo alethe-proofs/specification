@@ -643,14 +643,14 @@ In addition to the explicit steps, solvers might reorder equalities, i.e.,
 apply symmetry of the equality predicate, without generating steps.
 The SMT solver veriT currently applies this liberty in a restricted
 form: equalities are only reordered
-when the term below the equality change during proof search. One such
+when the term below the equality changes during proof search. One such
 case is the instantiation of universally quantified variables. If an
 instantiated variable appears below an equality, then the equality might
 have an arbitrary order after instantiation.
 Nevertheless, consumers of {\formatName} must consider the possible
 implicit reordering of equalities.
 
-
+% PF TODO why concrete?  Why not simply call it Semantics?
 \section{The Concrete Semantics}
 \label{sec:semantic}
 
@@ -723,6 +723,9 @@ presented below, followed by explanations.
   \tag{\ensuremath{\mathrm{let}}}
 \end{gather}
 
+% PF TODO: \models_{\!\!{\mathcal T}} does not look nice.  Actually
+% this {\mathcal T} with the current font is ugly, without even counting
+% the space that makes \models_{\!\!{\mathcal T}} unreadable
 The rules are:
 %
 \noindent
@@ -776,6 +779,7 @@ The rules are:
 \noindent
 %These rules deserve some explanation:
 %
+% PF TODO it is not nice to have an itemize here. Maybe just remove, with an introductory sentence nicely saying indeed that rules deserve explanation.
 \begin{itemize}
 \item \TautT{} relies on an oracle $\models_{\mathcal T}$
 to derive arbitrary lemmas in a theory $\mathcal T\!$.
@@ -787,6 +791,7 @@ variables; the side condition
 is then $\substapp{\GAMMA}{t} \eqa u$.
 (We use $\eqa$ instead of $=$ because applying a substitution can
 rename bound variables.)
+% PF TODO: maybe mention alpha-conversion: it is not clear why alpha
 
 
 \smallskip
@@ -841,6 +846,7 @@ Some of the side conditions may look computationally expensive,
 but there are techniques to compute them fairly efficiently. Furthermore, by
 systematically renaming variables in \Bind, we can satisfy most of the side conditions
 trivially.
+% PF TODO "there are techniques": we might want something more strict.
 
 The set of rules can be extended to cater for arbitrary transformations that
 can be expressed as equalities, using Hilbert choice to represent fresh
@@ -894,8 +900,9 @@ The following derivation tree justifies the expansion of a `let' expression:
 
 The high-level rules presented in the previous paragraph are useful for
 presentation purpose, but they are hard to check. We specialize them by reducing
-applicability. In particular the {\Taut} rule is very hard to check und is
+applicability. In particular the {\Taut} rule is very hard to check and is
 specialized.
+% PF TODO: improve the previous sentence
 
 \begin{figure}[t]
 \begin{minted}[linenos]{smtlib2.py -x}
@@ -918,8 +925,14 @@ specialized.
 \end{minted}
 \caption{Example proof output. Assumptions are introduced (line 1--2);
 a subproof renames bound variables (line 4--8); the proof finishes with
-instantiaton and resolution steps (line 10--15)}\label{fig:proof_ex}
+instantiation and resolution steps (line 10--15)}\label{fig:proof_ex}
 \end{figure}
+
+% PF Don't you want to talk about the lambda interpretation of all this?
+% At first, I wanted to only use the lambda version.  It is only later that
+% this syntactic sugar was introduced.
+% The above section actually does not talk much about semantics if
+% it does not relate to logic, interpretation, etc...
 
 \section{The Concrete Syntax}
 \label{sec:syntax}
