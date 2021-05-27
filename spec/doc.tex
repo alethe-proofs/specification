@@ -469,8 +469,13 @@ assumption $\varphi$ and a formula $\psi$ proved by intermediate steps
 from $\varphi$, the \proofRule{subproof} rule deduces the clause $\neg \varphi, 
 \psi$ that discharges the local assumption $\varphi$.
 A \proofRule{subproof} step can not use premise from a subproof nested within the current subproof.
-\todo{In a subproof is the last step only exported or can the conclusion depend
-on any intermediate step? (Possible use case: pattern with proof of conversion)}
+\begin{comment}{Mathias Fleury}
+There are two ways to export one element from the subproof:
+\begin{itemize}
+	\item rely on the order and take the last one
+	\item add an explicit :premises in the conclusion stop to give the exported step
+\end{itemize}
+\end{comment}
 
 Subproofs are also used to manipulate the context.
 As the example below shows, within this document we denote subproofs by a
