@@ -1051,6 +1051,20 @@ command which will end the subproof. The term of this $\grT{step}$
 command is the conclusion of the subproof.  If the subproof uses a
 context, the $\grT{:args}$ annotation of the $\grT{anchor}$ command
 indicates the arguments added to the context for this subproof.
+\begin{comment}{Haniel Barbosa}
+  Bruno pointed out what looks to me like an issue with how we are currently
+  printing variable arguments for subproofs whose anchors introduce bound
+  variables or substitutions for variables: without giving the types of the
+  variables, it's not possible to know their types without some deep forward
+  looking into next proof steps. I think then that the types should be printed
+  for bound variables and variables occurring in substitutions.
+
+  FWIW, it's very simple to change veriT to do this. I did so in a branch for
+  Bruno so that the checker he's implementing does not need to implement more
+  complicated solutions to figure out the type of the variables.
+
+  I'm curious though: how is this handled in the Isabelle/HOL reconstruction?
+\end{comment}
 In the example proof (Figure~\ref{fig:proof_ex}) a subproof starts on line four.
 It ends on line seven with the $\proofRule{bind}$ steps which finished the
 proof for the renaming of the bound variable \smtinline{z2}
