@@ -1349,82 +1349,6 @@ Rule & Description \\
 
 The following lists all rules of {\formatName}.
 
-\begin{proof-rule}{bind}{veriT}
-  The \currule{} rule is used to rename bound variables.
-
-  \begin{plContainer}
-    \begin{plSubList}
-      \plLine\\
-      \Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n,
-      \proofsep& j.& \varphi \leftrightarrow \varphi' &(\dots)\\
-    \end{plSubList}
-    \begin{plList}
-      \Gamma \proofsep& k.&
-      \forall x_1, \dots, x_n.\varphi \leftrightarrow \forall y_1, \dots, y_n. \varphi'  &(\currule)\\
-    \end{plList}
-  \end{plContainer}
-  where the variables $y_1, \dots, y_n$ is not free in $\forall x_1,
-  \dots, x_n.\varphi$.
-\end{proof-rule}
-
-\begin{proof-rule}{subproof}{veriT}
-The \currule{} rule completes a subproof and discharges local
-assumptions. Every subproof starts with some \proofRule{input} steps. The
-last step of the subproof is the conclusion.
-
-\begin{plContainer}
-\begin{plSubList}
-\proofsep& i_1.& \psi_1 &(\proofRule{input})\\
-\plLine\\
-\proofsep& i_n.& \psi_n &(\proofRule{input})\\
-\plLine\\
-\proofsep& j.& \varphi &(\dots)\\
-\end{plSubList}
-\begin{plList}
-\proofsep& k.& \neg\psi_1 , \dots , \neg \psi_n ,\varphi &(\currule)\\
-\end{plList}
-\end{plContainer}
-
-\end{proof-rule}
-
-\begin{proof-rule}{sko_ex}{veriT}
-The \currule{} rule skolemizes existential quantifiers.
-
-\begin{plContainer}
-\begin{plSubList}
-\plLine\\
-\Gamma, x_1 \mapsto (\varepsilon x_1.\varphi), \dots ,  x_n \mapsto (\varepsilon x_n.\varphi)
-\proofsep& j.&
-\varphi \leftrightarrow \psi &(\dots)\\
-\end{plSubList}
-\begin{plList}
-\Gamma \proofsep& k.&
-\exists x_1, \dots, x_n.\varphi \leftrightarrow \psi  &(\currule)\\
-\end{plList}
-\end{plContainer}
-\end{proof-rule}
-
-\begin{proof-rule}{sko_forall}{veriT}
-The \currule{} rule skolemizes universal quantifiers.
-
-\begin{plContainer}
-\begin{center}
-\parbox{\textwidth}{
-\begin{plSubList}
-\plLine\\
-\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)
-\proofsep& j.&
-\varphi \leftrightarrow \psi
-&(\dots)\\
-\end{plSubList}
-\begin{plList}
-\Gamma \proofsep& k.&
-\forall x_1, \dots, x_n.\varphi \leftrightarrow \psi  &(\currule)\\
-\end{plList}}
-\end{center}
-\end{plContainer}
-\end{proof-rule}
-
 \begin{proof-rule}{assume}{veriT}
 \begin{plContainer}
 \begin{plList}
@@ -1433,6 +1357,11 @@ The \currule{} rule skolemizes universal quantifiers.
 \end{plContainer}
 where $\varphi$ corresponds to a formula asserted in the input problem up
 to the orientation of equalities.
+\paragraph{Remark.} 
+This rule can not be used by the
+$\grT{(step }\dots\grT{)}$ command. Instead it corresponds to the dedicated
+$\grT{(assume }\dots\grT{)}$ command.
+
 \end{proof-rule}
 
 \begin{proof-rule}{true}{veriT}
@@ -1462,6 +1391,89 @@ to the orientation of equalities.
 clause by resolving a clause with the double negation on \(\varphi\).
 
 \end{proof-rule}
+
+\begin{proof-rule}{th_resolution}{veriT}
+This rule is the resolution of two or more clauses.
+
+\begin{plContainer}
+\begin{plList}
+\proofsep& i_1.& \varphi^{1}_{1} , \dots , \varphi^{1}_{k^1} &(\dots)\\
+\plLine\\
+\proofsep& i_n.& \varphi^{n}_{1} , \dots , \varphi^{n}_{k^n} &(\dots)\\
+\proofsep& j.&
+\varphi^{r_1}_{s_1} , \dots , \varphi^{r_m}_{s_m} 
+&(\currule; i_1, \dots, i_n)\\
+\end{plList}
+\end{plContainer}
+where $\varphi^{r_1}_{s_1} , \dots , \varphi^{r_m}_{s_m}$ are from $\varphi^{i}_{j}$ and
+are the result of a chain of predicate resolution steps on the clauses of
+$i_1$ to $i_n$. It is possible that $m = 0$, i.e. that
+the result is the empty clause.
+
+This rule is only used when the resolution step is not emitted by the SAT solver.
+See the equivalent \proofRule{resolution} rule for the rule emitted by the
+SAT solver.
+
+\paragraph{Remark.} While checking this rule is NP-complete, the \currule-steps
+produced by veriT are simple. Experience with reconstructing the step in
+Isabelle/HOL shows that checking can done by naive decision procedures. The
+vast majority of \currule-steps are binary resolution steps.
+\end{proof-rule}
+
+\begin{proof-rule}{resolution}{veriT}
+This rule is equivalent to the \proofRule{the\_resolution} rule, but it is
+emitted by the SAT solver instead of theory reasoners. The differentiation
+serves only informational purpose.
+
+\end{proof-rule}
+
+\begin{proof-rule}{tautology}{veriT}
+  \begin{plContainer}
+    \begin{plList}
+      \proofsep& i.&
+      \varphi_1 , \dots , \varphi_i , \dots , \varphi_j ,\dots , \varphi_n
+      &(\dots)\\
+      \proofsep& j.& \top &(\currule; i)\\
+    \end{plList}
+  \end{plContainer}
+  and $\varphi_i = \bar\varphi_j$.
+\end{proof-rule}
+
+\begin{proof-rule}{contraction}{veriT}
+  \begin{plContainer}
+    \begin{plList}
+      \proofsep& i.& \varphi_1 , \dots , \varphi_n &(\dots)\\
+      \plLine\\
+      \proofsep& j.& \varphi_{k_1} , \dots , \varphi_{k_m}
+      &(\currule; i)\\
+    \end{plList}
+  \end{plContainer}
+  where $m \leq n$ and  $k_1 \dots k_m$ is a monotonic map to $1 \dots n$
+  such that $\varphi_{k_1} \dots \varphi_{k_m}$ are pairwise distinct and
+  $\{\varphi_1, \dots, \varphi_n\} = \{\varphi_{k_1} \dots \varphi_{k_m}\}$.
+  Hence, this rule removes duplicated literals.
+\end{proof-rule}
+
+\begin{proof-rule}{subproof}{veriT}
+The \currule{} rule completes a subproof and discharges local
+assumptions. Every subproof starts with some \proofRule{input} steps. The
+last step of the subproof is the conclusion.
+
+\begin{plContainer}
+\begin{plSubList}
+\proofsep& i_1.& \psi_1 &(\proofRule{input})\\
+\plLine\\
+\proofsep& i_n.& \psi_n &(\proofRule{input})\\
+\plLine\\
+\proofsep& j.& \varphi &(\dots)\\
+\end{plSubList}
+\begin{plList}
+\proofsep& k.& \neg\psi_1 , \dots , \neg \psi_n ,\varphi &(\currule)\\
+\end{plList}
+\end{plContainer}
+
+\end{proof-rule}
+
 
 \begin{proof-rule}{la_generic}{veriT}
 A step of the $\currule$ rule represents a tautological clause of linear
@@ -1644,6 +1656,62 @@ as for the rule \proofRule{la\_generic}.
 
 \end{proof-rule}
 
+\begin{proof-rule}{bind}{veriT}
+  The \currule{} rule is used to rename bound variables.
+
+  \begin{plContainer}
+    \begin{plSubList}
+      \plLine\\
+      \Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n,
+      \proofsep& j.& \varphi \leftrightarrow \varphi' &(\dots)\\
+    \end{plSubList}
+    \begin{plList}
+      \Gamma \proofsep& k.&
+      \forall x_1, \dots, x_n.\varphi \leftrightarrow \forall y_1, \dots, y_n. \varphi'  &(\currule)\\
+    \end{plList}
+  \end{plContainer}
+  where the variables $y_1, \dots, y_n$ is not free in $\forall x_1,
+  \dots, x_n.\varphi$.
+\end{proof-rule}
+
+\begin{proof-rule}{sko_ex}{veriT}
+The \currule{} rule skolemizes existential quantifiers.
+
+\begin{plContainer}
+\begin{plSubList}
+\plLine\\
+\Gamma, x_1 \mapsto (\varepsilon x_1.\varphi), \dots ,  x_n \mapsto (\varepsilon x_n.\varphi)
+\proofsep& j.&
+\varphi \leftrightarrow \psi &(\dots)\\
+\end{plSubList}
+\begin{plList}
+\Gamma \proofsep& k.&
+\exists x_1, \dots, x_n.\varphi \leftrightarrow \psi  &(\currule)\\
+\end{plList}
+\end{plContainer}
+\end{proof-rule}
+
+\begin{proof-rule}{sko_forall}{veriT}
+The \currule{} rule skolemizes universal quantifiers.
+
+\begin{plContainer}
+\begin{center}
+\parbox{\textwidth}{
+\begin{plSubList}
+\plLine\\
+\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)
+\proofsep& j.&
+\varphi \leftrightarrow \psi
+&(\dots)\\
+\end{plSubList}
+\begin{plList}
+\Gamma \proofsep& k.&
+\forall x_1, \dots, x_n.\varphi \leftrightarrow \psi  &(\currule)\\
+\end{plList}}
+\end{center}
+\end{plContainer}
+\end{proof-rule}
+
 \begin{proof-rule}{forall_inst}{veriT}
 \begin{plContainer}
 \begin{plList}
@@ -1661,68 +1729,6 @@ more appropriate.  The resulting proof would be more fine grained and this
 would also be an opportunity to provide a proof for the clausification
 as currently done by \proofRule{qnt_cnf}.
 
-\end{proof-rule}
-
-\begin{proof-rule}{th_resolution}{veriT}
-This rule is the resolution of two or more clauses.
-
-\begin{plContainer}
-\begin{plList}
-\proofsep& i_1.& \varphi^{1}_{1} , \dots , \varphi^{1}_{k^1} &(\dots)\\
-\plLine\\
-\proofsep& i_n.& \varphi^{n}_{1} , \dots , \varphi^{n}_{k^n} &(\dots)\\
-\proofsep& j.&
-\varphi^{r_1}_{s_1} , \dots , \varphi^{r_m}_{s_m} 
-&(\currule; i_1, \dots, i_n)\\
-\end{plList}
-\end{plContainer}
-where $\varphi^{r_1}_{s_1} , \dots , \varphi^{r_m}_{s_m}$ are from $\varphi^{i}_{j}$ and
-are the result of a chain of predicate resolution steps on the clauses of
-$i_1$ to $i_n$. It is possible that $m = 0$, i.e. that
-the result is the empty clause.
-
-This rule is only used when the resolution step is not emitted by the SAT solver.
-See the equivalent \proofRule{resolution} rule for the rule emitted by the
-SAT solver.
-
-\paragraph{Remark.} While checking this rule is NP-complete, the \currule-steps
-produced by veriT are simple. Experience with reconstructing the step in
-Isabelle/HOL shows that checking can done by naive decision procedures. The
-vast majority of \currule-steps are binary resolution steps.
-\end{proof-rule}
-
-\begin{proof-rule}{resolution}{veriT}
-This rule is equivalent to the \proofRule{the\_resolution} rule, but it is
-emitted by the SAT solver instead of theory reasoners. The differentiation
-serves only informational purpose.
-
-\end{proof-rule}
-
-\begin{proof-rule}{tautology}{veriT}
-  \begin{plContainer}
-    \begin{plList}
-      \proofsep& i.&
-      \varphi_1 , \dots , \varphi_i , \dots , \varphi_j ,\dots , \varphi_n
-      &(\dots)\\
-      \proofsep& j.& \top &(\currule; i)\\
-    \end{plList}
-  \end{plContainer}
-  and $\varphi_i = \bar\varphi_j$.
-\end{proof-rule}
-
-\begin{proof-rule}{contraction}{veriT}
-  \begin{plContainer}
-    \begin{plList}
-      \proofsep& i.& \varphi_1 , \dots , \varphi_n &(\dots)\\
-      \plLine\\
-      \proofsep& j.& \varphi_{k_1} , \dots , \varphi_{k_m}
-      &(\currule; i)\\
-    \end{plList}
-  \end{plContainer}
-  where $m \leq n$ and  $k_1 \dots k_m$ is a monotonic map to $1 \dots n$
-  such that $\varphi_{k_1} \dots \varphi_{k_m}$ are pairwise distinct and
-  $\{\varphi_1, \dots, \varphi_n\} = \{\varphi_{k_1} \dots \varphi_{k_m}\}$.
-  Hence, this rule removes duplicated literals.
 \end{proof-rule}
 
 \begin{proof-rule}{refl}{veriT}
