@@ -1111,6 +1111,19 @@ tautologies.  That is, regular rules that do not use premises.
 Within the tables, the number in brackets corresponds to the number
 of the rule in Section~\ref{sec:rules}.
 
+\begin{table}[h!]
+\caption{Resolution and Related Rules}
+\centering
+\begin{tabular}{l l}
+Rule & Description \\
+\hline
+\ruleref{resolution} & Chain resolution of two or more clauses. \\
+\ruleref{th_resolution} & As \proofRule{resoltuion}, but used by theory solvers. \\
+\ruleref{tautology} & Simplification of tautological clauses to $\top$. \\
+\ruleref{contraction} & Removal of duplicated literals. \\
+\end{tabular}
+\end{table}
+
 %\begin{table}[h!]
 %\centering
 \begin{longtable}{l l}
@@ -1180,7 +1193,7 @@ P(t_1, \dots, t_n) \simeq P(u_1, \dots, u_n)\) \\
 %\end{table}
 
 \begin{table}[h!]
-\caption{Linear Arithmetic}
+\caption{Linear Arithmetic Rules}
 \centering
 \begin{tabular}{l l}
 Rule & Description \\
@@ -1230,47 +1243,107 @@ Rule & Description \\
 \end{table}
 
 \begin{table}[h!]
-\caption{Clausification Rules}
+\caption{Clausification Rules.  These rules can be used to perform propositional
+clausification.}
 \centering
 \begin{tabular}{l l}
 Rule & Description \\
 \hline
-1 & 6 \\
+\ruleref{and} & And elimination. \\
+\ruleref{not_or} & Elimination of a negated disjunction. \\
+\ruleref{or} & Disjunction to clause. \\
+\ruleref{not_and} & Distribution of negation over a conjunction. \\
+\ruleref{xor1} & From \(\operatorname{xor} \varphi_1 \varphi_2\) to \(\varphi_1, \varphi_2\). \\
+\ruleref{xor2} & From \(\operatorname{xor} \varphi_1 \varphi_2\) to \(\neg\varphi_1, \neg\varphi_2\). \\
+\ruleref{not_xor1} & From \(\neg(\operatorname{xor} \varphi_1 \varphi_2)\) to \(\varphi_1, \neg\varphi_2\). \\
+\ruleref{not_xor2} & From \(\neg(\operatorname{xor} \varphi_1 \varphi_2)\) to \(\neg\varphi_1, \varphi_2\). \\
+\ruleref{implies} & From \( \varphi_1\rightarrow\varphi_2 \) to \(\neg\varphi_1 , \varphi_2 \). \\
+\ruleref{not_implies1} & From \(\neg (\varphi_1\rightarrow\varphi_2)\) to \(\varphi_1\). \\
+\ruleref{not_implies2} & From \(\neg (\varphi_1\rightarrow\varphi_2)\) to \(\neg\varphi_2\). \\
+\ruleref{equiv1} & From \( \varphi_1\leftrightarrow\varphi_2\) to \(\neg\varphi_1 , \varphi_2\). \\
+\ruleref{equiv2} & From \( \varphi_1\leftrightarrow\varphi_2\) to \(\varphi_1 , \neg\varphi_2\). \\
+\ruleref{not_equiv1} & From \(\neg(\varphi_1\leftrightarrow\varphi_2)\) to \(\varphi_1 , \varphi_2\). \\
+\ruleref{not_equiv2} & From \(\neg(\varphi_1\leftrightarrow\varphi_2)\) to \(\neg\varphi_1 , \neg\varphi_2\). \\
+\ruleref{and_pos} & \(\neg (\varphi_1 \land \dots \land \varphi_n), \varphi_k\)\\
+\ruleref{and_neg} & \((\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1, \dots , \neg\varphi_n \) \\
+\ruleref{or_pos} & \(\neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots
+	, \varphi_n \) \\
+\ruleref{or_neg} &
+\( (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k \)\\
+\ruleref{xor_pos1} &
+\( \neg (\varphi_1 \operatorname{xor} \varphi_2) , \varphi_1 , \varphi_2 \) \\
+\ruleref{xor_pos2} &
+\( \neg (\varphi_1 \operatorname{xor} \varphi_2)
+, \neg \varphi_1, \neg \varphi_2 \) \\
+\ruleref{xor_neg1} &
+\( \varphi_1 \operatorname{xor} \varphi_2, \varphi_1 , \neg \varphi_2 \) \\
+\ruleref{xor_neg2} &
+\( \varphi_1 \operatorname{xor} \varphi_2, \neg \varphi_1 , \varphi_2 \) \\
+\ruleref{implies_pos} &
+\( \neg (\varphi_1 \rightarrow \varphi_2), \neg \varphi_1 , \varphi_2 \) \\
+\ruleref{implies_neg1} &
+\( \varphi_1 \rightarrow \varphi_2, \varphi_1 \) \\
+\ruleref{implies_neg2} &
+\( \varphi_1 \rightarrow \varphi_2, \neg \varphi_2 \) \\
+\ruleref{equiv_pos1} &
+\(\neg (\varphi_1 \leftrightarrow \varphi_2) , \varphi_1 , \neg \varphi_2\) \\
+\ruleref{equiv_pos2} &
+\(\neg (\varphi_1 \leftrightarrow \varphi_2) , \neg \varphi_1 , \varphi_2\) \\
+\ruleref{equiv_neg1} &
+\(\varphi_1 \leftrightarrow \varphi_2 , \neg \varphi_1 , \neg \varphi_2\) \\
+\ruleref{equiv_neg2} &
+\(\varphi_1 \leftrightarrow \varphi_2 , \varphi_1 , \varphi_2\) \\
+\ruleref{let} & Elimination of the 'let' operator.  \\
+\ruleref{distinct_elim} & Elimination of the 'distinct' operator.  \\
+\ruleref{nary_elim} & Elimination of n-ary application of operators. \\
 \end{tabular}
 \end{table}
 
 \begin{table}[h!]
-\caption{Resolution and Clause Simplification}
+\caption{Simplification Rules. These rules represent typical operator-level
+simplifications.}
 \centering
 \begin{tabular}{l l}
 Rule & Description \\
 \hline
-1 & 6 \\
+\ruleref{connective_def} & Definition of the boolean connectives. \\
+\ruleref{and_simplify} & Simplification of a conjunction. \\
+\ruleref{or_simplify} & Simplification of a disjunction. \\
+\ruleref{not_simplify} & Simplification of a boolean negation. \\
+\ruleref{implies_simplify} & Simplification of an implication. \\
+\ruleref{equiv_simplify} & Simplification of an equivalence. \\
+\ruleref{bool_simplify} & Simplification of combined boolean connectives. \\
+\ruleref{ac_simp} & Simplification of nested disjunctions and conjunctions. \\
+\ruleref{ite_simplify} & Simplification of if-then-else. \\
+\ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
+\ruleref{onepoint} & The one-point rule. \\
+\ruleref{qnt_join} & Joining of consecutive quantifiers. \\
+\ruleref{qnt_rm_unused} & Removal of unused quantified variables. \\
+\ruleref{eq_simplify} & Simplification of equalities. \\
+\ruleref{div_simplify} & Simplification of division. \\
+\ruleref{prod_simplify} & Simplification of products. \\
+\ruleref{unary_minus_simplify} & Simplification of the unary minus. \\
+\ruleref{minus_simplify} & Simplification of subtractions. \\
+\ruleref{sum_simplify} & Simplification of sums. \\
+\ruleref{comp_simplify} & Simplification of arithmetic comparisons. \\
+\ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
 \end{tabular}
 \end{table}
 
-\begin{table}[h!]
-\caption{Simplification Rules}
-\centering
-\begin{tabular}{l l}
-Rule & Description \\
-\hline
-1 & 6 \\
-\end{tabular}
-\end{table}
-
-\begin{table}[h!]
-\caption{Recommended Rules.  Some rules are very similar.  This table lists
-which rule should be used in this case.}
-\centering
-\begin{tabular}{l l}
-Rule & Description \\
-\hline
-1 & 6 \\
-\end{tabular}
-\end{table}
+%TODO: Implement this
+%\begin{table}[h!]
+%\caption{Recommended Rules.  Some rules are very similar.  This table lists
+%which rule should be used in this case.}
+%\centering
+%\begin{tabular}{l l}
+%Rule & Description \\
+%\hline
+%1 & 6 \\
+%\end{tabular}
+%\end{table}
 
 %TODO: Add proof-relevante options
+\clearpage
 \section{List of Proof Rules}
 \label{sec:rules}
 
