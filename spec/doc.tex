@@ -1347,35 +1347,7 @@ Rule & Description \\
 \section{List of Proof Rules}
 \label{sec:rules}
 
-The following lists all rules of {\formatName}. They are categorized by type:
-
-\begin{description}
-\item[Main Rules (Sect.~\ref{sec:main-rules})] contains the rules that justify
-  the existence of the proof format, namely the \proofRule{bind} and
-  \proofRule{subproof} rules.
-\item[Skolemization Rules (Sect.~\ref{sec:skolem-rules})] that uses Hilbert choice.
-\item[Basic Proof Rules (Sect.~\ref{sec:basic-rules}).]
-\item[Arithmetic Rules (Sect.~\ref{sec:arith-rules}).]
-\item[Quantifier Rules (Sect.~\ref{sec:quantifier-rules})] that shows how to instantiate a formula.
-\item[SAT handling (Sect.~\ref{sec:resolution-rules})] where resolution and
-  removal of duplicated literals are presented.
-\item[Clausification of] Boolean operators
-  (Sect.~\ref{sec:clausification-bools}) and if-then-else
-  (Sect.~\ref{sec:ite-rules}) where structure is moved from terms to the clause
-  structure.
-\item[Simplifications (Sect.~\ref{sec:simplification-rules})] are a very
-  important part of any SMT solver. veriT provides very detailed rules. To
-  simplify checking, we encourage users to write one step per theory instead of
-  combining all simplifications in a single step.
-\item[Term Reshaping (Sect.~\ref{sec:unsorted-rules})] that transform a term by
-  adding or removing variables.
-\end{description}
-
-\subsection*{Main Rules}
-\label{sec:main-rules}
-The following rules are the raison-d'\^etre of the proof format: providing
-detailed reasoning under quantifiers.
-
+The following lists all rules of {\formatName}.
 
 \begin{proof-rule}{bind}{veriT}
   The \currule{} rule is used to rename bound variables.
@@ -1394,7 +1366,6 @@ detailed reasoning under quantifiers.
   where the variables $y_1, \dots, y_n$ is not free in $\forall x_1,
   \dots, x_n.\varphi$.
 \end{proof-rule}
-
 
 \begin{proof-rule}{subproof}{veriT}
 The \currule{} rule completes a subproof and discharges local
@@ -1415,10 +1386,6 @@ last step of the subproof is the conclusion.
 \end{plContainer}
 
 \end{proof-rule}
-
-
-\subsection*{Skolemization Rules}
-\label{sec:skolem-rules}
 
 \begin{proof-rule}{sko_ex}{veriT}
 The \currule{} rule skolemizes existential quantifiers.
@@ -1458,9 +1425,6 @@ The \currule{} rule skolemizes universal quantifiers.
 \end{plContainer}
 \end{proof-rule}
 
-\subsection*{Basic Proof Rules}
-\label{sec:basic-rules}
-
 \begin{proof-rule}{assume}{veriT}
 \begin{plContainer}
 \begin{plList}
@@ -1498,9 +1462,6 @@ to the orientation of equalities.
 clause by resolving a clause with the double negation on \(\varphi\).
 
 \end{proof-rule}
-
-\subsection*{Arithmetic Rules}
-\label{sec:arith-rules}
 
 \begin{proof-rule}{la_generic}{veriT}
 A step of the $\currule$ rule represents a tautological clause of linear
@@ -1683,9 +1644,6 @@ as for the rule \proofRule{la\_generic}.
 
 \end{proof-rule}
 
-\subsection*{Quantifier Rules}
-\label{sec:quantifier-rules}
-
 \begin{proof-rule}{forall_inst}{veriT}
 \begin{plContainer}
 \begin{plList}
@@ -1704,9 +1662,6 @@ would also be an opportunity to provide a proof for the clausification
 as currently done by \proofRule{qnt_cnf}.
 
 \end{proof-rule}
-
-\subsection*{Resolution Rules and Clause Simplifications}
-\label{sec:resolution-rules}
 
 \begin{proof-rule}{th_resolution}{veriT}
 This rule is the resolution of two or more clauses.
@@ -1769,9 +1724,6 @@ serves only informational purpose.
   $\{\varphi_1, \dots, \varphi_n\} = \{\varphi_{k_1} \dots \varphi_{k_m}\}$.
   Hence, this rule removes duplicated literals.
 \end{proof-rule}
-
-\subsection*{Equality and Congruence Reasonning}
-\label{sec:equality-rules}
 
 \begin{proof-rule}{refl}{veriT}
 Either
@@ -1898,8 +1850,6 @@ P(t_1, \dots, t_n) \simeq P(u_1, \dots, u_n)
 %
 \end{proof-rule}
 
-\subsection*{Clausification of Quantifiers}
-
 \begin{proof-rule}{qnt_cnf}{veriT}
 \begin{plContainer}
 \begin{plList}
@@ -1945,10 +1895,6 @@ where:
 done during clausification.
 
 \end{proof-rule}
-
-
-\subsection*{Clausification of Boolean Operators}
-\label{sec:clausification-bools}
 
 \begin{proof-rule}{and}{veriT}
   \begin{plContainer}
@@ -2101,7 +2047,6 @@ An application of the \currule{} rule.
 \end{plContainer}
 \end{proof-rule}
 
-
 \begin{proof-rule}{and_pos}{veriT}
 \begin{plContainer}
 \begin{plList}
@@ -2240,11 +2185,6 @@ with $1 \leq k \leq n$.
 \end{plContainer}
 \end{proof-rule}
 
-
-\subsection*{Clausification of If-Then-Else}
-\label{sec:ite-rules}
-
-
 \begin{proof-rule}{ite1}{veriT}
 \begin{plContainer}
 \begin{plList}
@@ -2321,20 +2261,6 @@ with $1 \leq k \leq n$.
 \end{plContainer}
 \end{proof-rule}
 
-
-
-\subsection*{Simplifications}
-\label{sec:simplification-rules}
-
-The following rules are pure simplification rules. We give a very detailed list.
-Combining several simplifications at once is possible, but we encourage proofs
-to do so for only one single theory at a time.
-
-
-
-\subsubsection*{Boolean Operators}
-\label{sec:bool-simp-rules}
-
 \begin{proof-rule}{connective_def}{veriT}
   This rule is used to replace connectives by their definition. It can be one
   of the following:
@@ -2366,7 +2292,6 @@ to do so for only one single theory at a time.
     \end{plList}
   \end{plContainer}
 \end{proof-rule}
-
 
 \begin{proof-rule}{and_simplify}{veriT}
 This rule simplifies an $\land$ term by applying equivalent
@@ -2587,10 +2512,6 @@ The possible transformations are:
 \end{itemize}
 \end{proof-rule}
 
-
-\subsubsection*{Quantifiers}
-\label{sec:qnt-simp-rules}
-
 \begin{proof-rule}{qnt_simplify}{veriT}
   This rule simplifies a $\forall$-formula with a constant predicate.
 
@@ -2603,7 +2524,6 @@ The possible transformations are:
   \end{plContainer}
   where $\varphi$ is either $\top$ or $\bot$.
 \end{proof-rule}
-
 
 \begin{proof-rule}{onepoint}{veriT}
 The {\currule} rule is the ``one-point-rule''. That is: it eliminates quantified
@@ -2662,7 +2582,6 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
 
 \end{proof-rule}
 
-
 \begin{proof-rule}{qnt_join}{veriT}
   \begin{plContainer}
     \begin{plList}
@@ -2692,10 +2611,6 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
 
 \end{proof-rule}
 
-
-\subsubsection*{Equalities}
-\label{sec:equality-simp-rules}
-
 \begin{proof-rule}{eq_simplify}{veriT}
   This rule simplifies an $\simeq$ term by applying equivalent
   transformations as long as possible. Hence, the general form is
@@ -2716,10 +2631,6 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
   \item $\neg (t \simeq t) \leftrightarrow \bot$ if $t$ is a numeric constant.
   \end{itemize}
 \end{proof-rule}
-
-
-\subsubsection*{Arithmetic Operators}
-\label{sec:arith-simp-rules}
 
 \begin{proof-rule}{div_simplify}{veriT}
 This rule simplifies a division by applying equivalent
@@ -2870,10 +2781,6 @@ The possible transformations are:
 \end{itemize}
 \end{proof-rule}
 
-
-\subsubsection*{Other Simplifications}
-\label{sec:other-simp-rules}
-
 \begin{proof-rule}{let}{veriT}
   This rule eliminats $\operatorname{let}$. It has the form
 
@@ -2901,7 +2808,6 @@ The possible transformations are:
   is skipped.
 
 \end{proof-rule}
-
 
 \begin{proof-rule}{distinct_elim}{veriT}
 This rule eliminates the $\operatorname{distinct}$ predicate. If called with one
@@ -2991,10 +2897,6 @@ i.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
 \end{plContainer}
 \end{proof-rule}
 
-\subsection*{Term Reshaping}
-\label{sec:unsorted-rules}
-
-
 \begin{proof-rule}{bfun_elim}{veriT}
 \begin{plContainer}
 \begin{plList}
@@ -3021,7 +2923,6 @@ f(x, \top, y)\;f(x, \bot, y)$. If the argument is already the constant $\top$
 or $\bot$ it is ignored.
 
 \end{proof-rule}
-
 
 \begin{proof-rule}{ite_intro}{veriT}
 Either 
