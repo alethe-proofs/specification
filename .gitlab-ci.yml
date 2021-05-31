@@ -6,11 +6,11 @@ before_script:
 build:
     script:
     - cd spec
-    - pdflatex  -shell-escape -recorder  "doc.tex"
+    - pdflatex -shell-escape -recorder '\def\nocomments{}\input{doc.tex}'
     - bibtex  "doc"
-    - pdflatex  -shell-escape -recorder  "doc.tex"
+    - pdflatex -shell-escape -recorder '\def\nocomments{}\input{doc.tex}'
     - bibtex  "doc"
-    - pdflatex  -shell-escape -recorder  "doc.tex"
+    - pdflatex -shell-escape -recorder '\def\nocomments{}\input{doc.tex}'
     - cd ..
     - cp spec/doc.pdf specification.pdf
     artifacts:

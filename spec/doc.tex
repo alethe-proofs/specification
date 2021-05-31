@@ -62,7 +62,8 @@
 \newcommand{\formatName}{Alethe}
 
 % Environment for discussion, conditional
-\ifdef{\withcomments}
+\ifdef{\nocomments}
+{\NewEnviron{comment}[1]{}}
 {\global\mdfdefinestyle{commentstyle}{%
 frametitlebackgroundcolor=gray!20,%
 frametitlefont={\sffamily\bfseries},%
@@ -75,7 +76,6 @@ linewidth=1pt,%
   \BODY
 \end{mdframed}%
 }}
-{\NewEnviron{comment}[1]{}}
 
 \newcounter{ProofRuleCounter}
 
