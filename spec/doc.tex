@@ -112,7 +112,7 @@ break
 \end{inner-rule}
 }
 
-\newcommand{\ruleref}[1]{\autoref{rule:#1}:~\proofRule{\nameref{rule:#1}}}
+\newcommand{\ruleref}[1]{\proofRule{\nameref{rule:#1}}~(\ref{rule:#1})}
 
 % == Theorem environments ==
 
@@ -1099,7 +1099,7 @@ no $\grT{define-fun}$ commands are issued and the constants are expanded.
 \section{Classifications of the Proof Rules}
 \label{sec:rules-overview}
 
-In the next section we provide a list of all proof rules supported by
+Section~\ref{sec:rules} provides a list of all proof rules supported by
 {\formatName}.  To make this long list more accessible, this section
 first lists multiple classes of proof rules.  The classes are not
 mutually exclusive: for example, the \proofRule{la\_generic} rule is
@@ -1107,6 +1107,9 @@ both a linear arithmetic rule and introduces a tautology.
 Table~\ref{rule-tab:special} lists rules that serve a special purpose.
 Table~\ref{rule-tab:tautologies} lists all rules that introduce
 tautologies.  That is, regular rules that do not use premises.
+
+Within the tables, the number in brackets corresponds to the number
+of the rule in Section~\ref{sec:rules}.
 
 %\begin{table}[h!]
 %\centering
