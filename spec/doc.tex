@@ -1065,6 +1065,22 @@ indicates the arguments added to the context for this subproof.
 
   I'm curious though: how is this handled in the Isabelle/HOL reconstruction?
 \end{comment}
+\begin{comment}{Hans-Jörg Schurr}
+    Indeed the substitution induced by an anchor should always be fully
+    sorted. I think, the sorts should also be checked during proof checking.
+
+    What syntax did you choose to print the sorts?  I would like to
+    understand better when it's necessary to print a sort. Certainly,
+    one can often directly deduce the sort of a variable from the substitute
+    term. On the other hand, it is certainly necessary to print the sorts
+    of fixed variables.  Furthermore, constructions such as 'x1:=x2, x2:=x1'
+    need sort annotations.  In theory we could probably eliminate the last
+    case. Is there a case where the substitute is a complex term, but it is
+    still not clear what sort it is?
+
+    For Isabelle/HOL it's not a problem since its reconstruction looks
+    ahead to the conclusion of the subproof.
+\end{comment}
 In the example proof (Figure~\ref{fig:proof_ex}) a subproof starts on line four.
 It ends on line seven with the $\proofRule{bind}$ steps which finished the
 proof for the renaming of the bound variable \smtinline{z2}
