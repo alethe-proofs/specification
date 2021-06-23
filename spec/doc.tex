@@ -1718,15 +1718,17 @@ The \currule{} rule skolemizes existential quantifiers.
 \begin{plContainer}
 \begin{plSubList}
 \plLine\\
-\Gamma, x_1 \mapsto (\varepsilon x_1.\varphi), \dots ,  x_n \mapsto (\varepsilon x_n.\varphi)
-\proofsep& j.&
-\varphi \leftrightarrow \psi &(\dots)\\
+\Gamma, x_1 \mapsto (\varepsilon x_1. (\exists x_2, \dots, x_n. \varphi)), \dots ,  x_n \mapsto (\varepsilon
+x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{n-1}\mapsto \varepsilon_{n-1}])
+\proofsep& j.&\varphi \leftrightarrow \psi &(\dots)\\
 \end{plSubList}
 \begin{plList}
 \Gamma \proofsep& k.&
 \exists x_1, \dots, x_n.\varphi \leftrightarrow \psi  &(\currule)\\
 \end{plList}
 \end{plContainer}
+where $\varepsilon_i$ stands for $\varepsilon x_i. (\exists x_{i+1}, \dots,
+x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{i-1}\mapsto\varepsilon_{i-1}])$
 \end{proof-rule}
 
 \begin{proof-rule}{sko_forall}{veriT}
