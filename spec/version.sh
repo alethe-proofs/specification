@@ -3,8 +3,8 @@
 
 v=`git describe --tag --dirty=-changed --always 2> /dev/null`
 if [ -n "$v" ]; then
-    printf "git revision %s." "$v"
+    printf "%s" "$v"
 else
-	echo "an unknown git revision."
+	echo "not known"
 fi
 

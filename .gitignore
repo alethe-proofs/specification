@@ -1,5 +1,4 @@
-_minted-doc/
-_minted-comments/
+_minted-*/
 *.aux
 *.bbl
 *.blg
@@ -10,3 +9,4 @@ _minted-comments/
 *.pdf
 *.pag
 *.toc
+*.pyg
