@@ -269,7 +269,7 @@ break
 % ========================================
 
 \title{The {\formatName} Proof Format}
-\subtitle{A Speculative Specification and Reference}
+\subtitle{A Speculative Specification and Reference\\(Work in Progress)}
 \author{Haniel Barbosa\textsuperscript{1}
 \and Mathias Fleury\textsuperscript{2}
 \and Pascal Fontaine\textsuperscript{3}
@@ -609,6 +609,51 @@ of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
 % x < 0 , x = 1 --> 1 1  gives 2x < 1
 % x < 0 , 1 = x --> 1 1  gives 1 < 0
 % this should somehow be fixed
+
+\paragraph{Subproofs and Lemmas.}
+The proof format uses subproof to prove lemmas and to manipulate the context.
+To prove lemmas, a subproof can
+introduce local assumptions. The subproof \emph{rule} discharges the
+local assumptions by concluding with an implication (written as a clause)
+which has the local assumptions as its antecedents. 
+A step can only use steps from the same subproof as its premise. It
+is not possible to have premises from either a subproof at a deeper
+level or from an outer level.%\todo{We could technically allow premises from
+%outside. Do we allow this?} 
+
+As the example below shows, our notation for subproofs is a
+frame around the rules within the subproof. Subproofs are also used to
+manipulate the context.
+
+\begin{example} This example show a contradiction proof for the
+formula \((2 + 2) \simeq 5\). The proof uses a subproof to prove the
+lemma \(((2 + 2) \simeq 5) \Rightarrow 4 \simeq 5\).
+
+\begin{plContainer}
+\begin{plList}
+\proofsep& 1.& (2 + 2) \simeq 5                   &(\proofRule{assume})\\
+\end{plList}
+\begin{plSubList}
+\proofsep& 2.& (2 + 2) \simeq 5                   &(\proofRule{assume})\\
+\proofsep& 3.& (2 + 2) \simeq 4                   &(\proofRule{plus\_simplify})\\
+\proofsep& 4.& 4 \simeq 5                         &(\proofRule{trans}; 1, 2)\\
+\end{plSubList}
+\begin{plList}
+\proofsep& 5.& \neg((2 + 2) \simeq 5), 4 \simeq 5 &(\proofRule{subproof})\\
+\proofsep& 6.& (4 \simeq 5)\leftrightarrow \bot &(\proofRule{eq\_simplify})\\
+\proofsep& 7.& \neg((4 \simeq 5)\leftrightarrow \bot), \neg(4\simeq 5), \bot  &(\proofRule{equiv\_pos2})\\
+\proofsep& 8.& \bot  &(\proofRule{resolution}; 1, 5, 7, 8)\\
+\end{plList}
+\end{plContainer}
+
+\end{example}
+
+\paragraph{Contexts.}
+A specialty of the veriT proof
+format is the step context. The context is a possible empty list $[c_1,
+\dots, c_l]$, where $c_i$ is either a variable or a variable-term tuple
+denoted $x_i\mapsto t_i$. Throughout this document $\Gamma$ denotes
+an arbitrary context. The context denotes a substitution.%\todo{Extend} 
 
 \paragraph{Skolemization and Other Preprocessing Steps.}
 One typical example for a rule with context is the \proofRule{sko\_ex}
