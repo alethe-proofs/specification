@@ -10,3 +10,8 @@ _minted-*/
 *.pag
 *.toc
 *.pyg
+*.vrb
+*.snm
+*.run.xml
+*.nav
+*.bcf
