@@ -331,8 +331,7 @@ The \currule{} rule skolemizes existential quantifiers.
 \begin{plContainer}
 \begin{plSubList}
 \plLine\\
-\Gamma, x_1 \mapsto (\varepsilon x_1. (\exists x_2, \dots, x_n. \varphi)), \dots ,  x_n \mapsto (\varepsilon
-x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{n-1}\mapsto \varepsilon_{n-1}])
+\Gamma, x_1 \mapsto \varepsilon_1, \dots ,  x_n \mapsto \varepsilon_n
 \proofsep& j.&\varphi \leftrightarrow \psi &(\dots)\\
 \end{plSubList}
 \begin{plList}
@@ -341,7 +340,7 @@ x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{n-1}\mapsto \varepsilon_{n-1}])
 \end{plList}
 \end{plContainer}
 where $\varepsilon_i$ stands for $\varepsilon x_i. (\exists x_{i+1}, \dots,
-x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{i-1}\mapsto\varepsilon_{i-1}])$
+x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{i-1}\mapsto\varepsilon_{i-1}])$.
 \end{proof-rule}
 
 \begin{proof-rule}{sko_forall}{veriT}
@@ -370,11 +369,11 @@ The \currule{} rule skolemizes universal quantifiers.
 \begin{plList}
 \proofsep& i.&
 \neg (\forall x_1, \dots, x_n. P) \lor P[t_1/x_1]\dots[t_n/x_n]
-&(\currule; ; x_{k_1} := t_{k_1}, \dots, x_{k_n} := t_{k_n})\\
+&(\currule; ; (x_{k_1}, t_{k_1}), \dots, (x_{k_n}, t_{k_n}))\\
 \end{plList}
 \end{plContainer}
 where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_i$ and
-$k_i$ have the same sort. The arguments $x_{k_i} := t_{k_i}$ are printed as
+$k_i$ have the same sort. The arguments $(x_{k_i}, t_{k_i})$ are printed as
 \smtinline{(:= xki tki)}.
 
 \paragraph{Remark.} A rule simmilar to the \proofRule{let} rule would be

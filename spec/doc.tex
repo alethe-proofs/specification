@@ -401,8 +401,10 @@ In addition to the multi-sorted first-order logic used by SMT-LIB,
 Alethe also uses Hilbert's choice operator $\varepsilon$. Choice acts
 like a binder. The term $\varepsilon x. \varphi$ stands for a value $v$,
 such that $\varphi[v/x]$ is true if such a value exists. Any value is
-possible otherwise.
-% PF it might be useful to say that \varepsilon is functional, i.e., if \varphi is logically equivalent to \varpsi then \varepsilon gives the same result
+possible otherwise.  Alethe requires that $\varepsilon$ is functional
+with respect to logical equivalence: if for two formulas $\varphi$, $\psi$
+that contain the free variable $x$, it holds that
+$(\forall x.\,\varphi\leftrightarrow\psi)$, then $(\varepsilon x.\, \varphi)\simeq (\varepsilon x.\, \psi)$.
 
 As a matter of notation, we use the symbols $x$, $y$, $z$ for variables,
 $f$, $g$, $h$ for functions, and $P$, $Q$ for predicates, i.e.,
@@ -419,9 +421,26 @@ are syntactically equal and the number of leading negations is even
 for $\varphi$ and odd for $\psi$, or vice versa.  To simplify the
 notation we will omit the sort of terms when possible.
 
+\begin{example} The following example shows a simple Alethe proof.
+It uses quantifier instantiation and resolution to show a contradiction.
+The sections below step-by-step describe the concepts necessary to
+understand the proof intuitively.
+
+\begin{plContainer}
+    \begin{plList}
+        \proofsep& 1.& \forall x.\, P(x)                  &(\proofRule{assume})\\
+        \proofsep& 2.& \neg P(a)                          &(\proofRule{assume})\\
+        \proofsep& 3.& \neg (\forall x.\, P(x)) \lor P(a) &(\proofRule{forall_inst};;(x, a))\\
+        \proofsep& 4.& \neg (\forall x.\, P(x)), P(a)     &(\proofRule{or}; 3)\\
+        \proofsep& 5.& \bot                               &(\proofRule{resolution}; 1, 2, 4)\\
+    \end{plList}
+\end{plContainer}
+
+\end{example}
+
 \paragraph{Steps.}
 A proof in the Alethe format is an indexed list of steps.
-To mimic the concrete syntax we will write a step
+To mimic the concrete syntax we write a step in the form
 \begin{plListEq}
 	c_1,\,\dots,\, c_k &\proofsep i. & \varphi_1,\dots ,\varphi_l &
 		(\proofRule{rule};\: p_1,\,\dots,\, p_n;\: a_1,\,\dots,\,a_m)
@@ -450,8 +469,12 @@ the \emph{context} of the step.  Contexts have their own section below.
 Every proof ends with a step that has the empty clause as the conclusion
 and an empty context. Section~\ref{sec:rules} provides an overview of
 all proof rules used by veriT.
-% PF TODO this above is quite abstract.  A figure with a full well-chosen
-% concrete example would be helpful to illustrate this, and the following too
+
+The example above consists of five steps. Step 4 and 5 use premises.
+Since step 3 introduces a tautology, it uses no premises.  However,
+it uses arguments to express the substitution $x\mapsto a$ used to instantiate
+the quantifier. Step 4 translates the disjunction into a clause.
+In the example above, the contexts are all empty.
 
 \paragraph{Assumptions.}
 The \proofRule{assume} rule introduces a term as an assumption. The
@@ -459,7 +482,10 @@ proof starts with a number of \proofRule{assume} steps. Each step such
 corresponds to an assertion. Additional assumptions can be introduced
 too. In this case each assumption must be discharged with an appropriate
 step. The only rule to do so is the \proofRule{subproof} rule.
- 
+
+The example above uses two assumptions which are introduced in the first
+two steps.
+
 \paragraph{Subproofs and Lemmas.}
 Alethe uses subproof to prove lemmas and to manipulate the context.
 To prove lemmas, a subproof can
