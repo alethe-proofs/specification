@@ -163,7 +163,8 @@ each $i$, let $\varphi := \varphi_i$ and $a := a_i$.
     \item If $\varphi = s_1 > s_2$, then let $\varphi := s_1 \leq s_2$.
     	If $\varphi = s_1 \geq s_2$, then let $\varphi := s_1 < s_2$.
     	If $\varphi = s_1 < s_2$, then let $\varphi := s_1 \geq s_2$. 
-    	If $\varphi = s_1 \leq s_2$, then let $\varphi := s_1 > s_2$.
+    	If $\varphi = s_1 \leq s_2$, then let $\varphi := s_1 > s_2$. This negates
+    	the literal.
    	\item If $\varphi = \neg (s_1 \bowtie s_2)$, then let $\varphi := s_1 \bowtie s_2$. 
     \item Replace $\varphi$ by $\sum_{i=0}^{n}c_i\times{}t_i - \sum_{i=n+1}^{m} c_i\times{}t_i
     \bowtie d$ where $d := d_2 - d_1$.
