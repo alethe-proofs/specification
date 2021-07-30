@@ -1033,28 +1033,27 @@ production for the $\grT{choice}$ binder.
       \grNT{proof\_command} &\grRule& \grT{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\; \grT{)}\\
                             &\grOr  & \grT{(step}\; \grNT{symbol}\; \grNT{clause}
                                       \; \grT{:rule}\; \grNT{symbol}\\
-                            &       & \quad\grNT{step\_annotation}\; \grT{)}\\
+                            &       & \quad\grNT{step\_annotation}^{?}\; \grT{)}\\
                             & \grOr & \grT{(anchor}\; \grT{:step}\; \grNT{symbol}\; \grT{)}\\
                             & \grOr & \grT{(anchor}\; \grT{:step}\; \grNT{symbol}\;
                                       \grT{:args}\; \grNT{proof\_args}\; \grT{)}\\
                             & \grOr & \grT{(define-fun}\; \grNT{function\_def}\; \grT{)}\\
       \grNT{clause}         &\grRule& \grT{(cl}\; \grNT{proof\_term}^{*}\; \grT{)}\\
-      \grNT{step\_annotation} &\grRule&
-                                      \grT{:premises (}\; \grNT{symbol}^{+}\; \grT{)}\;\\
-                            & \grOr & \grT{:args}\; \grNT{proof_args}\\
-                            & \grOr & \grT{:premises (}\; \grNT{symbol}^{+}\; \grT{)}\;
-                                      \grT{:args}\; \grNT{proof_args}\\
+
+      \grNT{step\_annotation} &\grRule& \grNT{premises\_annotation}^{?}\;\grNT{args\_annotation}\\
+
+      \grNT{premises\_annotation}  &\grRule& \grT{:premises (}\; \grNT{symbol}^{+}\grT{)}\\
+      \grNT{args\_annotation}      &\grRule& \grT{:args}\; \grNT{proof_args}\\
+
       \grNT{proof\_args}    &\grRule& \grT{(}\; \grNT{proof\_arg}^{+}\; \grT{)}\\
       \grNT{proof\_arg}     &\grRule& \grNT{symbol} \grOr
                                       \grT{(}\; \grNT{symbol}\; \grNT{proof\_term}\; \grT{)}\\
       \grNT{proof\_term}    &\grRule& \grNT{term}\text{ extended with }\\
-                            &       & \grT{(choice (}\; \grNT{sorted\_var}^{+}\;\grT{)}\; \grNT{proof\_term}\; \grT{)}
+                            &       & \grT{(choice (}\; \grNT{sorted\_var}\;\grT{)}\; \grNT{proof\_term}\; \grT{)}
     \end{array}\]
   }\par}
 \caption{The proof grammar}\label{fig:grammar}
 \end{figure}
-% PF TODO: factorize <arg_annotation> and <premise_annotation>
-% PF TODO: introduce ^? to denote optional non-terminal
 
 Input problems in the SMT-LIB standard contain a list of \emph{commands}
 that modify the internal state of the solver. In agreement
