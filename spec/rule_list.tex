@@ -1136,8 +1136,14 @@ The possible transformations are:
 \label{sec:ite-simp-rules}
 
 \begin{proof-rule}{ite_simplify}{veriT}
-This rule simplifies an if-then-else term by applying equivalent
-transformations as long as possible. Depending on the sort of the
+  This rule simplifies an if-then-else term by applying equivalent
+  transformations until fix point\footnote{Note however that the order of the
+    application is important, since the set of rules is not confluent. For
+    example, the term $(\operatorname{ite} \top \; t_1 \; t_2 \leftrightarrow
+    t_1)$ can be simplified into both $p$ and $(not (not p))$ depending on the
+    order of applications.}
+  %
+Depending on the sort of the
 $\operatorname{ite}$-term the rule can have one of two forms. If the sort
 is $\mathbf{Bool}$ it has the form
 \begin{plContainer}
