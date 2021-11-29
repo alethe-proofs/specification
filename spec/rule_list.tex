@@ -410,17 +410,19 @@ the context.
 Either
 \begin{plContainer}
 \begin{plList}
-\Gamma\proofsep& i.& t_1 \simeq t_2 &(\dots)\\
-\Gamma\proofsep& j.& t_2 \simeq t_3 &(\dots)\\
-\Gamma\proofsep& k.& t_1 \simeq t_3 &(\currule; i, j)\\
+\Gamma\proofsep& i_1.& t_1 \simeq t_2 &(\dots)\\
+\Gamma\proofsep& i_2.& t_2 \simeq t_3 &(\dots)\\
+\Gamma\proofsep& i_n.& t_n \simeq t_{n+1} &(\dots)\\
+\Gamma\proofsep& j.& t_1 \simeq t_{n+1} &(\currule; i_1, \dots, i_n, j)\\
 \end{plList}
 \end{plContainer}
 or
 \begin{plContainer}
 \begin{plList}
-\Gamma\proofsep& i.& \varphi_1 \leftrightarrow \varphi_2 &(\dots)\\
-\Gamma\proofsep& j.& \varphi_2 \leftrightarrow \varphi_3 &(\dots)\\
-\Gamma\proofsep& k.& \varphi_1 \leftrightarrow \varphi_3 &(\currule; i, j)\\
+\Gamma\proofsep& i_1.& \varphi_1 \leftrightarrow \varphi_2 &(\dots)\\
+\Gamma\proofsep& i_2.& \varphi_2 \leftrightarrow \varphi_3 &(\dots)\\
+\Gamma\proofsep& i_n.& \varphi_n \leftrightarrow \varphi_{n+1} &(\dots)\\
+\Gamma\proofsep& j.& \varphi_1 \leftrightarrow \varphi_{n+1} &(\currule; i_1,\dots, i_n, j)\\
 \end{plList}
 \end{plContainer}
 
