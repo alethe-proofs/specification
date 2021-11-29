@@ -26,6 +26,7 @@
 \usepackage{mathtools}
 \usepackage[mathcal]{eucal}
 \usepackage{longtable}
+\usepackage{stmaryrd}
 
 \usepackage{todonotes}
 
@@ -400,26 +401,28 @@ bound variables~\cite{barbosa-2019}.
 This section provides an overview of the core concepts of the Alethe
 language and also introduces some notation used throughout this document.
 While the next section provides a formal definition of the language,
-this overview of the core concept should be very helpful for
+this overview of the core concepts should be helpful for
 practitioners.
 
 \paragraph{Multi-Sorted First-Order Logic.}
 
 Many SMT solvers use the SMT-LIB language~\cite{SMTLIB} as both its
 input and output language and Alethe builds on this language.
-This includes its multi-sorted first-order logic.  The available sorts
-depend on the selected SMT-LIB theory/logic and they can also be extended by the
-user, but a distinguished $\mathbf{Bool}$ sort is always available.
+%
+This includes its multi-sorted first-order logic.  The available sorts depend on
+the selected SMT-LIB theory/logic as well as on those defined by the user, but a
+distinguished $\mathbf{Bool}$ sort is always available.
 
 In addition to the multi-sorted first-order logic used by SMT-LIB,
-Alethe also uses Hilbert's choice operator $\varepsilon$. Choice acts
-like a binder. The term $\varepsilon x. \varphi$ stands for a value $v$,
+Alethe also uses Hilbert's choice operator $\varepsilon$.
+%
+The term $\varepsilon x.\, \varphi$ stands for a value $v$,
 such that $\varphi[v/x]$ is true if such a value exists. Any value is
 possible otherwise.  Alethe requires that $\varepsilon$ is functional
 with respect to logical equivalence: if for two formulas $\varphi$, $\psi$
 that contain the free variable $x$, it holds that
 $(\forall x.\,\varphi\leftrightarrow\psi)$,
-then $(\varepsilon x.\, \varphi)\simeq (\varepsilon x.\, \psi)$.
+then $(\varepsilon x.\, \varphi)\simeq (\varepsilon x.\, \psi)$ must also hold.
 
 As a matter of notation, we use the symbols $x$, $y$, $z$ for variables,
 $f$, $g$, $h$ for functions, and $P$, $Q$ for predicates, i.e.,
@@ -429,13 +432,25 @@ terms of sort $\mathbf{Bool}$.  We use $\sigma$ to denote substitutions
 and $t\sigma$ to denote the application of the substitution on the term
 $t$.  To denote the substitution which maps $x$ to $t$ we write $[t/x]$.
 We use $=$ to denote syntactic equality and $\simeq$ to denote the sorted
-equality predicate. We also use the notion of complementary literals
+equality predicate.
+%
+We also use the notion of complementary literals
 very liberally: $\varphi = \bar{\psi}$ holds if the terms obtained
 after removing all leading negations from $\varphi$ and $\bar{\psi}$
 are syntactically equal and the number of leading negations is even
 for $\varphi$ and odd for $\psi$, or vice versa.  To simplify the
 notation we will omit the sort of terms when possible.
+\begin{comment}{Haniel Barbosa}
+  This notation is clashing with the notation of sequences of symbols, like in
+  $\bar x$ for $x_1, \dots, x_n$.
 
+  Maybe we could use an alternative notation for ``normalization under double
+  negation elimination''? Like $\llfloor \varphi \rrfloor_{\neg\neg}$? I find
+  the use of ``complementary literal'' to refer this a bit confusing
+  anyway. There are very few uses in the rules (only tautology, and/or simps),
+  so we could even not introduce a notation and just refer to ``normalized under
+  double negation elimination''.
+\end{comment}
 \begin{example} The following example shows a simple Alethe proof.
 It uses quantifier instantiation and resolution to show a contradiction.
 The sections below step-by-step describe the concepts necessary to
