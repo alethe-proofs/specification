@@ -413,11 +413,21 @@ This includes its multi-sorted first-order logic.  The available sorts depend on
 the selected SMT-LIB theory/logic as well as on those defined by the user, but a
 distinguished $\mathbf{Bool}$ sort is always available.
 
+We use $\sigma$ to denote substitutions and $t\sigma$ to denote the application
+of the substitution on the term $t$. To denote the substitution which maps $x$
+to $t$ we write $\{x\mapsto t\}$
+%
+The notation $t[\bar x_n]$ stands for a term that may depend on distinct
+variables $\bar x_n$.
+%
+$t[\bar s_n]$ is the respective term where the variables $\bar x_n$ are
+simultaneously substituted by $\bar s_n$.
+
 In addition to the multi-sorted first-order logic used by SMT-LIB,
 Alethe also uses Hilbert's choice operator $\varepsilon$.
 %
-The term $\varepsilon x.\, \varphi$ stands for a value $v$,
-such that $\varphi[v/x]$ is true if such a value exists. Any value is
+The term $\varepsilon x.\, \varphi[x]$ stands for a value $v$,
+such that $\varphi[v]$ is true if such a value exists. Any value is
 possible otherwise.  Alethe requires that $\varepsilon$ is functional
 with respect to logical equivalence: if for two formulas $\varphi$, $\psi$
 that contain the free variable $x$, it holds that
@@ -428,9 +438,8 @@ As a matter of notation, we use the symbols $x$, $y$, $z$ for variables,
 $f$, $g$, $h$ for functions, and $P$, $Q$ for predicates, i.e.,
 functions with result sort $\mathbf{Bool}$. The symbols $r$, $s$, $t$,
 $u$ stand for terms. The symbols $\varphi$, $\psi$ denote formulas, i.e.,
-terms of sort $\mathbf{Bool}$.  We use $\sigma$ to denote substitutions
-and $t\sigma$ to denote the application of the substitution on the term
-$t$.  To denote the substitution which maps $x$ to $t$ we write $[t/x]$.
+terms of sort $\mathbf{Bool}$.
+%
 We use $=$ to denote syntactic equality and $\simeq$ to denote the sorted
 equality predicate.
 %
@@ -579,14 +588,14 @@ Hence, every context $\Gamma$ induces a substitution
 \(\operatorname{subst}(\Gamma)\) is the empty substitution, i.e, the
 identity function. When $\Gamma$ ends in a mapping, the substitution is extended
 with this mapping: \(\operatorname{subst}([c_1,\dots, c_{n-1}, x_n\mapsto t_n]) =
-        \operatorname{subst}([c_1,\dots, c_{n-1}])\circ [t_n/x_n]\).
+        \operatorname{subst}([c_1,\dots, c_{n-1}])\circ \{x_n\mapsto t_n\}\).
 Finally, \(\operatorname{subst}([c_1,\dots, c_{n-1}, x_n])\)
 is \(\operatorname{subst}([c_1,\dots, c_{n-1}])\), but $x_n$ maps to $x_n$.
 The last case fixes $x_n$ and allows the context to shadow a previously defined
 substitution for $x_n$. The following example illustrates this idea:
 \begin{align*}
-    \operatorname{subst}([x\mapsto 7, x \mapsto g(x)]) &= [g(7)/x]\\
-    \operatorname{subst}([x\mapsto 7, x, x \mapsto g(x)]) &= [g(x)/x]\\
+    \operatorname{subst}([x\mapsto 7, x \mapsto g(x)]) &= \{x\mapsto g(7)\}\\
+    \operatorname{subst}([x\mapsto 7, x, x \mapsto g(x)]) &= \{x\mapsto g(x)\}\\
 \end{align*}
 
 \paragraph{Implicit Reordering of Equalities.}
@@ -1134,10 +1143,10 @@ and use an attribute to distinguish the two cases.
 
 \paragraph{Quantifier Instantiation.}
 To express quantifier instantiation, the rule \proofRule{forall\_inst}
-is used. It produces a formula of the form $(\neg \forall x_1 \dots
-x_n\,.\,\varphi)\lor \varphi[t_1/x_1]\dots[t_n/x_n]$, where $\varphi$ is
-a term containing the free variables $x_1$, \dots $x_n$, and $t_i$
-is a new variable free term with the same sort as $x_i$ for each $i$.
+is used. It produces a formula of the form $(\neg \forall \bar
+x_n.\,\varphi)\lor \varphi[\bar t_n]$, where $\varphi$ is
+a term containing the free variables $\bar x_n$, and each $t_i$
+is a new ground term with the same sort as $x_i$ for each $i$.
 
 The arguments of a \proofRule{forall\_inst} step is the list \((x_1 , t_1),
 \dots, (x_n, t_n)\). While this information can be recovered from the term,
