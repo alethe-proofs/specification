@@ -87,7 +87,12 @@ serves only informational purpose.
       \proofsep& j.& \top &(\currule; i)\\
     \end{plList}
   \end{plContainer}
-  and $\varphi_i = \bar\varphi_j$.
+  and $\varphi_i$, $\varphi_j$ are such that
+  \begin{align*}
+  \varphi_i &= \underbrace{\neg \dots \neg}_n \psi \\
+  \varphi_j &= \underbrace{\neg \dots \neg}_m \psi
+  \end{align*}
+  and one of $n, m$ is odd and the other even.  Either can be $0$.
 \end{proof-rule}
 
 \begin{proof-rule}{contraction}{veriT}
@@ -986,8 +991,13 @@ The possible transformations are:
     \land \dots \land \varphi_{n'} $ where the right hand side has all
     repeated literals removed.
     \item $\varphi_1 \land\dots\land \bot\land\dots \land \varphi_n \leftrightarrow \bot$
-    \item $\varphi_1 \land\dots\land \varphi_i\land \dots \land \varphi_j\land\dots \land \varphi_n \leftrightarrow \bot$ if
-      $\varphi_i = \bar{\varphi_j}$
+    \item $\varphi_1 \land\dots\land \varphi_i\land \dots \land \varphi_j\land\dots \land \varphi_n \leftrightarrow \bot$
+  and $\varphi_i$, $\varphi_j$ are such that
+  \begin{align*}
+  \varphi_i &= \underbrace{\neg \dots \neg}_n \psi \\
+  \varphi_j &= \underbrace{\neg \dots \neg}_m \psi
+  \end{align*}
+  and one of $n, m$ is odd and the other even.  Either can be $0$.
 \end{itemize}
 \end{proof-rule}
 
@@ -1014,8 +1024,13 @@ The possible transformations are:
     \lor \dots \lor \varphi_{n'} $ where the right hand side has all
     repeated literals removed.
     \item $\varphi_1 \lor\dots\lor \top\lor\dots \lor \varphi_n \leftrightarrow \top$
-    \item $\varphi_1 \lor\dots\lor \varphi_i\lor \dots \lor \varphi_j\lor\dots \lor \varphi_n \leftrightarrow \top$ if
-    	$\varphi_i = \bar{\varphi_j}$
+    \item $\varphi_1 \lor\dots\lor \varphi_i\lor \dots \lor \varphi_j\lor\dots \lor \varphi_n \leftrightarrow \top$
+  and $\varphi_i$, $\varphi_j$ are such that
+  \begin{align*}
+  \varphi_i &= \underbrace{\neg \dots \neg}_n \psi \\
+  \varphi_j &= \underbrace{\neg \dots \neg}_m \psi
+  \end{align*}
+  and one of $n, m$ is odd and the other even.  Either can be $0$.
 \end{itemize}
 \end{proof-rule}
 

@@ -442,24 +442,9 @@ terms of sort $\mathbf{Bool}$.
 %
 We use $=$ to denote syntactic equality and $\simeq$ to denote the sorted
 equality predicate.
-%
-We also use the notion of complementary literals
-very liberally: $\varphi = \bar{\psi}$ holds if the terms obtained
-after removing all leading negations from $\varphi$ and $\bar{\psi}$
-are syntactically equal and the number of leading negations is even
-for $\varphi$ and odd for $\psi$, or vice versa.  To simplify the
+To simplify the
 notation we will omit the sort of terms when possible.
-\begin{comment}{Haniel Barbosa}
-  This notation is clashing with the notation of sequences of symbols, like in
-  $\bar x$ for $x_1, \dots, x_n$.
 
-  Maybe we could use an alternative notation for ``normalization under double
-  negation elimination''? Like $\llfloor \varphi \rrfloor_{\neg\neg}$? I find
-  the use of ``complementary literal'' to refer this a bit confusing
-  anyway. There are very few uses in the rules (only tautology, and/or simps),
-  so we could even not introduce a notation and just refer to ``normalized under
-  double negation elimination''.
-\end{comment}
 \begin{example} The following example shows a simple Alethe proof.
 It uses quantifier instantiation and resolution to show a contradiction.
 The sections below step-by-step describe the concepts necessary to
