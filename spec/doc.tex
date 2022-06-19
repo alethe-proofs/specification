@@ -452,11 +452,11 @@ understand the proof intuitively.
 
 \begin{plContainer}
     \begin{plList}
-        \proofsep& 1.& \forall x.\, P(x)                  &(\proofRule{assume})\\
-        \proofsep& 2.& \neg P(a)                          &(\proofRule{assume})\\
-        \proofsep& 3.& \neg (\forall x.\, P(x)) \lor P(a) &(\proofRule{forall_inst};;(x, a))\\
-        \proofsep& 4.& \neg (\forall x.\, P(x)), P(a)     &(\proofRule{or}; 3)\\
-        \proofsep& 5.& \bot                               &(\proofRule{resolution}; 1, 2, 4)\\
+        \proofsep& 1.& \forall x.\, P(x)                  &\proofRule{assume}\\
+        \proofsep& 2.& \neg P(a)                          &\proofRule{assume}\\
+        \proofsep& 3.& \neg (\forall x.\, P(x)) \lor P(a) &\proofRule{forall_inst}\,[(x, a)]\\
+        \proofsep& 4.& \neg (\forall x.\, P(x)), P(a)     &(\proofRule{or}\:3)\\
+        \proofsep& 5.& \bot                               &(\proofRule{resolution}\: 1, 2, 4)\\
     \end{plList}
 \end{plContainer}
 
@@ -467,7 +467,7 @@ A proof in the Alethe language is an indexed list of steps.
 To mimic the concrete syntax we write a step in the form
 \begin{plListEq}
 	c_1,\,\dots,\, c_k &\proofsep i. & \varphi_1,\dots ,\varphi_l &
-		(\proofRule{rule};\: p_1,\,\dots,\, p_n;\: a_1,\,\dots,\,a_m)
+		(\proofRule{rule}\: p_1,\,\dots,\, p_n)\,[a_1,\,\dots,\,a_m]
 \end{plListEq}
 \noindent
 Each step has a unique index \(i \in \mathbb{I}\), where \(\mathbb{I}\) is a countable
@@ -542,18 +542,18 @@ lemma \(((2 + 2) \simeq 5) \Rightarrow 4 \simeq 5\).
 
 \begin{plContainer}
 \begin{plList}
-\proofsep& 1.& (2 + 2) \simeq 5                   &(\proofRule{assume})\\
+\proofsep& 1.& (2 + 2) \simeq 5                   &\proofRule{assume}\\
 \end{plList}
 \begin{plSubList}
-\proofsep& 2.& (2 + 2) \simeq 5                   &(\proofRule{assume})\\
-\proofsep& 3.& (2 + 2) \simeq 4                   &(\proofRule{plus\_simplify})\\
-\proofsep& 4.& 4 \simeq 5                         &(\proofRule{trans}; 1, 2)\\
+\proofsep& 2.& (2 + 2) \simeq 5                   &\proofRule{assume}\\
+\proofsep& 3.& (2 + 2) \simeq 4                   &\proofRule{plus\_simplify}\\
+\proofsep& 4.& 4 \simeq 5                         &(\proofRule{trans}\;1, 2)\\
 \end{plSubList}
 \begin{plList}
-\proofsep& 5.& \neg((2 + 2) \simeq 5), 4 \simeq 5 &(\proofRule{subproof})\\
-\proofsep& 6.& (4 \simeq 5)\leftrightarrow \bot &(\proofRule{eq\_simplify})\\
-\proofsep& 7.& \neg((4 \simeq 5)\leftrightarrow \bot), \neg(4\simeq 5), \bot  &(\proofRule{equiv\_pos2})\\
-\proofsep& 8.& \bot  &(\proofRule{resolution}; 1, 5, 7, 8)\\
+\proofsep& 5.& \neg((2 + 2) \simeq 5), 4 \simeq 5 &\proofRule{subproof}\\
+\proofsep& 6.& (4 \simeq 5)\leftrightarrow \bot &\proofRule{eq\_simplify}\\
+\proofsep& 7.& \neg((4 \simeq 5)\leftrightarrow \bot), \neg(4\simeq 5), \bot  &\proofRule{equiv\_pos2}\\
+\proofsep& 8.& \bot  &(\proofRule{resolution}\; 1, 5, 7, 8)\\
 \end{plList}
 \end{plContainer}
 
@@ -1156,16 +1156,16 @@ the coefficients is a trivial inequality between constants.
 The following example is the proof for the unsatisfiability
 of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
 \begin{plListEq}
-\proofsep& 1.& (3 < x) \lor (x + y < 1)           &(\proofRule{assume})\\
-\proofsep& 2.& x\simeq 2                          &(\proofRule{assume})\\
-\proofsep& 3.& 0\simeq y                          &(\proofRule{assume})\\
-\proofsep& 4.& (3 < x), (x + y < 1)               &(\proofRule{or};1)\\
-\proofsep& 5.& \neg (3<x), \neg (x\simeq 2)       &(\proofRule{la\_generic};\: ;1.0, 1.0)\\
-\proofsep& 6.& \neg (3<x)                         &(\proofRule{resolution}; 2, 5)\\
-\proofsep& 7.& x + y < 1                          &(\proofRule{resolution}; 4, 6)\\
+\proofsep& 1.& (3 < x) \lor (x + y < 1)           &\proofRule{assume}\\
+\proofsep& 2.& x\simeq 2                          &\proofRule{assume}\\
+\proofsep& 3.& 0\simeq y                          &\proofRule{assume}\\
+\proofsep& 4.& (3 < x), (x + y < 1)               &(\proofRule{or}\;1)\\
+\proofsep& 5.& \neg (3<x), \neg (x\simeq 2)       &\proofRule{la\_generic}\; [1.0, 1.0]\\
+\proofsep& 6.& \neg (3<x)                         &(\proofRule{resolution}\; 2, 5)\\
+\proofsep& 7.& x + y < 1                          &(\proofRule{resolution}\; 4, 6)\\
 \proofsep& 8.& \neg (x + y < 1), \neg (x\simeq 2) \lor \neg (0 \simeq y)
-&(\proofRule{la\_generic};\: ;1.0, -1.0, 1.0)\\
-\proofsep& 9.& \bot                               &(\proofRule{resolution};\:\; 8, 7, 2, 3)
+&\proofRule{la\_generic}\;[1.0, -1.0, 1.0]\\
+\proofsep& 9.& \bot                               &(\proofRule{resolution}\; 8, 7, 2, 3)
 \end{plListEq}
 \end{example}
 
@@ -1178,7 +1178,7 @@ a step $m$ ($m > n$) where the variable is quantified.
 
 \begin{plListEq}
   \Gamma, x\mapsto (\varepsilon x.\varphi) &\proofsep n.&\varphi \simeq \psi &(\proofRule{\dots})\\
-  \Gamma &\proofsep m.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko\_ex};\: n)
+  \Gamma &\proofsep m.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko\_ex}\; n)
 \end{plListEq}
 
 \begin{example}
@@ -1189,10 +1189,10 @@ a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
 is functional congruence, and \proofRule{sko\_forall} works like
 \proofRule{sko\_ex}, except that the choice term is $\varepsilon x.\neg\varphi$.
 \begin{plListEqAlgn}
-  x\mapsto (\varepsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \varepsilon x.\neg p(x)  &(\proofRule{refl})\\
-  x\mapsto (\varepsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\varepsilon x.\neg p(x)) &(\proofRule{cong};\: 1)\\
-                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\varepsilon x.\neg p(x)) &(\proofRule{sko\_forall};\: 2)\\
-                                  \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\varepsilon x.\neg p(x)) &(\proofRule{cong};\: 3)
+  x\mapsto (\varepsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \varepsilon x.\neg p(x)  &\proofRule{refl}\\
+  x\mapsto (\varepsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\varepsilon x.\neg p(x)) &(\proofRule{cong}\; 1)\\
+                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\varepsilon x.\neg p(x)) &(\proofRule{sko\_forall}\; 2)\\
+                                  \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\varepsilon x.\neg p(x)) &(\proofRule{cong}\; 3)
  \end{plListEqAlgn}
 \end{example}
 

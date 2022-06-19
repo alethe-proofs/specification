@@ -3,7 +3,7 @@
 \begin{proof-rule}{assume}{veriT}
 \begin{plContainer}
 \begin{plList}
-\proofsep& i.& \phi &(\currule)\\
+\proofsep& i.& \phi &\currule\\
 \end{plList}
 \end{plContainer}
 where $\varphi$ corresponds to a formula asserted in the input problem up
@@ -18,7 +18,7 @@ $\grT{(assume }\dots\grT{)}$ command.
 \begin{proof-rule}{true}{veriT}
 \begin{plContainer}
 \begin{plList}
-\proofsep& i.& \top  &(\currule)\\
+\proofsep& i.& \top  &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -26,7 +26,7 @@ $\grT{(assume }\dots\grT{)}$ command.
 \begin{proof-rule}{false}{veriT}
 \begin{plContainer}
 \begin{plList}
-\proofsep& i.& \neg \bot &(\currule)\\
+\proofsep& i.& \neg \bot &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -34,7 +34,7 @@ $\grT{(assume }\dots\grT{)}$ command.
 \begin{proof-rule}{not_not}{veriT}
 \begin{plContainer}
 \begin{plList}
-\proofsep& i.& \neg (\neg \neg \varphi) , \varphi &(\currule)\\
+\proofsep& i.& \neg (\neg \neg \varphi) , \varphi &\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -53,7 +53,7 @@ This rule is the resolution of two or more clauses.
 \proofsep& i_n.& \varphi^{n}_{1} , \dots , \varphi^{n}_{k^n} &(\dots)\\
 \proofsep& j.&
 \varphi^{r_1}_{s_1} , \dots , \varphi^{r_m}_{s_m} 
-&(\currule; i_1, \dots, i_n)\\
+&(\currule\; i_1, \dots, i_n)\\
 \end{plList}
 \end{plContainer}
 where $\varphi^{r_1}_{s_1} , \dots , \varphi^{r_m}_{s_m}$ are from $\varphi^{i}_{j}$ and
@@ -84,7 +84,7 @@ serves only informational purpose.
       \proofsep& i.&
       \varphi_1 , \dots , \varphi_i , \dots , \varphi_j ,\dots , \varphi_n
       &(\dots)\\
-      \proofsep& j.& \top &(\currule; i)\\
+      \proofsep& j.& \top &(\currule\; i)\\
     \end{plList}
   \end{plContainer}
   and $\varphi_i$, $\varphi_j$ are such that
@@ -101,7 +101,7 @@ serves only informational purpose.
       \proofsep& i.& \varphi_1 , \dots , \varphi_n &(\dots)\\
       \plLine\\
       \proofsep& j.& \varphi_{k_1} , \dots , \varphi_{k_m}
-      &(\currule; i)\\
+      &(\currule\; i)\\
     \end{plList}
   \end{plContainer}
   where $m \leq n$ and  $k_1 \dots k_m$ is a monotonic map to $1 \dots n$
@@ -117,14 +117,14 @@ last step of the subproof is the conclusion.
 
 \begin{plContainer}
 \begin{plSubList}
-\proofsep& i_1.& \psi_1 &(\proofRule{input})\\
+\proofsep& i_1.& \psi_1 &\proofRule{assume}\\
 \plLine\\
-\proofsep& i_n.& \psi_n &(\proofRule{input})\\
+\proofsep& i_n.& \psi_n &\proofRule{assume}\\
 \plLine\\
 \proofsep& j.& \varphi &(\dots)\\
 \end{plSubList}
 \begin{plList}
-\proofsep& k.& \neg\psi_1 , \dots , \neg \psi_n ,\varphi &(\currule)\\
+\proofsep& k.& \neg\psi_1 , \dots , \neg \psi_n ,\varphi &\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -150,7 +150,7 @@ rational numbers, then a $\currule$ step has the form
 \begin{plListEq}
 \proofsep& i.&
 \varphi_1, \dots , \varphi_o
-&(\currule; ; a_1, \dots, a_o)\\
+&\currule\;[a_1, \dots, a_o]\\
 \end{plListEq}
 
 where $\varphi_i$ is either $\neg l_i$ or $l_i$, but never $s_1
@@ -241,7 +241,7 @@ same form as \texttt{la\_generic}, without the additional arguments.
 \begin{plList}
 \proofsep& i.&
 \varphi_1, \dots , \varphi_n
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 with $\varphi_i$ being linear inequalities. The disjunction
@@ -259,7 +259,7 @@ can be NP-hard. Hence, this rule should be avoided when possible.
 \begin{plList}
 \proofsep& i.&
 t_1 \simeq t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -269,7 +269,7 @@ t_1 \simeq t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)
 \begin{plList}
 \proofsep& i.&
 t_1 \leq t_2 \lor t_2 \leq t_1
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -282,7 +282,7 @@ sophisticated reasoning. It has either the form
 \begin{plList}
 \proofsep& i.&
 \varphi
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $\varphi$ is either a linear inequality $s_1 \bowtie s_2$
@@ -294,7 +294,7 @@ The second form handles bounds on linear combinations. It is binary clause:
 \begin{plList}
 \proofsep& i.&
 \varphi_1 \lor \varphi_2 % Checked: this is a proper disjunction not a cl
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -324,7 +324,7 @@ as for the rule \proofRule{la\_generic}.
     \end{plSubList}
     \begin{plList}
       \Gamma \proofsep& k.&
-      \forall x_1, \dots, x_n.\varphi \leftrightarrow \forall y_1, \dots, y_n. \varphi'  &(\currule)\\
+      \forall x_1, \dots, x_n.\varphi \leftrightarrow \forall y_1, \dots, y_n. \varphi'  &\currule\\
     \end{plList}
   \end{plContainer}
   where the variables $y_1, \dots, y_n$ is not free in $\forall x_1,
@@ -342,7 +342,7 @@ The \currule{} rule skolemizes existential quantifiers.
 \end{plSubList}
 \begin{plList}
 \Gamma \proofsep& k.&
-\exists x_1, \dots, x_n.\varphi \leftrightarrow \psi  &(\currule)\\
+\exists x_1, \dots, x_n.\varphi \leftrightarrow \psi  &\currule\\
 \end{plList}
 \end{plContainer}
 where $\varepsilon_i$ stands for $\varepsilon x_i. (\exists x_{i+1}, \dots,
@@ -364,7 +364,7 @@ The \currule{} rule skolemizes universal quantifiers.
 \end{plSubList}
 \begin{plList}
 \Gamma \proofsep& k.&
-\forall x_1, \dots, x_n.\varphi \leftrightarrow \psi  &(\currule)\\
+\forall x_1, \dots, x_n.\varphi \leftrightarrow \psi  &\currule\\
 \end{plList}}
 \end{center}
 \end{plContainer}
@@ -374,8 +374,8 @@ The \currule{} rule skolemizes universal quantifiers.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.&
-\neg (\forall x_1, \dots, x_n. P) \lor P[t_1/x_1]\dots[t_n/x_n]
-&(\currule; ; (x_{k_1}, t_{k_1}), \dots, (x_{k_n}, t_{k_n}))\\
+\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1]\dots[x_n\mapsto t_n]
+&\currule\; [(x_{k_1}, t_{k_1}), \dots, (x_{k_n}, t_{k_n})]\\
 \end{plList}
 \end{plContainer}
 where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_i$ and
@@ -393,13 +393,13 @@ as currently done by \proofRule{qnt_cnf}.
 Either
 \begin{plContainer}
 \begin{plList}
-\Gamma\proofsep& j.& t_1 \simeq t_2 &(\currule)\\
+\Gamma\proofsep& j.& t_1 \simeq t_2 &\currule\\
 \end{plList}
 \end{plContainer}
 or
 \begin{plContainer}
 \begin{plList}
-\Gamma\proofsep& j.& \varphi_1 \leftrightarrow \varphi_2 &(\currule)\\
+\Gamma\proofsep& j.& \varphi_1 \leftrightarrow \varphi_2 &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -418,7 +418,7 @@ Either
 \Gamma\proofsep& i_1.& t_1 \simeq t_2 &(\dots)\\
 \Gamma\proofsep& i_2.& t_2 \simeq t_3 &(\dots)\\
 \Gamma\proofsep& i_n.& t_n \simeq t_{n+1} &(\dots)\\
-\Gamma\proofsep& j.& t_1 \simeq t_{n+1} &(\currule; i_1, \dots, i_n, j)\\
+\Gamma\proofsep& j.& t_1 \simeq t_{n+1} &(\currule\; i_1, \dots, i_n, j)\\
 \end{plList}
 \end{plContainer}
 or
@@ -427,7 +427,7 @@ or
 \Gamma\proofsep& i_1.& \varphi_1 \leftrightarrow \varphi_2 &(\dots)\\
 \Gamma\proofsep& i_2.& \varphi_2 \leftrightarrow \varphi_3 &(\dots)\\
 \Gamma\proofsep& i_n.& \varphi_n \leftrightarrow \varphi_{n+1} &(\dots)\\
-\Gamma\proofsep& j.& \varphi_1 \leftrightarrow \varphi_{n+1} &(\currule; i_1,\dots, i_n, j)\\
+\Gamma\proofsep& j.& \varphi_1 \leftrightarrow \varphi_{n+1} &(\currule\; i_1,\dots, i_n, j)\\
 \end{plList}
 \end{plContainer}
 
@@ -451,7 +451,7 @@ Either
 \Gamma\proofsep& i_1.& t_1 \simeq u_1 &(\dots)\\
 \Gamma\proofsep& i_n.& t_n \simeq u_n &(\dots)\\
 \Gamma\proofsep& j.& \operatorname{f}(t_1, \dots, t_n) \simeq
-\operatorname{f}(u_1, \dots, u_n) &(\currule;i_1, \dots, i_n)\\
+\operatorname{f}(u_1, \dots, u_n) &(\currule\;i_1, \dots, i_n)\\
 \end{plList}
 \end{plContainer}
 where $\operatorname{f}$ is an $n$-ary function symbol,
@@ -461,7 +461,7 @@ or
 \Gamma\proofsep& i_1.& \varphi_1 \simeq \psi_1 &(\dots)\\
 \Gamma\proofsep& i_n.& \varphi_n \simeq \psi_n &(\dots)\\
 \Gamma\proofsep& j.& \operatorname{P}(\varphi_1, \dots, \varphi_n) \leftrightarrow
-\operatorname{P}(\psi_1, \dots, \psi_n) &(\currule;i_1, \dots, i_n)\\
+\operatorname{P}(\psi_1, \dots, \psi_n) &(\currule\;i_1, \dots, i_n)\\
 \end{plList}
 \end{plContainer}
 where $\operatorname{P}$ is an $n$-ary predicate symbol.
@@ -473,7 +473,7 @@ where $\operatorname{P}$ is an $n$-ary predicate symbol.
 \begin{plList}
 \proofsep& i.&
 t \simeq t
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -484,7 +484,7 @@ t \simeq t
 \proofsep& i.&
 \neg (t_1 \simeq t_2) , \dots , \neg (t_{n-1} \simeq t_n) ,
 t_1 \simeq t_n
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -495,7 +495,7 @@ t_1 \simeq t_n
 \proofsep& i.&
 \neg (t_1 \simeq u_1) , \dots , \neg (t_n \simeq u_n) ,
 f(t_1, \dots, t_n) \simeq f(u_1, \dots, u_n)
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -508,7 +508,7 @@ f(t_1, \dots, t_n) \simeq f(u_1, \dots, u_n)
 \proofsep& i.&
 \neg (t_1 \simeq u_1) , \dots , \neg (t_n \simeq u_n) ,
 \neg (P(t_1, \dots, t_n) \simeq P(u_1, \dots, u_n))
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 %\endgroup
@@ -521,7 +521,7 @@ f(t_1, \dots, t_n) \simeq f(u_1, \dots, u_n)
 \begin{plList}
 \proofsep& i.&
 \neg(\forall x_1, \dots, x_n. \varphi) \lor \forall x_{k_1}, \dots, x_{k_m}.\varphi'
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 This rule expresses clausification of a term under a universal
@@ -566,7 +566,7 @@ done during clausification.
   \begin{plContainer}
     \begin{plList}
       \proofsep& i.& \varphi_1 \land \dots \land \varphi_n&(\dots)\\
-      \proofsep& j.& \varphi_i &(\currule; i)\\
+      \proofsep& j.& \varphi_i &(\currule\; i)\\
     \end{plList}
   \end{plContainer}
 \end{proof-rule}
@@ -576,7 +576,7 @@ done during clausification.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg (\varphi_1 \lor \dots \lor \varphi_n) &(\dots)\\
-\proofsep& j.& \neg \varphi_i &(\currule; i)\\
+\proofsep& j.& \neg \varphi_i &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -585,7 +585,7 @@ done during clausification.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \varphi_1 \lor \dots \lor \varphi_n &(\dots)\\
-\proofsep& j.& \varphi_1 , \dots , \varphi_n &(\currule; i)\\
+\proofsep& j.& \varphi_1 , \dots , \varphi_n &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 
@@ -608,7 +608,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg (\varphi_1 \land \dots \land \varphi_n) &(\dots)\\
-\proofsep& j.& \neg\varphi_1 , \dots , \neg\varphi_n &(\currule; i)\\
+\proofsep& j.& \neg\varphi_1 , \dots , \neg\varphi_n &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 
@@ -618,7 +618,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \operatorname{xor} \varphi_1\;\varphi_2 &(\dots)\\
-\proofsep& j.& \varphi_1 , \varphi_2 &(\currule; i)\\
+\proofsep& j.& \varphi_1 , \varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -627,7 +627,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \operatorname{xor} \varphi_1\;\varphi_2 &(\dots)\\
-\proofsep& j.& \neg\varphi_1 , \neg\varphi_2 &(\currule; i)\\
+\proofsep& j.& \neg\varphi_1 , \neg\varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -636,7 +636,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg(\operatorname{xor} \varphi_1\;\varphi_2) &(\dots)\\
-\proofsep& j.& \varphi_1 , \neg\varphi_2 &(\currule; i)\\
+\proofsep& j.& \varphi_1 , \neg\varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -645,7 +645,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg(\operatorname{xor} \varphi_1\;\varphi_2) &(\dots)\\
-\proofsep& j.& \neg\varphi_1 , \varphi_2 &(\currule; i)\\
+\proofsep& j.& \neg\varphi_1 , \varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -654,7 +654,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \varphi_1\rightarrow\varphi_2 &(\dots)\\
-\proofsep& j.& \neg\varphi_1 , \varphi_2 &(\currule; i)\\
+\proofsep& j.& \neg\varphi_1 , \varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -663,7 +663,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg (\varphi_1\rightarrow\varphi_2) &(\dots)\\
-\proofsep& j.& \varphi_1 &(\currule; i)\\
+\proofsep& j.& \varphi_1 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -672,7 +672,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg (\varphi_1\rightarrow\varphi_2) &(\dots)\\
-\proofsep& j.& \neg\varphi_2 &(\currule; i)\\
+\proofsep& j.& \neg\varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -681,7 +681,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \varphi_1\leftrightarrow\varphi_2 &(\dots)\\
-\proofsep& j.& \neg\varphi_1 , \varphi_2 &(\currule; i)\\
+\proofsep& j.& \neg\varphi_1 , \varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -690,7 +690,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \varphi_1\leftrightarrow\varphi_2 &(\dots)\\
-\proofsep& j.& \varphi_1 , \neg\varphi_2 &(\currule; i)\\
+\proofsep& j.& \varphi_1 , \neg\varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -699,7 +699,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg(\varphi_1\leftrightarrow\varphi_2) &(\dots)\\
-\proofsep& j.& \varphi_1 , \varphi_2 &(\currule; i)\\
+\proofsep& j.& \varphi_1 , \varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -708,7 +708,7 @@ An application of the \currule{} rule.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg(\varphi_1\leftrightarrow\varphi_2) &(\dots)\\
-\proofsep& j.& \neg\varphi_1 , \neg\varphi_2 &(\currule; i)\\
+\proofsep& j.& \neg\varphi_1 , \neg\varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -716,7 +716,7 @@ An application of the \currule{} rule.
 \begin{proof-rule}{and_pos}{veriT}
 \begin{plContainer}
 \begin{plList}
-\proofsep& i.& \neg (\varphi_1 \land \dots \land \varphi_n) , \varphi_k &(\currule)\\
+\proofsep& i.& \neg (\varphi_1 \land \dots \land \varphi_n) , \varphi_k &\currule\\
 \end{plList}
 \end{plContainer}
 with $1 \leq k \leq n$.
@@ -726,7 +726,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& (\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1
-	, \dots , \neg\varphi_n &(\currule)\\
+	, \dots , \neg\varphi_n &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -735,7 +735,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots
-	, \varphi_n &(\currule)\\
+	, \varphi_n &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -743,7 +743,7 @@ with $1 \leq k \leq n$.
 \begin{proof-rule}{or_neg}{veriT}
 \begin{plContainer}
 \begin{plList}
-\proofsep& i.& (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k &(\currule)\\
+\proofsep& i.& (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k &\currule\\
 \end{plList}
 \end{plContainer}
 with $1 \leq k \leq n$.
@@ -752,7 +752,7 @@ with $1 \leq k \leq n$.
 \begin{proof-rule}{xor_pos1}{veriT}
 \begin{plContainer}
 \begin{plList}
-\proofsep& i.& \neg (\varphi_1 \operatorname{xor} \varphi_2) , \varphi_1 , \varphi_2 &(\currule)\\
+\proofsep& i.& \neg (\varphi_1 \operatorname{xor} \varphi_2) , \varphi_1 , \varphi_2 &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -761,7 +761,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg (\varphi_1 \operatorname{xor} \varphi_2)
-, \neg \varphi_1, \neg \varphi_2 &(\currule)\\
+, \neg \varphi_1, \neg \varphi_2 &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -770,7 +770,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \varphi_1 \operatorname{xor} \varphi_2
-, \varphi_1 , \neg \varphi_2 &(\currule)\\
+, \varphi_1 , \neg \varphi_2 &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -779,7 +779,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \varphi_1 \operatorname{xor} \varphi_2
-, \neg \varphi_1 , \varphi_2 &(\currule)\\
+, \neg \varphi_1 , \varphi_2 &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -788,7 +788,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg (\varphi_1 \rightarrow \varphi_2)
-, \neg \varphi_1 , \varphi_2 &(\currule)\\
+, \neg \varphi_1 , \varphi_2 &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -797,7 +797,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \varphi_1 \rightarrow \varphi_2
-, \varphi_1 &(\currule)\\
+, \varphi_1 &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -806,7 +806,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \varphi_1 \rightarrow \varphi_2
-, \neg \varphi_2 &(\currule)\\
+, \neg \varphi_2 &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -816,7 +816,7 @@ with $1 \leq k \leq n$.
 \begin{plList}
 \proofsep& i.&
 \neg (\varphi_1 \leftrightarrow \varphi_2) , \varphi_1 , \neg \varphi_2
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -826,7 +826,7 @@ with $1 \leq k \leq n$.
 \begin{plList}
 \proofsep& i.&
 \neg (\varphi_1 \leftrightarrow \varphi_2) , \neg \varphi_1 , \varphi_2
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -836,7 +836,7 @@ with $1 \leq k \leq n$.
 \begin{plList}
 \proofsep& i.&
 \varphi_1 \leftrightarrow \varphi_2 , \neg \varphi_1 , \neg \varphi_2
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -846,7 +846,7 @@ with $1 \leq k \leq n$.
 \begin{plList}
 \proofsep& i.&
 \varphi_1 \leftrightarrow \varphi_2 , \varphi_1 , \varphi_2
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -855,7 +855,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \operatorname{ite}\varphi_1\;\varphi_2\;\varphi_3 &(\dots)\\
-\proofsep& j.& \varphi_1 , \varphi_3 &(\currule; i)\\
+\proofsep& j.& \varphi_1 , \varphi_3 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -864,7 +864,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \operatorname{ite}\varphi_1\;\varphi_2\;\varphi_3 &(\dots)\\
-\proofsep& j.& \neg\varphi_1 , \varphi_2 &(\currule; i)\\
+\proofsep& j.& \neg\varphi_1 , \varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -874,7 +874,7 @@ with $1 \leq k \leq n$.
     \begin{plList}
       \proofsep& i.&
       \neg (\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3) , \varphi_1 , \varphi_3
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
 \end{proof-rule}
@@ -884,7 +884,7 @@ with $1 \leq k \leq n$.
     \begin{plList}
       \proofsep& i.&
       \neg (\operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3) , \neg \varphi_1 , \varphi_2
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
 \end{proof-rule}
@@ -894,7 +894,7 @@ with $1 \leq k \leq n$.
     \begin{plList}
       \proofsep& i.&
       \operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3 , \varphi_1 , \neg \varphi_3
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
 \end{proof-rule}
@@ -904,7 +904,7 @@ with $1 \leq k \leq n$.
     \begin{plList}
       \proofsep& i.&
       \operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3 , \neg \varphi_1 , \neg \varphi_2
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
 \end{proof-rule}
@@ -913,7 +913,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg(\operatorname{ite}\varphi_1\;\varphi_2\;\varphi_3) &(\dots)\\
-\proofsep& j.& \varphi_1 , \neg\varphi_3 &(\currule; i)\\
+\proofsep& j.& \varphi_1 , \neg\varphi_3 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -922,7 +922,7 @@ with $1 \leq k \leq n$.
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \neg(\operatorname{ite}\varphi_1\;\varphi_2\;\varphi_3) &(\dots)\\
-\proofsep& j.& \neg\varphi_1 , \neg\varphi_2 &(\currule; i)\\
+\proofsep& j.& \neg\varphi_1 , \neg\varphi_2 &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -936,7 +936,7 @@ with $1 \leq k \leq n$.
       \Gamma\proofsep&
       i.& \varphi_1\operatorname{xor}\varphi_2 \leftrightarrow
       (\neg\varphi_1 \land \varphi_2) \lor (\varphi_1 \land \neg\varphi_2)
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
 
@@ -945,7 +945,7 @@ with $1 \leq k \leq n$.
       \Gamma\proofsep&
       i.& \varphi_1\leftrightarrow\varphi_2 \leftrightarrow
       (\varphi_1 \rightarrow \varphi_2) \land (\varphi_2 \rightarrow \varphi_1)
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
 
@@ -954,7 +954,7 @@ with $1 \leq k \leq n$.
       \Gamma\proofsep&
       i.& \operatorname{ite} \varphi_1\;\varphi_2\;\varphi_3 \leftrightarrow
       (\varphi_1 \rightarrow \varphi_2) \land (\neg\varphi_1 \rightarrow \varphi_3)
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
 
@@ -962,7 +962,7 @@ with $1 \leq k \leq n$.
     \begin{plList}
       \Gamma\proofsep&
       i.& \operatorname{\forall x_1, \dots, x_n.} \varphi \leftrightarrow \operatorname{\neg\exists x_1, \dots, x_n.} \neg\varphi
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
 
@@ -976,7 +976,7 @@ transformations as long as possible. Hence, the general form is
 \begin{plList}
 \Gamma\proofsep&
 i.& \varphi_1\land \dots\land\varphi_n \leftrightarrow \psi
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $\psi$ is the transformed term.
@@ -1009,7 +1009,7 @@ transformations as long as possible. Hence, the general form is
 \begin{plList}
 \Gamma\proofsep&
 i.& (\varphi_1\lor \dots\lor\varphi_n) \leftrightarrow \psi
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $\psi$ is the transformed term.
@@ -1042,7 +1042,7 @@ transformations as long as possible. Hence, the general form is
 \begin{plList}
 \Gamma\proofsep&
 i.& \neg\varphi \leftrightarrow \psi
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $\psi$ is the transformed term.
@@ -1063,7 +1063,7 @@ transformations as long as possible. Hence, the general form is
 \begin{plList}
 \Gamma\proofsep&
 i.& \varphi_1\rightarrow \varphi_2 \leftrightarrow \psi
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $\psi$ is the transformed term.
@@ -1090,7 +1090,7 @@ transformations as long as possible. Hence, the general form is
 \begin{plList}
 \Gamma\proofsep&
 i.&  (\varphi_1\leftrightarrow \varphi_2) \leftrightarrow \psi
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $\psi$ is the transformed term.
@@ -1116,7 +1116,7 @@ transformations as long as possible. Hence, the general form is
 \begin{plList}
 \Gamma\proofsep&
 i.& \varphi\leftrightarrow \psi
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $\psi$ is the transformed term.
@@ -1141,7 +1141,7 @@ The possible transformations are:
     \begin{plList}
       \Gamma\proofsep&
       i.& \psi  \leftrightarrow \varphi_1 \circ\dots\circ\varphi_n
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
   where $\circ \in \{\lor, \land\}$ and $\psi$ is a nested application of $\circ$.
@@ -1167,7 +1167,7 @@ is $\mathbf{Bool}$ it has the form
 \begin{plList}
 \Gamma\proofsep&
 i.& \operatorname{ite} \varphi\;t_1\;t_2 \leftrightarrow \psi
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $\psi$ is the transformed term.
@@ -1177,7 +1177,7 @@ Otherwise, it has the form
 \begin{plList}
 \Gamma\proofsep&
 i.& \operatorname{ite} \varphi\;t_1\;t_2 \simeq u
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $u$ is the transformed term.
@@ -1208,7 +1208,7 @@ The possible transformations are:
     \begin{plList}
       \Gamma\proofsep&
       i.&  \forall x_1, \dots, x_n. \varphi \leftrightarrow \varphi
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
   where $\varphi$ is either $\top$ or $\bot$.
@@ -1227,7 +1227,7 @@ variables that can only have one value.
 \end{plSubList}
 \begin{plList}
 \Gamma \proofsep& k.&
-Q x_1, \dots, x_n.\varphi \leftrightarrow Q x_{k_1}, \dots, x_{k_m}. \varphi'  &(\currule)\\
+Q x_1, \dots, x_n.\varphi \leftrightarrow Q x_{k_1}, \dots, x_{k_m}. \varphi'  &\currule\\
 \end{plList}
 \end{plContainer}
 \end{plContainer}
@@ -1278,7 +1278,7 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
       Q x_1, \dots, x_n. Q x_{n+1}, \dots, x_{m}. \varphi
       \leftrightarrow
       Q x_{k_1}, \dots, x_{k_o}. \varphi
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
   where $m > n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_o$ is a monotonic
@@ -1291,7 +1291,7 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
     \begin{plList}
       \Gamma\proofsep& i.&
       Q x_1, \dots, x_n. \varphi \leftrightarrow Q x_{k_1}, \dots, x_{k_m}.\varphi
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
   where $m \leq n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_m$ is
@@ -1308,7 +1308,7 @@ An application of the $\currule$ rule on the term $\forall x, y.\, x \simeq y
     \begin{plList}
       \Gamma\proofsep&
       i.& t_1\simeq t_2 \leftrightarrow \varphi
-      &(\currule)\\
+      &\currule\\
     \end{plList}
   \end{plContainer}
   where $\psi$ is the transformed term.
@@ -1329,7 +1329,7 @@ transformations. The general form is
 \begin{plList}
 \Gamma\proofsep&
 i.& (t_1 / t_2) \simeq t_3
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -1351,7 +1351,7 @@ transformations as long as possible. The general form is
 \begin{plList}
 \Gamma\proofsep&
 i.& t_1\times\dots\times t_n \simeq u
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 where $u$ is either a constant or a product.
@@ -1379,14 +1379,14 @@ This rule is either
 \begin{plContainer}
 \begin{plList}
 \Gamma\proofsep&
-i.& - (-t) \simeq t &(\currule)\\
+i.& - (-t) \simeq t &\currule\\
 \end{plList}
 \end{plContainer}
 or
 \begin{plContainer}
 \begin{plList}
 \Gamma\proofsep&
-i.& -t \simeq u &(\currule)\\
+i.& -t \simeq u &\currule\\
 \end{plList}
 \end{plContainer}
 where $u$ is the negated numerical constant $t$.
@@ -1399,7 +1399,7 @@ transformations. The general form is
 \begin{plContainer}
 \begin{plList}
 \Gamma\proofsep&
-i.& t_1 - t_2 \simeq u &(\currule)\\
+i.& t_1 - t_2 \simeq u &\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -1421,7 +1421,7 @@ transformations as long as possible. The general form is
 \begin{plContainer}
 \begin{plList}
 \Gamma\proofsep&
-i.& t_1+\dots+t_n \simeq u &(\currule)\\
+i.& t_1+\dots+t_n \simeq u &\currule\\
 \end{plList}
 \end{plContainer}
 where $u$ is either a constant or a product.
@@ -1448,7 +1448,7 @@ transformations as long as possible. The general form is
 \begin{plContainer}
 \begin{plList}
 \Gamma\proofsep&
-i.& t_1 \bowtie t_n \leftrightarrow \psi &(\currule)\\
+i.& t_1 \bowtie t_n \leftrightarrow \psi &\currule\\
 \end{plList}
 \end{plContainer}
 where $\bowtie$ is as for the proof rule \proofRule{la_generic}, but never
@@ -1488,7 +1488,7 @@ The possible transformations are:
       \Gamma \proofsep& k.&
       (\operatorname{let} x_1 := t_1, \dots, x_n := t_n. u) \simeq
       u'
-      &(\currule;i_1 \dots i_n)\\
+      &(\currule\;i_1 \dots i_n)\\
     \end{plList}
   \end{plContainer}
   where $\simeq$ is replaced by $\leftrightarrow$ where necessary.
@@ -1505,7 +1505,7 @@ argument this predicate always holds:
 \begin{plList}
 \proofsep& i.&
 (\operatorname{distinct} t) \leftrightarrow \top
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -1516,7 +1516,7 @@ distinct, hence only two cases are possible:
 \begin{plList}
 \proofsep& i.&
 (\operatorname{distinct} \varphi\;\psi) \leftrightarrow \neg (\varphi \leftrightarrow \psi)
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 and
@@ -1524,7 +1524,7 @@ and
 \begin{plList}
 \proofsep& i.&
 (\operatorname{distinct} \varphi_1\;\varphi_2\;\varphi_3\dots) \leftrightarrow \bot
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -1534,7 +1534,7 @@ The general case is
 \proofsep& i.&
 (\operatorname{distinct} t_1 \dots t_n) \leftrightarrow
 \bigwedge_{i=1}^{n}\bigwedge_{j=i+1}^{n} t_i\;{\not\simeq}\;t_j
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -1544,7 +1544,7 @@ The general case is
 \begin{plList}
 \proofsep& i.&
 (t \simeq u) \simeq (t \leq u \land u \leq t)
-&(\currule)\\
+&\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -1562,7 +1562,7 @@ If the operator $\circ$ is left associative, then the rule has the form
 \begin{plList}
 \Gamma\proofsep&
 i.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
-(\dots( t_1\circ  t_2) \circ  t_3)\circ \dots  t_n) &(\currule)\\
+(\dots( t_1\circ  t_2) \circ  t_3)\circ \dots  t_n) &\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -1571,7 +1571,7 @@ If the operator $\circ$ is right associative, then the rule has the form
 \begin{plList}
 \Gamma\proofsep&
 i.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
-( t_1 \circ \dots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n)\dots) &(\currule)\\
+( t_1 \circ \dots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n)\dots) &\currule\\
 \end{plList}
 \end{plContainer}
 
@@ -1581,7 +1581,7 @@ If the operator is \emph{chainable}, then it has the form
 \Gamma\proofsep&
 i.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
 ( t_1\circ t_2) \land ( t_2 \circ  t_3) \land \dots
-\land ( t_{n-1}\circ t_n) &(\currule)\\
+\land ( t_{n-1}\circ t_n) &\currule\\
 \end{plList}
 \end{plContainer}
 \end{proof-rule}
@@ -1590,15 +1590,15 @@ i.& \bigcirc_{i=1}^{n} t_i \leftrightarrow
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.& \psi &(\dots)\\
-\proofsep& j.& \varphi &(\currule; i)\\
+\proofsep& j.& \varphi &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
 
 The formula $\varphi$ is $\psi$ after boolean functions have been simplified.
 This happens in a two step process. Both steps recursively iterate over $\psi$.
 The first step expands quantified variable of type $\mathbf{Bool}$. Hence,
-$\exists x.t$ becomes $t[\bot/x]\lor t[\top/x]$ and
-$\forall x.t$ becomes $t[\bot/x]\land t[\top/x]$. If $n$ variables of sort
+$\exists x.t$ becomes $t[x\mapsto \bot]\lor t[x\mapsto \top]$ and
+$\forall x.t$ becomes $t[x\mapsto \bot]\land t[x\mapsto \top]$. If $n$ variables of sort
 $\mathbf{Bool}$ appear in a quantifier, the disjunction (conjunction) has
 $2^n$ terms. Each term replaces the variables in $t$ according
 to the bits of a number which is increased by one for each subsequent
@@ -1617,14 +1617,14 @@ or $\bot$ it is ignored.
 Either 
 \begin{plContainer}
 \begin{plList}
-\proofsep& i.& t \simeq (t' \land u_1 \land \dots \land u_n) &(\currule)\\
+\proofsep& i.& t \simeq (t' \land u_1 \land \dots \land u_n) &\currule\\
 \end{plList}
 \end{plContainer}
 or
 \begin{plContainer}
 \begin{plList}
 \proofsep& i.&
-\varphi \leftrightarrow (\varphi' \land u_1 \land \dots \land u_n) &(\currule)\\
+\varphi \leftrightarrow (\varphi' \land u_1 \land \dots \land u_n) &\currule\\
 \end{plList}
 \end{plContainer}
 
