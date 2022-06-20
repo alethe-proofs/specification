@@ -890,8 +890,12 @@ Figure~\ref{fig:grammar} shows the grammar of the proof text. It
 is based on the SMT-LIB grammar, as defined in the SMT-LIB
 standard version 2.6 Appendix~B\footnote{Available online at:
 \url{http://smtlib.cs.uiowa.edu/language.shtml}}.  The nonterminals
-$\grNT{symbol}$, $\grNT{function\_def}$, $\grNT{sorted\_var}$, and
-$\grNT{term}$ are as defined in the standard. The $\grNT{proof_term}$
+$\grNT{attribute}$
+$\grNT{function\_def}$,
+$\grNT{sorted\_var}$,
+$\grNT{symbol}$, and
+$\grNT{term}$
+are as defined in the standard. The $\grNT{proof_term}$
 is the recursive $\grNT{term}$ nonterminal redefined with the additional
 production for the $\grT{choice}$ binder.
 
@@ -905,26 +909,27 @@ production for the $\grT{choice}$ binder.
       \grNT{proof\_command} &\grRule& \grT{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\; \grT{)}\\
                             &\grOr  & \grT{(step}\; \grNT{symbol}\; \grNT{clause}
                                       \; \grT{:rule}\; \grNT{symbol}\\
-                            &       & \quad\grNT{step\_annotation}^{?}\; \grT{)}\\
-                            & \grOr & \grT{(anchor}\; \grT{:step}\; \grNT{symbol}\; \grT{)}\\
+                            &       & \quad \grNT{premises\_annotation}^{?}\\
+                            &       & \quad \grNT{context\_annotation}^{?}\;\grNT{attribute}^{*}\; \grT{)}\\
+                            & \grOr & \grT{(anchor}\; \grT{:step}\; \grNT{symbol}\;\grNT{attribute}^{*}\; \grT{)}\\
                             & \grOr & \grT{(anchor}\; \grT{:step}\; \grNT{symbol}\;
-                                      \grT{:args}\; \grNT{proof\_args}\; \grT{)}\\
+                                      \grNT{args\_annotation}^{?}\;\\
+                            &       & \quad \grNT{attribute}^{*}\; \grT{)}\\
                             & \grOr & \grT{(define-fun}\; \grNT{function\_def}\; \grT{)}\\
       \grNT{clause}         &\grRule& \grT{(cl}\; \grNT{proof\_term}^{*}\; \grT{)}\\
-
-      \grNT{step\_annotation} &\grRule& \grNT{premises\_annotation}^{?}\;\grNT{args\_annotation}\\
+      \grNT{proof\_term}    &\grRule& \grNT{term}\text{ extended with }\\
+                            &       & \grT{(choice (}\; \grNT{sorted\_var}\;\grT{)}\; \grNT{proof\_term}\; \grT{)} \\
 
       \grNT{premises\_annotation}  &\grRule& \grT{:premises (}\; \grNT{symbol}^{+}\grT{)}\\
-      \grNT{args\_annotation}      &\grRule& \grT{:args}\; \grNT{proof_args}\\
-
-      \grNT{proof\_args}    &\grRule& \grT{(}\; \grNT{proof\_arg}^{+}\; \grT{)}\\
-      \grNT{proof\_arg}     &\grRule& \grNT{symbol} \grOr
+      \grNT{args\_annotation}      &\grRule& \grT{:args}\;\grT{(}\; \grNT{step\_arg}^{+}\; \grT{)} \\
+      \grNT{step\_arg}     &\grRule& \grNT{symbol} \grOr
                                       \grT{(}\; \grNT{symbol}\; \grNT{proof\_term}\; \grT{)}\\
-      \grNT{proof\_term}    &\grRule& \grNT{term}\text{ extended with }\\
-                            &       & \grT{(choice (}\; \grNT{sorted\_var}\;\grT{)}\; \grNT{proof\_term}\; \grT{)}
+      \grNT{context\_annotation}      &\grRule& \grT{:args}\;\grT{(}\;\grNT{context\_assignment}^{+}\;\grT{)} \\
+      \grNT{context\_assignment}      &\grRule& \grT{(}\; \grNT{sorted_var}\; \grT{)} \\
+                                      & \grOr & \grT{(:=}\; \grNT{symbol}\;\grNT{proof_term}\;\grT{)}\\
     \end{array}\]
   }\par}
-\caption{The proof grammar}\label{fig:grammar}
+\caption{The proof grammar.}\label{fig:grammar}
 \end{figure}
 
 Input problems in the SMT-LIB standard contain a list of \emph{commands}
@@ -948,14 +953,26 @@ represent unary or empty clauses. To circumvent this we introduce a new
 $\grT{cl}$ operator.  It corresponds the standard $\grT{or}$ function
 extended to one argument, where it is equal to the identity, and zero
 arguments, where it is equal to $\grT{false}$.
-The $\grT{:premises}$ annotation denotes the premises and is skipped
-if they are none. If the rule carries arguments, the
-$\grT{:args}$ annotation is used to denote them.
-
 The $\grT{anchor}$ and $\grT{define-fun}$ commands are used for
 subproofs and sharing, respectively. The $\grT{define-fun}$ command
 corresponds exactly to the $\grT{define-fun}$ command of the
 SMT-LIB language.
+
+Furthermore, the syntax uses annotations as used by SMT-LIB.  The
+original SMT-LIB syntax uses the non-terminal $\grNT{attribute}$.
+The Alethe syntax uses some standard annotation.  To simplify parsing
+the order in which those must be printed is strict.
+The $\grT{:premises}$ annotation denotes the premises and is skipped
+if they are none. If the rule carries arguments, the
+$\grT{:args}$ annotation is used to denote them.
+Anchors have two annotations: $\grT{:step}$ provides the name of the
+step that concludes the subproof and $\grT{:args}$ provides the context
+as sorted variables and assignments.  Note that, in this annotation
+the $\grT{symbol}$ non-terminal is intended to be a variable.
+After those pre-defined annotations, the solver can use additional
+annotation.  This can be used for debugging, or other purposes.
+A consumer of Alethe proofs \emph{must} be able to parse proofs
+that contain such annotations. 
 
 \begin{table}[ht]\label{rule-tab:special}
 \caption{Special Rules}
