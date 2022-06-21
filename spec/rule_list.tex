@@ -59,13 +59,22 @@ This rule is the resolution of two or more clauses.
 where $\varphi^{r_1}_{s_1} , \dots , \varphi^{r_m}_{s_m}$ are from $\varphi^{i}_{j}$ and
 are the result of a chain of predicate resolution steps on the clauses of
 $i_1$ to $i_n$. It is possible that $m = 0$, i.e. that
-the result is the empty clause.
+the result is the empty clause.  When performing resolution steps, the
+rule implicitly merges repeated negations at the start of the formulas
+$\varphi^{i}_{j}$.  For example, the formulas $\neg\neg\neg P$ and $\neg\neg P$
+can serve as pivots during resolution.  The first formula is interpreted as
+$\neg P$ and the second as just $P$ for the purpose of performing resolution
+steps.
 
 This rule is only used when the resolution step is not emitted by the SAT solver.
 See the equivalent \proofRule{resolution} rule for the rule emitted by the
 SAT solver.
 
-\paragraph{Remark.} While checking this rule is NP-complete, the \currule-steps
+\paragraph{Remark.} The definition given here is very general.  The motivation
+for this to ensure the definition covers all possible resolution steps generated
+by the existing proof generation code in veriT.  It will be restricted after
+a full review of the code.  As a consequence of this checking this rule is
+theoretically NP-complete.  In practice, however, the \currule-steps
 produced by veriT are simple. Experience with reconstructing the step in
 Isabelle/HOL shows that checking can done by naive decision procedures. The
 vast majority of \currule-steps are binary resolution steps.
