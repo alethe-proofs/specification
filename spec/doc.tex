@@ -881,24 +881,6 @@ instantiation and resolution steps (line 10--15)}\label{fig:proof_ex}
 \subsection{The Syntax}
 \label{sec:syntax}
 
-The concrete text representation of the Alethe proofs
-is based on the SMT-LIB standard. Figure~\ref{fig:proof_ex} shows an
-exemplary proof as printed by veriT with light edits for readability.
-The format follows the SMT-LIB standard when possible.
-
-Figure~\ref{fig:grammar} shows the grammar of the proof text. It
-is based on the SMT-LIB grammar, as defined in the SMT-LIB
-standard version 2.6 Appendix~B\footnote{Available online at:
-\url{http://smtlib.cs.uiowa.edu/language.shtml}}.  The nonterminals
-$\grNT{attribute}$
-$\grNT{function\_def}$,
-$\grNT{sorted\_var}$,
-$\grNT{symbol}$, and
-$\grNT{term}$
-are as defined in the standard. The $\grNT{proof_term}$
-is the recursive $\grNT{term}$ nonterminal redefined with the additional
-production for the $\grT{choice}$ binder.
-
 \begin{figure}[t]
   {\centering
   { % TODO typesetting hack: align adds an empty line break
@@ -932,9 +914,27 @@ production for the $\grT{choice}$ binder.
 \caption{The proof grammar.}\label{fig:grammar}
 \end{figure}
 
+The concrete text representation of the Alethe proofs
+is based on the SMT-LIB standard. Figure~\ref{fig:proof_ex} shows an
+exemplary proof as printed by veriT with light edits for readability.
+The format follows the SMT-LIB standard when possible.
+
+Figure~\ref{fig:grammar} shows the grammar of the proof text. It
+is based on the SMT-LIB grammar, as defined in the SMT-LIB
+standard version 2.6 Appendix~B\footnote{Available online at:
+\url{http://smtlib.cs.uiowa.edu/language.shtml}}.  The nonterminals
+$\grNT{attribute}$
+$\grNT{function\_def}$,
+$\grNT{sorted\_var}$,
+$\grNT{symbol}$, and
+$\grNT{term}$
+are as defined in the standard. The $\grNT{proof_term}$
+is the recursive $\grNT{term}$ nonterminal redefined with the additional
+production for the $\grT{choice}$ binder.
+
 Input problems in the SMT-LIB standard contain a list of \emph{commands}
-that modify the internal state of the solver. In agreement
-with this approach veriT's proofs are also formed by a list of commands.
+that modify the internal state of the solver. Following
+this approach Alethe proofs are also formed by a list of commands.
 The $\grT{assume}$ command introduces a new assumption. While this
 command could also be expressed using the $\grT{step}$ command with
 a special rule, the special semantic of an assumption justifies the
@@ -974,73 +974,83 @@ annotation.  This can be used for debugging, or other purposes.
 A consumer of Alethe proofs \emph{must} be able to parse proofs
 that contain such annotations. 
 
-\begin{table}[ht]\label{rule-tab:special}
-\caption{Special Rules}
-\centering
-\begin{tabular}{l l}
-Rule & Description \\
-\hline
-\ruleref{assume}   & Repetition of an input assumption. \\
-\ruleref{subproof} & Concludes a subproof and discharges local assumptions. \\
-\end{tabular}
-\end{table}
+\tikzset{
+     solver/.style={draw, thin},
+     system/.style={draw, thin, rounded corners},
+}
 
-% PF TODO: the following lets think there is a subproof command, whereas it is
-% only the identified step in the anchor.  This comes from the fact that
-% assume is a command too, and proofrules have the same font as grT.
-% I have not thought of a solution, we can discuss if needed.
+\begin{figure}[t]
+\centering
+\scalebox{0.8}{
+\begin{tikzpicture}[node distance=2cm, auto,>=latex', thick,scale=0.8]
+    \node[solver] (unsat) {Unsat mode};
+    \node[system, right=of unsat] (assume) {Assumptions};
+    \path[->] (unsat) edge[bend left] node {\texttt{get-proof}} (assume);
+    \path[->] (assume) edge[loop above] node[align=center] {$\grT{assume}$,\\ $\grT{define-fun}$,\\ $\grT{anchor}$} (assume);
+    \node[system, right=of assume] (step) {Steps};
+    \path[->] (assume) edge[bend left] node {$\grT{step}$} (step);
+    \path[->] (step) edge[loop above] node[align=center] {$\grT{step}$,\\ $\grT{define-fun}$} (step);
+    \path[->] (step) edge[above, bend left] node {$\grT{anchor}$} (assume);
+    \path[->] (step) edge[above, bend left] node {Last step} (unsat);
+\end{tikzpicture}}
+\caption{Abstract view of the transitions in an Alethe proof}\label{fig:proof-states}
+\end{figure}
+
+Figure~\ref{fig:proof-states} shows the states of an Alethe proof
+abstractly.  To generate a proof, the SMT solver must be in the
+\emph{Unsat mode}, i.e., the solver determined that the problem
+is unsatisfiable.  The user of the solver then requests the proof by
+invoking the $\grT{get-proof}$ command.  It is possible that this command
+fails. For example, proof production was not activated upfront.
+If there is no error, the proof is printed and printing starts by printing
+the assumptions.  The solver prints the proof as a list of commands
+according to the state.  The states ensure one constraint is maintained:
+assumptions can only appear at either the beginning of a proof or right
+after a subproof is started by the $\grT{anchor}$ command.  They can not
+be mixed with ordinary proof steps.  This simplifies
+reconstruction.  Each assumption printed at the beginning of the proof
+corresponds to assertions in the input problem, up to symmetry of equality.
+Proof printing concludes after the last step is printed and the solver
+returns to the Unsat mode and the user can issue further commands.
+Usually the last step is a step the main proof
+(i.e., not within a subproof) that concludes the proof by deriving
+the empty clause, but this is not necessary.
+The solver is allowed to print some additional, useless,
+steps after the proof is concluded.  
+
 \subsection*{Subproofs}
-As the name suggests, the \proofRule{subproof} rule
-expresses subproofs. This is possible because its application is
-restricted: the assumption used as premise
+As the name suggests, the \grT{anchor} command together with proof
+rules such as the \proofRule{subproof} rule expresses subproofs. This
+is possible because its application is restricted: the assumption used
+as premise
 for the \proofRule{subproof} step must be the assumption introduced
-last. Hence, the \proofRule{assume}, \proofRule{subproof} pairs are
+last. Hence, the \grT{assume}, \proofRule{subproof} pairs are
 nested.  The context is manipulated in the same way: if a step
 pops $c_1,\dots, c_n$ from a context $\Gamma$, there is an earlier step which
 pushes precisely $c_1,\dots, c_n$ onto the context. Since
 contexts can only be manipulated by push and pop, context manipulations
 are also nested.
+Because of this nesting, a subproof
+is started right before an \grT{assume} command or a command which
+pushes onto the context. We call this point the {\em anchor} and an Alethe
+contains the \grT{anchor} command at this point.
 
-Because of this nesting, veriT uses the concept of subproofs.  A subproof
-is started right before an \proofRule{assume} command or a command which
-pushes onto the context. We call this point the \emph{anchor}.   The
-subproof ends with the matching \proofRule{subproof} command or
-command which pops from the context, respectively. The $\grT{:step}$
+After the \grT{Anchor} command the proof uses \grT{assume} commands to list
+the assumptions of the subproof.  Subsequently the subproof is a list of
+\grT{step} commands that can use the assumptions of and any parent subproof
+as premises.
+The subproof ends with a \grT{step} command using the \proofRule{subproof} rule or
+another rule that pops from the context, respectively. The $\grT{:step}$
 annotation of the anchor command is used to indicate the $\grT{step}$
-command which will end the subproof. The term of this $\grT{step}$
-command is the conclusion of the subproof.  If the subproof uses a
+command which will end the subproof.  The term of this $\grT{step}$
+command is the conclusion of the subproof.   While it is possible to infer the
+step that concludes a subproof from structure of the proof, the explicit
+annotation simplifies reconstruction and makes the proof easier to read.
+If the subproof uses a
 context, the $\grT{:args}$ annotation of the $\grT{anchor}$ command
-indicates the arguments added to the context for this subproof.
-\begin{comment}{Haniel Barbosa}
-  Bruno pointed out what looks to me like an issue with how we are currently
-  printing variable arguments for subproofs whose anchors introduce bound
-  variables or substitutions for variables: without giving the types of the
-  variables, it's not possible to know their types without some deep forward
-  looking into next proof steps. I think then that the types should be printed
-  for bound variables and variables occurring in substitutions.
+indicates the arguments added to the context for this subproof.  The
+annotation provides the sort of fixed variables.
 
-  FWIW, it's very simple to change veriT to do this. I did so in a branch for
-  Bruno so that the checker he's implementing does not need to implement more
-  complicated solutions to figure out the type of the variables.
-
-  I'm curious though: how is this handled in the Isabelle/HOL reconstruction?
-\end{comment}
-\begin{comment}{Hans-Jörg Schurr}
-    Indeed the substitution induced by an anchor should always be fully
-    sorted. I think, the sorts should also be checked during proof checking.
-
-    What syntax did you choose to print the sorts?  I would like to
-    understand better when it's necessary to print a sort. Certainly,
-    one can often directly deduce the sort of a variable from the substitute
-    term. On the other hand, it is certainly necessary to print the sorts
-    of fixed variables.  Furthermore, constructions such as 'x1:=x2, x2:=x1'
-    need sort annotations.  In theory we could probably eliminate the last
-    case. Is there a case where the substitute is a complex term, but it is
-    still not clear what sort it is?
-
-    For Isabelle/HOL it's not a problem since its reconstruction looks
-    ahead to the conclusion of the subproof.
-\end{comment}
 In the example proof (Figure~\ref{fig:proof_ex}) a subproof starts on line four.
 It ends on line seven with the $\proofRule{bind}$ steps which finished the
 proof for the renaming of the bound variable \smtinline{z2}
@@ -1114,7 +1124,7 @@ of $\grT{define-fun}$ commands that define shorthand 0-ary functions for
 the $\grT{(choice }\dots\grT{)}$ terms needed. Without this option,
 no $\grT{define-fun}$ commands are issued and the constants are expanded.
 
-\section{The Alethe proof calculus}
+\section{The Alethe Rules}
 \label{sec:rules-generic}
 
 Together with the language, the Alethe format also comes with a set
@@ -1134,10 +1144,11 @@ it deduces $\neg \varphi_1 \lor \varphi_2$.
 
 \paragraph{Resolution.}
 CDCL($T$)-based SMT solvers, and especially their SAT solvers,
-are fundamentally based on clauses. Hence, Alethe also uses
-clauses.  Nevertheless, since SMT solvers do not enforce a strict
+are fundamentally based on resolution of clauses.
+Hence, Alethe also has dedicated clauses and a resolution proof
+rule.  However, since SMT solvers do not enforce a strict
 clausal normal-form, ordinary disjunction is also used.
-Keeping clauses and disjunctions distinct, simplifies rule checking.
+Keeping clauses and disjunctions distinct simplifies rule checking.
 For example, in the case of
 resolution there is a clear distinction between unit clauses where
 the sole literal starts with a disjunction, and non-unit clauses.  The
@@ -1150,18 +1161,13 @@ resolution rule with the rule name \proofRule{resolution} or
 \proofRule{th\_resolution}. Both names denote the same rule. The
 difference only serves to distinguish if the rule was introduced by
 the SAT solver or by a theory solver. The resolution step is purely
-propositional; there is no notion of a unifier.
+propositional; there is no notion of a unifier.  The resolution
+rules also implicitly simplifies repeated negations at the head
+of literals.
 
 The premises of a resolution step are clauses and the conclusion
 is a clause that has been derived from the premises by some binary
 resolution steps.
-\begin{comment}{Hans-Jörg Schurr}
-We have to clarify that resolution counts the number of leading negations
-to determine polarity. This is important for double negation elimination.
-
-Furthermore, as Pascal noted, we should also fold the two rules into one
-and use an attribute to distinguish the two cases.
-\end{comment}
 
 \paragraph{Quantifier Instantiation.}
 To express quantifier instantiation, the rule \proofRule{forall\_inst}
@@ -1249,6 +1255,17 @@ tautologies.  That is, regular rules that do not use premises.
 
 Within the tables, the number in brackets corresponds to the number
 of the rule in Section~\ref{sec:rules}.
+
+\begin{table}[ht]\label{rule-tab:special}
+\caption{Special Rules}
+\centering
+\begin{tabular}{l l}
+Rule & Description \\
+\hline
+\ruleref{assume}   & Repetition of an input assumption. \\
+\ruleref{subproof} & Concludes a subproof and discharges local assumptions. \\
+\end{tabular}
+\end{table}
 
 \begin{table}[h!]
 \caption{Resolution and Related Rules}
