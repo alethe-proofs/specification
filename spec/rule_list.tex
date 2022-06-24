@@ -3,7 +3,7 @@
 \begin{proof-rule}{assume}{veriT}
 \begin{plContainer}
 \begin{plList}
-\proofsep& i.& \phi &\currule\\
+\proofsep& i.& \varphi &\currule\\
 \end{plList}
 \end{plContainer}
 where $\varphi$ corresponds to a formula asserted in the input problem up
@@ -12,6 +12,27 @@ to the orientation of equalities.
 This rule can not be used by the
 $\grT{(step }\dots\grT{)}$ command. Instead it corresponds to the dedicated
 $\grT{(assume }\dots\grT{)}$ command.
+
+\end{proof-rule}
+
+\begin{proof-rule}{hole}{veriT}
+\begin{plContainer}
+\begin{plList}
+\proofsep& i.& \varphi &(\currule\; p_1, \dots, p_n)\; [a_1, \dots, a_n]\\
+\end{plList}
+\end{plContainer}
+where $\varphi$ is any well formula.
+
+This rule can be used to express holes in the proof.  It can be used by
+solvers as a placeholder for proof steps that are not yet expressed
+by the proof rules in this document.  A proof checker \emph{must not}
+accept a proof as valid that contains this rule even if the checker can
+somehow check this rule.  However, it is possible for checkers to have
+a dedicated status for proofs that contain this rule and are otherwise
+valid.  Any other tool can accept or reject proofs that contain this rule.
+
+The premises and arguments are arbitrary, but must follow the syntax
+for premises and arguments.
 
 \end{proof-rule}
 
@@ -81,7 +102,7 @@ vast majority of \currule-steps are binary resolution steps.
 \end{proof-rule}
 
 \begin{proof-rule}{resolution}{veriT}
-This rule is equivalent to the \proofRule{the\_resolution} rule, but it is
+This rule is equivalent to the \proofRule{th_resolution} rule, but it is
 emitted by the SAT solver instead of theory reasoners. The differentiation
 serves only informational purpose.
 
@@ -296,7 +317,7 @@ sophisticated reasoning. It has either the form
 \end{plContainer}
 where $\varphi$ is either a linear inequality $s_1 \bowtie s_2$
 or $\neg(s_1 \bowtie s_2)$. After performing step 1 to 3 of the process for
-checking the \proofRule{la\_generic} the result is trivially unsatisfiable.
+checking the \proofRule{la_generic} the result is trivially unsatisfiable.
 
 The second form handles bounds on linear combinations. It is binary clause:
 \begin{plContainer}
@@ -307,7 +328,7 @@ The second form handles bounds on linear combinations. It is binary clause:
 \end{plList}
 \end{plContainer}
 
-It can be checked by using the procedure for \proofRule{la\_generic} with
+It can be checked by using the procedure for \proofRule{la_generic} with
 while setting the arguments to $1$. Informally, the rule follows one of several
 cases:
 \begin{itemize}
@@ -318,7 +339,7 @@ cases:
     \item $\neg (s_1 \leq d_1) \lor \neg(s_1 \geq d_2)$ where $d_1 < d_2$
 \end{itemize}
 The inequalities $s_1 \bowtie d$ are are the result of applying normalization
-as for the rule \proofRule{la\_generic}.
+as for the rule \proofRule{la_generic}.
 
 \end{proof-rule}
 

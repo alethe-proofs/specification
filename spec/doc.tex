@@ -112,11 +112,15 @@ break
 \end{inner-rule}
 }
 
-\newcommand{\ruleref}[1]{\proofRule{\nameref{rule:#1}}~(\ref{rule:#1})}
+% Proof rules
+ 
+\newcommand{\ruleType}[1]{\microtypesetup{tracking=false}\texttt{#1}\microtypesetup{tracking=true}}
+\newcommand{\ruleref}[1]{\ruleType{\nameref{rule:#1}}~(\ref{rule:#1})}
+%\newcommand{\proofRule}[1]{\microtypesetup{tracking=false}\texttt{#1}\microtypesetup{tracking=true}}
+\newcommand{\proofRule}[1]{\ruleType{\nameref{rule:#1}}}
 
 % == Theorem environments ==
 
-\newcommand{\proofRule}[1]{\microtypesetup{tracking=false}\texttt{#1}\microtypesetup{tracking=true}}
 \newcommand{\isaTac}[1]{\texttt{#1}}
 \newcommand\IfThenElse[3]{\ensuremath{\mathit{if}~#1~\mathit{then}~#2~\mathit{else}~#3}}
 
@@ -492,7 +496,7 @@ as its conclusion (i.e., \(l = 0\)) we will write \(\bot\).  While this
 muddles the water a bit with regards to steps which have the unit clause
 with the unit literal \(\bot\) as their conclusion, it simplifies the
 notation.  We will remark on the difference if it is relevant.  The rule
-name \(\proofRule{rule}\) is taken from a set of possible proof rules.
+name \proofRule{rule} is taken from a set of possible proof rules.
 Furthermore, each step has a possibly empty set of premises $\{p_1,
 \dots, p_n\}$ with $p_i\in\mathbb{I}$,
 and a rule-dependent and possibly
@@ -525,9 +529,7 @@ The example above uses two assumptions which are introduced in the first
 two steps.
 
 \paragraph{Subproofs and Lemmas.}
-Alethe uses subproofs to create new contexts
-
-prove lemmas and to manipulate the context.
+Alethe uses subproofs to prove lemmas and to create and manipulate the context.
 %
 To prove lemmas, a subproof can
 introduce local assumptions. The \proofRule{subproof} \emph{rule} discharges the
@@ -561,13 +563,13 @@ lemma \(((2 + 2) \simeq 5) \Rightarrow 4 \simeq 5\).
 \end{plList}
 \begin{plSubList}
 \proofsep& 2.& (2 + 2) \simeq 5                   &\proofRule{assume}\\
-\proofsep& 3.& (2 + 2) \simeq 4                   &\proofRule{plus\_simplify}\\
+\proofsep& 3.& (2 + 2) \simeq 4                   &\proofRule{plus_simplify}\\
 \proofsep& 4.& 4 \simeq 5                         &(\proofRule{trans}\;1, 2)\\
 \end{plSubList}
 \begin{plList}
 \proofsep& 5.& \neg((2 + 2) \simeq 5), 4 \simeq 5 &\proofRule{subproof}\\
-\proofsep& 6.& (4 \simeq 5)\leftrightarrow \bot &\proofRule{eq\_simplify}\\
-\proofsep& 7.& \neg((4 \simeq 5)\leftrightarrow \bot), \neg(4\simeq 5), \bot  &\proofRule{equiv\_pos2}\\
+\proofsep& 6.& (4 \simeq 5)\leftrightarrow \bot &\proofRule{eq_simplify}\\
+\proofsep& 7.& \neg((4 \simeq 5)\leftrightarrow \bot), \neg(4\simeq 5), \bot  &\proofRule{equiv_pos2}\\
 \proofsep& 8.& \bot  &(\proofRule{resolution}\; 1, 5, 7, 8)\\
 \end{plList}
 \end{plContainer}
@@ -936,6 +938,21 @@ The format follows the SMT-LIB standard when possible.  Hence, beside
 the SMT-LIB logic and term language, it also uses commands to structure
 the proof.  An Alethe proof is a list of commands.
 
+Usually an Alethe proof is associated with a concrete SMT-LIB problem
+that is proved by the Alethe proof.  This can either be a concrete
+problem file or, if the incremental solving features of SMT-LIB
+are used, the implicit problem constructed at the invocation of a
+$\grT{get-proof}$ command.
+In this document we will call this SMT-LIB problem the \emph{input problem}.
+All symbols declared or defined in the input problem remain declared or
+defined, respectively.  Furthermore, the symbolic names introduced
+by the $\grT{:named}$ annotation also stay valid and can be used
+in the script.  For the purpose of the proof rules, terms are treated
+as if proxy names introduced by $\grT{:named}$ annotations have been
+expanded and annotations have been removed.  For example, the term
+\smtinline{(or (! (P a) :named baz) (! baz :foo))} and
+\smtinline{(or (P a) (P a))} are considered to be syntactically equal.
+
 Figure~\ref{fig:grammar} shows the grammar of the proof text. It
 is based on the SMT-LIB grammar, as defined in the SMT-LIB
 standard version 2.6 Appendix~B\footnote{Available online at:
@@ -959,10 +976,20 @@ presence of a dedicated command: assumptions are neither tautological nor
 derived from premises.  The $\grT{step}$ command, on the other hand,
 introduces a derived or tautological formula.  Both commands $\grT{assume}$
 and $\grT{step}$ require an index as the first argument to later
-refer back to it. This index is an arbitrary SMT-LIB symbol. The only
-restriction is that it must be unique for each $\grT{assume}$ and
-$\grT{step}$ command.  The second argument is the term introduced by the
-command.
+refer back to it. This index is an arbitrary SMT-LIB symbol.
+It must be unique for each $\grT{assume}$ and $\grT{step}$ command.
+A special restriction applies to the $\grT{assume}$ of the main proof.
+Those reference assertions in the input SMT-LIB problem.  To simplify
+proof checking, the $\grT{assume}$ command must use the name assigned
+to the asserted formula if there is any.  For example, if the input
+problem contains \smtinline{(assert (! (P c) :named foo))} then
+the proof must refer to this assert (if it is needed) as
+\smtinline{(assume foo (P c))}.  Note that SMT-LIB problem can
+assign a name to terms at any point, not only at their first assert.
+If a term has more than one name, any can be picked.
+
+The second argument of $\grT{step}$ and $\grT{assume}$
+is the term introduced by the command.
 For a $\grT{step}$, this term is always a clause.
 To express disjunctions in SMT-LIB the $\grT{or}$ operator is used.
 This operator, however, needs at least two arguments and cannot
@@ -984,7 +1011,7 @@ if they are none. If the rule carries arguments, the
 $\grT{:args}$ annotation is used to denote them.
 Anchors have two annotations: $\grT{:step}$ provides the name of the
 step that concludes the subproof and $\grT{:args}$ provides the context
-as sorted variables and assignments.  Note that, in this annotation
+as sorted variables and assignments.  Note that in this annotation
 the $\grT{symbol}$ non-terminal is intended to be a variable.
 After those pre-defined annotations, the solver can use additional
 annotation.  This can be used for debugging, or other purposes.
@@ -1069,7 +1096,7 @@ indicates the arguments added to the context for this subproof.  The
 annotation provides the sort of fixed variables.
 
 In the example proof (Figure~\ref{fig:proof_ex}) a subproof starts on line four.
-It ends on line seven with the $\proofRule{bind}$ steps which finished the
+It ends on line seven with the \proofRule{bind} steps which finished the
 proof for the renaming of the bound variable \smtinline{z2}
 to \smtinline{vr4}.
 
@@ -1152,7 +1179,7 @@ general concepts related to the rules.
 
 \paragraph{Tautologous Rules and Simple Deduction.}
 Most rules introduce tautologies. One example is
-the \proofRule{and\_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
+the \proofRule{and_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
 \dots \land \varphi_n) \lor \varphi_i$.  Other rules operate on only
 one premise. Those rules are primarily used to simplify Boolean
 connectives during preprocessing. For example, the \proofRule{implies}
@@ -1175,7 +1202,7 @@ use the standard SMT-LIB \smtinline{or} operator. The \proofRule{or}
 
 The Alethe proofs use a generalized propositional
 resolution rule with the rule name \proofRule{resolution} or
-\proofRule{th\_resolution}. Both names denote the same rule. The
+\proofRule{th_resolution}. Both names denote the same rule. The
 difference only serves to distinguish if the rule was introduced by
 the SAT solver or by a theory solver. The resolution step is purely
 propositional; there is no notion of a unifier.  The resolution
@@ -1187,13 +1214,13 @@ is a clause that has been derived from the premises by some binary
 resolution steps.
 
 \paragraph{Quantifier Instantiation.}
-To express quantifier instantiation, the rule \proofRule{forall\_inst}
+To express quantifier instantiation, the rule \proofRule{forall_inst}
 is used. It produces a formula of the form $(\neg \forall \bar
 x_n.\,\varphi)\lor \varphi[\bar t_n]$, where $\varphi$ is
 a term containing the free variables $\bar x_n$, and for each $i$ the
 ground term $t_i$ is a new term with the same sort as $x_i$.
 
-The arguments of a \proofRule{forall\_inst} step is the list \((x_1 , t_1),
+The arguments of a \proofRule{forall_inst} step is the list \((x_1 , t_1),
 \dots, (x_n, t_n)\). While this information can be recovered from the term,
 providing it explicitly helps reconstruction because the implicit reordering of
 equalities (see below) obscures which terms have been used as instances.
@@ -1201,14 +1228,14 @@ Existential quantifiers are handled by Skolemization.
 
 \paragraph{Linear Arithmetic.}
 Proofs for linear arithmetic use a number of straightforward rules,
-such as \proofRule{la\_totality}: $t_1 \leq t_2 \lor t_2 \leq t_1$
-and the main rule \proofRule{la\_generic}.  The conclusion of an
-\proofRule{la\_generic} step is a tautology $\neg \varphi_1, \neg
+such as \proofRule{la_totality}: $t_1 \leq t_2 \lor t_2 \leq t_1$
+and the main rule \proofRule{la_generic}.  The conclusion of an
+\proofRule{la_generic} step is a tautology $\neg \varphi_1, \neg
 \varphi_2, \dots, \neg \varphi_n$ where the $\varphi_i$ are linear
 (in)equalities. Checking the validity of these formulas amounts to
 checking the unsatisfiability of the system of linear equations
 $\varphi_1, \varphi_2, \dots, \varphi_n$.  The annotation of an
-\proofRule{la\_generic} step contains a coefficient for each (in)equality.
+\proofRule{la_generic} step contains a coefficient for each (in)equality.
 The result of forming the linear combination of the literals with
 the coefficients is a trivial inequality between constants.
 
@@ -1220,25 +1247,25 @@ of $(x+y<1) \lor (3<x)$, $x\simeq 2$, and $0\simeq y$.
 \proofsep& 2.& x\simeq 2                          &\proofRule{assume}\\
 \proofsep& 3.& 0\simeq y                          &\proofRule{assume}\\
 \proofsep& 4.& (3 < x), (x + y < 1)               &(\proofRule{or}\;1)\\
-\proofsep& 5.& \neg (3<x), \neg (x\simeq 2)       &\proofRule{la\_generic}\; [1.0, 1.0]\\
+\proofsep& 5.& \neg (3<x), \neg (x\simeq 2)       &\proofRule{la_generic}\; [1.0, 1.0]\\
 \proofsep& 6.& \neg (3<x)                         &(\proofRule{resolution}\; 2, 5)\\
 \proofsep& 7.& x + y < 1                          &(\proofRule{resolution}\; 4, 6)\\
 \proofsep& 8.& \neg (x + y < 1), \neg (x\simeq 2) \lor \neg (0 \simeq y)
-&\proofRule{la\_generic}\;[1.0, -1.0, 1.0]\\
+&\proofRule{la_generic}\;[1.0, -1.0, 1.0]\\
 \proofsep& 9.& \bot                               &(\proofRule{resolution}\; 8, 7, 2, 3)
 \end{plListEq}
 \end{example}
 
 \paragraph{Skolemization and Other Preprocessing Steps.}
-One typical example for a rule with context is the \proofRule{sko\_ex}
+One typical example for a rule with context is the \proofRule{sko_ex}
 rule, which is used to express Skolemization of an existentially
 quantified variable. It is a applied to a premise $n$ with a context
 that maps a variable $x$ to the appropriate Skolem term and produces
 a step $m$ ($m > n$) where the variable is quantified.
 
 \begin{plListEq}
-  \Gamma, x\mapsto (\varepsilon x.\varphi) &\proofsep n.&\varphi \simeq \psi &(\proofRule{\dots})\\
-  \Gamma &\proofsep m.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko\_ex}\; n)
+  \Gamma, x\mapsto (\varepsilon x.\varphi) &\proofsep n.&\varphi \simeq \psi &(\ruleType{\dots})\\
+  \Gamma &\proofsep m.&                 (\exists x.\varphi) \simeq \psi &(\proofRule{sko_ex}\; n)
 \end{plListEq}
 
 \begin{example}
@@ -1246,12 +1273,12 @@ To illustrate how such a rule is applied, consider the following example
 taken from~\cite{barbosa-2019}. Here the term $\neg p(\varepsilon x.\neg
 p(x))$ is Skolemized. The \proofRule{refl} rule expresses
 a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
-is functional congruence, and \proofRule{sko\_forall} works like
-\proofRule{sko\_ex}, except that the choice term is $\varepsilon x.\neg\varphi$.
+is functional congruence, and \proofRule{sko_forall} works like
+\proofRule{sko_ex}, except that the choice term is $\varepsilon x.\neg\varphi$.
 \begin{plListEqAlgn}
   x\mapsto (\varepsilon x.\neg p(x)) \proofsep& 1.&                 x  &\simeq        \varepsilon x.\neg p(x)  &\proofRule{refl}\\
   x\mapsto (\varepsilon x.\neg p(x)) \proofsep& 2.&               p(x) &\simeq      p(\varepsilon x.\neg p(x)) &(\proofRule{cong}\; 1)\\
-                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\varepsilon x.\neg p(x)) &(\proofRule{sko\_forall}\; 2)\\
+                                  \proofsep& 3.&(    \forall x.p(x))&\simeq      p(\varepsilon x.\neg p(x)) &(\proofRule{sko_forall}\; 2)\\
                                   \proofsep& 4.&(\neg\forall x.p(x))&\simeq \neg p(\varepsilon x.\neg p(x)) &(\proofRule{cong}\; 3)
  \end{plListEqAlgn}
 \end{example}
@@ -1264,7 +1291,7 @@ is functional congruence, and \proofRule{sko\_forall} works like
 Section~\ref{sec:rules} provides a list of all proof rules supported by
 Alethe.  To make this long list more accessible, this section
 first lists multiple classes of proof rules.  The classes are not
-mutually exclusive: for example, the \proofRule{la\_generic} rule is
+mutually exclusive: for example, the \proofRule{la_generic} rule is
 both a linear arithmetic rule and introduces a tautology.
 Table~\ref{rule-tab:special} lists rules that serve a special purpose.
 Table~\ref{rule-tab:tautologies} lists all rules that introduce
@@ -1280,6 +1307,7 @@ of the rule in Section~\ref{sec:rules}.
 Rule & Description \\
 \hline
 \ruleref{assume}   & Repetition of an input assumption. \\
+\ruleref{hole}     & Placeholder for rules not defined here. \\
 \ruleref{subproof} & Concludes a subproof and discharges local assumptions. \\
 \end{tabular}
 \end{table}
