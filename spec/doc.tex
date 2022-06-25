@@ -483,7 +483,7 @@ A proof in the Alethe language is an indexed list of steps.
 To mimic the concrete syntax we write a step in the form
 \begin{plListEq}
 	c_1,\,\dots,\, c_k &\proofsep i. & \varphi_1,\dots ,\varphi_l &
-		(\proofRule{rule}\: p_1,\,\dots,\, p_n)\,[a_1,\,\dots,\,a_m]
+		(\ruleType{rule}\; p_1,\,\dots,\, p_n)\,[a_1,\,\dots,\,a_m]
 \end{plListEq}
 \noindent
 Each step has a unique index \(i \in \mathbb{I}\), where \(\mathbb{I}\) is a countable
@@ -496,7 +496,8 @@ as its conclusion (i.e., \(l = 0\)) we will write \(\bot\).  While this
 muddles the water a bit with regards to steps which have the unit clause
 with the unit literal \(\bot\) as their conclusion, it simplifies the
 notation.  We will remark on the difference if it is relevant.  The rule
-name \proofRule{rule} is taken from a set of possible proof rules.
+name \ruleType{rule} is taken from a set of possible proof
+rules (Section~\ref{sec:rules}).
 Furthermore, each step has a possibly empty set of premises $\{p_1,
 \dots, p_n\}$ with $p_i\in\mathbb{I}$,
 and a rule-dependent and possibly
@@ -517,11 +518,11 @@ In the example above, the contexts are all empty.
 
 \paragraph{Assumptions.}
 A \proofRule{assume} step introduces a term as an assumption. The
-proof starts with a number of \proofRule{assume} steps. Each such step
+proof starts with a number of \ruleType{assume} steps. Each such step
 corresponds to an input assertion. Additional assumptions can be introduced
 too. In this case each assumption must be discharged with an appropriate
 step. The rule \proofRule{subproof} can be used to do so.  In the concrete
-syntax \proofRule{assume} steps have a dedicated command $\grT{assume}$ to
+syntax \ruleType{assume} steps have a dedicated command $\grT{assume}$ to
 clearly distinguish them from normal steps that use the $\grT{step}$ command
 (see Section~\ref{sec:syntax}).
 
@@ -563,7 +564,7 @@ lemma \(((2 + 2) \simeq 5) \Rightarrow 4 \simeq 5\).
 \end{plList}
 \begin{plSubList}
 \proofsep& 2.& (2 + 2) \simeq 5                   &\proofRule{assume}\\
-\proofsep& 3.& (2 + 2) \simeq 4                   &\proofRule{plus_simplify}\\
+\proofsep& 3.& (2 + 2) \simeq 4                   &\proofRule{sum_simplify}\\
 \proofsep& 4.& 4 \simeq 5                         &(\proofRule{trans}\;1, 2)\\
 \end{plSubList}
 \begin{plList}
@@ -1319,7 +1320,7 @@ Rule & Description \\
 Rule & Description \\
 \hline
 \ruleref{resolution} & Chain resolution of two or more clauses. \\
-\ruleref{th_resolution} & As \proofRule{resoltuion}, but used by theory solvers. \\
+\ruleref{th_resolution} & As \proofRule{resolution}, but used by theory solvers. \\
 \ruleref{tautology} & Simplification of tautological clauses to $\top$. \\
 \ruleref{contraction} & Removal of duplicated literals. \\
 \end{tabular}
