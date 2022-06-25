@@ -181,7 +181,7 @@ break
 
 \newtheorem{example}{Example}
 \newtheorem{theorem}{Theorem}[example]
-
+\newtheorem{definition}{Definition}[example]
 
 % == Commands for Grammar ==
 \definecolor{SmtBlue}{HTML}{00007f}
@@ -616,11 +616,129 @@ implicit reordering of equalities.
 \subsection{The Semantics of the Alethe Language}
 \label{sec:semantic}
 
-Most of the content is taken from the presentation and the correctness proof of
-the format~\cite{barbosa-2019}.
+An Alethe proof is a list of steps, but not every list is an
+Alethe proof.  In this sections we first give the restrictions that separate
+an Alethe proof from lists of steps that are not Alethe proof.  Then
+we show that Alethe proofs are sound.  That is, if an Alethe proof
+contains the empty clause as a conclusion not within a subproof, then
+the input assertions are contradictory.  We will not prove that every
+rule is sound.
+
+An Alethe proof $P$ is a list $[s_1, \dots, s_n]$ of steps and anchors.
+\emph{Anchors} capture the point in a proof where a subproof starts.
+In the graphical notation we are using this is the start of the
+vertical black line.  Furthermore, the context
+only changes at an anchor and the steps that conclude a subproof
+and an anchor only ever extends the context.  Hence, every
+anchor is associated with an, possibly empty, list
+of variables and variable term tuples.  The steps among $s_1, \dots, s_n$
+are not associated with a context.  Instead the context can be computed.
+In the following a concluding rule is a proof rule that concludes a
+subproof (such as \proofRule{subproof} and \proofRule{bind}).
+
+\begin{definition}[Calculated Context]
+	Let $s_i$ be a step or anchor in $P$ such that no step $s_j$
+	where $j < i$ uses a concluding
+	rule.  Let $a_1, \dots, a_m$ be the anchors among $s_1, \dots, s_{i-1}$.
+
+	The calculated context of $s_i$ is the context
+	$c_{1,1}, \dots, c_{1, n_1}, \dots, c_{m,1}, \dots, c_{m, n_m}$
+	where $c_{k,1}, \dots, c_{k, n_k}$ is the context of $a_k$.
+
+	Note that if $s_i$ is an anchor, its calculated context is the
+	context before concatenating it with the context associated
+	with $s_i$.
+\end{definition}
+
+To check the validity of a proof we can inductively eliminate subproofs
+until we reach a proof without subproof.
+If we always eliminate the first
+subproof that does not contain another subproof we can calculate the context
+and check the validity of the subproof directly.
+We start with $P_0 = P$.
+
+To elimnate a part of a proof, we can replace some steps with a hole.
+Consider a proof $[s_1, \dots, s_n]$ and indices $1 \leq i \leq
+j \leq n$.  We can create a new step $s'$ that
+uses the \proofRule{hole}
+rule, has the conclusion of $s_j$ as its conclusion, and uses
+an index from $\mathbb{I}$ not used by any step in the proof. We can
+form the new proof $[s_1, \dots, s_{i-1}, s', s_{j+1}, \dots, s_n]$.
+Of course this is only valid if the steps that are replace do not contain
+partial subpoors.  Due to our induction, we will only replace entire subproofs that
+do not contain subpoof.
+
+\begin{definition}[Admissible Proof, Pure Subproofs]
+	Let $P_i$ be the proof $[s_1, \dots, s_n]$ and $1 \leq \mathit{start}
+	< \mathit{end} \leq n$ such that
+	\begin{itemize}
+		\item $s_{\mathit{start}}$ is an anchor,
+		\item $s_{\mathit{end}}$ is a step that uses a concluding rule,
+		\item no $s_k$ with $\mathit{start} < k < \mathit{end}$ is an anchor or
+		 a step that uses a concluding rule.
+	\end{itemize}
+	The proof $P_i$ is \emph{admissible} if it either contains no such $\mathit{start}$,
+	$\mathit{end}$, or
+	\begin{itemize}
+		\item all steps $s_k$ with $\mathit{start} < k <
+		\mathit{end}$ only use the premises $s_l$ with $\mathit{start} <
+		l < k$,
+		\item all steps $s_k$ are valid application of their rule under the
+		calculated context of $s_{\mathit{start}}$,
+		\item the step $s_{\mathit{end}}$ is a valid application of its rule
+		under its calculated context,
+		\item the proof $P_{i+1}$, where the steps $s_{\mathit{start}}, \dots,
+		s_{\mathit{end}}$ have been replaced by $s'$ as described above, is admissible.
+	\end{itemize}
+	We call the proof $[s_{\mathit{start}}, \dots, s_{\mathit{end}}]$ a \emph{pure
+	subproof}.
+\end{definition}
+
+Since proofs are finite, this process stops at some admissible proof
+$P_{\mathit{last}}$.  If the structure of the proof is not well formed
+there will still be some anchors and steps using concluding rules in
+$P_{\mathit{last}}$.  Otherwise, we can check $P_{\mathit{last}}$ to
+see if the overall proof is valid.
+
+\begin{definition}[Valid Alethe Proof]
+	An Alethe proof $P_0 = [s_1, \dots, s_n]$ is valid if
+	\begin{itemize}
+		\item $P_0$ does not contain any step that uses the \proofRule{hole} rule,
+		\item each step in $P_0$ uses an unique index,
+		\item $P_0$ is admissible,
+		\item $P_0$ contains a step that has the empty clause as its conclusion,
+		\item $P_{\mathit{last}}$ does not contain any anchor or step using a concluding
+		rule,
+		\item all steps $s_k$ in $P_{\mathit{last}}$
+		only use the premises $s_l$ with $1 \leq l < k$,
+		\item all steps in $P_{\mathit{last}}$ are valid
+		applications of their rules under the empty context.
+		\end{itemize}
+\end{definition}
+
+In this document we will often call $P_{\mathit{last}}$ the outermost
+proof.
+
+\subsubsection{Soundness}
+
+To show the soundness of a valid Alethe proof $P = [s_1, \dots, s_n]$
+we can use the same induction as the for the definition of validity.
+
+\begin{theorem}[Soundness of Alethe]
+If there is a valid Alethe proof $P$ that has the formulas
+$\varphi_1, \dots, \varphi_m$ as the conclusions of the \proofRule{assume}
+steps in its outermost proof, then
+\[
+\varphi_1, \dots, \varphi_m \vDash \bot
+\]
+\end{theorem}
+
+We wills tart with proofs with empty context and then add contexts.
 
 \subsubsection{Abstract Inference System}  % or Rules, or Rules of Inference
 \label{sec:inference-system}
+Most of the content is taken from the presentation and the correctness proof of
+the format~\cite{barbosa-2019}.
 
 The inference rules used by our framework depend on a notion of
 \emph{context} defined by the grammar
