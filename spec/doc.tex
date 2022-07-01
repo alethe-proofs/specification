@@ -181,6 +181,7 @@ break
 
 \newtheorem{example}{Example}
 \newtheorem{theorem}{Theorem}[example]
+\newtheorem{lemma}{Lemma}[example]
 \newtheorem{definition}{Definition}[example]
 
 % == Commands for Grammar ==
@@ -196,6 +197,8 @@ break
 \newcommand\vthinspace{\kern+0.083333em}
 \newcommand\negvthinspace{\kern-0.083333em}
 \newcommand\negvvthinspace{\kern-0.041667em}
+
+\newcommand{\limp}{\rightarrow}
 
 \newcommand\metafun[1]{\ensuremath{\mathit{#1}}}
 \newcommand\sort[1]{\mathsf{#1}}
@@ -690,7 +693,7 @@ do not contain subpoof.
 		\item the proof $P_{i+1}$, where the steps $s_{\mathit{start}}, \dots,
 		s_{\mathit{end}}$ have been replaced by $s'$ as described above, is admissible.
 	\end{itemize}
-	We call the proof $[s_{\mathit{start}}, \dots, s_{\mathit{end}}]$ a \emph{pure
+	We call the admissible proof $[s_{\mathit{start}}, \dots, s_{\mathit{end}}]$ a \emph{pure
 	subproof}.
 \end{definition}
 
@@ -733,7 +736,27 @@ steps in its outermost proof, then
 \]
 \end{theorem}
 
-We wills tart with proofs with empty context and then add contexts.
+We wills start with simple subproofs with empty contexts and then add contexts.
+Here, we will assume that every rule is sound.
+
+\begin{lemma}
+	Let $P = [s_1, \dots, s_n]$ be a pure subpoof such that no $s_i$ is
+	an anchor, $s_n$ is a \proofRule{subproof} step with the conclusion
+	$\psi$, and $\varphi_1, \dots, \varphi_m$ are the conclusion of \proofRule{assume}
+	steps.  Then $\vDash \varphi_1, \dots, \varphi_m \limp \psi$.
+\end{lemma}
+\begin{proof}
+	Let $s_j$ be the premise of the step $s_n$.  Due to the definition of
+	\proofRule{subproof}, this conclusion of $s_j$ is $\psi$.  If we can
+	show that $s_j$ means $\varphi_1, \dots, \varphi_m  \vDash \psi$,
+	then $\vDash \varphi_1, \dots, \varphi_m \limp \psi$ since
+	\proofRule{subproof} is sound.
+
+	We show this by induction over the proof steps.  Let $V_0 = \emptyset$.
+	Let $\psi_i$ be the conclusions of the step $s_i$.  If $s_i$ is an
+	\proofRule{assume} step, then let $V_i = V_{i-1} \cup \{\psi_i\}$.
+	Otherwies, 
+\end{proof}
 
 \subsubsection{Abstract Inference System}  % or Rules, or Rules of Inference
 \label{sec:inference-system}
