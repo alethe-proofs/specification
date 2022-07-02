@@ -181,7 +181,8 @@ break
 
 \newtheorem{example}{Example}
 \newtheorem{theorem}{Theorem}[example]
-
+\newtheorem{lemma}{Lemma}[example]
+\newtheorem{definition}{Definition}[example]
 
 % == Commands for Grammar ==
 \definecolor{SmtBlue}{HTML}{00007f}
@@ -197,6 +198,8 @@ break
 \newcommand\negvthinspace{\kern-0.083333em}
 \newcommand\negvvthinspace{\kern-0.041667em}
 
+\newcommand{\limp}{\rightarrow}
+
 \newcommand\metafun[1]{\ensuremath{\mathit{#1}}}
 \newcommand\sort[1]{\mathsf{#1}}
 \newcommand\sym[1]{\mathsf{#1}}
@@ -204,6 +207,7 @@ break
 \newcommand\emptyctx{\varnothing}
 \newcommand\substname{\metafun{subst}}
 \newcommand\subname{\metafun{repl}}
+\newcommand\reify{\metafun{reify}}
 \newcommand\subst[1]{\substname(#1)}
 \newcommand\substapp[2]{#1(#2)}
 
@@ -461,7 +465,7 @@ To simplify the
 notation we will omit the sort of terms when possible.
 
 \begin{example} The following example shows a simple Alethe proof
-expressed in the abstract claculus used in this document.
+expressed in the abstract calculus used in this document.
 It uses quantifier instantiation and resolution to show a contradiction.
 The sections below step-by-step describe the concepts necessary to
 understand the proof intuitively.
@@ -482,8 +486,8 @@ understand the proof intuitively.
 A proof in the Alethe language is an indexed list of steps.
 To mimic the concrete syntax we write a step in the form
 \begin{plListEq}
-	c_1,\,\dots,\, c_k &\proofsep i. & \varphi_1,\dots ,\varphi_l &
-		(\ruleType{rule}\; p_1,\,\dots,\, p_n)\,[a_1,\,\dots,\,a_m]
+  c_1,\,\dots,\, c_k &\proofsep i. & \varphi_1,\dots ,\varphi_l &
+    (\ruleType{rule}\; p_1,\,\dots,\, p_n)\,[a_1,\,\dots,\,a_m]
 \end{plListEq}
 \noindent
 Each step has a unique index \(i \in \mathbb{I}\), where \(\mathbb{I}\) is a countable
@@ -545,8 +549,8 @@ A \proofRule{subproof} step can not use premise from a subproof nested within th
 \begin{comment}{Mathias Fleury}
 There are two ways to export one element from the subproof:
 \begin{itemize}
-	\item rely on the order and take the last one
-	\item add an explicit :premises in the conclusion stop to give the exported step
+  \item rely on the order and take the last one
+  \item add an explicit :premises in the conclusion stop to give the exported step
 \end{itemize}
 \end{comment}
 
@@ -616,258 +620,379 @@ implicit reordering of equalities.
 \subsection{The Semantics of the Alethe Language}
 \label{sec:semantic}
 
-Most of the content is taken from the presentation and the correctness proof of
-the format~\cite{barbosa-2019}.
+An Alethe proof is a list of steps and anchors, but not every list of
+steps and anchors is an Alethe proof.  In this sections we first give the
+restrictions that separate an Alethe proof from lists of steps and anchors
+that are not Alethe proof.  Then we show that Alethe proofs are sound.
+That is, if an Alethe proof contains the empty clause as a conclusion
+not within a subproof, then the input assertions are contradictory.
+We will not prove that every rule is sound.
 
-\subsubsection{Abstract Inference System}  % or Rules, or Rules of Inference
-\label{sec:inference-system}
+An Alethe proof $P$ is a list $[s_1, \dots, s_n]$ of steps and anchors.
+\emph{Anchors} capture the point in a proof where a subproof starts.
+In the graphical notation we are using this is the start of the
+vertical black line.  Furthermore, the context
+only changes at an anchor and the steps that conclude a subproof
+and an anchor only ever extends the context.  Hence, every
+anchor is associated with an, possibly empty, list
+of variables and variable, term tuples.  The steps among $s_1, \dots, s_n$
+are not associated with a context.  Instead the context can be computed.
+In the following a concluding rule is a proof rule that concludes a
+subproof (such as \proofRule{subproof}, \proofRule{bind}, and so forth).
 
-The inference rules used by our framework depend on a notion of
-\emph{context} defined by the grammar
-\[\GAMMA \,::=\, \emptyctx \,\mid\, \GAMMA,\, x \,\mid\, \GAMMA,\,\bar x_n\mapsto \bar s_n\]
-The empty context $\emptyctx$ is also denoted by a blank.
-Each context entry either \emph{fixes} a variable~$x$ or defines a
-\emph{substitution} $\{\bar x_n \mapsto \bar s_n\}$.  Any variables arising in
-the terms $\bar s_n$
-will typically have been introduced in the context $\GAMMA$ on the left, but
-this is not required.
-If a context introduces the same variable several times, the rightmost
-entry shadows the others.
-\par
-Abstractly, a context $\GAMMA$ fixes a set of variables
-and specifies a substitution
-$\subst{\GAMMA}$%
-. The substitution is the identity for $\emptyctx$ and is
-defined as follows in the other cases:
-%
-\begin{align*}
-  \subst{\GAMMA,\, x} & = \subst{\GAMMA}[x \mapsto x]
-  \, %%% TYPESETTING
-&
-  \subst{\GAMMA,\, \bar x_n \mapsto \bar t_n} & = \subst{\GAMMA} \mathrel\circ \{\bar x_n \mapsto \bar t_n\}
-\end{align*}
-In the first equation,
-the $[x \mapsto x]$ update shadows any
-replacement of $x$ induced by $\GAMMA$.
-The examples below illustrate this subtlety:
-\begin{align*}
-\subst{x \mapsto 7,\, x \mapsto \sym{g}(x)} & = \{x \mapsto \sym{g}(7)\}
-\\
-\subst{x \mapsto 7,\, x,\, x \mapsto \sym{g}(x)} & = \{x \mapsto \sym{g}(x)\}
-%\\
-%\subst{x,\, y \mapsto x,\, x,\, z \mapsto x} & = \{x \mapsto \sym{g}(x)\}
-\end{align*}%
-We write $\substapp{\GAMMA}{t}$ to abbreviate
-the capture-avoiding substitution $\subst{\GAMMA}(t)$.
+In the following we assume, without loss of generality, that each step
+$s_i$ in $P$ uses $i$ as its index.  Furthermore, $\vDash$ represents
+semantic consequence in the many-sorted first order logic of SMT-LIB
+with the theories of uninterpreted functions and linear arithmetic.
 
-Transformations of terms (and formulas) are justified by judgments of
-the form $\judge{\GAMMA}{\allowbreak t\simeq\nobreak u}$, where $\GAMMA$ is a context, $t$ is an unprocessed term, and $u$ is the
-corresponding processed term. The free variables in $t$ and $u$ must appear in
-the context $\GAMMA$. Semantically, the judgment expresses the equality of the
-terms $\substapp{\GAMMA}{t}$ and $u$, universally quantified on variables fixed by~$\GAMMA$.
-Crucially, the substitution applies only on the left-hand side of the equality.
+\begin{definition}[Calculated Context]
+  Let $s_i$ be a step or anchor in $P$ such that no step $s_j$
+  where $j < i$ uses a concluding rule.
+  Let $a_1, \dots, a_m$ be the anchors among $s_1, \dots, s_{i-1}$.
 
-The inference rules for the transformations rely on equations that are presented here, then the rules are
-presented below, followed by explanations.
-\begin{gather}
-  \label{eq:choicei}
-  \models (\Ex{x}{\varphi[x]}) \implies \varphi[\Choice{x}{\varphi}]
-  \tag{\ensuremath{\Choicename_1}}
-  \\
-  \label{eq:choiceii}
-  \models (\forall x.\;\varphi \simeq \psi) \implies (\Choice{x}{\varphi}) \simeq (\Choice{x}{\psi})
-  \tag{\ensuremath{\Choicename_2}}
-  \\
-  % \intertext{and}
-  \label{eq:let}
-  \models (\mathrm{let}~\bar x_n \simeq \bar s_n~\mathrm{in}~t[\bar x_n])
-  \simeq t[\bar s_n]
-  \tag{\ensuremath{\mathrm{let}}}
-\end{gather}
+  The calculated context of $s_i$ is the context
+  $c_{1,1}, \dots, c_{1, n_1}, \dots, c_{m,1}, \dots, c_{m, n_m}$
+  where $c_{k,1}, \dots, c_{k, n_k}$ is the list of variables
+  and variable, term tuples associated with $a_k$.
 
-% PF TODO: \models_{\!\!{\mathcal T}} does not look nice.  Actually
-% this {\mathcal T} with the current font is ugly, without even counting
-% the space that makes \models_{\!\!{\mathcal T}} unreadable
-The rules are:
-%
-\noindent
-\begin{center}
-    \AXC{\strut}
-    \RL{{\footnotesize \TautT}%
-      \quad\mbox{if\vthinspace{} $\models_{\!\!{\mathcal T}} {\substapp{\GAMMA}{t} \simeq u}$}}
-    \UIC{\strut$\judge{\GAMMA}{t\simeq u}$}
-    \DP
-    \qquad
-    \AXC{\strut$\judge{\GAMMA}{s\simeq t}\quad\judge{\GAMMA}{t\simeq u}$}
-    \RL{{\footnotesize \Trans}\quad\mbox{if\vthinspace{} $\substapp{\GAMMA}{t} = t$}}
-    \UIC{\strut$\judge{\GAMMA}{s\simeq u}$}
-    \DP
+  Note that if $s_i$ is an anchor, its calculated context does not
+  contain the the variables and variable, term tuples associated with $s_i$.
+  Hence, the context of $s_i$ is the context just before $s_i$ is applied.
+\end{definition}
 
-\vskip.7\abovedisplayskip
+To check the validity of a proof we can inductively eliminate subproofs
+until we reach a proof without subproof.
+If we always eliminate the first
+subproof that does not contain another subproof we can calculate the context
+and check the validity of the subproof directly.
+The following notion captures the idea of a subproof that can be eliminated.
 
-    \AXC{\strut$\bigl(\judge{\GAMMA}{t_i\simeq u_i}\bigr){}_{i=1}^n$}
-    \RL{{\footnotesize \Cong}}
-    \UIC{\strut$\judge{\GAMMA}{\sym{f}(\bar t_n)\simeq \sym{f}(\bar u_n)}$}
-    \DP
-    \ \ \
-    \AXC{\strut$\judge{\GAMMA,\,y,\,x\mapsto y}{\varphi\simeq\psi}$}
-    \RL{{\footnotesize \Bind}\quad\mbox{if\vthinspace{} $y \notin \FV{Qx.\>\varphi} \mathrel\cup \var{\GAMMA}$}}
-    \UIC{\strut$\judge{\GAMMA}{(Qx.\>\varphi)\simeq (Qy.\>\psi)}$}
-    \DP
+\begin{definition}[Admissible Subproof]
+  Let $P$ be the proof $[s_1, \dots, s_n]$ and $1 \leq \mathit{start}
+  < \mathit{end} \leq n$ such that
+  \begin{itemize}
+    \item $s_{\mathit{start}}$ is an anchor,
+    \item $s_{\mathit{end}}$ is a step that uses a concluding rule,
+    \item no $s_k$ with $k < \mathit{start}$ uses a concluding rule,
+    \item no $s_k$ with $\mathit{start} < k < \mathit{end}$ is an anchor or
+     a step that uses a concluding rule,
+  \end{itemize}
+  The proof $P$ contains an \emph{admissible subproof} if there are such
+  $\mathit{start}$, $\mathit{end}$ and
+  \begin{itemize}
+    \item all steps $s_k$ with $\mathit{start} \leq k <
+    \mathit{end}$ only use the premises $s_l$ with $\mathit{start} <
+    l < k$,
+    \item all steps $s_k$ are valid application of their rule under the
+    calculated context of $s_{\mathit{end}}$,
+    \item the step $s_{\mathit{end}}$ is a valid application of its rule
+    under its calculated context of $s_{\mathit{start}}$.
+  \end{itemize}
+\end{definition}
 
-\vskip.7\abovedisplayskip
+Since the \proofRule{assume} rule expects an empty context, an admissible
+subproof can only contain assumptions if the rule used by $s_{\mathit{end}}$
+is the \proofRule{subproof} rule.
 
-    \AXC{\strut$\judge{\GAMMA,\, x\mapsto (\Choice{x}{\varphi})}{\varphi\simeq \psi}$}
-    \RL{{\footnotesize \SkoEx}}
-    \UIC{\strut$\judge{\GAMMA}{(\Ex{x}{\varphi})\simeq \psi}$}
-    \DP
-    \qquad
-    \AXC{\strut$\judge{\GAMMA,\, x\mapsto (\Choice{x}{\Not\varphi})}{\varphi\simeq \psi}$}
-    \RL{{\footnotesize \SkoAll}}
-    \UIC{\strut$\judge{\GAMMA}{(\All{x}{\varphi})\simeq \psi}$}
-    \DP
+To eliminate a part of a proof, we can replace some steps with a hole.
+To do soe we create a new step $s'$ that uses the \proofRule{hole} rule, has
+the conclusion and index of $s_{\mathit{end}}$.
+The new proof is: $P' = [s_1, \dots, s_{\mathit{start}-1}, s', s_{\mathit{end}+1}, \dots, s_n]$.
 
-\vskip.7\abovedisplayskip
+Since proofs are finite, this process stops at some admissible proof
+$P_{\mathit{last}}$.  If the structure of the proof is not well formed
+there will still be some anchors and steps using concluding rules in
+$P_{\mathit{last}}$.  Otherwise, we can check $P_{\mathit{last}}$ to
+see if the overall proof is valid.
 
-    \AXC{\strut$\bigl(\judge{\GAMMA}{r_i \simeq s_i}\bigr){}_{i=1}^n
-    \quad
-    \judge{\GAMMA,\,\bar x_n\mapsto \bar s_n}{t\simeq u}$}
-    \RL{{\footnotesize \Let}\quad\mbox{if\vthinspace{}
-    $\substapp{\GAMMA}{s_i} = s_i$ \,for all $i \in [n]$}}
-    \UIC{\strut$\judge{\GAMMA}{(\mathrm{let}\ \bar x_n \simeq \bar r_n\ \mathrm{in}\ t)\simeq u}$}
-    \DP
-\end{center}
+\begin{definition}[Admissible Proof]
+  \label{def:valid_proof}
+  An Alethe proof $P = [s_1, \dots, s_n]$ is an admissible proof
+  if every step uses an unique index and one of the following two sets
+  of conditions hold:
+  \begin{itemize}
+    \item It contains no anchor steps, or steps that use a concluding rule,
+    \item all steps $s_i$ only use the premises $s_j$ with $1 \leq j < i$,
+    \item all steps are valid applications of their rules under the empty context,
+    \item and it contains a step that has the empty clause as its conclusion.
+  \end{itemize}
+  or
+  \begin{itemize}
+    \item It contains an admissible subproof
+    \item and the proof $P'$ constructed as above is an admissible proof. 
+  \end{itemize}
+\end{definition}
 
-\noindent
-%These rules deserve some explanation:
-%
-% PF TODO it is not nice to have an itemize here. Maybe just remove, with an introductory sentence nicely saying indeed that rules deserve explanation.
-\begin{itemize}
-\item \TautT{} relies on an oracle $\models_{\mathcal T}$
-to derive arbitrary lemmas in a theory $\mathcal T\!$.
-In practice, the oracle will produce some
-kind of certificate to justify the inference.
-An important special case, for
-which we use the name \Refl{}, is syntactic equality up to renaming of bound
-variables; the side condition
-is then $\substapp{\GAMMA}{t} \eqa u$.
-(We use $\eqa$ instead of $=$ because applying a substitution can
-rename bound variables.)
-% PF TODO: maybe mention alpha-conversion: it is not clear why alpha
+In this document we will call the proof that terminates this iterative
+process by fulfilling the first set of conditions the \emph{outermost proof}.
 
+\begin{definition}[Valid Alethe Proof]
+  An admissible proof $P$ is a \emph{valid Alethe proof} if it contains
+  no step that uses the \proofRule{hole} rule.
+\end{definition}
 
-\smallskip
+\subsubsection{Soundness}
 
-\item \Trans{} needs the side condition because the term $t$ appears both on
-the left-hand side of $\simeq$ (where it is subject to $\GAMMA$'s substitution)
-and on the right-hand side (where it is not).
-Without it, the two occurrences of $t$ in the
-antecedent could denote different terms.
+To show the soundness of a valid Alethe proof $P = [s_1, \dots, s_n]$
+we can use the same approach as for the definition of validity:  consider
+subproof free subproofs and then replace subproofs by holes.
 
-\smallskip
-
-\item \Cong{} can be used for any function symbol $\sym{f}$,
-  including the logical connectives. % and other predicates.
-
-\smallskip
-
-\item \Bind{} is a congruence rule for quantifiers. The rule
-also justifies the renaming of the bound variable
-(from $x$ to $y$).  In the antecedent, the
-renaming is expressed by a substitution in the context.
-If $x = y$,
-the context is $\GAMMA,\, x,\, x \mapsto x$, which has the same meaning as
-$\GAMMA,\, x$. The side condition prevents an unwarranted variable
-capture: The new variable should not be a free variable in the formula where the
-renaming occurs ($y \notin \FV{Qx.\>\varphi}$), and should be fresh in the
-context ($y\notin \var{\GAMMA}$, where $\var{\GAMMA}$ denotes the set of all
-variables occurring in $\GAMMA$).  In particular, $y$ should not appear fixed
-or on either side of a substitution in the context.
-\smallskip
-
-\item \SkoEx{} and \SkoAll{} exploit (\ref{eq:choicei})
-to replace a quantified variable with a suitable witness, simulating
-skolemization. We can think of the $\Choicename$ expression in each rule
-abstractly as a fresh function symbol that takes any fixed variables it
-depends on as arguments. In the antecedents, the replacement is performed
-by the context.
-
-\smallskip
-
-\item \Let{} exploits (\ref{eq:let}) to expand a `let'
-expression. Again, a substitution is used. 
-The terms~$\bar r_n$ assigned to the variables $\bar x_n$
-can be transformed into terms $\bar s_n$.
-\end{itemize}
-
-The antecedents of all the rules inspect subterms structurally, without
-modifying them. Modifications to the term on the left-hand side are delayed;
-the substitution is applied only in \Taut{}. This is crucial to obtain compact
-proofs that can be checked efficiently.
-Some of the side conditions may look computationally expensive,
-but there are techniques to compute them fairly efficiently. Furthermore, by
-systematically renaming variables in \Bind, we can satisfy most of the side conditions
-trivially.
-% PF TODO "there are techniques": we might want something more strict.
-
-The set of rules can be extended to cater for arbitrary transformations that
-can be expressed as equalities, using Hilbert choice to represent fresh
-symbols if necessary. The usefulness of Hilbert choice for proof
-reconstruction is well known
-\cite{de-nivelle-2005,paulson-susanto-2007,boehme-weber-2010}, but we push
-the idea further and use it to simplify the inference system and make it more
-uniform.
-
-\begin{example}
-\label{ex:let}
-The following derivation tree justifies the expansion of a `let' expression:
-%
+\begin{theorem}[Soundness of Alethe]
+\label{thm:sound}
+If there is a valid Alethe proof $P$ that has the formulas
+$\varphi_1, \dots, \varphi_m$ as the conclusions of the \proofRule{assume}
+steps in its outermost proof, then
 \[
-    \AXC{\axiomstrut}
-    \RL{{\footnotesize $\Cong$}}
-    \UIC{\strut$\judgei{\sym{a} \simeq \sym{a}}$}
-      \AXC{\axiomstrut}
-      \RL{{\footnotesize \Refl}}
-      \UIC{\strut$\judge{x\mapsto\sym{a}}{x\simeq \sym{a}}$}
-        \AXC{\axiomstrut}
-        \RL{{\footnotesize \Refl}}
-        \UIC{\strut$\judge{x\mapsto\sym{a}}{x\simeq \sym{a}}$}
-      \RL{{\footnotesize \Cong}}
-      \BIC{\strut$\judge{x\mapsto\sym{a}}{\sym{p}(x, x)\simeq \sym{p}(\sym{a}, \sym{a})}$}
-    \RL{{\footnotesize \Let}}
-    \BIC{\strut$\judgei{(\mathrm{let}\ x\simeq \sym{a}\ \mathrm{in}\ \sym{p}(x
-        , x))\simeq \sym{p}(\sym{a},\sym{a})}$}
-    \DP
+\varphi_1, \dots, \varphi_m \vDash \bot
 \]
-\end{example}
-
-\subsubsection{Correctness}
-\label{sec:correctness}
-\newcommand\thys{\mathcal T_1 \mathrel\cup \cdots \mathrel\cup \mathcal T_n \mathrel\cup {\simeq} \mathrel\cup \Choicename \mathrel\cup \mathrm{let}}
-
-\begin{theorem}[Soundness of Inferences~{\cite[Theorem 11]{barbosa-2019}}]
-  \label{thm:sound-calc}
-  \,If the judgment\/ $\judge{\GAMMA}{t\simeq u}$ is derivable
-  using the original inference system
-  with the theories $\enum{\mathcal T}${\rm,} then\/
-  $\models_{\mathcal T}{\substapp{\GAMMA}{t} \simeq u}$ with\/ $\mathcal T = \thys$.
 \end{theorem}
+
+We wills start with simple subproofs without subproofs and with empty contexts.
+Here, we will assume that every rule is sound.
+
+\begin{lemma}
+  \label{lem:sound_subproof}
+  Let $P$ be a proof that contains an admissible subproof where
+  $s_{\mathit{end}}$ is a \proofRule{subproof} step.  Let
+  $\psi$ be the conclusion of $s_{\mathit{end}}$
+  and $\varphi_1, \dots, \varphi_m$ are the conclusion of the
+  \proofRule{assume} steps between $s_{\mathit{start}}$ and
+  $s_{\mathit{end}}$.
+  Then $\vDash \varphi_1, \dots, \varphi_m \limp \psi$ holds.
+\end{lemma}
 \begin{proof}
-  See~\cite[Theorem 11]{barbosa-2019}
+  First, we use induction on the number of steps $n$ after
+  $s_{\mathit{start}}$.  Let $\psi_n$ be the conclusion
+  of $s_{\mathit{start}+n}$ and $V_n$ the conclusions of
+  the \proofRule{assume} steps in $[s_{\mathit{start}}, \dots,
+  s_{\mathit{start}+n}]$. We will
+  show $V_n \vDash \psi_n$ if $\mathit{start}+n < \mathit{end}$.
+
+  If $n = 1$ then $s_{\mathit{start}+1}$ must
+  be either a tautology, or an assume step.  In the first case,
+  $\vDash \psi_{\mathit{start}+1}$ holds and in the second case
+  $\psi_{\mathit{start}+1} \vDash \psi_{\mathit{start}+1}$.
+
+
+  For subsequent $n$, $s_{\mathit{start}+n}$ is
+  either an ordinary step, or an assume step.  In the second case,
+  $\psi_{\mathit{start}+n} \vDash \psi_{\mathit{start}+n}$ which can
+  be weakened to $V_n \vDash \psi_{\mathit{start}+n}$.
+
+  In the first case, the step $s_{\mathit{start}+n}$ has a set of
+  premises $P$.  
+  For each step $s_{\mathit{start}+i} \in P$ we have $i < n$ and
+  $V_i \vDash \psi_{\mathit{start}+i}$ due to the induction
+  hypothesis. Since $i < n$, the premises $V_i$ are a subset of $V_n$ and
+  we can weaken $V_i \vDash \psi_{\mathit{start}+i}$
+  to $V_n \vDash \psi_{\mathit{start}+i}$.  Since all premises of
+  $s_{\mathit{start}+n}$ are the consequence of $V_n$ we get
+  $V_n \vDash \psi_n$.
+
+  This process ends when $s_{\mathit{end}}$ is reached and we
+  get $\varphi_1, \dots, \varphi_n \vDash \psi$ and by definition of
+  \proofRule{subproof} $\vDash \varphi_1, \dots, \varphi_m \limp \psi$.
 \end{proof}
 
+\subsubsection{Contexts and Metaterms}
 
-\subsubsection{More Concrete Rules}
-\label{sec:concrete-rules}
+We now direct our attention to subproofs with contexts.  Contexts are
+local in the sense that they only affect the proof step they are
+applied to. Since we already assume that all rules are sound and are
+used correctly in a valid Alethe proof, it is not necessary for us to
+discuss them further to show the soundness of Alethe proofs.  However,
+it is useful to give a precise semantic to context to have the tools
+to check that rules that use contexts are sound.
+For the full details on contexts see~\cite{barbosa-2019}.
+The presentation here is adapted from this publication, but omits
+some details.
 
-The high-level rules presented in the previous paragraph are useful for
-presentation purpose, but they are hard to check. We specialize them by reducing
-applicability. In particular the {\Taut} rule is very hard to check and is
-specialized.
-% PF TODO: improve the previous sentence
+To handle subproofs with contexts, we translate the contexts into
+$\lambda$-terms.
+These $\lambda$-terms are called \emph{metaterms}
+
+\begin{definition}[Metaterm]
+  Metaterms are expressions constructed by the grammar
+  \[
+    M \,::=\, \boxed{t}\,\mid\, \lambda x.\,M\,\mid\,(\lambda \bar{x}_n.\,
+    M)\,\bar{t}_n
+  \]
+where $t$ is an ordinary term and $t_i$ and $x_i$ have the same sort for
+all $0 \leq i \leq 1$.
+\end{definition}
+
+According to this definition, a metaterm is either a boxed term, a
+$\lambda$ abstraction, or an application to an uncurried $\lambda$-term.
+The annotation $\boxed{t}$ delimits terms from the context, a simple
+$\lambda$ abstraction is used to express fixed variables, and the
+application expresses simulations substitution of $n$ terms.
+We use $=_{\alpha\beta}$ to denote syntactic equivalence module modulo
+$\alpha$-equivalence and $\beta$-reduction.
+
+A proof step
+\begin{plListEq}
+  \Gamma &\proofsep i. & t \simeq u & (\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]
+\end{plListEq}
+\noindent
+is encoded into
+\begin{plListEq}
+  &\proofsep i. & L(\Gamma)[t] \simeq R(\Gamma)[u] & (\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]
+\end{plListEq}
+where
+\begin{align*}
+  L(\emptyset)[t] &= \boxed{t}                      & R(\emptyset)[u] &= \boxed{u} \\
+  L(x, \bar{c}_m)[t] &= \lambda x.\,L(\bar{c}_m)[t] & R(x, \bar{c}_m)[u] &= \lambda x.\,R(\bar{c}_m)[u] \\
+  L(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[t] &= (\lambda \bar{x}_n.\,L(\bar{c}_m)[t]) \bar{s}_n
+  & R(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[u] &= R(\bar{c}_m)[u] \\
+\end{align*}
+
+\begin{example}
+ This translation, together with $=_{\alpha\beta}$,
+applies the $\subst$ function.  For example:
+\begin{align*}
+L(x\mapsto 7, x \mapsto g(x))[x] = (\lambda x.\,(\lambda. x\,\boxed{x})\,(g(x)))\, 7
+=_{\alpha\beta} \boxed{g(7)} \\
+L(x\mapsto 7, x, x \mapsto g(x))[x] = (\lambda x.\,\lambda x.\,(\lambda. x\,\boxed{x})\,(g(x)))\, 7
+=_{\alpha\beta} \boxed{g(x)} \\
+\end{align*}
+\end{example}
+
+Most proof rules that operate with contexts can easily be translated into
+proof rules using metaterms.  The exception are the tautologous rules,
+such as \proofRule{refl} and the \ruleType{..._simplify} rules.
+
+Steps that use such rules always encode a judgment
+$\vDash \Gamma \vartriangleright t \simeq u$.  With the encoding described above
+we get $L(\Gamma)[t] \simeq R(\Gamma)[u]
+=_{\alpha\beta} \lambda \bar{x}_n.\,\boxed{t'} \simeq
+\lambda \bar{x}_n.\,\boxed{u'}$ with some terms $t'$, $u'$.
+To handle those terms, we use the $\reify$ function.
+This function is defined as $\reify(\lambda \bar{x}_n.\,\boxed{t} \simeq
+\lambda \bar{x}_n.\,\boxed{u}) = \forall \bar{x}_n.\,t \simeq u$.
+Hence,
+all tautological rules with contexts represent a judgment
+$\vDash \reify(T \simeq U)$
+where $T =_{\alpha\beta} L(\Gamma)[t]$ and $U =_{\alpha\beta} R(\Gamma)[u]$.
+
+\begin{example}
+  Consider the step
+  \begin{plListEq}
+    y, x \mapsto y &\proofsep i. & x + 0 \simeq y & \ruleType{sum_simplify}
+  \end{plListEq}
+  Translating the context into meta terms gives us
+  \begin{plListEq}
+    &\proofsep i. & (\lambda x.\,(\lambda y.\,\boxed{x + 0}))\, y \simeq
+        (\lambda y.\,\boxed{y}) & \ruleType{sum_simplify}
+  \end{plListEq}
+  Applying $\beta$-reduction gives us
+  \begin{plListEq}
+    &\proofsep i. & (\lambda y.\,\boxed{y + 0}) \simeq
+        (\lambda y.\,\boxed{y}) & \ruleType{sum_simplify}
+  \end{plListEq}
+  Finally, using $\reify()$ gives us
+  \begin{plListEq}
+    &\proofsep i. & \forall y.\,(y + 0 \simeq  y) & \ruleType{sum_simplify}
+  \end{plListEq}
+  This obviously holds in the theory of linear arithmetic.
+\end{example}
+
+We now give a version of Lemma~\ref{lem:sound_subproof} with contexts.
+
+\begin{lemma}
+  \label{lem:sound_subproof_context}
+  Let $P$ be a proof that contains an admissible subproof where
+  $s_{\mathit{end}}$ is a step using one of:
+  \proofRule{bind}, \proofRule{sko_ex}, \proofRule{sko_forall},
+  \proofRule{onepoint}, \proofRule{let}.
+
+  Then $V \vDash \Gamma \vartriangleright \psi$ where $\Gamma$ is the
+  calculated context of $s_{\mathit{start}}$ and $\psi$ is the conclusion
+  of $s_{\mathit{end}}$.  The set $V$ is empty if $s_{\mathit{end}}$
+  does not use the \ruleType{let} rule.  Otherwies, it contains all
+  conclusions of the
+  \ruleType{assume} steps among $[s_{\mathit{start}'}, \dots,
+  s_{\mathit{start}}]$ where $\mathit{start}'$ is either the largest index
+  ${\mathit{start}'} < {\mathit{start}}$ such that $s_{\mathit{start}'}$ is an
+  anchor, or $1$ if no such index exist.
+\end{lemma}
+\begin{proof}
+  The step $s_{\mathit{start}}$ is an anchor due to the definition
+  of admissible proof.
+  Let $c_1, \dots, c_n$ is the context introduce by the anchor
+  $s_{\mathit{start}}$ and let $\Gamma' = \Gamma, c_1, \dots, c_n$.
+  $\Gamma'$ is the calculated context of the steps in the subproof after
+  $s_{\mathit{start}}$.
+
+  The step $s_{\mathit{end}}$ is a step
+  \begin{plContainer}
+    \begin{plSubList}
+      \plLine\\
+      \Gamma'
+      \proofsep& i.& \psi' &(\dots)\\
+    \end{plSubList}
+    \begin{plList}
+      \Gamma \proofsep& \mathit{end}.& \psi &(\ruleType{rule}\;i_1 \dots i_n)\\
+    \end{plList}
+  \end{plContainer}
+  Since we assume the step $s_{\mathit{end}}$ is correctly employed,
+  $\vDash \Gamma \vartriangleright \psi$ holds, as long as
+  $\vDash \Gamma' \vartriangleright \psi'$ holds.
+
+  We perform the same induction as for
+  Lemma~\ref{lem:sound_subproof} over the steps in
+  $[s_{\mathit{start}}, \dots, s_{\mathit{end}}]$.  Here, the sets
+  $V_i$ stay empty since there are no assumptions in the subproof.
+  The induction ends once $s_i$ is reached.  At this step we
+  get $\vDash \Gamma' \vartriangleright \psi'$.
+
+  Only the \ruleType{let} rule uses additional premises
+  $s_{i_1}, \dots, s_{i_n}$.  Hence, for all other rules the conclusion
+  cannot depend on any steps outside the subproof and $V$ is empty.
+  % TODO: this is ugly, let is ugly
+  Due to the definition of admissible subproof, all steps $s_{i_1},
+  \dots, s_{i_n}$ are in the same subproof that starts at $s_{\mathit{start}'}$.
+  Furthermore, they are all valid steps that do not conclude a subproof.
+
+  If this is the outermost proof, or a subproof that concludes with
+  an \ruleType{subproof} step, then $s_{i_1}, \dots, s_{i_n}$ might
+  depend on some \ruleType{assume} steps that appear before them
+  in their subproof.  In this case we can, as we saw in the proof of
+  Lemma~\ref{lem:sound_subproof}, weaken their judgments to include
+  all assumptions in $[s_{\mathit{start}'}, \dots, s_{\mathit{start}}]$.
+
+  If the subproof that starts at $s_{\mathit{start}'}$ concludes with
+  any other rule, then ther cannot be any assumptions and $V$ is empty.
+\end{proof}
+
+\subsubsection{Soundess of Valid Alethe Proofs}
+
+By using Lemma~\ref{lem:sound_subproof} and
+Lemma~\ref{lem:sound_subproof_context} we can no show that a valid Alethe proof
+is sound. That is, we can show Theorem~\ref{thm:sound}.
+
+\begin{proof}
+By induction on the number of anchors in $P = [s_1, \dots, s_n]$.
+
+If there is no anchor in $P$ then there is a step $s_i$ that has the
+empty clause as its conclusion.  We can perform the same induction as
+in the proof of Lemma~\ref{lem:sound_subproof} with $\mathit{start} = 1$
+and $\mathit{end} = i$.  This shows that $V \vDash \bot$, where $V$ is the
+conclusion of the \proofRule{assume} steps in $[s_1, \dots, s_i]$.  We can weaken
+this by adding the conclusions of the \proofRule{assume} steps in
+$[s_i, \dots, s_n]$ to get $\varphi_1, \dots, \varphi_m \vDash \bot$.
+
+If there are $n$ anchors in $P$ then there is an admissible subproof with
+indices $\mathit{start}$, $\mathit{end}$.
+Depending on the rule used by $s_{\mathit{end}}$ either
+Lemma~\ref{lem:sound_subproof} and Lemma~\ref{lem:sound_subproof_context}
+applies.  Hence, it is safe to replace the subproof $[s_{\mathit{start}}, \dots
+s_{\mathit{end}}$ with the new step $s'$ as we do in
+Definition~\ref{def:valid_proof}.  The newly constructed proof $P'$ has
+$n-1$ anchors and hence is sound due to the induction hypothesis.
+\end{proof}
 
 \begin{figure}[t]
-\begin{minted}[linenos]{smtlib2.py -x}
+  \begin{minted}[linenos]{smtlib2.py -x}
 (assume h1 (not (p a)))
 (assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
 ...
@@ -884,17 +1009,11 @@ specialized.
 (step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
           :rule or :premises (t15))
 (step t17 (cl) :rule resolution :premises (t16 h1 t14))
-\end{minted}
-\caption{Example proof output. Assumptions are introduced (line 1--2);
-a subproof renames bound variables (line 4--8); the proof finishes with
-instantiation and resolution steps (line 10--15)}\label{fig:proof_ex}
+  \end{minted}
+  \caption{Example proof output. Assumptions are introduced (line 1--2);
+  a subproof renames bound variables (line 4--8); the proof finishes with
+  instantiation and resolution steps (line 10--15)}\label{fig:proof_ex}
 \end{figure}
-
-% PF Don't you want to talk about the lambda interpretation of all this?
-% At first, I wanted to only use the lambda version.  It is only later that
-% this syntactic sugar was introduced.
-% The above section actually does not talk much about semantics if
-% it does not relate to logic, interpretation, etc...
 
 \subsection{The Syntax}
 \label{sec:syntax}
@@ -1109,22 +1228,22 @@ remove the steps of the subproof from memory after checking it.
    There is an open question with regard to the best way to print
    subproofs:
 
-	 There is an implicit relation between the last step of the subproof
+   There is an implicit relation between the last step of the subproof
        and the step concluding the subproof.
     {\textrightarrow} what if we would, for some reason, have some crap after the last step
     of the subproof? We cannot accommodate this yet.
 
-	There are multiple solutions to solve this implicit dependency.
+  There are multiple solutions to solve this implicit dependency.
 
-	{\textbullet} One is to
-	give the final step of the subproof as a premise to the step concluding
-	the subproof.
-		{\textrightarrow} downside: normally it's forbidden to use steps from within a deeper proof
+  {\textbullet} One is to
+  give the final step of the subproof as a premise to the step concluding
+  the subproof.
+    {\textrightarrow} downside: normally it's forbidden to use steps from within a deeper proof
 
-	{\textbullet} We could have the conclusion of the subproof already in the anchor.
-	or we could turn the current structure upside down
-	  {\textrightarrow} downside: a solver that just dumps out steps can not no always know
-	      the conclusion when opening a subproof. For example, when simplifications are applied.
+  {\textbullet} We could have the conclusion of the subproof already in the anchor.
+  or we could turn the current structure upside down
+    {\textrightarrow} downside: a solver that just dumps out steps can not no always know
+        the conclusion when opening a subproof. For example, when simplifications are applied.
 \end{comment}
 
 \subsection*{Sharing and Skolem Terms}
@@ -1351,7 +1470,7 @@ f(t_1, \dots, t_n) \simeq f(u_1, \dots, u_n)\) \\
 P(t_1, \dots, t_n) \simeq P(u_1, \dots, u_n)\) \\
 \ruleref{qnt_cnf} & Clausification of a quantified formula. \\
 \ruleref{and_pos} & \(\neg (\varphi_1 \land \dots \land \varphi_n) , \varphi_k \) \\
-\ruleref{and_neg} & \( (\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1	, \dots , \neg\varphi_n \) \\
+\ruleref{and_neg} & \( (\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1  , \dots , \neg\varphi_n \) \\
 \ruleref{or_pos} & \( \neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots , \varphi_n \) \\
 \ruleref{or_neg} & \( (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k \) \\
 \ruleref{xor_pos1} & \( \neg (\varphi_1 \operatorname{xor} \varphi_2) , \varphi_1 , \varphi_2 \) \\
@@ -1469,7 +1588,7 @@ Rule & Description \\
 \ruleref{and_pos} & \(\neg (\varphi_1 \land \dots \land \varphi_n), \varphi_k\)\\
 \ruleref{and_neg} & \((\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1, \dots , \neg\varphi_n \) \\
 \ruleref{or_pos} & \(\neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots
-	, \varphi_n \) \\
+  , \varphi_n \) \\
 \ruleref{or_neg} &
 \( (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k \)\\
 \ruleref{xor_pos1} &
