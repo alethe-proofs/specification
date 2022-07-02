@@ -1,11 +1,18 @@
 \subsection*{Unreleased}
 
 Apply major changes to the structure of the document to clarify the difference
-between the \emph{language} and the \emph{rules}.
+between the \emph{language} and the \emph{rules}.  The language has a formal
+definition and a proof of soundness.  The syntax describes how proofs are
+encoded in the text file.
+
+The syntax was extended to allow extra annotations.  Tools consuming Alethe
+proofs must be able to ignore such extra annotations. 
 
 List of rules:
 \begin{itemize}
     \item Improve description of \proofRule{sko_ex}.
+    \item Add \proofRule{hole} rule to allow holes.  A proof that contains
+    steps that use this rule is not valid.
 \end{itemize}
 \noindent
 Corrections:
@@ -20,6 +27,7 @@ Clarifications:
     \item Add illustrating example to introduction.
     \item Normalize printing of (variable, term) arguments in the abstract notation.
     \item Fix linear arithmetic example in introduction.
+    \item Change syntax of abstract proof steps to be clearer.
 \end{itemize}
 
 
