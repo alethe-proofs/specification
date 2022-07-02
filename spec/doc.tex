@@ -207,6 +207,7 @@ break
 \newcommand\emptyctx{\varnothing}
 \newcommand\substname{\metafun{subst}}
 \newcommand\subname{\metafun{repl}}
+\newcommand\reify{\metafun{reify}}
 \newcommand\subst[1]{\substname(#1)}
 \newcommand\substapp[2]{#1(#2)}
 
@@ -464,7 +465,7 @@ To simplify the
 notation we will omit the sort of terms when possible.
 
 \begin{example} The following example shows a simple Alethe proof
-expressed in the abstract claculus used in this document.
+expressed in the abstract calculus used in this document.
 It uses quantifier instantiation and resolution to show a contradiction.
 The sections below step-by-step describe the concepts necessary to
 understand the proof intuitively.
@@ -619,13 +620,13 @@ implicit reordering of equalities.
 \subsection{The Semantics of the Alethe Language}
 \label{sec:semantic}
 
-An Alethe proof is a list of steps, but not every list is an
-Alethe proof.  In this sections we first give the restrictions that separate
-an Alethe proof from lists of steps that are not Alethe proof.  Then
-we show that Alethe proofs are sound.  That is, if an Alethe proof
-contains the empty clause as a conclusion not within a subproof, then
-the input assertions are contradictory.  We will not prove that every
-rule is sound.
+An Alethe proof is a list of steps and anchors, but not every list of
+steps and anchors is an Alethe proof.  In this sections we first give the
+restrictions that separate an Alethe proof from lists of steps and anchors
+that are not Alethe proof.  Then we show that Alethe proofs are sound.
+That is, if an Alethe proof contains the empty clause as a conclusion
+not within a subproof, then the input assertions are contradictory.
+We will not prove that every rule is sound.
 
 An Alethe proof $P$ is a list $[s_1, \dots, s_n]$ of steps and anchors.
 \emph{Anchors} capture the point in a proof where a subproof starts.
@@ -634,23 +635,29 @@ vertical black line.  Furthermore, the context
 only changes at an anchor and the steps that conclude a subproof
 and an anchor only ever extends the context.  Hence, every
 anchor is associated with an, possibly empty, list
-of variables and variable term tuples.  The steps among $s_1, \dots, s_n$
+of variables and variable, term tuples.  The steps among $s_1, \dots, s_n$
 are not associated with a context.  Instead the context can be computed.
 In the following a concluding rule is a proof rule that concludes a
-subproof (such as \proofRule{subproof} and \proofRule{bind}).
+subproof (such as \proofRule{subproof}, \proofRule{bind}, and so forth).
+
+In the following we assume, without loss of generality, that each step
+$s_i$ in $P$ uses $i$ as its index.  Furthermore, $\vDash$ represents
+semantic consequence in the many-sorted first order logic of SMT-LIB
+with the theories of uninterpreted functions and linear arithmetic.
 
 \begin{definition}[Calculated Context]
   Let $s_i$ be a step or anchor in $P$ such that no step $s_j$
-  where $j < i$ uses a concluding
-  rule.  Let $a_1, \dots, a_m$ be the anchors among $s_1, \dots, s_{i-1}$.
+  where $j < i$ uses a concluding rule.
+  Let $a_1, \dots, a_m$ be the anchors among $s_1, \dots, s_{i-1}$.
 
   The calculated context of $s_i$ is the context
   $c_{1,1}, \dots, c_{1, n_1}, \dots, c_{m,1}, \dots, c_{m, n_m}$
-  where $c_{k,1}, \dots, c_{k, n_k}$ is the context of $a_k$.
+  where $c_{k,1}, \dots, c_{k, n_k}$ is the list of variables
+  and variable, term tuples associated with $a_k$.
 
-  Note that if $s_i$ is an anchor, its calculated context is the
-  context before concatenating it with the context associated
-  with $s_i$.
+  Note that if $s_i$ is an anchor, its calculated context does not
+  contain the the variables and variable, term tuples associated with $s_i$.
+  Hence, the context of $s_i$ is the context just before $s_i$ is applied.
 \end{definition}
 
 To check the validity of a proof we can inductively eliminate subproofs
@@ -658,42 +665,39 @@ until we reach a proof without subproof.
 If we always eliminate the first
 subproof that does not contain another subproof we can calculate the context
 and check the validity of the subproof directly.
-We start with $P_0 = P$.
+The following notion captures the idea of a subproof that can be eliminated.
 
-To elimnate a part of a proof, we can replace some steps with a hole.
-Consider a proof $[s_1, \dots, s_n]$ and indices $1 \leq i \leq
-j \leq n$.  We can create a new step $s'$ that
-uses the \proofRule{hole}
-rule, has the conclusion of $s_j$ as its conclusion, and uses
-an index from $\mathbb{I}$ not used by any step in the proof. We can
-form the new proof $[s_1, \dots, s_{i-1}, s', s_{j+1}, \dots, s_n]$.
-Of course this is only valid if the steps that are replace do not contain
-partial subpoors.  Due to our induction, we will only replace entire subproofs that
-do not contain subpoof.
-
-\begin{definition}[Admissible Proof]
-  Let $P_i$ be the proof $[s_1, \dots, s_n]$ and $1 \leq \mathit{start}
+\begin{definition}[Admissible Subproof]
+  Let $P$ be the proof $[s_1, \dots, s_n]$ and $1 \leq \mathit{start}
   < \mathit{end} \leq n$ such that
   \begin{itemize}
     \item $s_{\mathit{start}}$ is an anchor,
     \item $s_{\mathit{end}}$ is a step that uses a concluding rule,
+    \item no $s_k$ with $k < \mathit{start}$ uses a concluding rule,
     \item no $s_k$ with $\mathit{start} < k < \mathit{end}$ is an anchor or
-     a step that uses a concluding rule.
+     a step that uses a concluding rule,
   \end{itemize}
-  The proof $P_i$ is \emph{admissible} if it either contains no such $\mathit{start}$,
-  $\mathit{end}$, or
+  The proof $P$ contains an \emph{admissible subproof} if there are such
+  $\mathit{start}$, $\mathit{end}$ and
   \begin{itemize}
-    \item all steps $s_k$ with $\mathit{start} < k <
+    \item all steps $s_k$ with $\mathit{start} \leq k <
     \mathit{end}$ only use the premises $s_l$ with $\mathit{start} <
     l < k$,
     \item all steps $s_k$ are valid application of their rule under the
-    calculated context of $s_{\mathit{start}}$,
+    calculated context of $s_{\mathit{end}}$,
     \item the step $s_{\mathit{end}}$ is a valid application of its rule
-    under its calculated context,
-    \item the proof $P_{i+1}$, where the steps $s_{\mathit{start}}, \dots,
-    s_{\mathit{end}}$ have been replaced by $s'$ as described above, is admissible.
+    under its calculated context of $s_{\mathit{start}}$.
   \end{itemize}
 \end{definition}
+
+Since the \proofRule{assume} rule expects an empty context, an admissible
+subproof can only contain assumptions if the rule used by $s_{\mathit{end}}$
+is the \proofRule{subproof} rule.
+
+To eliminate a part of a proof, we can replace some steps with a hole.
+To do soe we create a new step $s'$ that uses the \proofRule{hole} rule, has
+the conclusion and index of $s_{\mathit{end}}$.
+The new proof is: $P' = [s_1, \dots, s_{\mathit{start}-1}, s', s_{\mathit{end}+1}, \dots, s_n]$.
 
 Since proofs are finite, this process stops at some admissible proof
 $P_{\mathit{last}}$.  If the structure of the proof is not well formed
@@ -701,24 +705,31 @@ there will still be some anchors and steps using concluding rules in
 $P_{\mathit{last}}$.  Otherwise, we can check $P_{\mathit{last}}$ to
 see if the overall proof is valid.
 
-\begin{definition}[Valid Alethe Proof]
-  An Alethe proof $P_0 = [s_1, \dots, s_n]$ is valid if
+\begin{definition}[Admissible Proof]
+  \label{def:valid_proof}
+  An Alethe proof $P = [s_1, \dots, s_n]$ is an admissible proof
+  if every step uses an unique index and one of the following two sets
+  of conditions hold:
   \begin{itemize}
-    \item $P_0$ does not contain any step that uses the \proofRule{hole} rule,
-    \item each step in $P_0$ uses an unique index,
-    \item $P_0$ is admissible,
-    \item $P_0$ contains a step that has the empty clause as its conclusion,
-    \item $P_{\mathit{last}}$ does not contain any anchor or step using a concluding
-    rule,
-    \item all steps $s_k$ in $P_{\mathit{last}}$
-    only use the premises $s_l$ with $1 \leq l < k$,
-    \item all steps in $P_{\mathit{last}}$ are valid
-    applications of their rules under the empty context.
-    \end{itemize}
+    \item It contains no anchor steps, or steps that use a concluding rule,
+    \item all steps $s_i$ only use the premises $s_j$ with $1 \leq j < i$,
+    \item all steps are valid applications of their rules under the empty context,
+    \item and it contains a step that has the empty clause as its conclusion.
+  \end{itemize}
+  or
+  \begin{itemize}
+    \item It contains an admissible subproof
+    \item and the proof $P'$ constructed as above is an admissible proof. 
+  \end{itemize}
 \end{definition}
 
-In this document we will often call $P_{\mathit{last}}$ the outermost
-proof.
+In this document we will call the proof that terminates this iterative
+process by fulfilling the first set of conditions the \emph{outermost proof}.
+
+\begin{definition}[Valid Alethe Proof]
+  An admissible proof $P$ is a \emph{valid Alethe proof} if it contains
+  no step that uses the \proofRule{hole} rule.
+\end{definition}
 
 \subsubsection{Soundness}
 
@@ -727,6 +738,7 @@ we can use the same approach as for the definition of validity:  consider
 subproof free subproofs and then replace subproofs by holes.
 
 \begin{theorem}[Soundness of Alethe]
+\label{thm:sound}
 If there is a valid Alethe proof $P$ that has the formulas
 $\varphi_1, \dots, \varphi_m$ as the conclusions of the \proofRule{assume}
 steps in its outermost proof, then
@@ -739,48 +751,245 @@ We wills start with simple subproofs without subproofs and with empty contexts.
 Here, we will assume that every rule is sound.
 
 \begin{lemma}
-  Let $P = [s_{\mathit{start}}, \dots, s_{\mathit{end}}]$ be an
-  admissible proof such that no $s_i$ with $ i> 1$ is an anchor,
-  $s_{\mathit{end}$ is a \proofRule{subproof} step with the
-  conclusion $\psi$, and $\varphi_1, \dots, \varphi_m$ are the
-  conclusion of \proofRule{assume} steps.  Then $\vDash \varphi_1,
-  \dots, \varphi_m \limp \psi$.
+  \label{lem:sound_subproof}
+  Let $P$ be a proof that contains an admissible subproof where
+  $s_{\mathit{end}}$ is a \proofRule{subproof} step.  Let
+  $\psi$ be the conclusion of $s_{\mathit{end}}$
+  and $\varphi_1, \dots, \varphi_m$ are the conclusion of the
+  \proofRule{assume} steps between $s_{\mathit{start}}$ and
+  $s_{\mathit{end}}$.
+  Then $\vDash \varphi_1, \dots, \varphi_m \limp \psi$ holds.
 \end{lemma}
 \begin{proof}
-  By induction over the proof steps we can show that for each step $s_i$ with
-  the conclusion $\psi_i$ it holds that $V_i \vDash \psi_i$ where
-  $V_i$ is the set formulas assumed before $s_i$.
+  First, we use induction on the number of steps $n$ after
+  $s_{\mathit{start}}$.  Let $\psi_n$ be the conclusion
+  of $s_{\mathit{start}+n}$ and $V_n$ the conclusions of
+  the \proofRule{assume} steps in $[s_{\mathit{start}}, \dots,
+  s_{\mathit{start}+n}]$. We will
+  show $V_n \vDash \psi_n$ if $\mathit{start}+n < \mathit{end}$.
 
-  Let $V_0 = \emptyset$.
-  Let $\psi_i$ be the conclusions of the step $s_i$.  If $s_i$ is an
-  \proofRule{assume} step, then let $V_i = V_{i-1} \cup \{\psi_i\}$.
-  Otherwise,  let $S$ be the set of premises of $s_i$ and $P$ the set
-  of the conclusions of the steps in $S$.
-  Since $s_i$ is a valid application of its rule, we have $P \vDash \psi_i$.
+  If $n = 1$ then $s_{\mathit{start}+1}$ must
+  be either a tautology, or an assume step.  In the first case,
+  $\vDash \psi_{\mathit{start}+1}$ holds and in the second case
+  $\psi_{\mathit{start}+1} \vDash \psi_{\mathit{start}+1}$.
 
-  Now, for every step $s_j \in S$ with the conclusion $\psi_j \in P$, we
-  have $j < i$ and $V_j \vDash \psi_j$ due to the induction hypothesis. Since $j < i$, the
-  premises $V_j$ are a subset of $V_i$ and we can weaken $V_j \vDash \psi_j$ to
-  $V_i \vDash \psi_j$. Consequently, $V_i \vDash \psi_i$.
+
+  For subsequent $n$, $s_{\mathit{start}+n}$ is
+  either an ordinary step, or an assume step.  In the second case,
+  $\psi_{\mathit{start}+n} \vDash \psi_{\mathit{start}+n}$ which can
+  be weakened to $V_n \vDash \psi_{\mathit{start}+n}$.
+
+  In the first case, the step $s_{\mathit{start}+n}$ has a set of
+  premises $P$.  
+  For each step $s_{\mathit{start}+i} \in P$ we have $i < n$ and
+  $V_i \vDash \psi_{\mathit{start}+i}$ due to the induction
+  hypothesis. Since $i < n$, the premises $V_i$ are a subset of $V_n$ and
+  we can weaken $V_i \vDash \psi_{\mathit{start}+i}$
+  to $V_n \vDash \psi_{\mathit{start}+i}$.  Since all premises of
+  $s_{\mathit{start}+n}$ are the consequence of $V_n$ we get
+  $V_n \vDash \psi_n$.
 
   This process ends when $s_{\mathit{end}}$ is reached and we
   get $\varphi_1, \dots, \varphi_n \vDash \psi$ and by definition of
   \proofRule{subproof} $\vDash \varphi_1, \dots, \varphi_m \limp \psi$.
 \end{proof}
 
-To clarify the subproofs with contexts, we translate the contexts into
-$\lambda$-terms.  For a deeper description of this approach see the 
-publication that introduced this approach~\cite{barbosa-2019}.
+\subsubsection{Contexts and Metaterms}
+
+We now direct our attention to subproofs with contexts.  Contexts are
+local in the sense that they only affect the proof step they are
+applied to. Since we already assume that all rules are sound and are
+used correctly in a valid Alethe proof, it is not necessary for us to
+discuss them further to show the soundness of Alethe proofs.  However,
+it is useful to give a precise semantic to context to have the tools
+to check that rules that use contexts are sound.
+For the full details on contexts see~\cite{barbosa-2019}.
+The presentation here is adapted from this publication, but omits
+some details.
+
+To handle subproofs with contexts, we translate the contexts into
+$\lambda$-terms.
 These $\lambda$-terms are called \emph{metaterms}
 
 \begin{definition}[Metaterm]
-	Metaterms are expressions constructed by the grammar
-	\[
-		M \,::=\, \boxed{t}\,\mid\, \lambda x.\,M\,\mid\,(\lambda \bar{x}_n.\,
-		M)\,\bar{t}_n
-	\]
-
+  Metaterms are expressions constructed by the grammar
+  \[
+    M \,::=\, \boxed{t}\,\mid\, \lambda x.\,M\,\mid\,(\lambda \bar{x}_n.\,
+    M)\,\bar{t}_n
+  \]
+where $t$ is an ordinary term and $t_i$ and $x_i$ have the same sort for
+all $0 \leq i \leq 1$.
 \end{definition}
+
+According to this definition, a metaterm is either a boxed term, a
+$\lambda$ abstraction, or an application to an uncurried $\lambda$-term.
+The annotation $\boxed{t}$ delimits terms from the context, a simple
+$\lambda$ abstraction is used to express fixed variables, and the
+application expresses simulations substitution of $n$ terms.
+We use $=_{\alpha\beta}$ to denote syntactic equivalence module modulo
+$\alpha$-equivalence and $\beta$-reduction.
+
+A proof step
+\begin{plListEq}
+  \Gamma &\proofsep i. & t \simeq u & (\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]
+\end{plListEq}
+\noindent
+is encoded into
+\begin{plListEq}
+  &\proofsep i. & L(\Gamma)[t] \simeq R(\Gamma)[u] & (\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]
+\end{plListEq}
+where
+\begin{align*}
+  L(\emptyset)[t] &= \boxed{t}                      & R(\emptyset)[u] &= \boxed{u} \\
+  L(x, \bar{c}_m)[t] &= \lambda x.\,L(\bar{c}_m)[t] & R(x, \bar{c}_m)[u] &= \lambda x.\,R(\bar{c}_m)[u] \\
+  L(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[t] &= (\lambda \bar{x}_n.\,L(\bar{c}_m)[t]) \bar{s}_n
+  & R(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[u] &= R(\bar{c}_m)[u] \\
+\end{align*}
+
+\begin{example}
+ This translation, together with $=_{\alpha\beta}$,
+applies the $\subst$ function.  For example:
+\begin{align*}
+L(x\mapsto 7, x \mapsto g(x))[x] = (\lambda x.\,(\lambda. x\,\boxed{x})\,(g(x)))\, 7
+=_{\alpha\beta} \boxed{g(7)} \\
+L(x\mapsto 7, x, x \mapsto g(x))[x] = (\lambda x.\,\lambda x.\,(\lambda. x\,\boxed{x})\,(g(x)))\, 7
+=_{\alpha\beta} \boxed{g(x)} \\
+\end{align*}
+\end{example}
+
+Most proof rules that operate with contexts can easily be translated into
+proof rules using metaterms.  The exception are the tautologous rules,
+such as \proofRule{refl} and the \ruleType{..._simplify} rules.
+
+Steps that use such rules always encode a judgment
+$\vDash \Gamma \vartriangleright t \simeq u$.  With the encoding described above
+we get $L(\Gamma)[t] \simeq R(\Gamma)[u]
+=_{\alpha\beta} \lambda \bar{x}_n.\,\boxed{t'} \simeq
+\lambda \bar{x}_n.\,\boxed{u'}$ with some terms $t'$, $u'$.
+To handle those terms, we use the $\reify$ function.
+This function is defined as $\reify(\lambda \bar{x}_n.\,\boxed{t} \simeq
+\lambda \bar{x}_n.\,\boxed{u}) = \forall \bar{x}_n.\,t \simeq u$.
+Hence,
+all tautological rules with contexts represent a judgment
+$\vDash \reify(T \simeq U)$
+where $T =_{\alpha\beta} L(\Gamma)[t]$ and $U =_{\alpha\beta} R(\Gamma)[u]$.
+
+\begin{example}
+  Consider the step
+  \begin{plListEq}
+    y, x \mapsto y &\proofsep i. & x + 0 \simeq y & \ruleType{sum_simplify}
+  \end{plListEq}
+  Translating the context into meta terms gives us
+  \begin{plListEq}
+    &\proofsep i. & (\lambda x.\,(\lambda y.\,\boxed{x + 0}))\, y \simeq
+        (\lambda y.\,\boxed{y}) & \ruleType{sum_simplify}
+  \end{plListEq}
+  Applying $\beta$-reduction gives us
+  \begin{plListEq}
+    &\proofsep i. & (\lambda y.\,\boxed{y + 0}) \simeq
+        (\lambda y.\,\boxed{y}) & \ruleType{sum_simplify}
+  \end{plListEq}
+  Finally, using $\reify()$ gives us
+  \begin{plListEq}
+    &\proofsep i. & \forall y.\,(y + 0 \simeq  y) & \ruleType{sum_simplify}
+  \end{plListEq}
+  This obviously holds in the theory of linear arithmetic.
+\end{example}
+
+We now give a version of Lemma~\ref{lem:sound_subproof} with contexts.
+
+\begin{lemma}
+  \label{lem:sound_subproof_context}
+  Let $P$ be a proof that contains an admissible subproof where
+  $s_{\mathit{end}}$ is a step using one of:
+  \proofRule{bind}, \proofRule{sko_ex}, \proofRule{sko_forall},
+  \proofRule{onepoint}, \proofRule{let}.
+
+  Then $V \vDash \Gamma \vartriangleright \psi$ where $\Gamma$ is the
+  calculated context of $s_{\mathit{start}}$ and $\psi$ is the conclusion
+  of $s_{\mathit{end}}$.  The set $V$ is empty if $s_{\mathit{end}}$
+  does not use the \ruleType{let} rule.  Otherwies, it contains all
+  conclusions of the
+  \ruleType{assume} steps among $[s_{\mathit{start}'}, \dots,
+  s_{\mathit{start}}]$ where $\mathit{start}'$ is either the largest index
+  ${\mathit{start}'} < {\mathit{start}}$ such that $s_{\mathit{start}'}$ is an
+  anchor, or $1$ if no such index exist.
+\end{lemma}
+\begin{proof}
+  The step $s_{\mathit{start}}$ is an anchor due to the definition
+  of admissible proof.
+  Let $c_1, \dots, c_n$ is the context introduce by the anchor
+  $s_{\mathit{start}}$ and let $\Gamma' = \Gamma, c_1, \dots, c_n$.
+  $\Gamma'$ is the calculated context of the steps in the subproof after
+  $s_{\mathit{start}}$.
+
+  The step $s_{\mathit{end}}$ is a step
+  \begin{plContainer}
+    \begin{plSubList}
+      \plLine\\
+      \Gamma'
+      \proofsep& i.& \psi' &(\dots)\\
+    \end{plSubList}
+    \begin{plList}
+      \Gamma \proofsep& \mathit{end}.& \psi &(\ruleType{rule}\;i_1 \dots i_n)\\
+    \end{plList}
+  \end{plContainer}
+  Since we assume the step $s_{\mathit{end}}$ is correctly employed,
+  $\vDash \Gamma \vartriangleright \psi$ holds, as long as
+  $\vDash \Gamma' \vartriangleright \psi'$ holds.
+
+  We perform the same induction as for
+  Lemma~\ref{lem:sound_subproof} over the steps in
+  $[s_{\mathit{start}}, \dots, s_{\mathit{end}}]$.  Here, the sets
+  $V_i$ stay empty since there are no assumptions in the subproof.
+  The induction ends once $s_i$ is reached.  At this step we
+  get $\vDash \Gamma' \vartriangleright \psi'$.
+
+  Only the \ruleType{let} rule uses additional premises
+  $s_{i_1}, \dots, s_{i_n}$.  Hence, for all other rules the conclusion
+  cannot depend on any steps outside the subproof and $V$ is empty.
+  % TODO: this is ugly, let is ugly
+  Due to the definition of admissible subproof, all steps $s_{i_1},
+  \dots, s_{i_n}$ are in the same subproof that starts at $s_{\mathit{start}'}$.
+  Furthermore, they are all valid steps that do not conclude a subproof.
+
+  If this is the outermost proof, or a subproof that concludes with
+  an \ruleType{subproof} step, then $s_{i_1}, \dots, s_{i_n}$ might
+  depend on some \ruleType{assume} steps that appear before them
+  in their subproof.  In this case we can, as we saw in the proof of
+  Lemma~\ref{lem:sound_subproof}, weaken their judgments to include
+  all assumptions in $[s_{\mathit{start}'}, \dots, s_{\mathit{start}}]$.
+
+  If the subproof that starts at $s_{\mathit{start}'}$ concludes with
+  any other rule, then ther cannot be any assumptions and $V$ is empty.
+\end{proof}
+
+\subsubsection{Soundess of Valid Alethe Proofs}
+
+By using Lemma~\ref{lem:sound_subproof} and
+Lemma~\ref{lem:sound_subproof_context} we can no show that a valid Alethe proof
+is sound. That is, we can show Theorem~\ref{thm:sound}.
+
+\begin{proof}
+By induction on the number of anchors in $P = [s_1, \dots, s_n]$.
+
+If there is no anchor in $P$ then there is a step $s_i$ that has the
+empty clause as its conclusion.  We can perform the same induction as
+in the proof of Lemma~\ref{lem:sound_subproof} with $\mathit{start} = 1$
+and $\mathit{end} = i$.  This shows that $V \vDash \bot$, where $V$ is the
+conclusion of the \proofType{assume} steps in $[s_1, \dots, s_i]$.  We can weaken
+this by adding the conclusions of the \proofType{assume} steps in
+$[s_i, \dots, s_n]$ to get $\varphi_1, \dots, \varphi_m \vDash \bot$.
+
+If there are $n$ anchors in $P$ then there is an admissible subproof with
+indices $\mathit{start}$, $\mathit{end}$.
+Depending on the rule used by $s_{\mathit{end}}$ either
+Lemma~\ref{lem:sound_subproof} and Lemma~\ref{lem:sound_subproof_context}
+applies.  Hence, it is safe to replace the subproof $[s_{\mathit{start}}, \dots
+s_{\mathit{end}}$ with the new step $s'$ as we do in
+Definition~\ref{def:valid_proof}.  The newly constructed proof $P'$ has
+$n-1$ anchors and hence is sound due to the induction hypothesis.
+\end{proof}
 
 \subsubsection{Abstract Inference System}  % or Rules, or Rules of Inference
 \label{sec:inference-system}
