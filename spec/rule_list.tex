@@ -168,7 +168,7 @@ some strengthening rules, the resulting conjunction is unsatisfiable,
 even if integer variables are assumed to be real variables.
 
 A linear inequality is of term of the form $\sum_{i=0}^{n}c_i\times{}t_i +
-d_1\bowtie \sum_{i=n+1}^{m} c_i\times{}t_i + d_2$ where $\bowtie\;\in \{=, <,
+d_1\bowtie \sum_{i=n+1}^{m} c_i\times{}t_i + d_2$ where $\bowtie\;\in \{\simeq, <,
 >, \leq, \geq\}$, where $m\geq n$, $c_i, d_1, d_2$ are either integer or real
 constants, and for each $i$ $c_i$ and $t_i$ have the same sort. We will write
 $s_1 \bowtie s_2$.
@@ -232,7 +232,7 @@ $t_i$ of $l_k$, and $d^k$ is the constant $d$ of $l_k$. The operator
 $\bowtie$ is $\simeq$ if all operators are $\simeq$, $>$ if all are
 either $\simeq$ or $>$, and $\geq$ otherwise. The $a_i$ must be such
 that the sum on the left-hand side is $0$ and the right-hand side is $>0$ (or
-$\geq 0$ if $\bowtie is >$).
+$\geq 0$ if $\bowtie$ is $>$).
 
 \begin{rule-example}
 A simple $\currule$ step in the logic \texttt{LRA} might look like this:
