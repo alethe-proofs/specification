@@ -411,7 +411,7 @@ where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_i$ and
 $k_i$ have the same sort. The arguments $(x_{k_i}, t_{k_i})$ are printed as
 \smtinline{(:= xki tki)}.
 
-\paragraph{Remark.} A rule simmilar to the \proofRule{let} rule would be
+\paragraph{Remark.} A rule similar to the \proofRule{let} rule would be
 more appropriate.  The resulting proof would be more fine grained and this
 would also be an opportunity to provide a proof for the clausification
 as currently done by \proofRule{qnt_cnf}.
@@ -431,14 +431,14 @@ or
 \Gamma\proofsep& j.& \varphi_1 \leftrightarrow \varphi_2 &\currule\\
 \end{plList}
 \end{plContainer}
-\end{proof-rule}
 
 where, if $\sigma = \operatorname{subst}(\Gamma)$,
-the terms $\varphi_1\sigma$ and $\varphi_2$ (the formulas $P_1\sigma$ and $P_2$) are
+the terms $t_1\sigma$ and $t_2$ (the formulas $\varphi_1\sigma$ and $\varphi_2$) are
 syntactically equal up to the orientation of equalities.
 
 \paragraph{Remark.} This is the only rule that requires the application of
 the context.
+\end{proof-rule}
 
 \begin{proof-rule}{trans}{veriT}
 Either
@@ -533,6 +533,7 @@ f(t_1, \dots, t_n) \simeq f(u_1, \dots, u_n)
 \end{plContainer}
 \end{proof-rule}
 
+% TODO: why does this exist?
 \begin{proof-rule}{eq_congruent_pred}{veriT}
 %\begin{compactproof}
 %\begingroup\abovedisplayskip=0pt \belowdisplayskip=0pt%
