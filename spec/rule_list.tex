@@ -603,8 +603,8 @@ done during clausification.
       \proofsep& j.& \varphi_k &(\currule\; i)\\
     \end{plList}
   \end{plContainer}
-\end{proof-rule}
 and $1 \leq k \leq n$.
+\end{proof-rule}
 
 \begin{proof-rule}{not_or}{veriT}
 \begin{plContainer}
@@ -613,8 +613,8 @@ and $1 \leq k \leq n$.
 \proofsep& j.& \neg \varphi_k &(\currule\; i)\\
 \end{plList}
 \end{plContainer}
-\end{proof-rule}
 and $1 \leq k \leq n$.
+\end{proof-rule}
 
 \begin{proof-rule}{or}{veriT}
 \begin{plContainer}
@@ -996,7 +996,7 @@ with $1 \leq k \leq n$.
   \begin{plContainer}
     \begin{plList}
       \Gamma\proofsep&
-      i.& \operatorname{\forall x_1, \dots, x_n.} \varphi \leftrightarrow \operatorname{\neg\exists x_1, \dots, x_n.} \neg\varphi
+      i.& \forall x_1, \dots, x_n. \varphi \leftrightarrow \neg\exists x_1, \dots, x_n. \neg\varphi
       &\currule\\
     \end{plList}
   \end{plContainer}
@@ -1646,7 +1646,7 @@ The second step expands function argument of boolean types by introducing
 appropriate if-then-else terms. For example, consider $f(x, P, y)$ where
 $P$ is some formula. Then we replace this term by $\operatorname{ite} P\;
 f(x, \top, y)\;f(x, \bot, y)$. If the argument is already the constant $\top$
-or $\bot$ it is ignored.
+or $\bot$, it is ignored.
 
 \end{proof-rule}
 
