@@ -9,13 +9,19 @@
 
 \usepackage{minted}
 \usemintedstyle{trac}
+% TODO: tweak hilighter
+\newmintinline[inlineAlethe]{smtlib2.py -x}{}
 
 \usepackage{cite}
 \usepackage{url}
 \usepackage[useregional]{datetime2}
+\usepackage{xltabular} % gives us stretchable, breakable tables. for proofs
+\usepackage{environ} % Gives us NewEnviron to define environements with tables
 
 \usepackage{bussproofs}
 \EnableBpAbbreviations
+
+\usepackage{amsthm}
 
 \usepackage[english]{babel}
 \nonfrenchspacing
@@ -35,6 +41,43 @@
 \newcommand\cvcfive{\tool{cvc5}}
 \newcommand\cvcfour{\tool{CVC4}}
 \newcommand\isabelle{\tool{Isabelle/HOL}}
+\newcommand\lsymb[1]{\mathbf{#1}}
+
+% Proofs
+\newcommand\ctxsep{$\vartriangleright$}
+\newcommand\spctxsep{\multicolumn{1}{|c}{\ctxsep}}
+\newcommand\spsep{\cline{2-4}}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\newcommand{\ruleType}[1]{%
+	\microtypesetup{tracking=false}\textsf{#1}\microtypesetup{tracking=true}%
+}
+\def\proofRule#1{\hyperref[rule:\detokenize{#1}]{\ruleType{\detokenize{#1}}}}
+%\newcommand{\ruleref}[1]{\ruleType{\nameref{rule:#1}}~(\ref{rule:#1})}
+
+\NewEnviron{Alethe}{%
+\setlength{\arrayrulewidth}{0.8pt}
+\addtolength{\tabcolsep}{-4pt}
+\begin{xltabular}{\linewidth}{l c Y l}
+  \BODY
+\end{xltabular}
+\addtolength{\tabcolsep}{+4pt}
+}
+\NewEnviron{AletheS}{%
+\setlength{\arrayrulewidth}{0.8pt}
+\addtolength{\tabcolsep}{-4pt}
+\begin{xltabular}{\linewidth}{l r c Y l}
+  \BODY
+\end{xltabular}
+\addtolength{\tabcolsep}{+4pt}
+}
+
+\theoremstyle{definition} 
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}[example]
+\newtheorem{lemma}{Lemma}[example]
+\newtheorem{definition}{Definition}[example]
+\newtheorem{seppara}{}
 
 \title{The Alethe Proof Format}
 \subtitle{An Evolving Specification and Reference}
@@ -168,12 +211,8 @@ processing, such as skolemization, substitutions, and other manipulations of
 bound variables~\cite{barbosa-2019}.
 
 
-% ================== Cutoff
-\bibliographystyle{plain}
-\bibliography{publications}
-\end{document}
-
-\subsection[sec:alethe:language]{The Alethe Language}
+\section{The Alethe Language}
+\label{sec:alethe:language}
 
 This section provides an overview of the core concepts of the
 \index{Alethe}Alethe language and also introduces some notation used
@@ -182,31 +221,42 @@ The section first introduces an abstract notation to write Alethe proofs.
 Then, it introduces the concrete, {\smtlib}-based syntax.  Finally,
 we show how a concrete Alethe proof can be checked.
 
-\startexample The following example shows a simple Alethe proof
+\begin{example}
+The following example shows a simple Alethe proof
 expressed in the abstract notation used in this document.
 It uses quantifier instantiation and resolution to show a contradiction.
 The paragraphs below describe the concepts necessary to
 understand the proof step by step.
 
-\startAlethe
-\bTR\bTD 1.\eTD\bTD \ctxsep \eTD\bTD $\forall x.\, (P\,x)$ \eTD\bTD $ \proofRule{assume}$ \eTD\eTR 
-\bTR\bTD 2.\eTD\bTD \ctxsep \eTD\bTD $\neg (P\,a)        $ \eTD\bTD $ \proofRule{assume}$ \eTD\eTR 
-\bTR\bTD 3.\eTD\bTD \ctxsep \eTD\bTD $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ \eTD\bTD $\proofRule{forall_inst}\,[(x, a)]$ \eTD\eTR 
-\bTR\bTD 4.\eTD\bTD \ctxsep \eTD\bTD $\neg (\forall x.\, (P\,x)), (P\,a)$ \eTD\bTD $ (\proofRule{or}\:3)$ \eTD\eTR 
-\bTR\bTD 5.\eTD\bTD \ctxsep \eTD\bTD $\bot             $ \eTD\bTD $ (\proofRule{resolution}\: 1, 2, 4)$ \eTD\eTR 
-\stopAlethe
+%\startAlethe
+%\bTR\bTD 1.\eTD\bTD \ctxsep \eTD\bTD $\forall x.\, (P\,x)$ \eTD\bTD $ \proofRule{assume}$ \eTD\eTR 
+%\bTR\bTD 2.\eTD\bTD \ctxsep \eTD\bTD $\neg (P\,a)        $ \eTD\bTD $ \proofRule{assume}$ \eTD\eTR 
+%\bTR\bTD 3.\eTD\bTD \ctxsep \eTD\bTD $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ \eTD\bTD $\proofRule{forall_inst}\,[(x, a)]$ \eTD\eTR 
+%\bTR\bTD 4.\eTD\bTD \ctxsep \eTD\bTD $\neg (\forall x.\, (P\,x)), (P\,a)$ \eTD\bTD $ (\proofRule{or}\:3)$ \eTD\eTR 
+%\bTR\bTD 5.\eTD\bTD \ctxsep \eTD\bTD $\bot             $ \eTD\bTD $ (\proofRule{resolution}\: 1, 2, 4)$ \eTD\eTR 
+%\stopAlethe
 
-\stopparagraph
+\begin{Alethe}
+1.& \ctxsep & $\forall x.\, (P\,x)$ & $ \proofRule{assume}$ \\ 
+2.& \ctxsep & $\neg (P\,a)        $ & $ \proofRule{assume}$ \\ 
+3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[(x, a)]$ \\ 
+4.& \ctxsep & $\neg (\forall x.\, (P\,x)), (P\,a)$ & $ (\proofRule{or}\:3)$ \\ 
+5.& \ctxsep & $\bot             $ & $ (\proofRule{resolution}\: 1, 2, 4)$ \\
+\end{Alethe}
 
-\startparagraph{Many-Sorted First-Order Logic.}
+\end{example}
+
+\paragraph{Many-Sorted First-Order Logic.}
 Alethe builds on the {\smtlib} language.
 %
-This includes its many-sorted first-order logic described in Section~\ref{sec:ti-logic}.
+This includes its many-sorted first-order logic described in
+Section~\ref{sec:ti-logic}. % TODO: clarify!
 The available sorts depend on
 the selected {\smtlib} theory/logic as well as on those defined by the user, but the
 distinguished $\lsymb{Bool}$ sort is always available.
 %
-However, Alethe also extends this logic with Hilbert's choice operator $\varepsilon$.
+However, Alethe also extends this logic with Hilbert's choice
+operator $\varepsilon$.
 %
 The term $\varepsilon x.\, \varphi[x]$ stands for a value $v$
 such that $\varphi[v]$ is true if such a value exists. Any value is
@@ -216,17 +266,17 @@ that contain the free variable $x$, it holds that
 $(\forall x.\,\varphi ≈ \psi)$,
 then $(\varepsilon x.\, \varphi)\approx(\varepsilon x.\, \psi)$ must also hold.
 Note that, choice terms can only appear in Alethe proofs, not in {\smtlib} problems.
+%\end{seppara}
 
-\startparagraph{Steps.}
+\paragraph{Steps.}
 A \index{proof}proof in the Alethe language is an indexed list of \index{step}steps.
 To mimic the concrete syntax of Alethe proofs, proof steps in the
 abstract notation have the form
 
-\startAletheS
-\setupTABLE[c][4][width=14em]
-\bTR\bTD $i$.\eTD\bTD $c_1,\,\dots,\, c_j$ \eTD\bTD \ctxsep \eTD\bTD
-$l_1,\dots ,l_k$    \eTD\bTD $(\ruleType{rule}\; p_1,\,\dots,\, p_n)\,[a_1,\,\dots,\,a_m] $\eTD\eTR
-\stopAlethe
+\begin{AletheS}
+$i$.& $c_1,\,\dots,\, c_j$ & \ctxsep &
+$l_1,\dots ,l_k$ & $(\ruleType{rule}\; p_1,\,\dots,\, p_n)\,[a_1,\,\dots,\,a_m]$ \\
+\end{AletheS}
 
 \noindent
 Each step has a unique index $i \in \mathbb{I}$, where $\mathbb{I}$ is a countable
@@ -240,7 +290,7 @@ muddles the water a bit with regard to steps which have the unit clause
 with the unit literal $\bot$ as their conclusion, it simplifies the
 notation.  We will remark on the difference if it is relevant.  The rule
 name \ruleType{rule} is taken from a set of possible proof
-rules (see the Appendix~\about[apx:rules]).
+rules (see Section~\ref{apx:rules}).
 Furthermore, each step has a possibly empty set of premises $\{p_1,
 \dots, p_n\} \subseteq \mathbb{I}$,
 and a rule-dependent and possibly
@@ -261,24 +311,23 @@ Since step~3 introduces a tautology, it uses no premises.  However,
 it uses arguments to express the substitution $[x\mapsto a]$ used to instantiate
 the quantifier. Step~4 translates the disjunction into a clause.
 In the example above, the contexts are all empty.
-\stopparagraph
 
-\startparagraph{Assumptions.}
+\paragraph{Assumptions.}
 An \proofRule{assume} step introduces a term as an
 \index{assumption}assumption. The proof starts with a number of
 \proofRule{assume} steps. Each such step corresponds to an input
 assertion. Within a subproof, additional assumptions can be introduced
 too. In this case, each assumption must be discharged with an appropriate
 step. The rule \proofRule{subproof} can be used to do so.  In the concrete
-syntax, \ruleType{assume} steps have a dedicated command \inlineAlethe{assume}
+syntax, \proofRule{assume} steps have a dedicated command \inlineAlethe{assume}
 to clearly distinguish them from normal steps that use the \inlineAlethe{step}
 command (see~Section~\ref{sec:alethe:syntax}).
 
 The example above uses two assumptions which are introduced in the first
 two steps.
-\stopparagraph
 
-\startparagraph{Subproofs and Lemmas.}
+
+\paragraph{Subproofs and Lemmas.}
 Alethe uses subproofs to prove lemmas and to create and manipulate the context.
 %
 To prove \index{lemma}lemmas, a \index{subproof}subproof can
@@ -298,26 +347,31 @@ frame around the steps in the subproof.  In this case the subproof
 concludes with a step that does not use the \proofRule{subproof} rule,
 but another rule, such as the \proofRule{bind} rule.
 
-\startexample
+\begin{example}
 This example shows a refutation of the
 formula $(2 + 2) ≈ 5$. The proof uses a subproof to prove the
 lemma $((2 + 2) ≈ 5) \Rightarrow 4 ≈ 5$.
 
-\startAlethe
-\bTR\bTD 1.\eTD\bTD \ctxsep \eTD\bTD $(2 + 2) ≈ 5$ \eTD\bTD $\proofRule{assume}$ \eTD\eTR 
-\bTR\bTD 2.\eTD\bTD[leftframe=on] \ctxsep \eTD\bTD $(2 + 2) ≈ 5 $ \eTD\bTD $\proofRule{assume}$ \eTD\eTR 
-\bTR\bTD 3.\eTD\bTD[leftframe=on] \ctxsep \eTD\bTD $(2 + 2) ≈ 4 $ \eTD\bTD $\proofRule{sum_simplify}$ \eTD\eTR 
-\bTR[bottomframe=on]\bTD[bottomframe=off] 4.\eTD\bTD[leftframe=on] \ctxsep \eTD\bTD $4 ≈ 5       $ \eTD\bTD $(\proofRule{trans}\ 2, 3)$ \eTD\eTR 
-\bTR\bTD 5.\eTD\bTD \ctxsep \eTD\bTD $\neg((2 + 2) ≈ 5), 4 ≈ 5$ \eTD\bTD $\proofRule{subproof}$ \eTD\eTR 
-\bTR\bTD 6.\eTD\bTD \ctxsep \eTD\bTD $(4 ≈ 5)≈ \bot$ \eTD\bTD $\proofRule{eq_simplify}$ \eTD\eTR 
-\bTR\bTD 7.\eTD\bTD \ctxsep \eTD\bTD $\neg((4 ≈ 5)≈ \bot), \neg(4≈ 5), \bot $ \eTD\bTD $\proofRule{equiv_pos2}$ \eTD\eTR 
-\bTR\bTD 8.\eTD\bTD \ctxsep \eTD\bTD $\bot $ \eTD\bTD $(\proofRule{resolution}\ 1, 5, 6, 7)$ \eTD\eTR 
-\stopAlethe
+\begin{Alethe}
+1.&  \ctxsep &  $(2 + 2) ≈ 5$ &  $\proofRule{assume}$ \\ 
+2.&  \spctxsep &  $(2 + 2) ≈ 5 $ &  $\proofRule{assume}$ \\ 
+3.&  \spctxsep &  $(2 + 2) ≈ 4 $ &  $\proofRule{sum_simplify}$ \\ 
+4.&  \spctxsep &  $4 ≈ 5       $ &  $(\proofRule{trans}\ 2, 3)$ \\
+\spsep
+5.&  \ctxsep &  $\neg((2 + 2) ≈ 5), 4 ≈ 5$ &  $\proofRule{subproof}$ \\ 
+6.&  \ctxsep &  $(4 ≈ 5)≈ \bot$ &  $\proofRule{eq_simplify}$ \\ 
+7.&  \ctxsep &  $\neg((4 ≈ 5)≈ \bot), \neg(4≈ 5), \bot $ &  $\proofRule{equiv_pos2}$ \\ 
+8.&  \ctxsep &  $\bot $ &  $(\proofRule{resolution}\ 1, 5, 6, 7)$ \\ 
+\end{Alethe}
 
-\stopexample
-\stopparagraph
+\end{example
 
-\startparagraph{Contexts.}
+% ================== Cutoff
+\bibliographystyle{plain}
+\bibliography{publications}
+\end{document}
+
+\paragraph{Contexts.}
 A specificity of the Alethe proofs
 is the step \index{context}context.
 Alethe contexts are a general mechanism to write
@@ -373,7 +427,7 @@ $\vDash_T \subst(\Gamma)(t) ≈ u$.
 Formally, the context can be translated to \index{abstraction+lambda}λ-abstractions and
 applications.  This is discussed in the Section~\ref{sec:alethe:semantic}.
 
-\startexample[reference=ex:ti:ctx-abstract]
+\begin{example}[reference=ex:ti:ctx-abstract]
 This example shows a proof that uses a subproof with a context to rename a bound
 variable.
 \startAletheS
@@ -406,10 +460,10 @@ variable.
     \eTD\bTD $(\proofRule{resolution}\,1, 2, 5, 6)$ \eTD\eTR
      \eTD\bTD \eTD\eTR
 \stopAletheS
-\stopexample
-\stopparagraph
+\end{example
 
-\startparagraph{Implicit Reordering of Equalities.}
+
+\paragraph{Implicit Reordering of Equalities.}
 In addition to the explicit steps, solvers might reorder equalities,
 i.e., apply symmetry of the equality predicate, without generating steps.
 The sole exception is the topmost equality in the conclusion of steps
@@ -428,7 +482,7 @@ instantiated variable appears below an equality, then the equality might
 have an arbitrary order after instantiation.
 Nevertheless, consumers of Alethe must consider the possible
 implicit reordering of equalities everywhere.
-\stopparagraph
+
 
 \subsubsection[sec:alethe:syntax]{The Syntax}
 
@@ -581,7 +635,7 @@ annotations.  This can be used for debugging, or other purposes.
 A consumer of Alethe proofs {\em must} be able to parse proofs
 that contain such annotations.
 
-\startparagraph{Subproofs}
+\paragraph{Subproofs}
 The abstract notation denotes subproofs by marking them with a vertical
 line.  To map this notation to a list of commands, Alethe \index{anchor}uses the
 \inlineAlethe{anchor} command.  This command indicates the start of a subproof.
@@ -628,7 +682,7 @@ A further restriction applies: only the conclusion of a subproof can be used
 as a premise outside the subproof. Hence, a proof checking tool can
 remove the steps of the subproof from memory after checking it.
 
-\startexample[reference=ex:ti:ctx-concrete]
+\begin{example}[reference=ex:ti:ctx-concrete]
 This example shows the proof from Example~\ref{ex:ti:ctx-abstract}
 expressed as a concrete proof.
 
@@ -645,8 +699,8 @@ expressed as a concrete proof.
              (forall ((y S)) (P y)))) :rule equiv_pos2)
 (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
 \stopSMTCode
-\stopexample
-\stopparagraph
+\end{example
+
 
 \tikzset{
      solver/.style={draw, thin},
@@ -672,7 +726,7 @@ expressed as a concrete proof.
     \path[->] (step) edge[above, bend left] node {\ss \tfx Last step} (unsat);
 \stoptikzpicture\stopalignment}
 
-\startparagraph{Alethe Proof Printing States}
+\paragraph{Alethe Proof Printing States}
 Figure~\ref{fig:proof-states} shows the states of an Alethe proof
 abstractly.  To generate a proof, the SMT solver must be in the
 {\em Unsat mode}, i.e., the solver determined that the problem
@@ -694,9 +748,9 @@ Usually the last step is an outermost step
 the empty clause, but this is not necessary.
 The solver is allowed to print some additional, useless,
 steps after the proof is concluded.
-\stopparagraph
 
-\startparagraph{Sharing and Skolem Terms}
+
+\paragraph{Sharing and Skolem Terms}
 Usually, SMT solvers store terms internally in an efficient manner.  A term data
 structure with perfect sharing ensures that every term is stored in memory
 precisely once. When printing the proof, this compact storage is unfolded.
@@ -737,9 +791,9 @@ Skolem constants as functions. In this case, the proof contains a list
 of \inlineAlethe{define-fun} commands that define shorthand 0-ary functions for
 the \inlineAlethe{(choice }\dots\inlineAlethe{)} terms needed. Without this option,
 no \inlineAlethe{define-fun} commands are issued, and the constants are expanded.
-\stopparagraph
 
-\startparagraph{Implicit Transformations}
+
+\paragraph{Implicit Transformations}
 Overall, the following aspects are treated implicitly by Alethe.
 \startitemize[packed]
 	\item Symmetry of equalities that are not top-most equalities in steps with
@@ -758,7 +812,7 @@ Overall, the following aspects are treated implicitly by Alethe.
 
 Alethe proofs contain steps for other aspects that are commonly left implicit, such
 as renaming of bound variables, and the application of substitutions.
-\stopparagraph
+
 
 \subsubsection[sec:alethe:semantic]{Checking Alethe Proofs}
 
@@ -803,7 +857,7 @@ the calculation of the context of the steps in the subproof.
   \index{subproof+first-innermost}first-innermost subproof of $P$.
 \stopdefinition
 
-\startexample
+\begin{example}
 The proof in Example~\ref{ex:ti:ctx-concrete} has only one subproof
 and this subproof is also a first-innermost subproof.  It is the subproof
 \startSMTCode
@@ -813,7 +867,7 @@ and this subproof is also a first-innermost subproof.  It is the subproof
 (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
                               :rule bind)
 \stopSMTCode
-\stopexample
+\end{example
 
 It is easy to calculate the context of the first-innermost subproof.
 
@@ -841,11 +895,11 @@ the subproof.
 Hence, the context of $C_{\mathit{end}}$ is the calculated
 context of $C_{\mathit{start}}$.
 
-\startexample
+\begin{example}
 The calculated context of the steps \color[SmtStepId]{\tt t3} and \color[SmtStepId]{\tt t5} in
 Example~\ref{ex:ti:ctx-concrete} is the context $x \mapsto y$.
 The calculated context of the concluding step \color[SmtStepId]{\tt t5} and the anchor is empty.
-\stopexample
+\end{example
 
 \noindent
 A first-innermost subproof is valid if all its steps adhere to
@@ -897,7 +951,7 @@ Since $P$ is finite we will always reach a fixed point in finitely many steps.
 The result is a list $[P_0, P_1, P_2, \dots, P_{\mathit{last}}]$ where $P_0 = P$,
 $P_1 = E(P)$, $P_2 = E(E(P))$ and $P_{\mathit{last}} = E(P_{\mathit{last}})$.
 
-\startexample
+\begin{example}
 Applying $E$\, to the proof in
 Example~\ref{ex:ti:ctx-concrete} gives us the proof
 
@@ -913,7 +967,7 @@ Example~\ref{ex:ti:ctx-concrete} gives us the proof
 \stopSMTCode
 
 Since this proof contains no subproof, it is also $P_{\mathit{last}}$.
-\stopexample
+\end{example
 
 \startdefinition[reference=def:well_formed_proof,title={Well-Formed Proof}]
   The Alethe proof $P$\, is \index{proof+well-formed}well-formed
@@ -939,11 +993,11 @@ The condition that $P$\, contains no hole ensures that the original
 proof is complete and holes are only introduced by eliminating valid
 subproofs.
 
-\startexample
+\begin{example}
 The proof in Example~\ref{ex:ti:ctx-concrete} is valid.  The only
 subproof is valid, the proof contains no hole, and $P_{\mathit{last}}$
 contains the step {\ss t7} that concludes with the empty clause.
-\stopexample
+\end{example
 
 It is sometimes useful to speak about the steps that are not within a
 subproof.  We call such a step an \index{step+outermost}{\em outermost
@@ -1030,7 +1084,7 @@ To achieve the same effect as using the $\subst()$ function described above, we
 can translate the terms into metaterms, perform β-reduction, and rename
 bound variables if necessary~\cite{righttext={ Lemma~11}}[barbosa-2019].
 
-\startexample
+\begin{example}
 The example on page~\ref[page][ex:alethe:substctx] becomes
 \startformula
 \startalign[n=1,align=left]
@@ -1040,7 +1094,7 @@ The example on page~\ref[page][ex:alethe:substctx] becomes
 =_{\alpha\beta} \lambda x.\,\groundbox{$g(x)$} \NR
 \stopalign
 \stopformula
-\stopexample
+\end{example
 
 Most proof rules that operate with contexts can easily be translated into
 proof rules using metaterms.  The exception are the tautologous rules,
@@ -1062,7 +1116,7 @@ all tautological rules with contexts represent a judgment\\
 $\vDash \reify(T ≈ U)$
 where $T =_{\alpha\beta} L(\Gamma)[t]$ and $U =_{\alpha\beta} R(\Gamma)[u]$.
 
-\startexample
+\begin{example}
   Consider the step
 
 \startAletheS
@@ -1117,7 +1171,7 @@ Finally, using $\reify()$ leads to
 
 \noindent
 This obviously holds in the theory of linear arithmetic.
-\stopexample
+\end{example
 
 
 \subsubsection[sec:alethe:soundness-eh]{Soundness}
@@ -1361,7 +1415,7 @@ proof rules.  Currently, the proof rules correspond to the rules
 that the solver {\verit} can emit.  For the rest of this section, we will discuss some
 general concepts related to the rules.
 
-\startparagraph{Tautologous Rules and Simple Deduction.}
+\paragraph{Tautologous Rules and Simple Deduction.}
 Most rules introduce tautologies. One example is
 the \proofRule{and_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
 \dots \land \varphi_n), \varphi_i$.
@@ -1372,9 +1426,9 @@ Those rules are primarily used to simplify Boolean
 connectives during preprocessing. For example, the \proofRule{implies}
 rule eliminates an implication: From $\varphi_1 \limp \varphi_2$,
 it deduces $\neg \varphi_1, \varphi_2$.
-\stopparagraph
 
-\startparagraph{Resolution.}
+
+\paragraph{Resolution.}
 {\cdclt}-based SMT solvers, and especially their {\sat} solvers,
 are fundamentally based on resolution of clauses.
 Hence, Alethe also has dedicated clauses and a resolution proof
@@ -1400,9 +1454,9 @@ of literals.
 The premises of a resolution step are clauses, and the conclusion
 is a clause that has been derived from the premises by some binary
 resolution steps.
-\stopparagraph
 
-\startparagraph[reference=rule:forall_inst,title={Quantifier Instantiation.}]
+
+\paragraph[reference=rule:forall_inst,title={Quantifier Instantiation.}]
 To express quantifier instantiation, the rule \proofRule{forall_inst}
 is used. It produces a formula of the form $(\neg \forall \bar
 x_n.\,\varphi) \lor \varphi[\bar t_n]$, where $\varphi$ is
@@ -1417,9 +1471,9 @@ The arguments of a \proofRule{forall_inst} step is the list $(x_1 , t_1),
 providing it explicitly helps reconstruction because the implicit reordering of
 equalities obscures which terms have been used as instances.
 Existential quantifiers are handled by skolemization.
-\stopparagraph
 
-\startparagraph{Linear Arithmetic.}
+
+\paragraph{Linear Arithmetic.}
 Proofs for linear arithmetic use a number of straightforward rules,
 such as \proofRule{la_totality} ($t_1 \leq t_2 \lor t_2 \leq t_1$)\footnote{
 	This rule also has a unit clause with a disjunction as its conclusion.}
@@ -1433,7 +1487,7 @@ $\varphi_1, \varphi_2, \dots, \varphi_n$.  The annotation of an
 The result of forming the linear combination of the literals with
 the coefficients is a trivial inequality between constants.
 
-\startexample
+\begin{example}
 The following example is the proof for the unsatisfiability
 of $(x+y<1) \lor$ $(3<x)$, $x≈ 2$, and $0≈ y$.
 
@@ -1449,10 +1503,10 @@ of $(x+y<1) \lor$ $(3<x)$, $x≈ 2$, and $0≈ y$.
 \bTR\bTD 8.\eTD\bTD \ctxsep \eTD\bTD $\neg (x + y < 1), \neg (x≈ 2) \lor \neg (0 ≈ y)$ \eTD\bTD $\proofRule{la_generic}\,[1.0, -1.0, 1.0]$ \eTD\eTR
 \bTR\bTD 9.\eTD\bTD \ctxsep \eTD\bTD $\bot      $ \eTD\bTD      $ (\proofRule{resolution}\, 8, 7, 2, 3)$ \eTD\eTR
 \stopAlethe
-\stopexample
-\stopparagraph
+\end{example
 
-\startparagraph{Skolemization and Other Preprocessing Steps.}
+
+\paragraph{Skolemization and Other Preprocessing Steps.}
 One typical example for a rule with context is the \proofRule{sko_ex}
 rule that is used to express skolemization of an existentially
 quantified variable.
@@ -1477,7 +1531,7 @@ to the appropriate Skolem term.
 \eTD\bTD $(\exists x.\,\varphi) ≈ \psi$ \eTD\bTD $(\proofRule{sko_ex})$ \eTD\eTR
 \stopAlethe
 
-\startexample
+\begin{example}
 To illustrate how such a rule is applied, consider the following example
 taken from~\cite{barbosa-2019}. Here the term $\neg p(\varepsilon x.\neg
 p(x))$ is skolemized. The \proofRule{refl} rule expresses
@@ -1498,6 +1552,6 @@ is functional congruence, and \proofRule{sko_forall} works like
 \bTR\bTD 4. \eTD\bTD \eTD\bTD\ctxsep \eTD\bTD $(\neg\forall x.\,(p\,x))≈ \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ \eTD\bTD $(\proofRule{cong}\, 3)$ \eTD\eTR
 \stopAlethe
 
-\stopparagraph
+
 
 \stopcomponent
