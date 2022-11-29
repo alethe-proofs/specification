@@ -1,3 +1,6 @@
+backport:
+	latexmk -pdf -pvc -interaction=nonstopmode -shell-escape -lualatex spec
+
 comments:
 	latexmk -pdf -shell-escape doc
 
