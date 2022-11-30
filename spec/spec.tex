@@ -17,8 +17,11 @@
 \usepackage{url}
 \usepackage[useregional]{datetime2}
 \usepackage{xltabular} % Gives us stretchable, breakable tables. for proofs
+\usepackage{longtable} % Gives us longtables for proof
 \usepackage{environ} % Gives us NewEnviron to define environements with tables
 \usepackage{fancyvrb} % Gives us \Verb which can be used in footnotes
+\usepackage{amsthm}
+\usepackage{thmtools}
 
 \usepackage{tikz}
 \usetikzlibrary{tikzmark,positioning}
@@ -67,9 +70,10 @@
 \newcommand{\ruleTypeImpl}[1]{%
 	\microtypesetup{tracking=false}\textsf{#1}\microtypesetup{tracking=true}%
 }
-\def\ruleType#1{\ruleTypeImpl{\detokenize{#1}}}
-\def\proofRule#1{\hyperref[rule:\detokenize{#1}]{\ruleTypeImpl{\detokenize{#1}}}}
+\def\ruleType#1{\ruleTypeImpl{\detokenize{#1}}} % non linked rule (for examples)
+\def\proofRule#1{\hyperref[rule:\detokenize{#1}]{\ruleTypeImpl{\detokenize{#1}}}} % linked rule
 %\newcommand{\ruleref}[1]{\ruleType{\nameref{rule:#1}}~(\ref{rule:#1})}
+\def\ruleref#1{\hyperref[rule:\detokenize{#1}]{\ruleTypeImpl{\detokenize{#1}}}~(\ref{rule:\detokenize{#1}})} % for the rule tables
 
 \NewEnviron{Alethe}{%
 \renewcommand\spsep{\cline{2-4}}
@@ -88,6 +92,68 @@
   \BODY
 \end{xltabular}
 \addtolength{\tabcolsep}{+4pt}
+}
+
+% These avoid the xltabular environment. While xltabular can break on pages
+% it seems to interact badly with the RuleDescription enviornment.
+\NewEnviron{AletheX}{%
+\renewcommand\spsep{\cline{2-4}}
+\setlength{\arrayrulewidth}{0.8pt}
+\addtolength{\tabcolsep}{-4pt}
+\begin{tabularx}{\linewidth}{l c Y l}
+  \BODY
+\end{tabularx}
+\addtolength{\tabcolsep}{+4pt}
+}
+\NewEnviron{AletheXS}{%
+\renewcommand\spsep{\cline{2-5}}
+\setlength{\arrayrulewidth}{0.8pt}
+\addtolength{\tabcolsep}{-4pt}
+\begin{tabularx}{\linewidth}{l l c Y l}
+  \BODY
+\end{tabularx}
+\addtolength{\tabcolsep}{+4pt}
+}
+
+% Environment for proof-rules
+\newcounter{ProofRuleCounter}
+\newcommand\currule{\proofRule{none}}
+
+\declaretheoremstyle[
+headfont=\sffamily\bfseries,%
+notefont=\sffamily\bfseries,%
+notebraces={}{},%
+bodyfont=\normalfont,%
+headpunct={},%
+headformat={\NAME~\NUMBER:\NOTE},%
+break
+]{proof-rule-style}
+
+\declaretheorem[name=Rule,style=proof-rule-style,sibling=ProofRuleCounter]{inner-rule}
+
+\makeatletter
+\newcommand{\ruleparagraph}{%
+  \@startsection{paragraph}{4}%
+  {\z@}{1ex \@plus 0.5ex \@minus .2ex}{-1em}%
+  {\normalfont\normalsize\bfseries}%
+}
+\makeatother
+
+
+%\newenvironment{RuleDescription}[1]{%
+%\begin{inner-rule}[#1]\label{rule:#1}
+%\renewcommand\currule{\proofRule{#1}}
+%}{%
+%\end{inner-rule}
+%}
+
+\NewEnviron{RuleDescription}[1]{%
+\renewcommand\currule{\proofRule{#1}}
+
+\begin{inner-rule}[#1]\label{rule:#1}
+
+\BODY
+\end{inner-rule}
 }
 
 % TODO: synchronize colors!
@@ -1282,11 +1348,10 @@ subproofs with contexts.  This is slightly complicated by the
   The step $C_{\mathit{end}}$ is a step
 
 \begin{AletheS}
-& \spctx{} & & \cdots & \\
-$\mathit{end}-1$. & \spctx{} $\Gamma'$ & \ctxsep
-& $\,\psi'$ & $(\dots)$ \\
+                  & \spctx{}          &         & $\cdots$    &           \\
+$\mathit{end}-1$. & \spctx{$\Gamma'$} & \ctxsep & $\,\psi'$ & $(\dots)$ \\
 \spsep
-$\mathit{end}$. & $\Gamma$ & \ctxsep & $\psi$ & $(\ruleType{rule}\;i_1, \dots, i_n)$ \\
+$\mathit{end}$.   & $\Gamma$          & \ctxsep & $\psi$    & $(\ruleType{rule}\;i_1, \dots, i_n)$ \\
 \end{AletheS}
 
   Since we assume the step $C_{\mathit{end}}$ is correctly employed,
@@ -1398,7 +1463,7 @@ it deduces $\neg \varphi_1, \varphi_2$.
 
 
 \paragraph{Resolution.}
-{\cdclt}-based SMT solvers, and especially their {\sat} solvers,
+{\cdclt}-based SMT solvers, and especially their SAT solvers,
 are fundamentally based on resolution of clauses.
 Hence, Alethe also has dedicated clauses and a resolution proof
 rule.  However, since SMT solvers do not enforce a strict
@@ -1411,11 +1476,11 @@ syntax for clauses uses the \inlineAlethe{cl} operator, while disjunctions
 use the standard {\smtlib} \inlineAlethe{or} operator. The \proofRule{or}
 \emph{rule} is responsible for converting disjunctions into clauses.
 
-The Alethe proofs use a generalized propositional
+the SAT solver or by a theory solver. The resolution step is purely
 resolution rule with the name \proofRule{resolution} or
 \proofRule{th_resolution}. Both names denote the same rule. The
 difference only serves to distinguish if the rule was introduced by
-the {\sat} solver or by a theory solver. The resolution step is purely
+The Alethe proofs use a generalized propositional
 propositional; there is no notion of a unifier.  The resolution
 rules also implicitly simplifies repeated negations at the head
 of literals.
@@ -1512,10 +1577,15 @@ is functional congruence, and \proofRule{sko_forall} works like
 3. &  & \ctxsep &  $(    \forall x.\,(p\,x))≈      (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{sko_forall}\, 2)$ \\
 4. &  & \ctxsep &  $(\neg\forall x.\,(p\,x))≈ \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{cong}\, 3)$ \\
 \end{AletheS}
+\end{example}
 
 \section{Changelog}
-\label{sec:changelog}
+\label{sec:rules}
 \input{changelog}
+
+\section{List of Rules}
+\label{apx:rule}
+\input{alethe_rules}
 
 \section{Bibliography}
 \bibliographystyle{plain}

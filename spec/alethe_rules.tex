@@ -1,294 +1,250 @@
-\environment Typesetting
-\environment ThesisData
-
-\startcomponent AletheRules
-
-\starttitle[
-    title={The Alethe Proof Rules},
-    reference=apx:rules
-]
-\chapterannot{This section is based on an informally published reference
-of the Alethe proof format.
-It was originally written by me for the work in
-\in{Section}[sec:reconstruction].  Later\\ Haniel Barbosa,\\ Mathias Fleury, \\
-Pascal Fontaine contributed.
-}
-
-This appendix provides a list of all proof rules supported by
-Alethe.  To make this long list more accessible, this section
+This section provides a list of all proof rules supported by
+Alethe.  To make this long list more accessible, the section
 first lists multiple classes of proof rules.  The classes are not
 mutually exclusive: for example, the \proofRule{la_generic} rule is
 both a linear arithmetic rule and introduces a tautology.
 The number in brackets is the position of the rule in the overall list
 of proof rules.
-\in{Table}[rule-tab:special] lists rules that serve a special purpose.
-\in{Table}[rule-tab:tautologies] lists all rules that introduce
+Table~\ref{rule-tab:special} lists rules that serve a special purpose.
+Table~\ref{rule-tab:tautologies} lists all rules that introduce
 tautologies.  That is, regular rules that do not use premises.
 
-The subsequent section, starting at \at{page}[sec:alethe:rules-list], defines
+The subsequent section, starting at \pageref{sec:alethe:rules-list}, defines
 all rules and provides example proofs for complicated rules.
-The index of proof rules at \at{page}[sec:alethe:rules-index] can be used
+The index of proof rules at \pageref{sec:alethe:rules-index} can be used
 to quickly find the definition of rules.
 
-\subject[sec:alethe:rules-overview]{Classifications of the Rules}
+\subsection{Classifications of the Rules}
+\label{sec:alethe:rules-overview}
 
-\placetable[here][rule-tab:special]{Special rules.}{
-\setupTABLE[r][each][frame=off,style=\addff{table}]
-\setupTABLE[r][1][bottomframe=on,rulewidth=1pt]
-\setupTABLE[c][1][width=12em]
-\bTABLE[width=broad]
-	\bTR\bTD Rule \eTD\bTD Description \eTD\eTR
-	\bTR\bTD \ruleref{assume}   \eTD\bTD Repetition of an input assumption. \eTD\eTR
-	\bTR\bTD \ruleref{hole}     \eTD\bTD Placeholder for rules not defined here. \eTD\eTR
-	\bTR\bTD \ruleref{subproof} \eTD\bTD Concludes a subproof and discharges local assumptions. \eTD\eTR
-\eTABLE
-}
+\begin{xltabular}{\linewidth}{l X}
+\caption{Special rules.}
+\label{rule-tab:special}\\
+	Rule & Description \\
+	\hline
+	\ruleref{assume}   & Repetition of an input assumption. \\
+	\ruleref{hole}     & Placeholder for rules not defined here. \\
+	\ruleref{subproof} & Concludes a subproof and discharges local assumptions. \\
+\end{xltabular}
 
-\placetable[here][rule-tab:resolution]{Resolution and related rules.}{
-\setupTABLE[r][each][frame=off,style=\addff{table}]
-\setupTABLE[r][1][bottomframe=on,rulewidth=1pt]
-\setupTABLE[c][1][width=12em]
-\bTABLE[width=broad]
-	\bTR\bTD	Rule \eTD\bTD Description \eTD\eTR
-	\bTR\bTD	\ruleref{resolution} \eTD\bTD Chain resolution of two or more clauses. \eTD\eTR
-	\bTR\bTD	\ruleref{th_resolution} \eTD\bTD As \proofRule{resolution}, but used by theory solvers. \eTD\eTR
-	\bTR\bTD	\ruleref{tautology} \eTD\bTD Simplification of tautological clauses to $\top$. \eTD\eTR
-	\bTR\bTD	\ruleref{contraction} \eTD\bTD Removal of duplicated literals. \eTD\eTR
-		\eTABLE
-}
+\begin{xltabular}{\linewidth}{l X}
+\caption{Resolution and related rules.}
+\label{rule-tab:resolution}\\
+	Rule & Description \\
+	\hline
+	\ruleref{resolution} & Chain resolution of two or more clauses. \\
+	\ruleref{th_resolution} & As \proofRule{resolution}, but used by theory solvers. \\
+	\ruleref{tautology} & Simplification of tautological clauses to $\top$. \\
+	\ruleref{contraction} & Removal of duplicated literals. \\
+\end{xltabular}
 
-\page
-\placetable[here,split][rule-tab:tautologies]{Rules introducing tautologies.}{
-\setupTABLE[r][each][frame=off,style=\addff{table}]
-\setupTABLE[c][1][width=12em]
-\setupTABLE[r][1][bottomframe=on,rulewidth=1pt]
-\bTABLE[width=broad,split=repeat]
-\bTABLEhead
-\bTR\bTD Rule \eTD\bTD Conclusion \eTD\eTR
-\eTABLEhead
-\bTABLEbody
-\bTR\bTD \ruleref{true} \eTD\bTD $\top$ \eTD\eTR
-\bTR\bTD \ruleref{false} \eTD\bTD $\neg\bot$ \eTD\eTR
-\bTR\bTD \ruleref{not_not} \eTD\bTD $\neg(\neg\neg\varphi), \varphi$ \eTD\eTR
-\bTR\bTD \ruleref{la_generic} \eTD\bTD Tautologous disjunction of linear inequalities. \eTD\eTR
-\bTR\bTD \ruleref{lia_generic} \eTD\bTD Tautologous disjunction of linear integer inequalities. \eTD\eTR
-\bTR\bTD \ruleref{la_disequality} \eTD\bTD $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$ \eTD\eTR
-\bTR\bTD \ruleref{la_totality} \eTD\bTD $t_1 \leq t_2 \lor t_2 \leq t_1$ \eTD\eTR
-\bTR\bTD \ruleref{la_tautology} \eTD\bTD A trivial linear tautology. \eTD\eTR
-\bTR\bTD \ruleref{forall_inst} \eTD\bTD Quantifier instantiation. \eTD\eTR
-\bTR\bTD \ruleref{refl} \eTD\bTD Reflexivity after applying the context. \eTD\eTR
-\bTR\bTD \ruleref{eq_reflexive} \eTD\bTD $t ≈ t$ without context. \eTD\eTR
-\bTR\bTD \ruleref{eq_transitive} \eTD\bTD $\neg (t_1 ≈ t_2) , \dots , \neg (t_{n-1} ≈ t_n) , t_1 ≈ t_n$ \eTD\eTR
-\bTR\bTD \ruleref{eq_congruent} \eTD\bTD $\neg (t_1 ≈ u_1) , \dots , \neg (t_n ≈ u_n) , f(t_1, \dots, t_n) ≈ f(u_1, \dots, u_n)$ \eTD\eTR
-\bTR\bTD \ruleref{eq_congruent_pred} \eTD\bTD $\neg (t_1 ≈ u_1) , \dots , \neg (t_n ≈ u_n) , P(t_1, \dots, t_n) ≈ P(u_1, \dots, u_n)$ \eTD\eTR
-\bTR\bTD \ruleref{qnt_cnf} \eTD\bTD Clausification of a quantified formula. \eTD\eTR
-\bTR\bTD \ruleref{and_pos} \eTD\bTD $\neg (\varphi_1 \land \dots \land \varphi_n) , \varphi_k $ \eTD\eTR
-\bTR\bTD \ruleref{and_neg} \eTD\bTD $ (\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1  , \dots , \neg\varphi_n $ \eTD\eTR
-\bTR\bTD \ruleref{or_pos} \eTD\bTD $ \neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots , \varphi_n $ \eTD\eTR
-\bTR\bTD \ruleref{or_neg} \eTD\bTD $ (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k $ \eTD\eTR
-\bTR\bTD \ruleref{xor_pos1} \eTD\bTD $ \neg (\varphi_1 \,\lsymb{xor}\, \varphi_2) , \varphi_1 , \varphi_2 $ \eTD\eTR
-\bTR\bTD \ruleref{xor_pos2} \eTD\bTD $ \neg (\varphi_1 \,\lsymb{xor}\, \varphi_2), \neg \varphi_1, \neg \varphi_2 $ \eTD\eTR
-\bTR\bTD \ruleref{xor_neg1} \eTD\bTD $ \varphi_1 \,\lsymb{xor}\, \varphi_2, \varphi_1 , \neg \varphi_2 $ \eTD\eTR
-\bTR\bTD \ruleref{xor_neg2} \eTD\bTD $ \varphi_1 \,\lsymb{xor}\, \varphi_2, \neg \varphi_1 , \varphi_2 $ \eTD\eTR
-\bTR\bTD \ruleref{implies_pos} \eTD\bTD $ \neg (\varphi_1 \rightarrow \varphi_2), \neg \varphi_1 , \varphi_2 $ \eTD\eTR
-\bTR\bTD \ruleref{implies_neg1} \eTD\bTD $ \varphi_1 \rightarrow \varphi_2, \varphi_1 $ \eTD\eTR
-\bTR\bTD \ruleref{implies_neg2} \eTD\bTD $ \varphi_1 \rightarrow \varphi_2, \neg \varphi_2 $ \eTD\eTR
-\bTR\bTD \ruleref{equiv_pos1} \eTD\bTD $\neg (\varphi_1 ≈ \varphi_2) , \varphi_1 , \neg \varphi_2$ \eTD\eTR
-\bTR\bTD \ruleref{equiv_pos2} \eTD\bTD $\neg (\varphi_1 ≈ \varphi_2) , \neg \varphi_1 , \varphi_2$ \eTD\eTR
-\bTR\bTD \ruleref{equiv_neg1} \eTD\bTD $\varphi_1 ≈ \varphi_2 , \neg \varphi_1 , \neg \varphi_2$ \eTD\eTR
-\bTR\bTD \ruleref{equiv_neg2} \eTD\bTD $\varphi_1 ≈ \varphi_2 , \varphi_1 , \varphi_2$ \eTD\eTR
-\bTR\bTD \ruleref{ite_pos1} \eTD\bTD $\neg (\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3) , \varphi_1 , \varphi_3$ \eTD\eTR
-\bTR\bTD \ruleref{ite_pos2} \eTD\bTD $\neg (\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3) , \neg \varphi_1 , \varphi_2$ \eTD\eTR
-\bTR\bTD \ruleref{ite_neg1} \eTD\bTD $\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3 , \varphi_1 , \neg \varphi_3$ \eTD\eTR
-\bTR\bTD \ruleref{ite_neg2} \eTD\bTD $\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3 , \neg \varphi_1 , \neg \varphi_2$ \eTD\eTR
-\bTR\bTD \ruleref{connective_def} \eTD\bTD Definition of the Boolean connectives. \eTD\eTR
-\bTR\bTD \ruleref{and_simplify} \eTD\bTD Simplification of a conjunction. \eTD\eTR
-\bTR\bTD \ruleref{or_simplify} \eTD\bTD Simplification of a disjunction. \eTD\eTR
-\bTR\bTD \ruleref{not_simplify} \eTD\bTD Simplification of a Boolean negation. \eTD\eTR
-\bTR\bTD \ruleref{implies_simplify} \eTD\bTD Simplification of an implication. \eTD\eTR
-\bTR\bTD \ruleref{equiv_simplify} \eTD\bTD Simplification of an equivalence. \eTD\eTR
-\bTR\bTD \ruleref{bool_simplify} \eTD\bTD Simplification of combined Boolean connectives. \eTD\eTR
-\bTR\bTD \ruleref{ac_simp} \eTD\bTD Flattening of nested $\lor$ or $\land$. \eTD\eTR
-\bTR\bTD \ruleref{ite_simplify} \eTD\bTD Simplification of if-then-else. \eTD\eTR
-\bTR\bTD \ruleref{qnt_simplify} \eTD\bTD Simplification of constant quantified formulas. \eTD\eTR
-\bTR\bTD \ruleref{qnt_join} \eTD\bTD Joining of consecutive quantifiers. \eTD\eTR
-\bTR\bTD \ruleref{qnt_rm_unused} \eTD\bTD Removal of unused quantified variables. \eTD\eTR
-\bTR\bTD \ruleref{eq_simplify} \eTD\bTD Simplification of equality. \eTD\eTR
-\bTR\bTD \ruleref{div_simplify} \eTD\bTD Simplification of division. \eTD\eTR
-\bTR\bTD \ruleref{prod_simplify} \eTD\bTD Simplification of products. \eTD\eTR
-\bTR\bTD \ruleref{unary_minus_simplify} \eTD\bTD Simplification of the unary minus. \eTD\eTR
-\bTR\bTD \ruleref{minus_simplify} \eTD\bTD Simplification of subtractions. \eTD\eTR
-\bTR\bTD \ruleref{sum_simplify} \eTD\bTD Simplification of sums. \eTD\eTR
-\bTR\bTD \ruleref{comp_simplify} \eTD\bTD Simplification of arithmetic comparisons. \eTD\eTR
-\bTR\bTD \ruleref{distinct_elim} \eTD\bTD Elimination of the distinction predicate. \eTD\eTR
-\bTR\bTD \ruleref{la_rw_eq} \eTD\bTD $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \eTD\eTR
-\bTR\bTD \ruleref{nary_elim} \eTD\bTD Replace $n$-ary operators with binary application. \eTD\eTR
-\eTABLEbody
-\eTABLE
-}
+\begin{xltabular}{\linewidth}{l X}
+\caption{Rules introducing tautologies.}
+\label{rule-tab:tautologies}\\
+	Rule & Description \\
+	\hline
+\ruleref{true} & $\top$ \\
+\ruleref{false} & $\neg\bot$ \\
+\ruleref{not_not} & $\neg(\neg\neg\varphi), \varphi$ \\
+\ruleref{la_generic} & Tautologous disjunction of linear inequalities. \\
+\ruleref{lia_generic} & Tautologous disjunction of linear integer inequalities. \\
+\ruleref{la_disequality} & $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$ \\
+\ruleref{la_totality} & $t_1 \leq t_2 \lor t_2 \leq t_1$ \\
+\ruleref{la_tautology} & A trivial linear tautology. \\
+\ruleref{forall_inst} & Quantifier instantiation. \\
+\ruleref{refl} & Reflexivity after applying the context. \\
+\ruleref{eq_reflexive} & $t ≈ t$ without context. \\
+\ruleref{eq_transitive} & $\neg (t_1 ≈ t_2) , \dots , \neg (t_{n-1} ≈ t_n) , t_1 ≈ t_n$ \\
+\ruleref{eq_congruent} & $\neg (t_1 ≈ u_1) , \dots , \neg (t_n ≈ u_n) , f(t_1, \dots, t_n) ≈ f(u_1, \dots, u_n)$ \\
+\ruleref{eq_congruent_pred} & $\neg (t_1 ≈ u_1) , \dots , \neg (t_n ≈ u_n) , P(t_1, \dots, t_n) ≈ P(u_1, \dots, u_n)$ \\
+\ruleref{qnt_cnf} & Clausification of a quantified formula. \\
+\ruleref{and_pos} & $\neg (\varphi_1 \land \dots \land \varphi_n) , \varphi_k $ \\
+\ruleref{and_neg} & $ (\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1  , \dots , \neg\varphi_n $ \\
+\ruleref{or_pos} & $ \neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots , \varphi_n $ \\
+\ruleref{or_neg} & $ (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k $ \\
+\ruleref{xor_pos1} & $ \neg (\varphi_1 \,\lsymb{xor}\, \varphi_2) , \varphi_1 , \varphi_2 $ \\
+\ruleref{xor_pos2} & $ \neg (\varphi_1 \,\lsymb{xor}\, \varphi_2), \neg \varphi_1, \neg \varphi_2 $ \\
+\ruleref{xor_neg1} & $ \varphi_1 \,\lsymb{xor}\, \varphi_2, \varphi_1 , \neg \varphi_2 $ \\
+\ruleref{xor_neg2} & $ \varphi_1 \,\lsymb{xor}\, \varphi_2, \neg \varphi_1 , \varphi_2 $ \\
+\ruleref{implies_pos} & $ \neg (\varphi_1 \rightarrow \varphi_2), \neg \varphi_1 , \varphi_2 $ \\
+\ruleref{implies_neg1} & $ \varphi_1 \rightarrow \varphi_2, \varphi_1 $ \\
+\ruleref{implies_neg2} & $ \varphi_1 \rightarrow \varphi_2, \neg \varphi_2 $ \\
+\ruleref{equiv_pos1} & $\neg (\varphi_1 ≈ \varphi_2) , \varphi_1 , \neg \varphi_2$ \\
+\ruleref{equiv_pos2} & $\neg (\varphi_1 ≈ \varphi_2) , \neg \varphi_1 , \varphi_2$ \\
+\ruleref{equiv_neg1} & $\varphi_1 ≈ \varphi_2 , \neg \varphi_1 , \neg \varphi_2$ \\
+\ruleref{equiv_neg2} & $\varphi_1 ≈ \varphi_2 , \varphi_1 , \varphi_2$ \\
+\ruleref{ite_pos1} & $\neg (\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3) , \varphi_1 , \varphi_3$ \\
+\ruleref{ite_pos2} & $\neg (\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3) , \neg \varphi_1 , \varphi_2$ \\
+\ruleref{ite_neg1} & $\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3 , \varphi_1 , \neg \varphi_3$ \\
+\ruleref{ite_neg2} & $\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3 , \neg \varphi_1 , \neg \varphi_2$ \\
+\ruleref{connective_def} & Definition of the Boolean connectives. \\
+\ruleref{and_simplify} & Simplification of a conjunction. \\
+\ruleref{or_simplify} & Simplification of a disjunction. \\
+\ruleref{not_simplify} & Simplification of a Boolean negation. \\
+\ruleref{implies_simplify} & Simplification of an implication. \\
+\ruleref{equiv_simplify} & Simplification of an equivalence. \\
+\ruleref{bool_simplify} & Simplification of combined Boolean connectives. \\
+\ruleref{ac_simp} & Flattening of nested $\lor$ or $\land$. \\
+\ruleref{ite_simplify} & Simplification of if-then-else. \\
+\ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
+\ruleref{qnt_join} & Joining of consecutive quantifiers. \\
+\ruleref{qnt_rm_unused} & Removal of unused quantified variables. \\
+\ruleref{eq_simplify} & Simplification of equality. \\
+\ruleref{div_simplify} & Simplification of division. \\
+\ruleref{prod_simplify} & Simplification of products. \\
+\ruleref{unary_minus_simplify} & Simplification of the unary minus. \\
+\ruleref{minus_simplify} & Simplification of subtractions. \\
+\ruleref{sum_simplify} & Simplification of sums. \\
+\ruleref{comp_simplify} & Simplification of arithmetic comparisons. \\
+\ruleref{distinct_elim} & Elimination of the distinction predicate. \\
+\ruleref{la_rw_eq} & $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \\
+\ruleref{nary_elim} & Replace $n$-ary operators with binary application. \\
+\end{xltabular}
 
-\placetable[here,split][rule-tab:la-tauts]{Linear arithmetic rules.}{
-\setupTABLE[r][each][frame=off,style=\addff{table}]
-\setupTABLE[c][1][width=12em]
-\setupTABLE[r][1][bottomframe=on,rulewidth=1pt]
-\bTABLE[width=broad,split=repeat]
-\bTABLEhead\bTR\bTD Rule \eTD\bTD Conclusion \eTD\eTR\eTABLEhead
-\bTABLEbody
-\bTR\bTD\ruleref{la_generic} \eTD\bTD Tautologous disjunction of linear inequalities. \eTD\eTR
-\bTR\bTD\ruleref{lia_generic} \eTD\bTD Tautologous disjunction of linear integer inequalities. \eTD\eTR
-\bTR\bTD\ruleref{la_disequality} \eTD\bTD $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$ \eTD\eTR
-\bTR\bTD\ruleref{la_totality} \eTD\bTD $t_1 \leq t_2 \lor t_2 \leq t_1$ \eTD\eTR
-\bTR\bTD\ruleref{la_tautology} \eTD\bTD A trivial linear tautology. \eTD\eTR
-\bTR\bTD\ruleref{la_rw_eq} \eTD\bTD $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \eTD\eTR
-\bTR\bTD\ruleref{div_simplify} \eTD\bTD Simplification of division. \eTD\eTR
-\bTR\bTD\ruleref{prod_simplify} \eTD\bTD Simplification of products. \eTD\eTR
-\bTR\bTD\ruleref{unary_minus_simplify} \eTD\bTD Simplification of the unary minus. \eTD\eTR
-\bTR\bTD\ruleref{minus_simplify} \eTD\bTD Simplification of subtractions. \eTD\eTR
-\bTR\bTD\ruleref{sum_simplify} \eTD\bTD Simplification of sums. \eTD\eTR
-\bTR\bTD\ruleref{comp_simplify} \eTD\bTD Simplification of arithmetic comparisons. \eTD\eTR
-\eTABLEbody\eTABLE}
+\begin{xltabular}{\linewidth}{l X}
+\caption{Linear arithmetic rules.}
+\label{rule-tab:la-tauts}\\
+	Rule & Description \\
+	\hline
+\ruleref{la_generic} & Tautologous disjunction of linear inequalities. \\
+\ruleref{lia_generic} & Tautologous disjunction of linear integer inequalities. \\
+\ruleref{la_disequality} & $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$ \\
+\ruleref{la_totality} & $t_1 \leq t_2 \lor t_2 \leq t_1$ \\
+\ruleref{la_tautology} & A trivial linear tautology. \\
+\ruleref{la_rw_eq} & $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \\
+\ruleref{div_simplify} & Simplification of division. \\
+\ruleref{prod_simplify} & Simplification of products. \\
+\ruleref{unary_minus_simplify} & Simplification of the unary minus. \\
+\ruleref{minus_simplify} & Simplification of subtractions. \\
+\ruleref{sum_simplify} & Simplification of sums. \\
+\ruleref{comp_simplify} & Simplification of arithmetic comparisons. \\
+\end{xltabular}
 
-\page
-\placetable[here,split][rule-tab:quants]{Quantifier handling.}{
-\setupTABLE[r][each][frame=off,style=\addff{table}]
-\setupTABLE[c][1][width=12em]
-\setupTABLE[r][1][bottomframe=on,rulewidth=1pt]
-\bTABLE[width=broad,split=repeat]
-\bTABLEhead\bTR\bTD Rule \eTD\bTD Conclusion \eTD\eTR\eTABLEhead
-\bTABLEbody
-\bTR\bTD\ruleref{forall_inst} \eTD\bTD Instantiation of a universal variable. \eTD\eTR
-\bTR\bTD\ruleref{bind} \eTD\bTD Renaming of bound variables. \eTD\eTR
-\bTR\bTD\ruleref{sko_ex} \eTD\bTD Skolemization of existential variables. \eTD\eTR
-\bTR\bTD\ruleref{sko_forall} \eTD\bTD Skolemization of universal variables. \eTD\eTR
-\bTR\bTD\ruleref{qnt_cnf} \eTD\bTD Clausification of quantified formulas. \eTD\eTR
-\bTR\bTD\ruleref{qnt_simplify} \eTD\bTD Simplification of constant quantified formulas. \eTD\eTR
-\bTR\bTD\ruleref{onepoint} \eTD\bTD The one-point rule. \eTD\eTR
-\bTR\bTD\ruleref{qnt_join} \eTD\bTD Joining of consecutive quantifiers. \eTD\eTR
-\bTR\bTD\ruleref{qnt_rm_unused} \eTD\bTD Removal of unused quantified variables. \eTD\eTR
-\eTABLEbody\eTABLE}
+\begin{xltabular}{\linewidth}{l X}
+\caption{Quantifier handling.}
+\label{rule-tab:quants}\\
+	Rule & Description \\
+	\hline
+\ruleref{forall_inst} & Instantiation of a universal variable. \\
+\ruleref{bind} & Renaming of bound variables. \\
+\ruleref{sko_ex} & Skolemization of existential variables. \\
+\ruleref{sko_forall} & Skolemization of universal variables. \\
+\ruleref{qnt_cnf} & Clausification of quantified formulas. \\
+\ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
+\ruleref{onepoint} & The one-point rule. \\
+\ruleref{qnt_join} & Joining of consecutive quantifiers. \\
+\ruleref{qnt_rm_unused} & Removal of unused quantified variables. \\
+\end{xltabular}
 
+\begin{xltabular}{\linewidth}{l X}
+\caption{Skolemization rules.}
+\label{rule-tab:skos}\\
+	Rule & Description \\
+	\hline
+\ruleref{sko_ex} & Skolemization of existential variables. \\
+\ruleref{sko_forall} & Skolemization of universal variables. \\
+\end{xltabular}
 
-\placetable[here,split][rule-tab:skos]{Skolemization rules.}{
-\setupTABLE[r][each][frame=off,style=\addff{table}]
-\setupTABLE[c][1][width=12em]
-\setupTABLE[r][1][bottomframe=on,rulewidth=1pt]
-\bTABLE[width=broad,split=repeat]
-\bTABLEhead\bTR\bTD Rule \eTD\bTD Conclusion \eTD\eTR\eTABLEhead
-\bTABLEbody
-\bTR\bTD\ruleref{sko_ex} \eTD\bTD Skolemization of existential variables. \eTD\eTR
-\bTR\bTD\ruleref{sko_forall} \eTD\bTD Skolemization of universal variables. \eTD\eTR
-\eTABLEbody\eTABLE}
-
-
-\placetable[here,split][rule-tab:clausification]{Clausification rules.  These rules can be used to perform propositional
-clausification.}{
-\setupTABLE[r][each][frame=off,style=\addff{table}]
-\setupTABLE[c][1][width=12em]
-\setupTABLE[r][1][bottomframe=on,rulewidth=1pt]
-\bTABLE[width=broad,split=repeat]
-\bTABLEhead\bTR\bTD Rule \eTD\bTD Conclusion \eTD\eTR\eTABLEhead
-\bTABLEbody
-\bTR\bTD\ruleref{and} \eTD\bTD And elimination. \eTD\eTR
-\bTR\bTD\ruleref{not_or} \eTD\bTD Elimination of a negated disjunction. \eTD\eTR
-\bTR\bTD\ruleref{or} \eTD\bTD Disjunction to clause. \eTD\eTR
-\bTR\bTD\ruleref{not_and} \eTD\bTD Distribution of negation over a conjunction. \eTD\eTR
-\bTR\bTD\ruleref{xor1} \eTD\bTD From $\,\lsymb{xor}\, \varphi_1 \varphi_2$ to $\varphi_1, \varphi_2$. \eTD\eTR
-\bTR\bTD\ruleref{xor2} \eTD\bTD From $\,\lsymb{xor}\, \varphi_1 \varphi_2$ to $\neg\varphi_1, \neg\varphi_2$. \eTD\eTR
-\bTR\bTD\ruleref{not_xor1} \eTD\bTD From $\neg(\,\lsymb{xor}\, \varphi_1 \varphi_2)$ to $\varphi_1, \neg\varphi_2$. \eTD\eTR
-\bTR\bTD\ruleref{not_xor2} \eTD\bTD From $\neg(\,\lsymb{xor}\, \varphi_1 \varphi_2)$ to $\neg\varphi_1, \varphi_2$. \eTD\eTR
-\bTR\bTD\ruleref{implies} \eTD\bTD From $ \varphi_1\rightarrow\varphi_2 $ to $\neg\varphi_1 , \varphi_2 $. \eTD\eTR
-\bTR\bTD\ruleref{not_implies1} \eTD\bTD From $\neg (\varphi_1\rightarrow\varphi_2)$ to $\varphi_1$. \eTD\eTR
-\bTR\bTD\ruleref{not_implies2} \eTD\bTD From $\neg (\varphi_1\rightarrow\varphi_2)$ to $\neg\varphi_2$. \eTD\eTR
-\bTR\bTD\ruleref{equiv1} \eTD\bTD From $ \varphi_1≈\varphi_2$ to $\neg\varphi_1 , \varphi_2$. \eTD\eTR
-\bTR\bTD\ruleref{equiv2} \eTD\bTD From $ \varphi_1≈\varphi_2$ to $\varphi_1 , \neg\varphi_2$. \eTD\eTR
-\bTR\bTD\ruleref{not_equiv1} \eTD\bTD From $\neg(\varphi_1≈\varphi_2)$ to $\varphi_1 , \varphi_2$. \eTD\eTR
-\bTR\bTD\ruleref{not_equiv2} \eTD\bTD From $\neg(\varphi_1≈\varphi_2)$ to $\neg\varphi_1 , \neg\varphi_2$. \eTD\eTR
-\bTR\bTD\ruleref{and_pos} \eTD\bTD $\neg (\varphi_1 \land \dots \land \varphi_n), \varphi_k$\eTD\eTR
-\bTR\bTD\ruleref{and_neg} \eTD\bTD $(\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1, \dots , \neg\varphi_n $ \eTD\eTR
-\bTR\bTD\ruleref{or_pos} \eTD\bTD $\neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots
-  , \varphi_n $ \eTD\eTR
-\bTR\bTD\ruleref{or_neg} \eTD\bTD
-$ (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k $\eTD\eTR
-\bTR\bTD\ruleref{xor_pos1} \eTD\bTD
-$ \neg (\varphi_1 \,\lsymb{xor}\, \varphi_2) , \varphi_1 , \varphi_2 $ \eTD\eTR
-\bTR\bTD\ruleref{xor_pos2} \eTD\bTD
+\begin{xltabular}{\linewidth}{l X}
+\caption{Clausification rules.  These rules can be used to perform propositional
+clausification.}
+\label{rule-tab:clausification}\\
+	Rule & Description \\
+	\hline
+\ruleref{and} & And elimination. \\
+\ruleref{not_or} & Elimination of a negated disjunction. \\
+\ruleref{or} & Disjunction to clause. \\
+\ruleref{not_and} & Distribution of negation over a conjunction. \\
+\ruleref{xor1} & From $\,\lsymb{xor}\, \varphi_1 \varphi_2$ to $\varphi_1, \varphi_2$. \\
+\ruleref{xor2} & From $\,\lsymb{xor}\, \varphi_1 \varphi_2$ to $\neg\varphi_1, \neg\varphi_2$. \\
+\ruleref{not_xor1} & From $\neg(\,\lsymb{xor}\, \varphi_1 \varphi_2)$ to $\varphi_1, \neg\varphi_2$. \\
+\ruleref{not_xor2} & From $\neg(\,\lsymb{xor}\, \varphi_1 \varphi_2)$ to $\neg\varphi_1, \varphi_2$. \\
+\ruleref{implies} & From $ \varphi_1\rightarrow\varphi_2 $ to $\neg\varphi_1 , \varphi_2 $. \\
+\ruleref{not_implies1} & From $\neg (\varphi_1\rightarrow\varphi_2)$ to $\varphi_1$. \\
+\ruleref{not_implies2} & From $\neg (\varphi_1\rightarrow\varphi_2)$ to $\neg\varphi_2$. \\
+\ruleref{equiv1} & From $ \varphi_1≈\varphi_2$ to $\neg\varphi_1 , \varphi_2$. \\
+\ruleref{equiv2} & From $ \varphi_1≈\varphi_2$ to $\varphi_1 , \neg\varphi_2$. \\
+\ruleref{not_equiv1} & From $\neg(\varphi_1≈\varphi_2)$ to $\varphi_1 , \varphi_2$. \\
+\ruleref{not_equiv2} & From $\neg(\varphi_1≈\varphi_2)$ to $\neg\varphi_1 , \neg\varphi_2$. \\
+\ruleref{and_pos} & $\neg (\varphi_1 \land \dots \land \varphi_n), \varphi_k$\\
+\ruleref{and_neg} & $(\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1, \dots , \neg\varphi_n $ \\
+\ruleref{or_pos} & $\neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots
+  , \varphi_n $ \\
+\ruleref{or_neg} &
+$ (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k $\\
+\ruleref{xor_pos1} &
+$ \neg (\varphi_1 \,\lsymb{xor}\, \varphi_2) , \varphi_1 , \varphi_2 $ \\
+\ruleref{xor_pos2} &
 $ \neg (\varphi_1 \,\lsymb{xor}\, \varphi_2)
-, \neg \varphi_1, \neg \varphi_2 $ \eTD\eTR
-\bTR\bTD\ruleref{xor_neg1} \eTD\bTD
-$ \varphi_1 \,\lsymb{xor}\, \varphi_2, \varphi_1 , \neg \varphi_2 $ \eTD\eTR
-\bTR\bTD\ruleref{xor_neg2} \eTD\bTD
-$ \varphi_1 \,\lsymb{xor}\, \varphi_2, \neg \varphi_1 , \varphi_2 $ \eTD\eTR
-\bTR\bTD\ruleref{implies_pos} \eTD\bTD
-$ \neg (\varphi_1 \rightarrow \varphi_2), \neg \varphi_1 , \varphi_2 $ \eTD\eTR
-\bTR\bTD\ruleref{implies_neg1} \eTD\bTD
-$ \varphi_1 \rightarrow \varphi_2, \varphi_1 $ \eTD\eTR
-\bTR\bTD\ruleref{implies_neg2} \eTD\bTD
-$ \varphi_1 \rightarrow \varphi_2, \neg \varphi_2 $ \eTD\eTR
-\bTR\bTD\ruleref{equiv_pos1} \eTD\bTD
-$\neg (\varphi_1 ≈ \varphi_2) , \varphi_1 , \neg \varphi_2$ \eTD\eTR
-\bTR\bTD\ruleref{equiv_pos2} \eTD\bTD
-$\neg (\varphi_1 ≈ \varphi_2) , \neg \varphi_1 , \varphi_2$ \eTD\eTR
-\bTR\bTD\ruleref{equiv_neg1} \eTD\bTD
-$\varphi_1 ≈ \varphi_2 , \neg \varphi_1 , \neg \varphi_2$ \eTD\eTR
-\bTR\bTD\ruleref{equiv_neg2} \eTD\bTD
-$\varphi_1 ≈ \varphi_2 , \varphi_1 , \varphi_2$ \eTD\eTR
-\bTR\bTD\ruleref{let} \eTD\bTD Elimination of the $\lsymb{let}$ operator.  \eTD\eTR
-\bTR\bTD\ruleref{distinct_elim} \eTD\bTD Elimination of the $\lsymb{distinct}$ operator.  \eTD\eTR
-\bTR\bTD\ruleref{nary_elim} \eTD\bTD Elimination of n-ary application of operators. \eTD\eTR
-\eTABLEbody\eTABLE}
+, \neg \varphi_1, \neg \varphi_2 $ \\
+\ruleref{xor_neg1} &
+$ \varphi_1 \,\lsymb{xor}\, \varphi_2, \varphi_1 , \neg \varphi_2 $ \\
+\ruleref{xor_neg2} &
+$ \varphi_1 \,\lsymb{xor}\, \varphi_2, \neg \varphi_1 , \varphi_2 $ \\
+\ruleref{implies_pos} &
+$ \neg (\varphi_1 \rightarrow \varphi_2), \neg \varphi_1 , \varphi_2 $ \\
+\ruleref{implies_neg1} &
+$ \varphi_1 \rightarrow \varphi_2, \varphi_1 $ \\
+\ruleref{implies_neg2} &
+$ \varphi_1 \rightarrow \varphi_2, \neg \varphi_2 $ \\
+\ruleref{equiv_pos1} &
+$\neg (\varphi_1 ≈ \varphi_2) , \varphi_1 , \neg \varphi_2$ \\
+\ruleref{equiv_pos2} &
+$\neg (\varphi_1 ≈ \varphi_2) , \neg \varphi_1 , \varphi_2$ \\
+\ruleref{equiv_neg1} &
+$\varphi_1 ≈ \varphi_2 , \neg \varphi_1 , \neg \varphi_2$ \\
+\ruleref{equiv_neg2} &
+$\varphi_1 ≈ \varphi_2 , \varphi_1 , \varphi_2$ \\
+\ruleref{let} & Elimination of the $\lsymb{let}$ operator.  \\
+\ruleref{distinct_elim} & Elimination of the $\lsymb{distinct}$ operator.  \\
+\ruleref{nary_elim} & Elimination of n-ary application of operators. \\
+\end{xltabular}
 
-\page
-\placetable[here,split][rule-tab:simplification]{Simplification rules. These rules represent typical operator-level
-simplifications.}{
-\setupTABLE[r][each][frame=off,style=\addff{table}]
-\setupTABLE[c][1][width=12em]
-\setupTABLE[r][1][bottomframe=on,rulewidth=1pt]
-\bTABLE[width=broad,split=repeat]
-\bTABLEhead\bTR\bTD Rule \eTD\bTD Conclusion \eTD\eTR\eTABLEhead
-\bTABLEbody
-\bTR\bTD\ruleref{connective_def} \eTD\bTD Definition of the Boolean connectives. \eTD\eTR
-\bTR\bTD\ruleref{and_simplify} \eTD\bTD Simplification of a conjunction. \eTD\eTR
-\bTR\bTD\ruleref{or_simplify} \eTD\bTD Simplification of a disjunction. \eTD\eTR
-\bTR\bTD\ruleref{not_simplify} \eTD\bTD Simplification of a Boolean negation. \eTD\eTR
-\bTR\bTD\ruleref{implies_simplify} \eTD\bTD Simplification of an implication. \eTD\eTR
-\bTR\bTD\ruleref{equiv_simplify} \eTD\bTD Simplification of an equivalence. \eTD\eTR
-\bTR\bTD\ruleref{bool_simplify} \eTD\bTD Simplification of combined Boolean connectives. \eTD\eTR
-\bTR\bTD\ruleref{ac_simp} \eTD\bTD Simplification of nested disjunctions and conjunctions. \eTD\eTR
-\bTR\bTD\ruleref{ite_simplify} \eTD\bTD Simplification of if-then-else. \eTD\eTR
-\bTR\bTD\ruleref{qnt_simplify} \eTD\bTD Simplification of constant quantified formulas. \eTD\eTR
-\bTR\bTD\ruleref{onepoint} \eTD\bTD The one-point rule. \eTD\eTR
-\bTR\bTD\ruleref{qnt_join} \eTD\bTD Joining of consecutive quantifiers. \eTD\eTR
-\bTR\bTD\ruleref{qnt_rm_unused} \eTD\bTD Removal of unused quantified variables. \eTD\eTR
-\bTR\bTD\ruleref{eq_simplify} \eTD\bTD Simplification of equalities. \eTD\eTR
-\bTR\bTD\ruleref{div_simplify} \eTD\bTD Simplification of division. \eTD\eTR
-\bTR\bTD\ruleref{prod_simplify} \eTD\bTD Simplification of products. \eTD\eTR
-\bTR\bTD\ruleref{unary_minus_simplify} \eTD\bTD Simplification of the unary minus. \eTD\eTR
-\bTR\bTD\ruleref{minus_simplify} \eTD\bTD Simplification of subtractions. \eTD\eTR
-\bTR\bTD\ruleref{sum_simplify} \eTD\bTD Simplification of sums. \eTD\eTR
-\bTR\bTD\ruleref{comp_simplify} \eTD\bTD Simplification of arithmetic comparisons. \eTD\eTR
-\bTR\bTD\ruleref{qnt_simplify} \eTD\bTD Simplification of constant quantified formulas. \eTD\eTR
-\eTABLEbody\eTABLE}
-\stopsection
+\begin{xltabular}{\linewidth}{l X}
+\caption{Simplification rules. These rules represent typical operator-level
+simplifications.}
+\label{rule-tab:simplification}\\
+	Rule & Description \\
+	\hline
+\ruleref{connective_def} & Definition of the Boolean connectives. \\
+\ruleref{and_simplify} & Simplification of a conjunction. \\
+\ruleref{or_simplify} & Simplification of a disjunction. \\
+\ruleref{not_simplify} & Simplification of a Boolean negation. \\
+\ruleref{implies_simplify} & Simplification of an implication. \\
+\ruleref{equiv_simplify} & Simplification of an equivalence. \\
+\ruleref{bool_simplify} & Simplification of combined Boolean connectives. \\
+\ruleref{ac_simp} & Simplification of nested disjunctions and conjunctions. \\
+\ruleref{ite_simplify} & Simplification of if-then-else. \\
+\ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
+\ruleref{onepoint} & The one-point rule. \\
+\ruleref{qnt_join} & Joining of consecutive quantifiers. \\
+\ruleref{qnt_rm_unused} & Removal of unused quantified variables. \\
+\ruleref{eq_simplify} & Simplification of equalities. \\
+\ruleref{div_simplify} & Simplification of division. \\
+\ruleref{prod_simplify} & Simplification of products. \\
+\ruleref{unary_minus_simplify} & Simplification of the unary minus. \\
+\ruleref{minus_simplify} & Simplification of subtractions. \\
+\ruleref{sum_simplify} & Simplification of sums. \\
+\ruleref{comp_simplify} & Simplification of arithmetic comparisons. \\
+\ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
+\end{xltabular}
 
-\page
-\subject[sec:alethe:rules-list]{Rule List}
+\subject{Rule List}
+\label{sec:alethe:rules-list}
 
-\startRuleDescription{assume}
-\startAletheS
-\setupTABLE[c][3][width=27em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
-$\varphi$    \eTD\bTD \currule \eTD\eTR
-\stopAlethe
-
+\begin{RuleDescription}{assume}
+\begin{AletheX}
+$i$. & \ctxsep & $\varphi$ & \currule \\
+\end{AletheX}
 	where $\varphi$ corresponds up to the orientation of equalities
 	to a formula asserted in the input problem.
-	\starttightpara{Remark.}
+	\ruleparagraph{Remark.}
 	This rule can not be used by the
 	\inlineAlethe{(step }\dots\inlineAlethe{)} command. Instead it corresponds to the dedicated
 	\inlineAlethe{(assume }\dots\inlineAlethe{)} command.
+\end{RuleDescription}
 
-	\stoptightpara
-\stopRuleDescription
+\endinput
 
 \startRuleDescription{hole}
 \startAlethe
