@@ -18,9 +18,13 @@
 \usepackage[useregional]{datetime2}
 \usepackage{xltabular} % Gives us stretchable, breakable tables. for proofs
 \usepackage{environ} % Gives us NewEnviron to define environements with tables
-\usepackage{mathtools} % Gives us \Coloneqq
+\usepackage{fancyvrb} % Gives us \Verb which can be used in footnotes
 
 \usepackage{tikz}
+\usetikzlibrary{tikzmark,positioning}
+\usetikzlibrary{shapes,arrows,fit, scopes}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{svg.path}
 
 \usepackage{bussproofs}
 \EnableBpAbbreviations
@@ -38,6 +42,7 @@
 \hyphenation{Isa-belle Nieuw-en-huis meta-logic multi-set multi-sets non-unit Mini-Sat}
 
 \newcommand\smtlib{SMT-LIB}
+\newcommand\cdclt{CDCL(T)}
 
 \newcommand\tool[1]{\textsf{#1}}
 \newcommand\tactic[1]{\texttt{#1}}
@@ -48,6 +53,8 @@
 
 \newcommand\lsymb[1]{\mathbf{#1}}
 \DeclareMathOperator*{\subst}{subst}
+\DeclareMathOperator*{\reify}{reify}
+\newcommand\groundbox[1]{\boxed{#1}}
 
 % Proofs
 \newcommand\textAlethe[1]{\texttt{#1}}
@@ -57,10 +64,11 @@
 \newcommand\spsep{\cline{2-4}}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
-\newcommand{\ruleType}[1]{%
+\newcommand{\ruleTypeImpl}[1]{%
 	\microtypesetup{tracking=false}\textsf{#1}\microtypesetup{tracking=true}%
 }
-\def\proofRule#1{\hyperref[rule:\detokenize{#1}]{\ruleType{\detokenize{#1}}}}
+\def\ruleType#1{\ruleTypeImpl{\detokenize{#1}}}
+\def\proofRule#1{\hyperref[rule:\detokenize{#1}]{\ruleTypeImpl{\detokenize{#1}}}}
 %\newcommand{\ruleref}[1]{\ruleType{\nameref{rule:#1}}~(\ref{rule:#1})}
 
 \NewEnviron{Alethe}{%
@@ -76,18 +84,21 @@
 \renewcommand\spsep{\cline{2-5}}
 \setlength{\arrayrulewidth}{0.8pt}
 \addtolength{\tabcolsep}{-4pt}
-\begin{xltabular}{\linewidth}{l r c Y l}
+\begin{xltabular}{\linewidth}{l l c Y l}
   \BODY
 \end{xltabular}
 \addtolength{\tabcolsep}{+4pt}
 }
 
+% TODO: synchronize colors!
 \definecolor{SmtBlue}{HTML}{00007f}
 \definecolor{SmtGreen}{HTML}{3b7f31}
+\definecolor{SmtStepId}{HTML}{3b7f31}
+
 \newcommand{\grNT}[1]{\textcolor{SmtGreen}{\langle\texttt{#1}\rangle}}
 \newcommand{\grT}[1]{\textcolor{SmtBlue}{\texttt{#1}}}
-\newcommand{\grRule}{\quad\Coloneqq\quad}
-\newcommand{\grOr}{\quad|\quad}
+\newcommand{\grRule}{≔}
+\newcommand{\grOr}{|}
 
 \theoremstyle{definition} 
 \newtheorem{example}{Example}
@@ -674,8 +685,7 @@ as a premise outside the subproof. Hence, a proof checking tool can
 remove the steps of the subproof from memory after checking it.
 
 \begin{example}
-\label{[reference=ex:ti:ctx-concrete]}
-\end{example}
+\label{ex:ti:ctx-concrete}
 This example shows the proof from Example~\ref{ex:ti:ctx-abstract}
 expressed as a concrete proof.
 
@@ -694,35 +704,27 @@ expressed as a concrete proof.
 \end{AletheVerb}
 \end{example}
 
-% ================== Cutoff
-\bibliographystyle{plain}
-\bibliography{publications}
-\end{document}
-
-
 \tikzset{
      solver/.style={draw, thin},
      system/.style={draw, thin, rounded corners},
 }
 
-% To get the colors to work correctly I have to use an odd hack inserting
-% a completely transparent character.  I use negative space to then
-% move back.
-\definecolor[invisible][t=0.0,a=1]
-\definehspace[backspace][-0.3 em]
-\placefigure[top][fig:proof-states]{Abstract view of the transitions in an Alethe proof.}{
-\startalignment[middle]
-\starttikzpicture[node distance=2cm, auto,>=latex', thick,scale=0.8]
-    \node[solver] (unsat) {\ss Unsat mode};
-    \node[system, right=of unsat] (assume) {\ss Assumptions};
-    \path[->] (unsat) edge[bend left] node {{\tt\tfx get-proof}} (assume);
-    \path[->] (assume) edge[loop above] node[align=center] {\tfx \inlineAlethe{assume},\\\tfx\inlineAlethe{define-fun},\\\tfx  \inlineAlethe{anchor}} (assume);
-    \node[system, right=of assume] (step) {\ss Steps};
-    \path[->] (assume) edge[bend left] node {\tfx \inlineAlethe{step}} (step);
-    \path[->]   (step) edge[loop above] node[align=center] {\tfx \color[invisible]{.}\hspace[backspace]\inlineAlethe{step},\\ \tfx\inlineAlethe{define-fun}} (step);
-    \path[->] (step) edge[above, bend left] node {\tfx \color[invisible]{.}\hspace[backspace]\inlineAlethe{anchor}} (assume);
-    \path[->] (step) edge[above, bend left] node {\ss \tfx Last step} (unsat);
-\stoptikzpicture\stopalignment}
+	\begin{figure}[t]
+\center
+\begin{tikzpicture}[node distance=2cm, auto,>=latex', thick,scale=0.8]
+    \node[solver] (unsat) {\textsf{Unsat mode}};
+    \node[system, right=of unsat] (assume) {\textsf{Assumptions}};
+    \path[->] (unsat) edge[bend left] node[font=\scriptsize] {\texttt{get-proof}} (assume);
+    \path[->] (assume) edge[loop above] node[align=center,font=\scriptsize] {\inlineAlethe{assume},\\\inlineAlethe{define-fun},\\\inlineAlethe{anchor}} (assume);
+    \node[system, right=of assume] (step) {\textsf{Steps}};
+    \path[->] (assume) edge[bend left] node[font=\scriptsize] {\inlineAlethe{step}} (step);
+    \path[->] (step) edge[loop above] node[align=center,font=\scriptsize] {\inlineAlethe{step},\\ \inlineAlethe{define-fun}} (step);
+    \path[->] (step) edge[above, bend left] node[font=\scriptsize] {\inlineAlethe{anchor}} (assume);
+    \path[->] (step) edge[above, bend left] node[font=\scriptsize] {\textsf{Last step}} (unsat);
+\end{tikzpicture}
+\label{fig:proof-states}\caption{Abstract view of the transitions in an Alethe proof.}
+\end{figure}
+
 
 \paragraph{Alethe Proof Printing States}
 Figure~\ref{fig:proof-states} shows the states of an Alethe proof
@@ -755,10 +757,10 @@ precisely once. When printing the proof, this compact storage is unfolded.
 This leads to a blowup of the proof size.
 
 Alethe can optionally use sharing\footnote{For {\verit} this can be activated
-by the command-line option {\tt\minusminus{}proof-with-sharing}.} to print common
+by the command-line option \Verb{--proof-with-sharing}.} to print common
 subterms only once.  This is realized using the standard naming mechanism
 of {\smtlib}. A term $t$ is annotated with a name $n$ by writing
-\inlineAlethe{(! }$t$\inlineAlethe{ :named }$n$\inlineAlethe{ )}
+\inlineAlethe{(!}\,$t$\,\inlineAlethe{:named}\;$n$\,\inlineAlethe{)}
 where $n$ is a symbol. After a term is annotated with a name, the name can
 be used in place of the term. This is a purely syntactical replacement.
 Alethe continues to use the names already used in the input problem.
@@ -784,35 +786,34 @@ sharing representation, testing if a term is marked takes constant time
 and the overall traversal takes linear time in the proof size.
 
 To simplify reconstruction, Alethe can optionally\footnote{For {\verit} by
-using the command-line option {\tt\minusminus{}proof-define-skolems}.} define
+using the command-line option \Verb{--proof-define-skolems}.} define
 Skolem constants as functions. In this case, the proof contains a list
 of \inlineAlethe{define-fun} commands that define shorthand 0-ary functions for
 the \inlineAlethe{(choice }\dots\inlineAlethe{)} terms needed. Without this option,
 no \inlineAlethe{define-fun} commands are issued, and the constants are expanded.
 
-
 \paragraph{Implicit Transformations}
 Overall, the following aspects are treated implicitly by Alethe.
-\startitemize[packed]
+\begin{itemize}
 	\item Symmetry of equalities that are not top-most equalities in steps with
 	      non-empty context.
 	\item The order of literals in the clauses.
 	\item The unfolding of names introduced by
-	   \inlineAlethe{(! }$t$\inlineAlethe{ :named }$s$\inlineAlethe{)}.
+	   \inlineAlethe{(!}\,$t$\,\inlineAlethe{:named }\;$s$\,\inlineAlethe{)}.
 	\item The removal of other {\smtlib} annotations of the form
-	   \inlineAlethe{(! }$t$ \dots\inlineAlethe{)}.
+	   \inlineAlethe{(!}\,$t$\,\dots\,\inlineAlethe{)}.
 	\item The unfolding of function symbols introduced by
 	\inlineAlethe{define-fun}.\footnote{For {\verit} this is only used when the user
 	introduces {\verit} to print Skolem terms as defined functions. User defined
 	functions in the input problem are not supported by {\verit} in proof production
 	mode.}
-\stopitemize
+\end{itemize}
 
 Alethe proofs contain steps for other aspects that are commonly left implicit, such
 as renaming of bound variables, and the application of substitutions.
 
-
-\subsubsection[sec:alethe:semantic]{Checking Alethe Proofs}
+\section{Checking Alethe Proofs}
+\label{sec:alethe:semantic}
 
 In this section we present an abstract procedure to check if an Alethe
 proof is \index{well-formed}well-formed and valid.  An Alethe proof is
@@ -824,10 +825,10 @@ If all the steps in the subproofs adhere to the conditions of
 their rules, the subproof is valid.  If all subproofs are valid,
 then the entire proof is valid.
 
-Formally, an Alethe proof $P$\, is a list $[C_1, \dots, C_n]$ of steps
+Formally, an Alethe proof $P$ is a list $[C_1, \dots, C_n]$ of steps
 and anchors.
 Since every step uses an unique index, we assume that each step
-$C_i$ in $P$\, uses $i$ as its index.
+$C_i$ in $P$ uses $i$ as its index.
 The context
 only changes at anchors and subproof-concluding steps.
 Therefore, the elements of $C_1, \dots, C_n$ that are steps
@@ -841,35 +842,36 @@ subproof, i.e., the innermost subproof that does not come after a
 complete subproof.  The restriction to the first subproofs simplifies
 the calculation of the context of the steps in the subproof.
 
-\startdefinition{First-Innermost Subproof}
+\begin{definition}[First-Innermost Subproof]
   Let $P$\, be the proof $[C_1, \dots, C_n]$ and $1 \leq \mathit{start}
   < \mathit{end} \leq n$ be two indices such that
-  \startitemize[packed]
+  \begin{itemize}
     \item $C_{\mathit{start}}$ is an anchor,
     \item $C_{\mathit{end}}$ is a step that uses a concluding rule,
     \item no $C_k$ with $k < \mathit{start}$ uses a concluding rule,
     \item no $C_k$ with $\mathit{start} < k < \mathit{end}$ is an anchor or
      a step that uses a concluding rule.
-  \stopitemize
+  \end{itemize}
   Then $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$ is the
   \index{subproof+first-innermost}first-innermost subproof of $P$.
-\stopdefinition
+\end{definition}
 
 \begin{example}
 The proof in Example~\ref{ex:ti:ctx-concrete} has only one subproof
 and this subproof is also a first-innermost subproof.  It is the subproof
-\startSMTCode
+\begin{AletheVerb}
 (anchor :step t5 :args ((:= x y)))
 (step t3 (cl (= x y)) :rule refl)
 (step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
 (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
                               :rule bind)
-\stopSMTCode
+\end{AletheVerb}
 \end{example}
 
+\noindent
 It is easy to calculate the context of the first-innermost subproof.
 
-\startdefinition{Calculated Context}
+\begin{definition}[Calculated Context]
   Let $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$ be
   the first-innermost subproof of $P$.
 	For $\mathit{start} \leq i < \mathit{end}$, let
@@ -881,7 +883,7 @@ It is easy to calculate the context of the first-innermost subproof.
   \]
   where $c_{k,1}, \dots, c_{k, n_k}$ is the list of fixed variables
   and mappings associated with $A_k$.
-\stopdefinition
+\end{definition}
 
 Note that if $C_i$ is an anchor, its calculated context does not
 contain the elements associated with $C_i$.
@@ -894,22 +896,22 @@ Hence, the context of $C_{\mathit{end}}$ is the calculated
 context of $C_{\mathit{start}}$.
 
 \begin{example}
-The calculated context of the steps \color[SmtStepId]{\tt t3} and \color[SmtStepId]{\tt t5} in
+The calculated context of the steps \texttt{\color{SmtStepId}t3} and \texttt{\color{SmtStepId}t5} in
 Example~\ref{ex:ti:ctx-concrete} is the context $x \mapsto y$.
-The calculated context of the concluding step \color[SmtStepId]{\tt t5} and the anchor is empty.
+The calculated context of the concluding step \texttt{\color{SmtStepId}t5} and the anchor is empty.
 \end{example}
 
 \noindent
 A first-innermost subproof is valid if all its steps adhere to
 the conditions of their rule and only use premises that occur in front of them
-in the subproof.  The conditions of each rule are listed the
-Appendix~\about[apx:rules].
+in the subproof.  The conditions of each rule are listed in
+Section~\ref{apx:rules}.
 
-\startdefinition{Valid First-Innermost Subproof}
+\begin{definition}[Valid First-Innermost Subproof]
 	Let $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$
 	be the first-innermost subproof of $P$.
 	The subproof is \index{subproof+valid}{\em valid} if
-  \startitemize[packed]
+  \begin{itemize}
     \item all steps $C_i$ with $\mathit{start} < i <
     \mathit{end}$ only use premises $C_j$ with $\mathit{start} <
     j < i$,
@@ -918,8 +920,8 @@ Appendix~\about[apx:rules].
     \item the step $C_{\mathit{end}}$
 		adheres to the conditions of its
     rule under the calculated context of $C_{\mathit{start}}$.
-  \stopitemize
-\stopdefinition
+  \end{itemize}
+\end{definition}
 
 Since the \proofRule{assume} rule expects an empty context, an admissible
 subproof can contain assumptions only if the rule used by $C_{\mathit{end}}$
@@ -929,22 +931,22 @@ To eliminate a subproof we can replace the subproof with a hole that has
 at its conclusion the conclusion of the subproof.  This is safe as long
 as the subproof that is eliminated is valid (see Section~\ref{sec:alethe:soundness-eh}).
 
-\startdefinition
+\begin{definition}
 The function $E$ eliminates the first-innermost subproof from a proof
 if there is one.
-Let $P$\, be a proof $[C_1, \dots C_n]$.
-Then $E(P) = P$\, if $P$\, has no first-innermost subproof.
-Otherwise, $P$\, has the first-innermost subproof
+Let $P$ be a proof $[C_1, \dots C_n]$.
+Then $E(P) = P$ if $P$ has no first-innermost subproof.
+Otherwise, $P$ has the first-innermost subproof
 $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$, and
 $E(P) = [C_1, \dots, C_{\mathit{start}-1}, C', C_{\mathit{end}+1},
 \dots, C_n]$ where $C'$ is a new step that uses the \proofRule{hole} rule
 and has the index, conclusion, and premises of $C_{\mathit{end}}$.
-\stopdefinition
+\end{definition}
 
 It is important to add the premises of $C_{\mathit{end}}$
 to $C'$.  The \proofRule{let} rule can use additional premises
 and omitting those premises results in an unsound step.
-We can apply $E$\, iteratively to a proof $P$\, until we reach the least fixed point.
+We can apply $E$ iteratively to a proof $P$ until we reach the least fixed point.
 Since $P$ is finite we will always reach a fixed point in finitely many steps.
 The result is a list $[P_0, P_1, P_2, \dots, P_{\mathit{last}}]$ where $P_0 = P$,
 $P_1 = E(P)$, $P_2 = E(E(P))$ and $P_{\mathit{last}} = E(P_{\mathit{last}})$.
@@ -953,7 +955,7 @@ $P_1 = E(P)$, $P_2 = E(E(P))$ and $P_{\mathit{last}} = E(P_{\mathit{last}})$.
 Applying $E$\, to the proof in
 Example~\ref{ex:ti:ctx-concrete} gives us the proof
 
-\startSMTCode
+\begin{AletheVerb}
 (assume h1 (forall ((x S)) (P x)))
 (assume h2 (not (forall ((y S)) (P y))))
 (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
@@ -962,20 +964,22 @@ Example~\ref{ex:ti:ctx-concrete} gives us the proof
              (not (forall ((x S)) (P x)))
              (forall ((y S)) (P y)))) :rule equiv_pos2)
 (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
-\stopSMTCode
+\end{AletheVerb}
 
 Since this proof contains no subproof, it is also $P_{\mathit{last}}$.
 \end{example}
 
-\startdefinition[reference=def:well_formed_proof,title={Well-Formed Proof}]
-  The Alethe proof $P$\, is \index{proof+well-formed}well-formed
+
+\begin{definition}[Well-Formed Proof]
+	\label{def:well_formed_proof}
+  The Alethe proof $P$ is \index{proof+well-formed}well-formed
   if every step uses a unique index and $P_{\mathit{last}}$
   contains no anchor or step that uses a concluding rule.
-\stopdefinition
+\end{definition}
 
-\startdefinition{Valid Alethe Proof}
-	The proof $P$\, is a \index{proof+valid}{\em valid Alethe proof} if
-  \startitemize[packed]
+\begin{definition}[Valid Alethe Proof]
+	The proof $P$ is a \index{proof+valid}{\em valid Alethe proof} if
+  \begin{itemize}
   	\item $P$\, is well-formed,
   	\item $P$\, does not contain any step that uses the \proofRule{hole} rule,
     \item $P_{\mathit{last}}$ contains a step that has the empty clause as its conclusion,
@@ -984,17 +988,17 @@ Since this proof contains no subproof, it is also $P_{\mathit{last}}$.
           $C_j$ in $P_{\mathit{last}}$ with $1 \leq j < i$,
     \item all steps $C_i$ in $P_{\mathit{last}}$ adhere to the conditions of their
     rule under the empty context.
-  \stopitemize
-\stopdefinition
+  \end{itemize}
+\end{definition}
 
-The condition that $P$\, contains no hole ensures that the original
+The condition that $P$ contains no hole ensures that the original
 proof is complete and holes are only introduced by eliminating valid
 subproofs.
 
 \begin{example}
 The proof in Example~\ref{ex:ti:ctx-concrete} is valid.  The only
 subproof is valid, the proof contains no hole, and $P_{\mathit{last}}$
-contains the step {\ss t7} that concludes with the empty clause.
+contains the step \textsf{\color{SmtStepId} t7} that concludes with the empty clause.
 \end{example}
 
 It is sometimes useful to speak about the steps that are not within a
@@ -1002,7 +1006,7 @@ subproof.  We call such a step an \index{step+outermost}{\em outermost
 step}.  In a well-formed proof those are the steps
 of $P_{\mathit{last}}$.
 
-\subsubsection{Contexts and Metaterms}
+\subsection{Contexts and Metaterms}
 
 We now direct our attention to subproofs with \index{context}contexts.
 It is useful to give a precise semantic
@@ -1022,7 +1026,7 @@ leverage the \index{lambda calculus}λ-calculus as an existing well-understood t
 %
 These λ-terms\index{term+lambda} are called \index{term+meta}\index{metaterms}{\em metaterms}.
 
-\startdefinition{Metaterm}
+\begin{definition}[Metaterm]
   Metaterms are expressions constructed by the grammar
   \[
     M \,::=\, \groundbox{$t$}\,\mid\, \lambda x.\,M\,\mid\,(\lambda \bar{x}_n.\,
@@ -1030,7 +1034,7 @@ These λ-terms\index{term+lambda} are called \index{term+meta}\index{metaterms}{
   \]
 where $t$ is an ordinary term and $t_i$ and $x_i$ have matching sorts for
 all $0 \leq i \leq 1$.
-\stopdefinition
+\end{definition}
 
 According to this definition, a metaterm is either a boxed term, a
 \index{abstraction+lambda}λ-abstraction, or an application to an uncurried λ-term.
@@ -1047,67 +1051,53 @@ Proof steps with contexts can be encoded into proof steps with empty
 contexts, but with metaterms.  A proof step
 
 \begin{AletheS}
-\setupTABLE[c][2][width=2em]
-\setupTABLE[c][3][width=1em]
-\setupTABLE[c][4][width=22.7em]
-\setupTABLE[c][5][width=6em]
-\bTR\bTD i. \eTD\bTD $\Gamma$ \eTD\bTD \ctxsep
-\eTD\bTD $t ≈ u$ \eTD\bTD $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \eTD\eTR
-\end{Alethe}
+i. & $\Gamma$ & \ctxsep & $t ≈ u$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
+\end{AletheS}
 
 \noindent
 is encoded into
 
 \begin{AletheS}
-\setupTABLE[c][2][width=2em]
-\setupTABLE[c][3][width=1em]
-\setupTABLE[c][4][width=22.7em]
-\setupTABLE[c][5][width=6em]
-\bTR\bTD i. \eTD\bTD  \eTD\bTD \ctxsep
-\eTD\bTD $L(\Gamma)[t] \simeq R(\Gamma)[u]$ \eTD\bTD $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \eTD\eTR
-\end{Alethe}
+i. &  & \ctxsep & $L(\Gamma)[t] \simeq R(\Gamma)[u]$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
+\end{AletheS}
 
 \noindent
 where
-\[
-\startalign[n=2,m=2,align={right,left}, distance=1.8em]
- \NC    L(\emptyset)[t] \NC= \groundbox{$t$}                  \NC    R(\emptyset)[u] \NC= \groundbox{$u$} \NR
- \NC L(x, \bar{c}_m)[t] \NC= \lambda x.\,L(\bar{c}_m)[t]    \NC R(x, \bar{c}_m)[u] \NC= \lambda x.\,R(\bar{c}_m)[u] \NR
-  \NC L(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[t] \NC= (\lambda \bar{x}_n.\,L(\bar{c}_m)[t]) \bar{s}_n
-     \NC R(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[u] \NC= R(\bar{c}_m)[u] \NR
-\stopalign
-\]
+\begin{align*}
+ L(\emptyset)[t]    &= \groundbox{t}             &    R(\emptyset)[u] &= \groundbox{u} \\
+ L(x, \bar{c}_m)[t] &= \lambda x.\,L(\bar{c}_m)[t] & R(x, \bar{c}_m)[u] &= \lambda x.\,R(\bar{c}_m)[u] \\
+ L(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[t] &= (\lambda \bar{x}_n.\,L(\bar{c}_m)[t]) \bar{s}_n
+     & R(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[u] &= R(\bar{c}_m)[u] \\
+\end{align*}
 
 To achieve the same effect as using the $\subst()$ function described above, we
 can translate the terms into metaterms, perform β-reduction, and rename
-bound variables if necessary~\cite{righttext={ Lemma~11}}[barbosa-2019].
+bound variables if necessary~\cite[Lemma~11]{barbosa-2019}.
 
 \begin{example}
 The example on page~\pageref{ex:alethe:substctx} becomes
-\[
-\startalign[n=1,align=left]
-\NC L(x\mapsto 7, x \mapsto g(x))[x] = (\lambda x.\,(\lambda x.\,\groundbox{$x$})\,(g(x)))\, 7
-=_{\alpha\beta} \groundbox{$g(7)$} \NR
-\NC L(x\mapsto 7, x, x \mapsto g(x))[x] = (\lambda x.\,\lambda x.\,(\lambda x.\,\groundbox{$x$})\,(g(x)))\, 7
-=_{\alpha\beta} \lambda x.\,\groundbox{$g(x)$} \NR
-\stopalign
-\]
+\begin{flalign*}
+\quad & L(x\mapsto 7, x \mapsto g(x))[x] = (\lambda x.\,(\lambda x.\,\groundbox{x})\,(g(x)))\, 7
+=_{\alpha\beta} \groundbox{g(7)} &\\
+& L(x\mapsto 7, x, x \mapsto g(x))[x] = (\lambda x.\,\lambda x.\,(\lambda x.\,\groundbox{x})\,(g(x)))\, 7
+=_{\alpha\beta} \lambda x.\,\groundbox{g(x)}
+\end{flalign*}
 \end{example}
 
 Most proof rules that operate with contexts can easily be translated into
 proof rules using metaterms.  The exception are the tautologous rules,
-such as \proofRule{refl} and the \ruleType{\cdots{}_simplify} rules.
+such as \proofRule{refl} and the $\cdots{}${\ruleType{_simplify}} rules.
 
 Steps that use such rules always encode a judgment
-$\vDash \Gamma\,\scale[grid=halfline]{▷}\,t ≈ u$.  With the encoding described above
+$\vDash \Gamma\,\vartriangleright\,t ≈ u$.  With the encoding described above
 we get $L(\Gamma)[t] ≈ R(\Gamma)[u]
-=_{\alpha\beta} \lambda \bar{x}_n.\,\groundbox{$t'$} ≈
-\lambda \bar{x}_n.\,\groundbox{$u'$}$ with some terms $t'$, $u'$.
+=_{\alpha\beta} \lambda \bar{x}_n.\,\groundbox{t'} ≈
+\lambda \bar{x}_n.\,\groundbox{u'}$ with some terms $t'$, $u'$.
 To handle those terms, we use the $\reify()$ function.
 This function is defined as
 \[
-\reify(\lambda \bar{x}_n.\,\groundbox{$t$} ≈
-\lambda \bar{x}_n.\,\groundbox{$u$}) = \forall \bar{x}_n.\,(t ≈ u).
+\reify(\lambda \bar{x}_n.\,\groundbox{t} ≈
+\lambda \bar{x}_n.\,\groundbox{u}) = \forall \bar{x}_n.\,(t ≈ u).
 \]
 Therefore,
 all tautological rules with contexts represent a judgment\\
@@ -1118,61 +1108,42 @@ where $T =_{\alpha\beta} L(\Gamma)[t]$ and $U =_{\alpha\beta} R(\Gamma)[u]$.
   Consider the step
 
 \begin{AletheS}
-\setupTABLE[c][3][width=1em]
-\setupTABLE[c][2][width=4em]
-\setupTABLE[c][4][width=20.7em]
-\setupTABLE[c][5][width=6em]
-\bTR\bTD i. \eTD\bTD $y, x \mapsto y$ \eTD\bTD \ctxsep
-\eTD\bTD $x + 0 ≈ y$ \eTD\bTD $\proofRule{sum_simplify}$ \eTD\eTR
-\end{Alethe}
+i. & $y, x \mapsto y$ & \ctxsep
+& $x + 0 ≈ y$ & $\proofRule{sum_simplify}$ \\
+\end{AletheS}
 
 \noindent
 Translating the context into metaterms leads to
 
 \begin{AletheS}
-\setupTABLE[c][3][width=1em]
-\setupTABLE[c][2][width=4em]
-\setupTABLE[c][3][width=1em]
-\setupTABLE[c][4][width=20.7em]
-\setupTABLE[c][5][width=6em]
-\bTR\bTD i. \eTD\bTD \eTD\bTD \ctxsep
-\eTD\bTD $(\lambda y.\,(\lambda x.\,\groundbox{$x + 0$})\, y) ≈
-        (\lambda y.\,\groundbox{$y$})$ \eTD\bTD $\proofRule{sum_simplify}$ \eTD\eTR
-\end{Alethe}
+i. & \phantom{$y, x \mapsto y$} & \ctxsep
+& $(\lambda y.\,(\lambda x.\,\groundbox{$x + 0$})\, y) ≈
+        (\lambda y.\,\groundbox{$y$})$ & $\proofRule{sum_simplify}$ \\
+\end{AletheS}
 
 \noindent
 Applying β-reduction leads to
 
 \begin{AletheS}
-\setupTABLE[c][3][width=1em]
-\setupTABLE[c][2][width=4em]
-\setupTABLE[c][3][width=1em]
-\setupTABLE[c][4][width=20.7em]
-\setupTABLE[c][5][width=6em]
-\bTR\bTD i. \eTD\bTD \eTD\bTD \ctxsep
-\eTD\bTD $(\lambda y.\,\groundbox{$y + 0$}) ≈
-        (\lambda y.\,\groundbox{$y$}) $ \eTD\bTD $\proofRule{sum_simplify}$ \eTD\eTR
-\end{Alethe}
+i. & \phantom{$y, x \mapsto y$} & \ctxsep
+& $(\lambda y.\,\groundbox{$y + 0$}) ≈
+        (\lambda y.\,\groundbox{$y$}) $ & $\proofRule{sum_simplify}$ \\
+\end{AletheS}
 
 \noindent
 Finally, using $\reify()$ leads to
 
 \begin{AletheS}
-\setupTABLE[c][3][width=1em]
-\setupTABLE[c][2][width=4em]
-\setupTABLE[c][3][width=1em]
-\setupTABLE[c][4][width=20.7em]
-\setupTABLE[c][5][width=6em]
-\bTR\bTD i. \eTD\bTD \eTD\bTD \ctxsep
-\eTD\bTD $\forall y.\,(y + 0 ≈  y)$ \eTD\bTD $\proofRule{sum_simplify}$ \eTD\eTR
-\end{Alethe}
+i. & \phantom{$y, x \mapsto y$} & \ctxsep
+& $\forall y.\,(y + 0 ≈  y)$ & $\proofRule{sum_simplify}$ \\
+\end{AletheS}
 
 \noindent
 This obviously holds in the theory of linear arithmetic.
 \end{example}
 
-
-\subsubsection[sec:alethe:soundness-eh]{Soundness}
+\subsection{Soundness}
+\label{sec:alethe:soundness-eh}
 
 Any proof calculus should be sound.  In the case of Alethe, most proof
 rules are
@@ -1193,14 +1164,15 @@ syntax does not precisely correspond to the abstract notation.
 In this section we will address the soundness of concrete Alethe
 proofs.
 
-\starttheorem[reference=thm:sound,title={Soundness of Concrete Alethe Proofs}]
+\begin{theorem}[Soundness of Concrete Alethe Proofs]
+	\label{thm:sound}
 	If there is a valid Alethe proof $P = [C_1, \dots, C_n]$ that has the formulas
 	$\varphi_1, \dots, \varphi_m$ as the conclusions of the outermost \proofRule{assume}
 	steps, then
 	\[
 	\varphi_1, \dots, \varphi_m \vDash \bot.
 	\]
-\stoptheorem
+\end{theorem}
 
 Here, $\vDash$ represents
 semantic consequence in the many-sorted first order logic of {\smtlib}
@@ -1217,13 +1189,14 @@ to allow holes that were introduced by the elimination of subproofs.
 We start with simple subproofs with empty contexts and without
 nested subproofs.
 
-\startlemma[reference=lem:sound_subproof]
+\begin{lemma}
+	\label{lem:sound_subproof}
   Let $P$\, be a proof that contains a valid first-innermost subproof where
   $C_{\mathit{end}}$ is a \proofRule{subproof} step.  Let
   $\psi$ be the conclusion of $C_{\mathit{end}}$.
   Then $\vDash \psi$ holds.
-\stoplemma
-\startproof
+\end{lemma}
+\begin{proof}
   First, we use induction on the number of steps $n$ after
   $C_{\mathit{start}}$.  Let $\psi_n$ be the conclusion
   of $C_{\mathit{start}+n}$ and $V_n$ the conclusions of
@@ -1261,7 +1234,7 @@ nested subproofs.
 	all assumptions in the subproof.
 	By the deduction theorem we get
 	\[
-	\vDash \varphi_1 \land \cdots \land \varphi_m \limp \psi_{\mathit{end}-1}.
+	\vDash \varphi_1 \land \cdots \land \varphi_m → \psi_{\mathit{end}-1}.
 	\]
 	This can be transformed into the clause
 	\[
@@ -1271,15 +1244,15 @@ nested subproofs.
 	This clause is exactly the conclusion of the 
 	step $C_{\mathit{end}}$
 	according to the definition of the \proofRule{subproof} rule.
-\stopproof
+\end{proof}
 
 \noindent
 We can do the same reasoning as for Lemma~\ref{lem:sound_subproof} for
 subproofs with contexts.  This is slightly complicated by the
 \proofRule{let} rule that can use extra premises.
 
-\startlemma[reference=lem:sound_subproof_context]
-  Let $P$\, be a proof that contains a
+\begin{lemma}\label{lem:sound_subproof_context}
+  Let $P$ be a proof that contains a
   valid first-innermost subproof where
   $C_{\mathit{end}}$ is a step using one of:
   \proofRule{bind}, \proofRule{sko_ex}, \proofRule{sko_forall},
@@ -1295,8 +1268,8 @@ subproofs with contexts.  This is slightly complicated by the
   $δ < {\mathit{start}}$ such
   that $s_{δ}$ is an anchor, or $1$ if no such index exist.
   Hence, there is no anchor between $C_{δ}$ and $C_{\mathit{start}}$. 
-\stoplemma
-\startproof
+\end{lemma}
+\begin{proof}
   The step $C_{\mathit{start}}$ is an anchor due to the definition
   of innermost-first subproof.
   Let $c_1, \dots, c_n$ be the context introduced by the anchor
@@ -1309,16 +1282,12 @@ subproofs with contexts.  This is slightly complicated by the
   The step $C_{\mathit{end}}$ is a step
 
 \begin{AletheS}
-\setupTABLE[c][1][width=4em]
-\setupTABLE[c][4][width=19.0em]
-\setupTABLE[c][5][width=6em]
-\bTR\bTD \eTD\bTD[leftframe=on] \eTD\bTD 
-\eTD\bTD \cdots \eTD\bTD \eTD\eTR
-\bTR[bottomframe=on]\bTD[bottomframe=off] $\mathit{end}-1$. \eTD\bTD[leftframe=on] $\Gamma'$ \eTD\bTD \ctxsep
-\eTD\bTD $\,\psi'$ \eTD\bTD $(\dots)$ \eTD\eTR
-\bTR\bTD $\mathit{end}$. \eTD\bTD $\Gamma$ \eTD\bTD \ctxsep
-\eTD\bTD $\psi$ \eTD\bTD $(\ruleType{rule}\;i_1, \dots, i_n)$ \eTD\eTR
-\end{Alethe}
+& \spctx{} & & \cdots & \\
+$\mathit{end}-1$. & \spctx{} $\Gamma'$ & \ctxsep
+& $\,\psi'$ & $(\dots)$ \\
+\spsep
+$\mathit{end}$. & $\Gamma$ & \ctxsep & $\psi$ & $(\ruleType{rule}\;i_1, \dots, i_n)$ \\
+\end{AletheS}
 
   Since we assume the step $C_{\mathit{end}}$ is correctly employed,
   $\vDash \Gamma \vartriangleright \psi$ holds, as long as
@@ -1354,14 +1323,14 @@ subproofs with contexts.  This is slightly complicated by the
 
   If the subproof that starts at $C_{δ}$ concludes with
   any other rule, then there cannot be any assumptions and $V$\, is empty.
-\stopproof
+\end{proof}
 
 By using Lemma~\ref{lem:sound_subproof} and
 Lemma~\ref{lem:sound_subproof_context} we can now show that
 a valid, concrete Alethe proof is sound. That is, we can show
 Theorem~\ref{thm:sound}.
 
-\startproof
+\begin{proof}
 	Since $P =[C_1, \dots, C_n]$ is valid, all steps that do not use the
 	\proofRule{hole} rule adhere to their rule.  Since we assume that the
 	abstract notation and the rules are sound, we only have to
@@ -1395,19 +1364,21 @@ Theorem~\ref{thm:sound}.
 	with the empty clause.
 	Let $\mathit{start} = 1$
 	and $\mathit{end} = j$ in the argument of Lemma~\ref{lem:sound_subproof}.
-	This shows that $V \vDash \bot$, where $V$\, is the
+	This shows that $V \vDash \bot$, where $V$ is the
 	conclusion of the \proofRule{assume} steps in the sublist $[C_1, \dots, C_j]$
 	of $P_{\mathit{last}}$.  We can weaken
 	this by adding the conclusions of the \proofRule{assume} steps in
 	$[C_j, \dots, C_n]$ of $P_{\mathit{last}}$
 	to get $\varphi_1, \dots, \varphi_m \vDash \bot$.
-\stopproof
+\end{proof}
 
-\subsection[sec:alethe:rules-generic]{The Alethe Rules}
+
+\section{The Alethe Rules}
+\label{sec:alethe:rules-generic}
 
 Together with the language, the Alethe format also includes a set
 of proof rule.
-The Appendix~\about[apx:rules]
+Section~\ref{apx:rules}
 gives a full list of all
 proof rules.  Currently, the proof rules correspond to the rules
 that the solver {\verit} can emit.  For the rest of this section, we will discuss some
@@ -1422,7 +1393,7 @@ Other rules derive their conclusion from a single premise.
 %
 Those rules are primarily used to simplify Boolean
 connectives during preprocessing. For example, the \proofRule{implies}
-rule eliminates an implication: From $\varphi_1 \limp \varphi_2$,
+rule eliminates an implication: From $\varphi_1 → \varphi_2$,
 it deduces $\neg \varphi_1, \varphi_2$.
 
 
@@ -1452,7 +1423,6 @@ of literals.
 The premises of a resolution step are clauses, and the conclusion
 is a clause that has been derived from the premises by some binary
 resolution steps.
-
 
 \paragraph[reference=rule:forall_inst,title={Quantifier Instantiation.}]
 To express quantifier instantiation, the rule \proofRule{forall_inst}
@@ -1489,20 +1459,18 @@ the coefficients is a trivial inequality between constants.
 The following example is the proof for the unsatisfiability
 of $(x+y<1) \lor$ $(3<x)$, $x≈ 2$, and $0≈ y$.
 
-\startAlethe
-\setupTABLE[c][3][width=19em,align=middle]
-\bTR\bTD 1.\eTD\bTD \ctxsep \eTD\bTD $(3 < x) \lor (x + y < 1) $ \eTD\bTD      $ \proofRule{assume}$ \eTD\eTR
-\bTR\bTD 2.\eTD\bTD \ctxsep \eTD\bTD $x≈ 2                   $ \eTD\bTD      $ \proofRule{assume}$ \eTD\eTR
-\bTR\bTD 3.\eTD\bTD \ctxsep \eTD\bTD $0≈ y                   $ \eTD\bTD      $ \proofRule{assume}$ \eTD\eTR
-\bTR\bTD 4.\eTD\bTD \ctxsep \eTD\bTD $(3 < x), (x + y < 1)        $ \eTD\bTD      $ (\proofRule{or}\,1)$ \eTD\eTR
-\bTR\bTD 5.\eTD\bTD \ctxsep \eTD\bTD $\neg (3<x), \neg (x≈ 2)$ \eTD\bTD      $ \proofRule{la_generic}\, [1.0, 1.0]$ \eTD\eTR
-\bTR\bTD 6.\eTD\bTD \ctxsep \eTD\bTD $\neg (3<x)                  $ \eTD\bTD      $ (\proofRule{resolution}\, 2, 5)$ \eTD\eTR
-\bTR\bTD 7.\eTD\bTD \ctxsep \eTD\bTD $x + y < 1                   $ \eTD\bTD      $ (\proofRule{resolution}\, 4, 6)$ \eTD\eTR
-\bTR\bTD 8.\eTD\bTD \ctxsep \eTD\bTD $\neg (x + y < 1), \neg (x≈ 2) \lor \neg (0 ≈ y)$ \eTD\bTD $\proofRule{la_generic}\,[1.0, -1.0, 1.0]$ \eTD\eTR
-\bTR\bTD 9.\eTD\bTD \ctxsep \eTD\bTD $\bot      $ \eTD\bTD      $ (\proofRule{resolution}\, 8, 7, 2, 3)$ \eTD\eTR
+\begin{Alethe}
+1.& \ctxsep & $(3 < x) \lor (x + y < 1) $ & $ \proofRule{assume}$ \\
+2.& \ctxsep & $x≈ 2                     $ & $ \proofRule{assume}$ \\
+3.& \ctxsep & $0≈ y                     $ & $ \proofRule{assume}$ \\
+4.& \ctxsep & $(3 < x), (x + y < 1)     $ & $ (\proofRule{or}\,1)$ \\
+5.& \ctxsep & $\neg (3<x), \neg (x≈ 2)  $ & $ \proofRule{la_generic}\, [1.0, 1.0]$ \\
+6.& \ctxsep & $\neg (3<x)               $ & $ (\proofRule{resolution}\, 2, 5)$ \\
+7.& \ctxsep & $x + y < 1                $ & $ (\proofRule{resolution}\, 4, 6)$ \\
+8.& \ctxsep & $\neg (x + y < 1), \neg (x≈ 2) \lor \neg (0 ≈ y)$ & $\proofRule{la_generic}\,[1.0, -1.0, 1.0]$ \\
+9.& \ctxsep & $\bot $ & $ (\proofRule{resolution}\, 8, 7, 2, 3)$ \\
 \end{Alethe}
 \end{example}
-
 
 \paragraph{Skolemization and Other Preprocessing Steps.}
 One typical example for a rule with context is the \proofRule{sko_ex}
@@ -1520,14 +1488,11 @@ has a context that maps the existentially quantified variables
 to the appropriate Skolem term.
 
 \begin{AletheS}
-\setupTABLE[c][1][width=1em]
-\setupTABLE[c][4][width=19em]
-\setupTABLE[c][5][width=5em]
-\bTR[bottomframe=on]\bTD[bottomframe=off] i. \eTD\bTD[leftframe=on] $\Gamma, x\mapsto (\varepsilon x.\,\varphi)$ \eTD\bTD \ctxsep
-\eTD\bTD $\varphi ≈ \psi$ \eTD\bTD $(\dots)$ \eTD\eTR
-\bTR\bTD j. \eTD\bTD $\Gamma$ \eTD\bTD \ctxsep
-\eTD\bTD $(\exists x.\,\varphi) ≈ \psi$ \eTD\bTD $(\proofRule{sko_ex})$ \eTD\eTR
-\end{Alethe}
+i. & \spctx{$\Gamma, x\mapsto (\varepsilon x.\,\varphi)$} & \ctxsep
+& $\varphi ≈ \psi$ & $(\dots)$ \\
+\spsep
+j. & $\Gamma$ & \ctxsep & $(\exists x.\,\varphi) ≈ \psi$ & $(\proofRule{sko_ex})$ \\
+\end{AletheS}
 
 \begin{example}
 To illustrate how such a rule is applied, consider the following example
@@ -1538,18 +1503,18 @@ is functional congruence, and \proofRule{sko_forall} works like
 \proofRule{sko_ex}, except that the choice term is $\varepsilon x.\neg\varphi$.
 
 \begin{AletheS}
-\setupTABLE[c][1][width=1em]
-\setupTABLE[c][4][width=17em]
-\bTR\bTD 1. \eTD\bTD[leftframe=on] $x\mapsto (\varepsilon x.\,\neg (p\,x))$
-     \eTD\bTD\ctxsep
-     \eTD\bTD $x  ≈   \varepsilon x.\,\neg (p\,x) $ \eTD\bTD
-     $\proofRule{refl}$ \eTD\eTR
-\bTR[bottomframe=on]\bTD[bottomframe=off] 2. \eTD\bTD[leftframe=on]
-     $x\mapsto (\varepsilon x.\,\neg (p\,x))$ \eTD\bTD\ctxsep \eTD\bTD $ (p\,x) ≈ p(\varepsilon x.\,\neg (p\,x))$ \eTD\bTD $(\proofRule{cong}\, 1)$ \eTD\eTR
-\bTR\bTD 3. \eTD\bTD \eTD\bTD\ctxsep \eTD\bTD $(    \forall x.\,(p\,x))≈      (p\,(\varepsilon x.\,\neg (p\,x)))$ \eTD\bTD $(\proofRule{sko_forall}\, 2)$ \eTD\eTR
-\bTR\bTD 4. \eTD\bTD \eTD\bTD\ctxsep \eTD\bTD $(\neg\forall x.\,(p\,x))≈ \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ \eTD\bTD $(\proofRule{cong}\, 3)$ \eTD\eTR
-\end{Alethe}
+1. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$}
+     & \ctxsep
+     &  $x  ≈   \varepsilon x.\,\neg (p\,x) $ & 
+     $\proofRule{refl}$ \\
+2. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$} & \ctxsep &  $ (p\,x) ≈ p(\varepsilon x.\,\neg (p\,x))$ &  $(\proofRule{cong}\, 1)$ \\
+ \spsep
+3. &  & \ctxsep &  $(    \forall x.\,(p\,x))≈      (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{sko_forall}\, 2)$ \\
+4. &  & \ctxsep &  $(\neg\forall x.\,(p\,x))≈ \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{cong}\, 3)$ \\
+\end{AletheS}
 
+\section{Bibliography}
+\bibliographystyle{plain}
+\bibliography{publications}
+\end{document}
 
-
-\stopcomponent
