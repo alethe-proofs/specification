@@ -244,16 +244,11 @@ $i$. & \ctxsep & $\varphi$ & \currule \\
 	\inlineAlethe{(assume }\dots\inlineAlethe{)} command.
 \end{RuleDescription}
 
-\endinput
+\begin{RuleDescription}{hole}
 
-\startRuleDescription{hole}
-\startAlethe
-\setupTABLE[c][3][width=15.3em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
-$\varphi$    \eTD\bTD (\currule\; p_1, \dots, p_n)\, [a_1, \dots, a_n] \eTD\eTR
-\stopAlethe
-
-\noindent
+\begin{AletheX}
+$i$. & \ctxsep & $\varphi$  & (\currule\; p_1, \dots, p_n)\, [a_1, \dots, a_n] \\
+\end{AletheX}
 where $\varphi$ is any well-formed formula.
 
 This rule can be used to express holes in the proof.  It can be used by
@@ -266,47 +261,48 @@ valid.  Any other tool can accept or reject proofs that contain this rule.
 
 The premises and arguments are arbitrary, but must follow the syntax
 for premises and arguments.
+\end{RuleDescription}
 
-\stopRuleDescription
+\endinput
 
-\startRuleDescription{true}
-\startAlethe
-\setupTABLE[c][3][width=27.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
-$\top$    \eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+\begin{RuleDescription}{true}
+\begin{AletheX}
 
-\startRuleDescription{false}
-\startAlethe
-\setupTABLE[c][3][width=27.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
-$\bot$    \eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+$i$. & \ctxsep   & 
+$\top$     & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{not_not}
+\begin{RuleDescription}{false}
+\begin{AletheX}
 
-\startAlethe
-\setupTABLE[c][3][width=27.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
-$\neg (\neg \neg \varphi)$, $\varphi$ \eTD\bTD \currule \eTD\eTR
-\stopAlethe
+$i$. & \ctxsep   & 
+$\bot$     & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\tightpara{Remark.} This rule is useful to remove double negations from a
+\begin{RuleDescription}{not_not}
+
+\begin{AletheX}
+
+$i$. & \ctxsep   & 
+$\neg (\neg \neg \varphi)$, $\varphi$  & \currule \\
+\end{AletheX}
+
+\ruleparagraph{Remark.} This rule is useful to remove double negations from a
 clause by resolving a clause with the double negation on $\varphi$.
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{th_resolution}
+\begin{RuleDescription}{th_resolution}
 This rule is the resolution of two or more clauses.
-\startAlethe
-\setupTABLE[c][3][width=20.1em]
-\bTR\bTD $i_1$.\eTD\bTD \ctxsep \eTD\bTD $l^1_1$, \dots, $l^1_{k^1}$ \eTD\bTD ($\ruleType{...}$) \eTD\eTR
+\begin{AletheX}
+
+$i_1$. & \ctxsep  & $l^1_1$, \dots, $l^1_{k^1}$  & ($\ruleType{...}$) \\
 \aletheLine
-\bTR\bTD $i_n$.\eTD\bTD \ctxsep \eTD\bTD $l^n_1$, \dots, $l^n_{k^n}$ \eTD\bTD $ (\ruleType{...}$) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD   \ctxsep \eTD\bTD $l^{r_1}_{s_1}$, \dots, $l^{r_m}_{s_m}$ \eTD\bTD ($\currule\;i_1,\dots, i_n)$ \eTD\eTR 
-\stopAlethe
+$i_n$. & \ctxsep  & $l^n_1$, \dots, $l^n_{k^n}$  & $ (\ruleType{...}$) \\
+$j$. & \ctxsep  & $l^{r_1}_{s_1}$, \dots, $l^{r_m}_{s_m}$  & ($\currule\;i_1,\dots, i_n)$ \\ 
+\end{AletheX}
 
 \noindent
 where $l^{r_1}_{s_1} , \dots , l^{r_m}_{s_m}$ are from $l^{i}_{j}$ and
@@ -323,7 +319,7 @@ This rule is only used when the resolution step is not emitted by the SAT solver
 See the equivalent \proofRule{resolution} rule for the rule emitted by the
 SAT solver.
 
-\tightpara{Remark.} The definition given here is very general.  The motivation
+\ruleparagraph{Remark.} The definition given here is very general.  The motivation
 for this to ensure the definition covers all possible resolution steps generated
 by the existing proof generation code in veriT.  It will be restricted after
 a full review of the code.  As a consequence of this checking this rule is
@@ -331,68 +327,68 @@ theoretically NP-complete.  In practice, however, the \currule-steps
 produced by {\verit} are simple. Experience with reconstructing the step in
 {\isabelle} shows that checking can done by naive decision procedures. The
 vast majority of \currule-steps are binary resolution steps.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{resolution}
+\begin{RuleDescription}{resolution}
 This rule is equivalent to the \proofRule{th_resolution} rule, but it is
 emitted by the SAT solver instead of theory reasoners. The differentiation
 serves only informational purpose.
 
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{tautology}
+\begin{RuleDescription}{tautology}
 
-\startAlethe
-\setupTABLE[c][3][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
-$l_1$, \dots, $l_k$, \dots, $l_m$, \dots, $l_n$ \eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep  \eTD\bTD
-$\top$ \eTD\bTD (\currule\; $i$) \eTD\eTR
-\stopAlethe
+\begin{AletheX}
+
+$i$. & \ctxsep   & 
+$l_1$, \dots, $l_k$, \dots, $l_m$, \dots, $l_n$  & (\dots) \\
+$j$. & \ctxsep   & 
+$\top$  & (\currule\; $i$) \\
+\end{AletheX}
 
 \noindent
   and $l_k$, $l_m$ are such that
-  \startformula\startalign
+  \[\startalign
   \NC l_k \NC= \underbrace{\neg \dots \neg}_o \varphi \NR
   \NC l_m \NC= \underbrace{\neg \dots \neg}_p \varphi
-  \stopalign\stopformula
+  \stopalign\]
   and one of $o, p$\/ is odd and the other even.  Either can be $0$.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{contraction}
-\startAlethe
-\setupTABLE[c][3][width=24.4em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
-$l_1$, \dots, $l_n$ \eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep  \eTD\bTD
-$l_{k_1}$, \dots, $l_{k_m}$ \eTD\bTD (\currule\; $i$) \eTD\eTR
-\stopAlethe
+\begin{RuleDescription}{contraction}
+\begin{AletheX}
+
+$i$. & \ctxsep   & 
+$l_1$, \dots, $l_n$  & (\dots) \\
+$j$. & \ctxsep   & 
+$l_{k_1}$, \dots, $l_{k_m}$  & (\currule\; $i$) \\
+\end{AletheX}
 
 \noindent
   where $m \leq n$ and  $k_1 \dots k_m$ is a monotonic map to $1 \dots n$
   such that $l_{k_1} \dots l_{k_m}$ are pairwise distinct and
   $\{l_1, \dots, l_n\} = \{l_{k_1}, \dots, l_{k_m}\}$.
   Hence, this rule removes duplicated literals.
-\stopRuleDescription
+\end{RuleDescription}
 
 
-\startRuleDescription{subproof}
+\begin{RuleDescription}{subproof}
 The \currule{} rule completes a subproof and discharges local
 assumptions. Every subproof starts with some \proofRule{assume} steps. The
 last step of the subproof is the conclusion.
 
-\startAlethe
-\bTR\bTD $i_1$.\eTD\bTD[leftframe=on] \ctxsep \eTD\bTD $\varphi_1$ \eTD\bTD $\proofRule{assume}$ \eTD\eTR
+\begin{AletheX}
+$i_1$. & [leftframe=on] \ctxsep  & $\varphi_1$  & $\proofRule{assume}$ \\
 \aletheLineB
-\bTR\bTD $i_n$.\eTD\bTD[leftframe=on] \ctxsep \eTD\bTD $\varphi_n$ \eTD\bTD $\proofRule{assume}$ \eTD\eTR 
+$i_n$. & [leftframe=on] \ctxsep  & $\varphi_n$  & $\proofRule{assume}$ \\ 
 \aletheLineB
-\bTR[bottomframe=on]\bTD[bottomframe=off] $j$.\eTD\bTD[leftframe=on] \ctxsep \eTD\bTD $\psi$ \eTD\bTD (\dots) \eTD\eTR 
-\bTR\bTD k.\eTD\bTD \ctxsep \eTD\bTD $\neg\varphi_1$,\dots, $\neg\varphi_n$, $\psi$  \eTD\bTD $\proofRule{subproof}$ \eTD\eTR 
-\stopAlethe
+\bTR[bottomframe=on]\bTD[bottomframe=off] $j$. & [leftframe=on] \ctxsep  & $\psi$  & (\dots) \\ 
+k. & \ctxsep  & $\neg\varphi_1$,\dots, $\neg\varphi_n$, $\psi$   & $\proofRule{subproof}$ \\ 
+\end{AletheX}
 
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{la_generic}
+\begin{RuleDescription}{la_generic}
 A step of the \currule{} rule represents a tautological clause of linear
 disequalities.  It can be checked by showing that the conjunction of
 the negated disequalities is unsatisfiable. After the application of
@@ -400,10 +396,10 @@ some strengthening rules, the resulting conjunction is unsatisfiable,
 even if integer variables are assumed to be real variables.
 
 A linear inequality is of term of the form
-\startformula
+\[
 \sum_{i=0}^{n}c_i\times{}t_i +
 d_1\bowtie \sum_{i=n+1}^{m} c_i\times{}t_i + d_2
-\stopformula
+\]
 where $\bowtie\;\in \{≈, <,
 >, \leq, \geq\}$, where $m\geq n$, $c_i, d_1, d_2$ are either integer or real
 constants, and for each $i$ $c_i$ and $t_i$ have the same sort. We will write
@@ -412,11 +408,11 @@ $s_1 \bowtie s_2$.
 Let $l_1,\dots, l_n$ be linear inequalities and $a_1, \dots, a_n$
 rational numbers, then a {\currule} step has the form
 
-\startAlethe
-\setupTABLE[c][3][width=21em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
-$\varphi_1$, \dots , $\varphi_o$ \eTD\bTD \currule\, [$a_1$, \dots, $a_o$] \eTD\eTR
-\stopAlethe
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
+$\varphi_1$, \dots , $\varphi_o$  & \currule\, [$a_1$, \dots, $a_o$] \\
+\end{AletheX}
 
 \noindent
 where $\varphi_i$ is either $\neg l_i$ or $l_i$, but never $s_1
@@ -449,27 +445,27 @@ each $i$, let $\varphi := \varphi_i$ and $a := a_i$.
 
 \placetable[here][tbl:lageneric]{Strengthening rules for \currule{}.}{
 	\bTABLE
-	\setupTABLE[r][each][frame=off]
-	\setupTABLE[c][each][roffset=0.5em]
-	\setupTABLE[r][1][bottomframe=on]
-\bTR\bTD $\bowtie$ \eTD\bTD If $d$ is an integer \eTD\bTD Otherwise \eTD\eTR
-\bTR\bTD $>$       \eTD\bTD $\geq d + 1$ \eTD\bTD $\geq \lfloor d\rfloor + 1$  \eTD\eTR
-\bTR\bTD $\geq$    \eTD\bTD $\geq d$     \eTD\bTD $\geq \lfloor d\rfloor + 1$  \eTD\eTR
+	
+	
+	
+$\bowtie$  & If $d$ is an integer  & Otherwise \\
+$>$        & $\geq d + 1$  & $\geq \lfloor d\rfloor + 1$  \\
+$\geq$     & $\geq d$      & $\geq \lfloor d\rfloor + 1$  \\
 	\eTABLE
 }
 
 Finally, the sum of the resulting literals is trivially contradictory.
 The sum
-\startformula
+\[
     \sum_{k=1}^{o}\sum_{i=1}^{m^o}c_i^k*t_i^k \bowtie \sum_{k=1}^{o}d^k
-\stopformula
+\]
 where $c_i^k$ is the constant $c_i$ of literal $l_k$, $t_i^k$ is the term
 $t_i$ of $l_k$, and $d^k$ is the constant $d$ of $l_k$. The operator
 $\bowtie$ is $≈$ if all operators are $≈$, $>$ if all are
 either $≈$ or $>$, and $\geq$ otherwise. The $a_i$ must be such
 that the sum on the left-hand side is $0$ and the right-hand side is $>0$ (or
 $\geq 0$ if $\bowtie$ is $>$).
-\stopRuleDescription
+\end{RuleDescription}
 
 % For some reason verbatim doesn't work in the enumerate environment
 \startruleexample
@@ -500,55 +496,55 @@ $-f_3 \geq 0 \land f_3 \geq ¼$. Which sums to the contradiction
 $¼ \geq 0$.
 \stopruleexample
 
-\startRuleDescription{lia_generic}
+\begin{RuleDescription}{lia_generic}
 This rule is a placeholder rule for integer arithmetic solving. It takes the
 same form as \proofRule{la_generic}, without the additional arguments.
 
-\startAlethe
-\setupTABLE[c][3][width=24em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
-$\varphi_1$, \dots , $\varphi_o$ \eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
+$\varphi_1$, \dots , $\varphi_o$  & (\currule) \\
+\end{AletheX}
 
 \noindent
 with $\varphi_i$ being linear inequalities. The disjunction
 $\varphi_1\lor \dots \lor \varphi_n$ is a tautology in the theory of linear
 integer arithmetic.
 
-\tightpara{Remark.} Since this rule can introduce a disjunction of arbitrary
+\ruleparagraph{Remark.} Since this rule can introduce a disjunction of arbitrary
 linear integer inequalities without any additional hints, proof checking
 can be NP-hard. Hence, this rule should be avoided when possible.
 
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{la_disequality}
-\startAlethe
-\setupTABLE[c][3][width=24em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{la_disequality}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$
-\eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{la_totality}
-\startAlethe
-\setupTABLE[c][3][width=24.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{la_totality}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $t_1 \leq t_2 \lor t_2 \leq t_1$
-\eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{la_tautology}
+\begin{RuleDescription}{la_tautology}
 This rule is a linear arithmetic tautology which can be checked without
 sophisticated reasoning. It has either the form
 
-\startAlethe
-\setupTABLE[c][3][width=24.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi$
-\eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
+ & (\currule) \\
+\end{AletheX}
 
 \noindent
 where $\varphi$ is either a linear inequality $s_1 \bowtie s_2$
@@ -556,12 +552,12 @@ or $\neg(s_1 \bowtie s_2)$. After performing step 1 to 3 of the process for
 checking the \proofRule{la_generic} the result is trivially unsatisfiable.
 
 The second form handles bounds on linear combinations. It is binary clause:
-\startAlethe
-\setupTABLE[c][3][width=24.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1 \lor \varphi_2$ % Checked: this is a proper disjunction not a cl
-\eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
+ & (\currule) \\
+\end{AletheX}
 
 It can be checked by using the procedure for \proofRule{la_generic} with
 while setting the arguments to $1$. Informally, the rule follows one of several
@@ -575,210 +571,210 @@ cases:
 \stopitemize
 The inequalities $s_1 \bowtie d$ are are the result of applying normalization
 as for the rule \proofRule{la_generic}.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{bind}
+\begin{RuleDescription}{bind}
   The \currule{} rule is used to rename bound variables.
 
-\startAletheS
-\setupTABLE[c][4][width=15.3em]
+\begin{AletheXS}
+
 \aletheLineS
-\bTR[bottomframe=on] \bTD[bottomframe=off] $j$.\eTD\bTD[leftframe=on]
+\bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
   $\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$
-	\eTD\bTD \ctxsep
-  \eTD\bTD
+	 & \ctxsep
+   & 
   $\varphi ≈ \varphi'$
-  \eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $k$.\eTD \bTD \eTD
-    \bTD \ctxsep \eTD\bTD
+   & (\dots) \\
+$k$. & \eTD
+    \bTD \ctxsep  & 
     $\forall x_1, \dots, x_n.\varphi ≈ \forall y_1, \dots, y_n. \varphi'$
-    \eTD\bTD \currule{} \eTD\eTR
-     \eTD\bTD \eTD\eTR
-\stopAletheS
+     & \currule{} \\
+      & \\
+\end{AletheXS}
 
   \noindent
   where the variables $y_1, \dots, y_n$ is not free in $\forall x_1,
   \dots, x_n.\varphi$.
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{sko_ex}
+\begin{RuleDescription}{sko_ex}
 The \currule{} rule skolemizes existential quantifiers.
 
-\startAletheS
-\setupTABLE[c][4][width=17em]
+\begin{AletheXS}
+
 \aletheLineS
-\bTR[bottomframe=on] \bTD[bottomframe=off] $j$.\eTD\bTD[leftframe=on]
+\bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
 $\Gamma, x_1 \mapsto \varepsilon_1, \dots ,  x_n \mapsto \varepsilon_n$
-	\eTD\bTD \ctxsep
-  \eTD\bTD
+	 & \ctxsep
+   & 
   $\varphi ≈ \psi$
-  \eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $k$.\eTD \bTD \eTD
-    \bTD \ctxsep \eTD\bTD
+   & (\dots) \\
+$k$. & \eTD
+    \bTD \ctxsep  & 
     $\exists x_1, \dots, x_n.\varphi ≈ \psi$
-    \eTD\bTD \currule{} \eTD\eTR
-     \eTD\bTD \eTD\eTR
-\stopAletheS
+     & \currule{} \\
+      & \\
+\end{AletheXS}
 
 \noindent
 where $\varepsilon_i$ stands for $\varepsilon x_i. (\exists x_{i+1}, \dots,
 x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{i-1}\mapsto\varepsilon_{i-1}])$.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{sko_forall}
+\begin{RuleDescription}{sko_forall}
 The \currule{} rule skolemizes universal quantifiers.
 
-\startAletheS
-\setupTABLE[c][4][width=11em]
+\begin{AletheXS}
+
 \aletheLineS
-\bTR[bottomframe=on] \bTD[bottomframe=off] $j$.\eTD\bTD[leftframe=on]
+\bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
 $\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)$
-	\eTD\bTD \ctxsep
-  \eTD\bTD
+	 & \ctxsep
+   & 
   $\varphi ≈ \psi$
-  \eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $k$.\eTD \bTD \eTD
-    \bTD \ctxsep \eTD\bTD
+   & (\dots) \\
+$k$. & \eTD
+    \bTD \ctxsep  & 
 $\forall x_1, \dots, x_n.\varphi ≈ \psi$
-    \eTD\bTD \currule{} \eTD\eTR
-     \eTD\bTD \eTD\eTR
-\stopAletheS
+     & \currule{} \\
+      & \\
+\end{AletheXS}
 
-\stopRuleDescription
+\end{RuleDescription}
 
 
-\startRuleDescription{forall_inst}
-\startAlethe
-\setupTABLE[c][3][width=18em]
-\setupTABLE[c][4][width=11em,align=flushright]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{forall_inst}
+\begin{AletheX}
+
+
+$i$. & \ctxsep     & 
 $\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1]\dots[x_n\mapsto t_n]$
-\eTD\bTD \currule\, [$(x_{k_1}, t_{k_1})$, \dots, $(x_{k_n}, t_{k_n})$] \eTD\eTR
-\stopAlethe
+ & \currule\, [$(x_{k_1}, t_{k_1})$, \dots, $(x_{k_n}, t_{k_n})$] \\
+\end{AletheX}
 
 \noindent
 where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_i$ and
 $k_i$ have the same sort. The arguments $(x_{k_i}, t_{k_i})$ are printed as
 \inlineAlethe{(:= xki tki)}.
 
-\tightpara{Remark.} In \in{Section}[sec:qsimp-proof] we discuss an alternative
+\ruleparagraph{Remark.} In \in{Section}[sec:qsimp-proof] we discuss an alternative
 quantifier instantiation rule.
 The resulting proof would be more fine grained and this
 would also be an opportunity to provide a proof for the clausification
 as currently done by \proofRule{qnt_cnf}.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{refl}
-\startAletheS
-\setupTABLE[c][4][width=28em]
-\bTR\bTD $j$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{RuleDescription}{refl}
+\begin{AletheXS}
+
+$j$. & \ctxsep  & $\Gamma$  & 
 $t_1 ≈ t_2 $
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where, if $\sigma = \subst(\Gamma)$,
 the terms $t_1\sigma$ and $t_2$ are
 syntactically equal up to the orientation of equalities.
 
-\tightpara{Remark.} This is the only rule that requires the application of
+\ruleparagraph{Remark.} This is the only rule that requires the application of
 the context.
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{trans}
-\startAletheS
-\setupTABLE[c][4][width=22em]
-\bTR\bTD $i_1$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{RuleDescription}{trans}
+\begin{AletheXS}
+
+$i_1$. & \ctxsep  & $\Gamma$  & 
 $t_1 ≈ t_2 $
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $i_2$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+ & (\dots) \\
+$i_2$. & \ctxsep  & $\Gamma$  & 
 $t_2 ≈ t_3 $
-\eTD\bTD (\dots) \eTD\eTR
+ & (\dots) \\
 \aletheLineSB
-\bTR\bTD $i_n$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+$i_n$. & \ctxsep  & $\Gamma$  & 
 $t_n ≈ t_{n+1} $
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep  & $\Gamma$  & 
 $t_1 ≈ t_{n+1}$
-\eTD\bTD (\currule\; $i_1$, \dots, $i_n$) \eTD\eTR
-\stopAletheS
+ & (\currule\; $i_1$, \dots, $i_n$) \\
+\end{AletheXS}
 
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{cong}
-\startAletheS
-\setupTABLE[c][4][width=22em]
-\bTR\bTD $i_1$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{RuleDescription}{cong}
+\begin{AletheXS}
+
+$i_1$. & \ctxsep  & $\Gamma$  & 
 $t_1 ≈ u_1 $
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $i_2$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+ & (\dots) \\
+$i_2$. & \ctxsep  & $\Gamma$  & 
 $t_2 ≈ u_2 $
-\eTD\bTD (\dots) \eTD\eTR
+ & (\dots) \\
 \aletheLineSB
-\bTR\bTD $i_n$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+$i_n$. & \ctxsep  & $\Gamma$  & 
 $t_n ≈ u_n $
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep  & $\Gamma$  & 
 $(f\,t_1\,\cdots\,t_n) ≈ (f\,u_1\,\cdots\,u_n)$
-\eTD\bTD (\currule\; $i_1$, \dots, $i_n$) \eTD\eTR
-\stopAletheS
+ & (\currule\; $i_1$, \dots, $i_n$) \\
+\end{AletheXS}
 
 \noindent
 where $f$\, is any $n$-ary function symbol of appropriate sort.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{eq_reflexive}
-\startAlethe
-\setupTABLE[c][3][width=24.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{eq_reflexive}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $t ≈ t$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{eq_transitive}
-\startAlethe
-\setupTABLE[c][3][width=24.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{eq_transitive}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (t_1 ≈ t_2)$, \dots , $\neg (t_{n-1} ≈ t_n)$,
 $t_1 ≈ t_n$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{eq_congruent}
-\startAlethe
-\setupTABLE[c][3][width=24.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{eq_congruent}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (t_1 ≈ u_1)$, \dots ,$\neg (t_n ≈ u_n)$,
 $(f\,t_1\, \cdots\,t_n) ≈ (f\,u_1\, \cdots\,u_n)$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{eq_congruent_pred}
-\startAlethe
-\setupTABLE[c][3][width=22em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{eq_congruent_pred}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (t_1 ≈ u_1)$, \dots ,$\neg (t_n ≈ u_n)$,
 $(P\,t_1\, \cdots\,t_n) ≈ (P\,u_1\, \cdots\,u_n)$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
+ & \currule \\
+\end{AletheX}
 
 \noindent
 where $P$\, is a function symbol with co-domain sort $\lsymb{Bool}$.
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{qnt_cnf}
-\startAlethe
-\setupTABLE[c][3][width=27em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{qnt_cnf}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg(\forall x_1, \dots, x_n. \varphi) \lor \forall x_{k_1}, \dots, x_{k_m}.\varphi'$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
+ & \currule \\
+\end{AletheX}
 
 This rule expresses clausification of a term under a universal
 quantifier. This is used by conflicting instantiation. $\varphi'$ is one of the clause
@@ -788,7 +784,7 @@ $\varphi$. Normalization is performed in two phases. First, the negative normal 
 is formed, then the result is prenexed. The result of the first step is $\Phi(\varphi, 1)$
 where:
 
-\startformula\startalign
+\[\startalign
 \NC  \Phi(\neg \varphi, 1) \NC:= \Phi(\varphi, 0)\NR
 \NC  \Phi(\neg \varphi, 0) \NC:= \Phi(\varphi, 1)\NR
 \NC  \Phi(\varphi_1 \lor\dots\lor\varphi_n, 1) \NC:= \Phi(\varphi_1, 1)\lor\dots\lor\Phi(\varphi_n, 1)\NR
@@ -809,58 +805,58 @@ where:
 \NC  \Phi(\exists x_1, \dots, x_n. \varphi, 0) \NC:= \forall x_1, \dots, x_n. \Phi(\varphi, 0)\NR
 \NC  \Phi(\varphi, 1) \NC:= \varphi\NR
 \NC  \Phi(\varphi, 0) \NC:= \neg\varphi
-\stopalign\stopformula
+\stopalign\]
 
-\tightpara{Remark.} This is a placeholder rule that combines the many steps
+\ruleparagraph{Remark.} This is a placeholder rule that combines the many steps
 done during clausification.
 
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{and}
-\startAlethe
-\setupTABLE[c][3][width=28em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{and}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1 \land \cdots \land \varphi_n$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\varphi_k$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
+ & (\currule\;$i$) \\
+\end{AletheX}
 
 \noindent
 and $1 \leq k \leq n$.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{not_or}
-\startAlethe
-\setupTABLE[c][3][width=27em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_or}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1 \lor \cdots \lor \varphi_n)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg \varphi_k$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
+ & (\currule\;$i$) \\
+\end{AletheX}
 
 \noindent
 and $1 \leq k \leq n$.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{or}
-\startAlethe
-\setupTABLE[c][3][width=28em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{or}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1 \lor \cdots \lor \varphi_n$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\varphi_1, \dots, \varphi_n$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
+ & (\currule\;$i$) \\
+\end{AletheX}
 
-\tightpara{Remark.} This rule deconstructs the \inlineAlethe{or} operator
+\ruleparagraph{Remark.} This rule deconstructs the \inlineAlethe{or} operator
 into a clause denoted by \inlineAlethe{cl}.
-\stopRuleDescription
+\end{RuleDescription}
 
 \startruleexample
 An application of the \currule{} rule.
@@ -874,435 +870,435 @@ An application of the \currule{} rule.
 \stopruleexample
 
 
-\startRuleDescription{not_and}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_and}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1 \land \dots \land \varphi_n)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg\varphi_1 , \dots , \neg\varphi_n$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
+ & (\currule\;$i$) \\
+\end{AletheX}
 
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{xor1}
-\startAlethe
-\setupTABLE[c][3][width=28em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{xor1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\lsymb{xor}\,\varphi_1\,\varphi_2$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\varphi_1, \varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
 \page
-\startRuleDescription{xor2}
-\startAlethe
-\setupTABLE[c][3][width=28em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{xor2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\lsymb{xor}\,\varphi_1\,\varphi_2$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg\varphi_1 , \neg\varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
+ & (\currule\;$i$) \\
+\end{AletheX}
 
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{not_xor1}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_xor1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg(\lsymb{xor}\,\varphi_1\,\varphi_2)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\varphi_1 , \neg\varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
+ & (\currule\;$i$) \\
+\end{AletheX}
 
 \noindent
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{not_xor2}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_xor2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg(\lsymb{xor}\,\varphi_1\,\varphi_2)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg\varphi_1 , \varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{implies}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{implies}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1\rightarrow\varphi_2$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg\varphi_1 , \varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{not_implies1}
-\startAlethe
-\setupTABLE[c][3][width=24em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_implies1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1\rightarrow\varphi_2)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\varphi_1$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{not_implies2}
-\startAlethe
-\setupTABLE[c][3][width=24em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_implies2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1\rightarrow\varphi_2)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg\varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{equiv1}
-\startAlethe
-\setupTABLE[c][3][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{equiv1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1≈\varphi_2$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg\varphi_1 , \varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
 \page
-\startRuleDescription{equiv2}
-\startAlethe
-\setupTABLE[c][3][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{equiv2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1≈\varphi_2$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\varphi_1, \neg\varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{not_equiv1}
-\startAlethe
-\setupTABLE[c][3][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_equiv1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg(\varphi_1≈\varphi_2)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\varphi_1 , \varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
 
-\startRuleDescription{not_equiv2}
-\startAlethe
-\setupTABLE[c][3][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_equiv2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg(\varphi_1≈\varphi_2)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg\varphi_1 , \neg\varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{and_pos}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{and_pos}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1 \land \cdots \land \varphi_n) , \varphi_k$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
+ & \currule \\
+\end{AletheX}
 
 \noindent
 with $1 \leq k \leq n$.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{and_neg}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{and_neg}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $(\varphi_1 \land \cdots \land \varphi_n), \neg\varphi_1, \dots , \neg\varphi_n$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
+ & \currule \\
+\end{AletheX}
 
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{or_pos}
-\startAlethe
-\setupTABLE[c][3][width=26.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{or_pos}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1 \lor \cdots \lor \varphi_n) , \varphi_1 , \dots, \varphi_n	$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{or_neg}
-\startAlethe
-\setupTABLE[c][3][width=26.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{or_neg}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $(\varphi_1 \lor \cdots \lor \varphi_n) , \neg \varphi_k$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
+ & \currule \\
+\end{AletheX}
 
 \noindent
 with $1 \leq k \leq n$.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{xor_pos1}
-\startAlethe
-\setupTABLE[c][3][width=26.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{xor_pos1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1\,\lsymb{xor}\,\varphi_2) , \varphi_1 , \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
 \page
-\startRuleDescription{xor_pos2}
-\startAlethe
-\setupTABLE[c][3][width=26.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{xor_pos2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1\,\lsymb{xor}\,\varphi_2), \neg \varphi_1, \neg \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{xor_neg1}
-\startAlethe
-\setupTABLE[c][3][width=26.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{xor_neg1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1 \,\lsymb{xor}\, \varphi_2, \varphi_1 , \neg \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{xor_neg2}
-\startAlethe
-\setupTABLE[c][3][width=26.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{xor_neg2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1\,\lsymb{xor}\,\varphi_2, \neg \varphi_1 , \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{implies_pos}
-\startAlethe
-\setupTABLE[c][3][width=25.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{implies_pos}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1 \rightarrow \varphi_2), \neg \varphi_1 , \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{implies_neg1}
-\startAlethe
-\setupTABLE[c][3][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{implies_neg1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1 \rightarrow \varphi_2, \varphi_1$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{implies_neg2}
-\startAlethe
-\setupTABLE[c][3][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{implies_neg2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1 \rightarrow \varphi_2, \neg \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{equiv_pos1}
-\startAlethe
-\setupTABLE[c][3][width=25.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{equiv_pos1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1 ≈ \varphi_2) , \varphi_1 , \neg \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{equiv_pos2}
-\startAlethe
-\setupTABLE[c][3][width=25.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{equiv_pos2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg (\varphi_1 ≈ \varphi_2) , \neg \varphi_1 , \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{equiv_neg1}
-\startAlethe
-\setupTABLE[c][3][width=25.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{equiv_neg1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1 ≈ \varphi_2 , \neg \varphi_1 , \neg \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{equiv_neg2}
-\startAlethe
-\setupTABLE[c][3][width=25.5em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{equiv_neg2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\varphi_1 ≈ \varphi_2 , \varphi_1 , \varphi_2$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & \currule \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{ite1}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{ite1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\varphi_1 , \varphi_3$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{ite2}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{ite2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg\varphi_1 , \varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{ite_pos1}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{ite_pos1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
       $\neg (\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) , \varphi_1 , \varphi_3$
-\eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{ite_pos2}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{ite_pos2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
       $\neg (\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) , \neg \varphi_1 , \varphi_2$
-\eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{ite_neg1}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{ite_neg1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
       $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3 , \varphi_1 , \neg \varphi_3$
-\eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{ite_neg2}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{ite_neg2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
       $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3 , \neg \varphi_1 , \neg \varphi_2$
-\eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{not_ite1}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_ite1}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\varphi_1 , \neg\varphi_3$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
-\stopRuleDescription
+ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
 
-\startRuleDescription{not_ite2}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep    \eTD\bTD
+\begin{RuleDescription}{not_ite2}
+\begin{AletheX}
+
+$i$. & \ctxsep     & 
 $\neg(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3)$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep    \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep     & 
 $\neg\varphi_1 , \neg\varphi_2$
-\eTD\bTD (\currule\;$i$) \eTD\eTR
-\stopAlethe
+ & (\currule\;$i$) \\
+\end{AletheX}
 
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{connective_def}
+\begin{RuleDescription}{connective_def}
   This rule is used to replace connectives by their definition. It can be one
   of the following:
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
     $\varphi_1\,\lsymb{xor}\,\varphi_2 ≈
     (\neg\varphi_1 \land \varphi_2) \lor (\varphi_1 \land \neg\varphi_2)$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
       $\varphi_1≈\varphi_2 ≈
       (\varphi_1 \rightarrow \varphi_2) \land (\varphi_2 \rightarrow \varphi_1)$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
       $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3 ≈
       (\varphi_1 \rightarrow \varphi_2) \land (\neg\varphi_1 \rightarrow \varphi_3)$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
       $\forall x_1, \dots, x_n.\,\varphi ≈ \neg(\exists x_1, \dots, x_n.\,
       \neg\varphi)$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
-\stopRuleDescription
+\end{RuleDescription}
 
 
-\startRuleDescription{and_simplify}
+\begin{RuleDescription}{and_simplify}
 This rule simplifies an $\land$ term by applying equivalent
 transformations as long as possible. Hence, the general form is
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $\varphi_1\land \cdots\land\varphi_n ≈ \psi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $\psi$ is the transformed term.
@@ -1319,24 +1315,24 @@ The possible transformations are:
     \item $\varphi_1 \land\cdots\land \bot\land\cdots \land \varphi_n ⇒ \bot$
     \item $\varphi_1 \land\cdots\land \varphi_i\land \cdots \land \varphi_j\land\cdots \land \varphi_n ⇒ \bot$
   and $\varphi_i$, $\varphi_j$ are such that
-  \startformula\startalign
+  \[\startalign
   \NC \varphi_i \NC= \underbrace{\neg \dots \neg}_n \psi \NR
   \NC \varphi_j \NC= \underbrace{\neg \dots \neg}_m \psi
-  \stopalign\stopformula
+  \stopalign\]
   and one of $n, m$ is odd and the other even.  Either can be $0$.
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{or_simplify}
+\begin{RuleDescription}{or_simplify}
 This rule simplifies an $\lor$ term by applying equivalent
 transformations as long as possible. Hence, the general form is
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $(\varphi_1\lor \cdots\lor\varphi_n) ≈ \psi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $\psi$ is the transformed term.
@@ -1353,24 +1349,24 @@ The possible transformations are:
     \item $\varphi_1 \lor\cdots\lor \top\lor\cdots \lor \varphi_n ⇒ \top$
     \item $\varphi_1 \lor\cdots\lor \varphi_i\lor \cdots \lor \varphi_j\lor\cdots \lor \varphi_n ⇒ \top$
   and $\varphi_i$, $\varphi_j$ are such that
-  \startformula\startalign
+  \[\startalign
   \NC \varphi_i \NC= \underbrace{\neg \dots \neg}_n \psi \NR
   \NC \varphi_j \NC= \underbrace{\neg \dots \neg}_m \psi
-  \stopalign\stopformula
+  \stopalign\]
   and one of $n, m$ is odd and the other even.  Either can be $0$.
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{not_simplify}
+\begin{RuleDescription}{not_simplify}
 This rule simplifies an $\neg$ term by applying equivalent
 transformations as long as possible. Hence, the general form is
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $\neg\varphi ≈ \psi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $\psi$ is the transformed term.
@@ -1381,18 +1377,18 @@ The possible transformations are:
     \item $\neg \bot ⇒ \top$
     \item $\neg \top ⇒ \bot$
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{implies_simplify}
+\begin{RuleDescription}{implies_simplify}
 This rule simplifies an $\rightarrow$ term by applying equivalent
 transformations as long as possible. Hence, the general form is
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $\varphi_1\rightarrow \varphi_2 ≈ \psi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $\psi$ is the transformed term.
@@ -1409,19 +1405,19 @@ The possible transformations are:
 		\item $ \varphi \rightarrow \neg \varphi ⇒ \neg \varphi$
 		\item $( \varphi_1\rightarrow \varphi_2)\rightarrow \varphi_2 ⇒  \varphi_1\lor \varphi_2$
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{equiv_simplify}
+\begin{RuleDescription}{equiv_simplify}
 This rule simplifies a formula with the head symbol $≈\,: \lsymb{Bool}\,\lsymb{Bool}\,\lsymb{Bool}$
 by applying equivalent
 transformations as long as possible. Hence, the general form is
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $(\varphi_1≈ \varphi_2) ≈ \psi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $\psi$ is the transformed term.
@@ -1437,18 +1433,18 @@ The possible transformations are:
     \item $(\bot ≈  \varphi) ⇒ \neg \varphi$
     \item $( \varphi ≈ \bot) ⇒ \neg \varphi$
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{bool_simplify}
+\begin{RuleDescription}{bool_simplify}
 This rule simplifies a boolean term by applying equivalent
 transformations as long as possible. Hence, the general form is
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $\varphi≈ \psi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $\psi$ is the transformed term.
@@ -1463,26 +1459,26 @@ The possible transformations are:
 	\item $(\varphi_1 \land (\varphi_1\rightarrow \varphi_2)) ⇒ (\varphi_1 \land \varphi_2)$
 	\item $((\varphi_1\rightarrow \varphi_2) \land \varphi_1) ⇒ (\varphi_1 \land \varphi_2)$
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{ac_simp}
+\begin{RuleDescription}{ac_simp}
   This rule simplifies nested occurrences of $\lor$ or $\land$:
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
       $\psi  ≈ \varphi_1 \circ\cdots\circ\varphi_n$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
   where $\circ \in \{\lor, \land\}$ and $\psi$ is a nested application of $\circ$.
   The literals $\varphi_i$ are literals of the flattening of $\psi$ with duplicates
   removed.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{ite_simplify}
+\begin{RuleDescription}{ite_simplify}
   This rule simplifies an if-then-else term by applying equivalent
   transformations until fix point\footnote{Note however that the order of the
     application is important, since the set of rules is not confluent. For
@@ -1491,12 +1487,12 @@ The possible transformations are:
     order of applications.}
   %
 It has the form
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $\lsymb{ite}\,\varphi\,t_1\,t_2 ≈ u$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $u$ is the transformed term.
@@ -1518,42 +1514,42 @@ The possible transformations are:
     \item $\lsymb{ite}\, \psi \, \bot\, \varphi ⇒ \neg\psi\land\varphi$
     \item $\lsymb{ite}\, \psi \, \varphi\,\top ⇒ \neg\psi\lor\varphi$
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{qnt_simplify}
+\begin{RuleDescription}{qnt_simplify}
   This rule simplifies a $\forall$-formula with a constant predicate.
 
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
       $\forall x_1, \dots, x_n. \varphi ≈ \varphi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
   where $\varphi$ is either $\top$ or $\bot$.
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{onepoint}
+\begin{RuleDescription}{onepoint}
 The {\currule} rule is the \quotation{one-point-rule}. That is: it eliminates quantified
 variables that can only have one value.
 
-\startAletheS
-\setupTABLE[c][4][width=10em]
+\begin{AletheXS}
+
 \aletheLineS
-\bTR[bottomframe=on] \bTD[bottomframe=off] $j$.\eTD\bTD[leftframe=on]
+\bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
   $\Gamma, x_{k_1},\dots, x_{k_m},  x_{j_1} \mapsto t_{j_1}, \dots ,  x_{j_o} \mapsto t_{j_o}$
-	\eTD\bTD \ctxsep
-  \eTD\bTD
+	 & \ctxsep
+   & 
   $\varphi ≈ \varphi'$
-  \eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $k$.\eTD \bTD \eTD
-    \bTD \ctxsep \eTD\bTD
+   & (\dots) \\
+$k$. & \eTD
+    \bTD \ctxsep  & 
 $Q x_1, \dots, x_n.\varphi ≈ Q x_{k_1}, \dots, x_{k_m}. \varphi'$
-    \eTD\bTD \currule{} \eTD\eTR
-     \eTD\bTD \eTD\eTR
-\stopAletheS
+     & \currule{} \\
+      & \\
+\end{AletheXS}
 
 \noindent
 where $Q\in\{\forall, \exists\}$,  $n = m + o$,  $k_1, \dots, k_m$ and
@@ -1564,12 +1560,12 @@ The terms $t_{j_1}, \dots, t_{j_o}$ are the points of the variables
 $x_{j_1}, \dots, x_{j_o}$. Points are defined by equalities $x_i≈ t_i$
 with positive polarity in the term $\varphi$.
 
-\tightpara{Remark.} Since an eliminated variable $x_i$ might appear free in a
+\ruleparagraph{Remark.} Since an eliminated variable $x_i$ might appear free in a
 term $t_j$, it is necessary to replace $x_i$ with $t_i$ inside $t_j$. While
 this substitution is performed correctly, the proof for it is currently
 missing.
 
-\stopRuleDescription
+\end{RuleDescription}
 
 \startruleexample
 An application of the \currule{} rule on the term $(\forall x, y.\, x ≈ y
@@ -1596,47 +1592,47 @@ An application of the \currule{} rule on the term $(\forall x, y.\, x ≈ y
 \stopruleexample
 
 \page
-\startRuleDescription{qnt_join}
-\startAletheS
-\setupTABLE[c][4][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{RuleDescription}{qnt_join}
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
       $Q x_1, \dots, x_n.\,(Q x_{n+1}, \dots, x_{m}.\,\varphi)
       ≈
       Q x_{k_1}, \dots, x_{k_o}.\,\varphi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
   where $m > n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_o$ is a monotonic
   map to $1, \dots, m$ such that $x_{k_1}, \dots, x_{k_o}$ are pairwise
   distinct, and $\{x_1, \dots, x_m\} = \{x_{k_1}, \dots, x_{k_o}\}$.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{qnt_rm_unused}
-\startAletheS
-\setupTABLE[c][4][width=23em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{RuleDescription}{qnt_rm_unused}
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
       $Q x_1, \dots, x_n.\,\varphi ≈ Q x_{k_1}, \dots, x_{k_m}.\,\varphi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
   \noindent
   where $m \leq n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_m$ is
   a monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
   n\} \land j\in\not \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
 
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{eq_simplify}
+\begin{RuleDescription}{eq_simplify}
   This rule simplifies an $≈$ term by applying equivalent
   transformations as long as possible. Hence, the general form is
 
-\startAletheS
-\setupTABLE[c][4][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
  $(t_1≈ t_2) ≈ \varphi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
   where $\psi$ is the transformed term.
@@ -1647,18 +1643,18 @@ An application of the \currule{} rule on the term $(\forall x, y.\, x ≈ y
   \item $(t_1 ≈ t_2) ⇒ \bot$ if $t_1$ and $t_2$ are different numeric constants.
   \item $\neg (t ≈ t) ⇒ \bot$ if $t$ is a numeric constant.
   \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{div_simplify}
+\begin{RuleDescription}{div_simplify}
 This rule simplifies a division by applying equivalent
 transformations. The general form is
 
-\startAletheS
-\setupTABLE[c][4][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $(t_1\, /\,  t_2) ⇒ t_3$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent The possible transformations are:
 \startitemize[packed]
@@ -1668,19 +1664,19 @@ $(t_1\, /\,  t_2) ⇒ t_3$
 		if $t_1$ and $t_2$ are constants and $t_3$ is $t_1$
 		divided by $t_2$ according to the semantic of the current theory.
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{prod_simplify}
+\begin{RuleDescription}{prod_simplify}
 This rule simplifies a product by applying equivalent
 transformations as long as possible. The general form is
 
-\startAletheS
-\setupTABLE[c][4][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $t_1\times\cdots\times t_n ≈ u$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $u$ is either a constant or a product.
@@ -1699,42 +1695,42 @@ The possible transformations are:
     \item $t_1\times\cdots\times t_n ⇒
 			t_{k_1}\times\cdots\times t_{k_n}$: same as above if $c$ is $1$.
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{unary_minus_simplify}
+\begin{RuleDescription}{unary_minus_simplify}
 This rule is either
 
-\startAletheS
-\setupTABLE[c][4][width=20em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $- (-t) ≈ t$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 or
-\startAletheS
-\setupTABLE[c][4][width=20em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $-t ≈ u$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $u$ is the negated numerical constant $t$.
-\stopRuleDescription
+\end{RuleDescription}
 
 
-\startRuleDescription{minus_simplify}
+\begin{RuleDescription}{minus_simplify}
 This rule simplifies a subtraction by applying equivalent
 transformations. The general form is
 
-\startAletheS
-\setupTABLE[c][4][width=22em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $t_1- t_2 ≈ u$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent The possible transformations are:
 \startitemize[packed]
@@ -1745,18 +1741,18 @@ $t_1- t_2 ≈ u$
     \item $t - 0 ⇒ t$
     \item $0 - t ⇒ -t$
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{sum_simplify}
+\begin{RuleDescription}{sum_simplify}
 This rule simplifies a sum by applying equivalent
 transformations as long as possible. The general form is
 
-\startAletheS
-\setupTABLE[c][4][width=22em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $t_1+\cdots+t_n ≈ u$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $u$ is either a constant or a product.
@@ -1774,19 +1770,19 @@ The possible transformations are:
 			t_{k_1}+\cdots+t_{k_n}$: same as above if $c$ is
 			$0$.
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
 
-\startRuleDescription{comp_simplify}
+\begin{RuleDescription}{comp_simplify}
 This rule simplifies a comparison by applying equivalent
 transformations as long as possible. The general form is
 
-\startAletheS
-\setupTABLE[c][4][width=22em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $t_1 \bowtie t_n ≈ \psi$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 where $\bowtie$ is as for the proof rule \proofRule{la_generic}, but never
@@ -1806,141 +1802,141 @@ The possible transformations are:
     \item $t_1 < t_2 ⇒ \neg (t_2 \leq t_1)$
     \item $t_1 > t_2 ⇒ \neg (t_1 \leq t_2)$
 \stopitemize
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{let}
+\begin{RuleDescription}{let}
   This rule eliminates $\lsymb{let}$. It has the form
 
-\startAletheS
-\setupTABLE[c][4][width=14.5em]
-\bTR \bTD $i_1$.\eTD\bTD
+\begin{AletheXS}
+
+$i_1$. & 
   $\Gamma$
-	\eTD\bTD \ctxsep \eTD\bTD
+	 & \ctxsep  & 
   $t_{1} ≈ s_{1}$
-  \eTD\bTD (\dots) \eTD\eTR
+   & (\dots) \\
 \aletheLineSB
-\bTR \bTD $i_n$.\eTD\bTD
+$i_n$. & 
   $\Gamma$
-	\eTD\bTD \ctxsep \eTD\bTD
+	 & \ctxsep  & 
   $t_{n} ≈ s_{n}$
-  \eTD\bTD (\dots) \eTD\eTR
+   & (\dots) \\
 \aletheLineS
-\bTR[bottomframe=on] \bTD[bottomframe=off] $j$.\eTD\bTD[leftframe=on]
+\bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
   $\Gamma, x_1 \mapsto s_1, \dots,  x_n \mapsto s_n$
-	\eTD\bTD \ctxsep
-  \eTD\bTD
+	 & \ctxsep
+   & 
   $u ≈ u'$
-  \eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $k$.\eTD \bTD $\Gamma$ \eTD
-    \bTD \ctxsep \eTD\bTD
+   & (\dots) \\
+$k$. & $\Gamma$ \eTD
+    \bTD \ctxsep  & 
      $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u) ≈ u'$
-    \eTD\bTD (\currule{}\;$i_1$, \dots, $i_n$) \eTD\eTR
-     \eTD\bTD \eTD\eTR
-\stopAletheS
+     & (\currule{}\;$i_1$, \dots, $i_n$) \\
+      & \\
+\end{AletheXS}
 
 	The premise $i_1, \dots, i_n$ must be in the same subproof as
 	the \currule{} step.  If for $t_i≈ s_i$ the $t_i$ and $s_i$
 	are syntactically equal, the premise
   is skipped.
-\stopRuleDescription
+\end{RuleDescription}
 
 \page
-\startRuleDescription{distinct_elim}
+\begin{RuleDescription}{distinct_elim}
 This rule eliminates the $\lsymb{distinct}$ predicate. If called with one
 argument this predicate always holds:
-\startAletheS
-\setupTABLE[c][4][width=22em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $(\lsymb{distinct}\, t) ≈ \top$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 If applied to terms of type $\lsymb{Bool}$ more than two terms can never be
 distinct, hence only two cases are possible:
 
-\startAletheS
-\setupTABLE[c][4][width=22em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $(\lsymb{distinct}\,\varphi\,\psi) ≈ \neg (\varphi ≈ \psi)$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 \noindent
 and
-\startAletheS
-\setupTABLE[c][4][width=22em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $(\lsymb{distinct}\,\varphi_1\,\varphi_2\,\varphi_3\,\dots) ≈ \bot$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 The general case is
-\startAletheS
-\setupTABLE[c][4][width=22em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $(\lsymb{distinct}\,t_1\,\dots\, t_n) ≈
 \bigwedge_{i=1}^{n}\bigwedge_{j=i+1}^{n} t_i\;{≈\not}\;t_j$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
-\stopRuleDescription
+ & \currule \\
+\end{AletheXS}
+\end{RuleDescription}
 
-\startRuleDescription{la_rw_eq}
-\startAlethe
-\setupTABLE[c][3][width=26em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
+\begin{RuleDescription}{la_rw_eq}
+\begin{AletheX}
+
+$i$. & \ctxsep   & 
 $(t ≈ u) ≈ (t \leq u \land u \leq t)$
-\eTD\bTD \currule \eTD\eTR
-\stopAlethe
+ & \currule \\
+\end{AletheX}
 
-\tightpara{Remark.} While the connective could be $≈$,
+\ruleparagraph{Remark.} While the connective could be $≈$,
 currently an equality is used.
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{nary_elim}
+\begin{RuleDescription}{nary_elim}
 This rule replaces $n$-ary operators with their equivalent
 application of the binary operator. It is never applied to $\land$ or $\lor$.
 
 Three cases are possible.
 If the operator $\circ$ is left associative, then the rule has the form
-\startAletheS
-\setupTABLE[c][4][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $\bigcirc_{i=1}^{n} t_i ≈
 (\dots( t_1\circ  t_2) \circ  t_3)\circ \cdots  t_n)$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 If the operator $\circ$ is right associative, then the rule has the form
-\startAletheS
-\setupTABLE[c][4][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $\bigcirc_{i=1}^{n} t_i ≈
 ( t_1 \circ \cdots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n)\dots)$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
+ & \currule \\
+\end{AletheXS}
 
 If the operator is {\em chainable}, then it has the form
 
-\startAletheS
-\setupTABLE[c][4][width=25em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep \eTD\bTD $\Gamma$ \eTD\bTD
+\begin{AletheXS}
+
+$i$. & \ctxsep  & $\Gamma$  & 
 $\bigcirc_{i=1}^{n} t_i ≈
 ( t_1\circ t_2) \land ( t_2 \circ  t_3) \land \cdots
 \land ( t_{n-1}\circ t_n)$
-\eTD\bTD \currule \eTD\eTR
-\stopAletheS
-\stopRuleDescription
+ & \currule \\
+\end{AletheXS}
+\end{RuleDescription}
 
-\startRuleDescription{bfun_elim}
-\startAlethe
-\setupTABLE[c][3][width=24em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
+\begin{RuleDescription}{bfun_elim}
+\begin{AletheX}
+
+$i$. & \ctxsep   & 
 $\psi$
-\eTD\bTD (\dots) \eTD\eTR
-\bTR\bTD $j$.\eTD\bTD \ctxsep  \eTD\bTD
+ & (\dots) \\
+$j$. & \ctxsep   & 
 $\varphi$
-\eTD\bTD (\currule\; $i$) \eTD\eTR
-\stopAlethe
+ & (\currule\; $i$) \\
+\end{AletheX}
 
 The formula $\varphi$ is $\psi$ after boolean functions have been simplified.
 This happens in a two step process. Both steps recursively iterate over $\psi$.
@@ -1959,35 +1955,35 @@ $P$ is some formula. Then we replace this term by $(\lsymb{ite}\, P\,
 (f\,x\, \top\ y)\,(f\,x\, \bot\, y))$. If the argument is already the constant $\top$
 or $\bot$, it is ignored.
 
-\stopRuleDescription
+\end{RuleDescription}
 
-\startRuleDescription{ite_intro}
-\startAlethe
-\setupTABLE[c][3][width=24em]
-\bTR\bTD $i$.\eTD\bTD \ctxsep  \eTD\bTD
+\begin{RuleDescription}{ite_intro}
+\begin{AletheX}
+
+$i$. & \ctxsep   & 
 $t ≈ (t' \land u_1 \land \dots \land u_n)$
-\eTD\bTD (\currule) \eTD\eTR
-\stopAlethe
+ & (\currule) \\
+\end{AletheX}
 
 The term $t$ (the formula $\varphi$) contains the $\lsymb{ite}$ operator.
 Let $s_1, \dots, s_n$ be the terms starting with $\lsymb{ite}$, i.e.
 $s_i := \lsymb{ite}\,\psi_i\,r_i\,r'_i$, then $u_i$ has the form
-\startformula
+\[
 	\lsymb{ite}\,\psi_i\,(s_i ≈ r_i)\,(s_i ≈ r'_i)
-\stopformula
+\]
 
 \noindent
 The term $t'$ is equal to the term $t$ up to the
 reordering of equalities where one argument is an $\lsymb{ite}$
 term.
 
-\tightpara{Remark.} This rule stems from the introduction of fresh
+\ruleparagraph{Remark.} This rule stems from the introduction of fresh
 constants for if-then-else terms inside veriT. Internally $s_i$ is a new
 constant symbol and the $\varphi$ on the right side of the equality is
 $\varphi$ with the if-then-else terms replaced by the constants. Those
 constants are unfolded during proof printing. Hence, the slightly strange
 form and the reordering of equalities.
-\stopRuleDescription
+\end{RuleDescription}
 
 \page % TODO: double sided
 \subject[sec:alethe:rules-index]{Rule Index}
