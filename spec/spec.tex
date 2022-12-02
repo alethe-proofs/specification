@@ -65,6 +65,15 @@
 \newcommand\spctxsep{\multicolumn{1}{|c}{\ctxsep}}
 \newcommand\spctx[1]{\multicolumn{1}{|c}{#1}}
 \newcommand\spsep{\cline{2-4}}
+
+% Empty lines with dots
+\newcommand\aletheLine{ &                       & $\vdots$ & \\}
+\newcommand\aletheLineB{& \multicolumn{1}{|c}{} & $\vdots$ & \\}
+% with subproof line to the left
+\newcommand\aletheLineS {&                       & & $\vdots$ & \\}
+\newcommand\aletheLineSB{& \multicolumn{1}{|c}{} & & $\vdots$ & \\}
+
+% Tables for proofs
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
 \newcommand{\ruleTypeImpl}[1]{%
@@ -97,18 +106,20 @@
 % These avoid the xltabular environment. While xltabular can break on pages
 % it seems to interact badly with the RuleDescription enviornment.
 \NewEnviron{AletheX}{%
-\renewcommand\spsep{\cline{2-4}}
-\setlength{\arrayrulewidth}{0.8pt}
-\addtolength{\tabcolsep}{-4pt}
+\renewcommand\spsep{\cline{2-4}}%
+\setlength{\arrayrulewidth}{0.8pt}%
+\addtolength{\tabcolsep}{-4pt}%
+\noindent
 \begin{tabularx}{\linewidth}{l c Y l}
   \BODY
 \end{tabularx}
 \addtolength{\tabcolsep}{+4pt}
 }
 \NewEnviron{AletheXS}{%
-\renewcommand\spsep{\cline{2-5}}
-\setlength{\arrayrulewidth}{0.8pt}
-\addtolength{\tabcolsep}{-4pt}
+\renewcommand\spsep{\cline{2-5}}%
+\setlength{\arrayrulewidth}{0.8pt}%
+\addtolength{\tabcolsep}{-4pt}%
+\noindent
 \begin{tabularx}{\linewidth}{l l c Y l}
   \BODY
 \end{tabularx}
@@ -139,22 +150,17 @@ break
 }
 \makeatother
 
-
-%\newenvironment{RuleDescription}[1]{%
-%\begin{inner-rule}[#1]\label{rule:#1}
-%\renewcommand\currule{\proofRule{#1}}
-%}{%
-%\end{inner-rule}
-%}
-
 \NewEnviron{RuleDescription}[1]{%
 \renewcommand\currule{\proofRule{#1}}
 
-\begin{inner-rule}[#1]\label{rule:#1}
+\begin{inner-rule}[\detokenize{#1}]\label{rule:#1}
 
 \BODY
 \end{inner-rule}
 }
+
+\theoremstyle{definition} 
+\newtheorem{RuleExample}{Example}[inner-rule]
 
 % TODO: synchronize colors!
 \definecolor{SmtBlue}{HTML}{00007f}
@@ -166,7 +172,6 @@ break
 \newcommand{\grRule}{≔}
 \newcommand{\grOr}{|}
 
-\theoremstyle{definition} 
 \newtheorem{example}{Example}
 \newtheorem{theorem}{Theorem}[example]
 \newtheorem{lemma}{Lemma}[example]

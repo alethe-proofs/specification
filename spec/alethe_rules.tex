@@ -9,9 +9,9 @@ Table~\ref{rule-tab:special} lists rules that serve a special purpose.
 Table~\ref{rule-tab:tautologies} lists all rules that introduce
 tautologies.  That is, regular rules that do not use premises.
 
-The subsequent section, starting at \pageref{sec:alethe:rules-list}, defines
+The subsequent section, starting at ref{sec:alethe:rules-list}, defines
 all rules and provides example proofs for complicated rules.
-The index of proof rules at \pageref{sec:alethe:rules-index} can be used
+The index of proof rules at ref{sec:alethe:rules-index} can be used
 to quickly find the definition of rules.
 
 \subsection{Classifications of the Rules}
@@ -247,7 +247,7 @@ $i$. & \ctxsep & $\varphi$ & \currule \\
 \begin{RuleDescription}{hole}
 
 \begin{AletheX}
-$i$. & \ctxsep & $\varphi$  & (\currule\; p_1, \dots, p_n)\, [a_1, \dots, a_n] \\
+$i$. & \ctxsep & $\varphi$  & $(\currule\; p_1, \dots, p_n)\, [a_1, \dots, a_n]$ \\
 \end{AletheX}
 where $\varphi$ is any well-formed formula.
 
@@ -263,48 +263,36 @@ The premises and arguments are arbitrary, but must follow the syntax
 for premises and arguments.
 \end{RuleDescription}
 
-\endinput
-
 \begin{RuleDescription}{true}
 \begin{AletheX}
-
-$i$. & \ctxsep   & 
-$\top$     & \currule \\
+$i$. & \ctxsep & $\top$     & \currule \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{false}
 \begin{AletheX}
-
-$i$. & \ctxsep   & 
-$\bot$     & \currule \\
+$i$. & \ctxsep & $\bot$     & \currule \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{not_not}
 
 \begin{AletheX}
-
-$i$. & \ctxsep   & 
-$\neg (\neg \neg \varphi)$, $\varphi$  & \currule \\
+$i$. & \ctxsep & $\neg (\neg \neg \varphi)$, $\varphi$  & \currule \\
 \end{AletheX}
-
 \ruleparagraph{Remark.} This rule is useful to remove double negations from a
 clause by resolving a clause with the double negation on $\varphi$.
 \end{RuleDescription}
 
-\page
 \begin{RuleDescription}{th_resolution}
 This rule is the resolution of two or more clauses.
+
 \begin{AletheX}
-
-$i_1$. & \ctxsep  & $l^1_1$, \dots, $l^1_{k^1}$  & ($\ruleType{...}$) \\
+$i_1$. & \ctxsep & $l^1_1$, $\dots$, $l^1_{k^1}$  & ($\ruleType{...}$) \\
 \aletheLine
-$i_n$. & \ctxsep  & $l^n_1$, \dots, $l^n_{k^n}$  & $ (\ruleType{...}$) \\
-$j$. & \ctxsep  & $l^{r_1}_{s_1}$, \dots, $l^{r_m}_{s_m}$  & ($\currule\;i_1,\dots, i_n)$ \\ 
+$i_n$. & \ctxsep & $l^n_1$, $\dots$, $l^n_{k^n}$  & ($\ruleType{...}$) \\
+  $j$. & \ctxsep & $l^{r_1}_{s_1}$, $\dots$, $l^{r_m}_{s_m}$  & ($\currule\;i_1,\dots, i_n$) \\ 
 \end{AletheX}
-
-\noindent
 where $l^{r_1}_{s_1} , \dots , l^{r_m}_{s_m}$ are from $l^{i}_{j}$ and
 are the result of a chain of predicate resolution steps on the clauses of
 $i_1$ to $i_n$. It is possible that $m = 0$, i.e. that
@@ -337,40 +325,27 @@ serves only informational purpose.
 \end{RuleDescription}
 
 \begin{RuleDescription}{tautology}
-
 \begin{AletheX}
-
-$i$. & \ctxsep   & 
-$l_1$, \dots, $l_k$, \dots, $l_m$, \dots, $l_n$  & (\dots) \\
-$j$. & \ctxsep   & 
-$\top$  & (\currule\; $i$) \\
+$i$. & \ctxsep & $l_1$, \dots, $l_k$, \dots, $l_m$, \dots, $l_n$  & ($\dots$) \\
+$j$. & \ctxsep & $\top$  & (\currule\; $i$) \\
 \end{AletheX}
-
-\noindent
   and $l_k$, $l_m$ are such that
-  \[\startalign
-  \NC l_k \NC= \underbrace{\neg \dots \neg}_o \varphi \NR
-  \NC l_m \NC= \underbrace{\neg \dots \neg}_p \varphi
-  \stopalign\]
+  \begin{align*}
+  l_k &= \underbrace{\neg \dots \neg}_o \varphi \\
+  l_m &= \underbrace{\neg \dots \neg}_p \varphi
+  \end{align*}
   and one of $o, p$\/ is odd and the other even.  Either can be $0$.
 \end{RuleDescription}
-
 \begin{RuleDescription}{contraction}
 \begin{AletheX}
-
-$i$. & \ctxsep   & 
-$l_1$, \dots, $l_n$  & (\dots) \\
-$j$. & \ctxsep   & 
-$l_{k_1}$, \dots, $l_{k_m}$  & (\currule\; $i$) \\
+$i$. & \ctxsep  & $l_1$, \dots, $l_n$  & ($\dots$) \\
+$j$. & \ctxsep  & $l_{k_1}$, \dots, $l_{k_m}$  & (\currule\; $i$) \\
 \end{AletheX}
-
-\noindent
   where $m \leq n$ and  $k_1 \dots k_m$ is a monotonic map to $1 \dots n$
   such that $l_{k_1} \dots l_{k_m}$ are pairwise distinct and
   $\{l_1, \dots, l_n\} = \{l_{k_1}, \dots, l_{k_m}\}$.
   Hence, this rule removes duplicated literals.
 \end{RuleDescription}
-
 
 \begin{RuleDescription}{subproof}
 The \currule{} rule completes a subproof and discharges local
@@ -378,11 +353,12 @@ assumptions. Every subproof starts with some \proofRule{assume} steps. The
 last step of the subproof is the conclusion.
 
 \begin{AletheX}
-$i_1$. & [leftframe=on] \ctxsep  & $\varphi_1$  & $\proofRule{assume}$ \\
+$i_1$. & \spctxsep  & $\varphi_1$  & $\proofRule{assume}$ \\
+\aletheLine
+$i_n$. & \spctxsep  & $\varphi_n$  & $\proofRule{assume}$ \\ 
 \aletheLineB
-$i_n$. & [leftframe=on] \ctxsep  & $\varphi_n$  & $\proofRule{assume}$ \\ 
-\aletheLineB
-\bTR[bottomframe=on]\bTD[bottomframe=off] $j$. & [leftframe=on] \ctxsep  & $\psi$  & (\dots) \\ 
+$j$. & \spctxsep  & $\psi$  & ($\dots$) \\
+\spsep
 k. & \ctxsep  & $\neg\varphi_1$,\dots, $\neg\varphi_n$, $\psi$   & $\proofRule{subproof}$ \\ 
 \end{AletheX}
 
@@ -409,12 +385,8 @@ Let $l_1,\dots, l_n$ be linear inequalities and $a_1, \dots, a_n$
 rational numbers, then a {\currule} step has the form
 
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\varphi_1$, \dots , $\varphi_o$  & \currule\, [$a_1$, \dots, $a_o$] \\
+$i$. & \ctxsep & $\varphi_1$, \dots , $\varphi_o$  & \currule\, [$a_1$, \dots, $a_o$] \\
 \end{AletheX}
-
-\noindent
 where $\varphi_i$ is either $\neg l_i$ or $l_i$, but never $s_1
 ≈ s_2$.
 
@@ -426,7 +398,7 @@ To check the unsatisfiability of the negation of $\varphi_1\lor \dots
 \lor \varphi_o$ one performs the following steps for each literal. For
 each $i$, let $\varphi := \varphi_i$ and $a := a_i$.
 
-\startitemize[n,packed]
+\begin{enumerate}
     \item If $\varphi = s_1 > s_2$, then let $\varphi := s_1 \leq s_2$.
     	If $\varphi = s_1 \geq s_2$, then let $\varphi := s_1 < s_2$.
     	If $\varphi = s_1 < s_2$, then let $\varphi := s_1 \geq s_2$. 
@@ -435,24 +407,22 @@ each $i$, let $\varphi := \varphi_i$ and $a := a_i$.
    	\item If $\varphi = \neg (s_1 \bowtie s_2)$, then let $\varphi := s_1 \bowtie s_2$. 
     \item Replace $\varphi$ by $\sum_{i=0}^{n}c_i\times{}t_i - \sum_{i=n+1}^{m} c_i\times{}t_i
     \bowtie d$ where $d := d_2 - d_1$.
-    \item Now $\varphi$ has the form $s_1 \bowtie d$. If all
+    \item \label{la_generic:str}Now $\varphi$ has the form $s_1 \bowtie d$. If all
     variables in $s_1$ are integer sorted: replace $\bowtie d$ according to
-    \in{Table}[tbl:lageneric].
+    the table below.
     \item If $\bowtie$ is $≈$ replace $l$ by
     $\sum_{i=0}^{m}a\times{}c_i\times{}t_i ≈ a\times{}d$, otherwise replace it by
     $\sum_{i=0}^{m}|a|\times{}c_i\times{}t_i ≈ |a|\times{}d$.
-\stopitemize
+\end{enumerate}
 
-\placetable[here][tbl:lageneric]{Strengthening rules for \currule{}.}{
-	\bTABLE
-	
-	
-	
+The replacements that can be performed by step~\ref{la_generic:str} above
+are
+
+\begin{tabular}{r l l}
 $\bowtie$  & If $d$ is an integer  & Otherwise \\
 $>$        & $\geq d + 1$  & $\geq \lfloor d\rfloor + 1$  \\
 $\geq$     & $\geq d$      & $\geq \lfloor d\rfloor + 1$  \\
-	\eTABLE
-}
+\end{tabular}
 
 Finally, the sum of the resulting literals is trivially contradictory.
 The sum
@@ -467,46 +437,43 @@ that the sum on the left-hand side is $0$ and the right-hand side is $>0$ (or
 $\geq 0$ if $\bowtie$ is $>$).
 \end{RuleDescription}
 
-% For some reason verbatim doesn't work in the enumerate environment
-\startruleexample
-A simple \currule{} step in the logic LRA might look like this:
+% Just like in ConTeX we can't have minted in the rule environment for some
+% reason.
+\begin{RuleExample}
+A simple \currule{} step in the logic \textsf{LRA} might look like this:
 
-\startSMTCode
+\begin{AletheVerb}
 (step t10 (cl (not (> (f a) (f b))) (not (= (f a) (f b))))
     :rule la_generic :args (1.0 (- 1.0)))
-\stopSMTCode
+\end{AletheVerb}
 
 To verify this we have to check the insatisfiability of $(f\,a) > (f\,b) \land
 (f\,a) ≈ (f\,b)$ (step 2). After step~3 we get $(f\,a) - (f\,b) > 0 \land
 (f\,a) - (f\,b) ≈ 0$. Since we don't have an integer sort in this logic step~4 does
 not apply. Finally, after step~5 the conjunction is $(f\,a) - (f\,b) > 0 \land
 - (f\,a) + (f\,b) ≈ 0$. This sums to $0 > 0$, which is a contradiction.
-\stopruleexample
+\end{RuleExample} 
 
-\startruleexample
-The following \currule{} step is from a {\ss QF\_UFLIA} problem:
-\startSMTCode
+\begin{RuleExample}
+The following \currule{} step is from a \textsf{QF\_UFLIA} problem:
+\begin{AletheVerb}
 (step t11 (cl (not (<= f3 0)) (<= (+ 1 (* 4 f3)) 1))
     :rule la_generic :args (1 (div 1 4)))
-\stopSMTCode
+\end{AletheVerb}
 After normalization we get $-f_3 \geq 0 \land 4\times f_3 > 0$.
 This time step~4 applies and we can strengthen this to
 $-f_3 \geq 0 \land 4\times f_3 \geq 1$ and after multiplication we get
 $-f_3 \geq 0 \land f_3 \geq ¼$. Which sums to the contradiction
 $¼ \geq 0$.
-\stopruleexample
+\end{RuleExample}
 
 \begin{RuleDescription}{lia_generic}
 This rule is a placeholder rule for integer arithmetic solving. It takes the
 same form as \proofRule{la_generic}, without the additional arguments.
 
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\varphi_1$, \dots , $\varphi_o$  & (\currule) \\
+$i$. & \ctxsep & $\varphi_1$, \dots , $\varphi_o$  & (\currule) \\
 \end{AletheX}
-
-\noindent
 with $\varphi_i$ being linear inequalities. The disjunction
 $\varphi_1\lor \dots \lor \varphi_n$ is a tautology in the theory of linear
 integer arithmetic.
@@ -519,19 +486,15 @@ can be NP-hard. Hence, this rule should be avoided when possible.
 
 \begin{RuleDescription}{la_disequality}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
+$i$. & \ctxsep  & 
 $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$
- & (\currule) \\
+& (\currule) \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{la_totality}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$t_1 \leq t_2 \lor t_2 \leq t_1$
- & (\currule) \\
+$i$. & \ctxsep & $t_1 \leq t_2 \lor t_2 \leq t_1$ & (\currule) \\
 \end{AletheX}
 \end{RuleDescription}
 
@@ -540,21 +503,16 @@ This rule is a linear arithmetic tautology which can be checked without
 sophisticated reasoning. It has either the form
 
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\varphi$
- & (\currule) \\
+$i$. & \ctxsep & $\varphi$  & (\currule) \\
 \end{AletheX}
-
-\noindent
 where $\varphi$ is either a linear inequality $s_1 \bowtie s_2$
 or $\neg(s_1 \bowtie s_2)$. After performing step 1 to 3 of the process for
 checking the \proofRule{la_generic} the result is trivially unsatisfiable.
 
 The second form handles bounds on linear combinations. It is binary clause:
-\begin{AletheX}
 
-$i$. & \ctxsep     & 
+\begin{AletheX}
+$i$. & \ctxsep & 
 $\varphi_1 \lor \varphi_2$ % Checked: this is a proper disjunction not a cl
  & (\currule) \\
 \end{AletheX}
@@ -562,13 +520,13 @@ $\varphi_1 \lor \varphi_2$ % Checked: this is a proper disjunction not a cl
 It can be checked by using the procedure for \proofRule{la_generic} with
 while setting the arguments to $1$. Informally, the rule follows one of several
 cases:
-\startitemize[packed]
+\begin{itemize}
     \item $\neg (s_1 \leq d_1) \lor s_1 \leq d_2$ where $d_1 \leq d_2$
     \item $s_1 \leq d_1 \lor \neg (s_1 \leq d_2)$ where $d_1 = d_2$
     \item $\neg (s_1 \geq d_1) \lor s_1 \geq d_2$ where $d_1 \geq d_2$
     \item $s_1 \geq d_1 \lor \neg (s_1 \geq d_2)$ where $d_1 = d_2$
     \item $\neg (s_1 \leq d_1) \lor \neg(s_1 \geq d_2)$ where $d_1 < d_2$
-\stopitemize
+\end{itemize}
 The inequalities $s_1 \bowtie d$ are are the result of applying normalization
 as for the rule \proofRule{la_generic}.
 \end{RuleDescription}
@@ -577,47 +535,29 @@ as for the rule \proofRule{la_generic}.
   The \currule{} rule is used to rename bound variables.
 
 \begin{AletheXS}
-
-\aletheLineS
-\bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
-  $\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$
-	 & \ctxsep
-   & 
-  $\varphi ≈ \varphi'$
-   & (\dots) \\
-$k$. & \eTD
-    \bTD \ctxsep  & 
+\aletheLineSB
+$j$. & \spctx{ $\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$}
+	 & \ctxsep & $\varphi ≈ \varphi'$ & ($\dots$) \\
+	 \spsep
+$k$. & & \ctxsep & 
     $\forall x_1, \dots, x_n.\varphi ≈ \forall y_1, \dots, y_n. \varphi'$
      & \currule{} \\
-      & \\
 \end{AletheXS}
-
-  \noindent
   where the variables $y_1, \dots, y_n$ is not free in $\forall x_1,
   \dots, x_n.\varphi$.
 \end{RuleDescription}
 
-\page
 \begin{RuleDescription}{sko_ex}
 The \currule{} rule skolemizes existential quantifiers.
 
 \begin{AletheXS}
-
 \aletheLineS
-\bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
-$\Gamma, x_1 \mapsto \varepsilon_1, \dots ,  x_n \mapsto \varepsilon_n$
-	 & \ctxsep
-   & 
-  $\varphi ≈ \psi$
-   & (\dots) \\
-$k$. & \eTD
-    \bTD \ctxsep  & 
-    $\exists x_1, \dots, x_n.\varphi ≈ \psi$
-     & \currule{} \\
-      & \\
+$j$. &
+\spctx{$\Gamma, x_1 \mapsto \varepsilon_1, \dots ,  x_n \mapsto \varepsilon_n$}
+	 & \ctxsep &  $\varphi ≈ \psi$ & ($\dots$) \\
+	 \spsep
+$k$. & & \ctxsep & $\exists x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 \end{AletheXS}
-
-\noindent
 where $\varepsilon_i$ stands for $\varepsilon x_i. (\exists x_{i+1}, \dots,
 x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{i-1}\mapsto\varepsilon_{i-1}])$.
 \end{RuleDescription}
@@ -626,54 +566,32 @@ x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{i-1}\mapsto\varepsilon_{i-1}])$.
 The \currule{} rule skolemizes universal quantifiers.
 
 \begin{AletheXS}
-
 \aletheLineS
-\bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
-$\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)$
-	 & \ctxsep
-   & 
-  $\varphi ≈ \psi$
-   & (\dots) \\
-$k$. & \eTD
-    \bTD \ctxsep  & 
-$\forall x_1, \dots, x_n.\varphi ≈ \psi$
-     & \currule{} \\
-      & \\
+$j$. & 
+\spctx{$\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)$}
+	 & \ctxsep & $\varphi ≈ \psi$ & ($\dots$) \\
+ \spsep
+$k$. & & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 \end{AletheXS}
 
 \end{RuleDescription}
-
 
 \begin{RuleDescription}{forall_inst}
 \begin{AletheX}
-
-
-$i$. & \ctxsep     & 
+$i$. & \ctxsep & 
 $\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1]\dots[x_n\mapsto t_n]$
- & \currule\, [$(x_{k_1}, t_{k_1})$, \dots, $(x_{k_n}, t_{k_n})$] \\
+ & \currule\, [$(x_{k_1}, t_{k_1})$, $\dots$, $(x_{k_n}, t_{k_n})$] \\
 \end{AletheX}
-
-\noindent
 where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_i$ and
 $k_i$ have the same sort. The arguments $(x_{k_i}, t_{k_i})$ are printed as
 \inlineAlethe{(:= xki tki)}.
-
-\ruleparagraph{Remark.} In \in{Section}[sec:qsimp-proof] we discuss an alternative
-quantifier instantiation rule.
-The resulting proof would be more fine grained and this
-would also be an opportunity to provide a proof for the clausification
-as currently done by \proofRule{qnt_cnf}.
 \end{RuleDescription}
+
 
 \begin{RuleDescription}{refl}
 \begin{AletheXS}
-
-$j$. & \ctxsep  & $\Gamma$  & 
-$t_1 ≈ t_2 $
- & \currule \\
+$j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_2 $ & \currule \\
 \end{AletheXS}
-
-\noindent
 where, if $\sigma = \subst(\Gamma)$,
 the terms $t_1\sigma$ and $t_2$ are
 syntactically equal up to the orientation of equalities.
@@ -682,73 +600,44 @@ syntactically equal up to the orientation of equalities.
 the context.
 \end{RuleDescription}
 
-\page
 \begin{RuleDescription}{trans}
 \begin{AletheXS}
-
-$i_1$. & \ctxsep  & $\Gamma$  & 
-$t_1 ≈ t_2 $
- & (\dots) \\
-$i_2$. & \ctxsep  & $\Gamma$  & 
-$t_2 ≈ t_3 $
- & (\dots) \\
-\aletheLineSB
-$i_n$. & \ctxsep  & $\Gamma$  & 
-$t_n ≈ t_{n+1} $
- & (\dots) \\
-$j$. & \ctxsep  & $\Gamma$  & 
-$t_1 ≈ t_{n+1}$
- & (\currule\; $i_1$, \dots, $i_n$) \\
+$i_1$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_2 $ & ($\dots$) \\
+$i_2$. & \ctxsep  & $\Gamma$  & $t_2 ≈ t_3 $ & ($\dots$) \\
+\aletheLineS
+$i_n$. & \ctxsep  & $\Gamma$  & $t_n ≈ t_{n+1} $ & ($\dots$) \\
+$j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_{n+1}$ & (\currule\; $i_1$, $\dots$, $i_n$) \\
 \end{AletheXS}
-
 \end{RuleDescription}
 
 \begin{RuleDescription}{cong}
 \begin{AletheXS}
-
-$i_1$. & \ctxsep  & $\Gamma$  & 
-$t_1 ≈ u_1 $
- & (\dots) \\
-$i_2$. & \ctxsep  & $\Gamma$  & 
-$t_2 ≈ u_2 $
- & (\dots) \\
-\aletheLineSB
-$i_n$. & \ctxsep  & $\Gamma$  & 
-$t_n ≈ u_n $
- & (\dots) \\
-$j$. & \ctxsep  & $\Gamma$  & 
-$(f\,t_1\,\cdots\,t_n) ≈ (f\,u_1\,\cdots\,u_n)$
- & (\currule\; $i_1$, \dots, $i_n$) \\
+$i_1$. & \ctxsep  & $\Gamma$  & $t_1 ≈ u_1$ & ($\dots$) \\
+$i_2$. & \ctxsep  & $\Gamma$  & $t_2 ≈ u_2 $ & ($\dots$) \\
+\aletheLineS
+$i_n$. & \ctxsep  & $\Gamma$  & $t_n ≈ u_n $ & ($\dots$) \\
+$j$. & \ctxsep  & $\Gamma$  & $(f\,t_1\,\cdots\,t_n) ≈ (f\,u_1\,\cdots\,u_n)$  & (\currule\; $i_1$, $\dots$, $i_n$) \\
 \end{AletheXS}
-
-\noindent
-where $f$\, is any $n$-ary function symbol of appropriate sort.
+where $f$ is any $n$-ary function symbol of appropriate sort.
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_reflexive}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$t ≈ t$
- & \currule \\
+$i$. & \ctxsep  & $t ≈ t$  & \currule \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_transitive}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\neg (t_1 ≈ t_2)$, \dots , $\neg (t_{n-1} ≈ t_n)$,
-$t_1 ≈ t_n$
- & \currule \\
+$i$. & \ctxsep & $\neg (t_1 ≈ t_2)$, $\dots$ , $\neg (t_{n-1} ≈ t_n)$,
+$t_1 ≈ t_n$ & \currule \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_congruent}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\neg (t_1 ≈ u_1)$, \dots ,$\neg (t_n ≈ u_n)$,
+$i$. & \ctxsep & 
+$\neg (t_1 ≈ u_1)$, $\dots$ ,$\neg (t_n ≈ u_n)$,
 $(f\,t_1\, \cdots\,t_n) ≈ (f\,u_1\, \cdots\,u_n)$
  & \currule \\
 \end{AletheX}
@@ -762,16 +651,12 @@ $\neg (t_1 ≈ u_1)$, \dots ,$\neg (t_n ≈ u_n)$,
 $(P\,t_1\, \cdots\,t_n) ≈ (P\,u_1\, \cdots\,u_n)$
  & \currule \\
 \end{AletheX}
-
-\noindent
 where $P$\, is a function symbol with co-domain sort $\lsymb{Bool}$.
 \end{RuleDescription}
 
-\page
 \begin{RuleDescription}{qnt_cnf}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
+$i$. & \ctxsep & 
 $\neg(\forall x_1, \dots, x_n. \varphi) \lor \forall x_{k_1}, \dots, x_{k_m}.\varphi'$
  & \currule \\
 \end{AletheX}
@@ -784,137 +669,100 @@ $\varphi$. Normalization is performed in two phases. First, the negative normal 
 is formed, then the result is prenexed. The result of the first step is $\Phi(\varphi, 1)$
 where:
 
-\[\startalign
-\NC  \Phi(\neg \varphi, 1) \NC:= \Phi(\varphi, 0)\NR
-\NC  \Phi(\neg \varphi, 0) \NC:= \Phi(\varphi, 1)\NR
-\NC  \Phi(\varphi_1 \lor\dots\lor\varphi_n, 1) \NC:= \Phi(\varphi_1, 1)\lor\dots\lor\Phi(\varphi_n, 1)\NR
-\NC  \Phi(\varphi_1 \land\dots\land\varphi_n, 1) \NC:= \Phi(\varphi_1, 1)\land\dots\land\Phi(\varphi_n, 1)\NR
-\NC  \Phi(\varphi_1 \lor\dots\lor\varphi_n, 0) \NC:= \Phi(\varphi_1, 0)\land\dots\land\Phi(\varphi_n, 0)\NR
-\NC  \Phi(\varphi_1 \land\dots\land\varphi_n, 0) \NC:= \Phi(\varphi_1, 0)\lor\dots\lor\Phi(\varphi_n, 0)\NR
-\NC  \Phi(\varphi_1 \rightarrow \varphi_2, 1) \NC:= (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land
-                                                    (\Phi(\varphi_2, 0) \lor \Phi(\varphi_1, 1))\NR
-\NC  \Phi(\varphi_1 \rightarrow \varphi_2, 0) \NC:= (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor
-                                                    (\Phi(\varphi_2, 1) \land \Phi(\varphi_1, 0))\NR
-\NC  \Phi(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3, 1) \NC:=
-             (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land (\Phi(\varphi_1, 1) \lor \Phi(\varphi_3, 1))\NR
-\NC  \Phi(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3, 0) \NC:=
-             (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor (\Phi(\varphi_1, 0) \land \Phi(\varphi_3, 0))\NR
-\NC  \Phi(\forall x_1, \dots, x_n. \varphi, 1) \NC:= \forall x_1, \dots, x_n. \Phi(\varphi, 1)\NR
-\NC  \Phi(\exists x_1, \dots, x_n. \varphi, 1) \NC:= \exists x_1, \dots, x_n. \Phi(\varphi, 1)\NR
-\NC  \Phi(\forall x_1, \dots, x_n. \varphi, 0) \NC:= \exists x_1, \dots, x_n. \Phi(\varphi, 0)\NR
-\NC  \Phi(\exists x_1, \dots, x_n. \varphi, 0) \NC:= \forall x_1, \dots, x_n. \Phi(\varphi, 0)\NR
-\NC  \Phi(\varphi, 1) \NC:= \varphi\NR
-\NC  \Phi(\varphi, 0) \NC:= \neg\varphi
-\stopalign\]
+\begin{align*}
+\Phi(\neg \varphi, 1) &:= \Phi(\varphi, 0) \\
+\Phi(\neg \varphi, 0) &:= \Phi(\varphi, 1) \\
+\Phi(\varphi_1 \lor\dots\lor\varphi_n, 1) &:= \Phi(\varphi_1, 1)\lor\dots\lor\Phi(\varphi_n, 1) \\
+\Phi(\varphi_1 \land\dots\land\varphi_n, 1) &:= \Phi(\varphi_1, 1)\land\dots\land\Phi(\varphi_n, 1) \\
+\Phi(\varphi_1 \lor\dots\lor\varphi_n, 0) &:= \Phi(\varphi_1, 0)\land\dots\land\Phi(\varphi_n, 0) \\
+\Phi(\varphi_1 \land\dots\land\varphi_n, 0) &:= \Phi(\varphi_1, 0)\lor\dots\lor\Phi(\varphi_n, 0) \\
+\Phi(\varphi_1 \rightarrow \varphi_2, 1) &:= (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land
+                                                    (\Phi(\varphi_2, 0) \lor \Phi(\varphi_1, 1)) \\
+\Phi(\varphi_1 \rightarrow \varphi_2, 0) &:= (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor
+                                                    (\Phi(\varphi_2, 1) \land \Phi(\varphi_1, 0)) \\
+\Phi(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3, 1) &:=
+             (\Phi(\varphi_1, 0) \lor \Phi(\varphi_2, 1)) \land (\Phi(\varphi_1, 1) \lor \Phi(\varphi_3, 1)) \\
+\Phi(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3, 0) &:=
+             (\Phi(\varphi_1, 1) \land \Phi(\varphi_2, 0)) \lor (\Phi(\varphi_1, 0) \land \Phi(\varphi_3, 0)) \\
+\Phi(\forall x_1, \dots, x_n. \varphi, 1) &:= \forall x_1, \dots, x_n. \Phi(\varphi, 1) \\
+\Phi(\exists x_1, \dots, x_n. \varphi, 1) &:= \exists x_1, \dots, x_n. \Phi(\varphi, 1) \\
+\Phi(\forall x_1, \dots, x_n. \varphi, 0) &:= \exists x_1, \dots, x_n. \Phi(\varphi, 0) \\
+\Phi(\exists x_1, \dots, x_n. \varphi, 0) &:= \forall x_1, \dots, x_n. \Phi(\varphi, 0) \\
+\Phi(\varphi, 1) &:= \varphi \\
+\Phi(\varphi, 0) &:= \neg\varphi
+\end{align*}
 
 \ruleparagraph{Remark.} This is a placeholder rule that combines the many steps
 done during clausification.
-
 \end{RuleDescription}
 
-\page
 \begin{RuleDescription}{and}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\varphi_1 \land \cdots \land \varphi_n$
- & (\dots) \\
-$j$. & \ctxsep     & 
-$\varphi_k$
- & (\currule\;$i$) \\
+$i$. & \ctxsep & $\varphi_1 \land \cdots \land \varphi_n$ & ($\dots$) \\
+$j$. & \ctxsep & $\varphi_k$ & (\currule\;$i$) \\
 \end{AletheX}
-
-\noindent
 and $1 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{not_or}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\neg (\varphi_1 \lor \cdots \lor \varphi_n)$
- & (\dots) \\
-$j$. & \ctxsep     & 
-$\neg \varphi_k$
- & (\currule\;$i$) \\
+$i$. & \ctxsep & $\neg (\varphi_1 \lor \cdots \lor \varphi_n)$ & ($\dots$) \\
+$j$. & \ctxsep & $\neg \varphi_k$  & (\currule\;$i$) \\
 \end{AletheX}
-
-\noindent
 and $1 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{or}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\varphi_1 \lor \cdots \lor \varphi_n$
- & (\dots) \\
-$j$. & \ctxsep     & 
-$\varphi_1, \dots, \varphi_n$
- & (\currule\;$i$) \\
+$i$. & \ctxsep & 
+$\varphi_1 \lor \cdots \lor \varphi_n$ & ($\dots$) \\
+$j$. & \ctxsep & $\varphi_1, \dots, \varphi_n$ & (\currule\;$i$) \\
 \end{AletheX}
 
 \ruleparagraph{Remark.} This rule deconstructs the \inlineAlethe{or} operator
 into a clause denoted by \inlineAlethe{cl}.
 \end{RuleDescription}
 
-\startruleexample
+\begin{RuleExample}
 An application of the \currule{} rule.
-
-\startSMTCode
+\begin{AletheVerb}
 (step t15 (cl (or (= a b) (not (<= a b)) (not (<= b a))))
     :rule la_disequality)
 (step t16 (cl     (= a b) (not (<= a b)) (not (<= b a)))
     :rule or :premises (t15))
-\stopSMTCode
-\stopruleexample
-
+\end{AletheVerb}
+\end{RuleExample}
 
 \begin{RuleDescription}{not_and}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\neg (\varphi_1 \land \dots \land \varphi_n)$
- & (\dots) \\
-$j$. & \ctxsep     & 
-$\neg\varphi_1 , \dots , \neg\varphi_n$
- & (\currule\;$i$) \\
+$i$. & \ctxsep & $\neg (\varphi_1 \land \dots \land \varphi_n)$ & ($\dots$) \\
+$j$. & \ctxsep & $\neg\varphi_1 , \dots , \neg\varphi_n$ & (\currule\;$i$) \\
 \end{AletheX}
-
 \end{RuleDescription}
 
 \begin{RuleDescription}{xor1}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\lsymb{xor}\,\varphi_1\,\varphi_2$
- & (\dots) \\
-$j$. & \ctxsep     & 
-$\varphi_1, \varphi_2$
- & (\currule\;$i$) \\
+$i$. & \ctxsep & $\lsymb{xor}\,\varphi_1\,\varphi_2$
+ & ($\dots$) \\
+$j$. & \ctxsep & $\varphi_1, \varphi_2$ & (\currule\;$i$) \\
 \end{AletheX}
 \end{RuleDescription}
 
-\page
 \begin{RuleDescription}{xor2}
 \begin{AletheX}
-
-$i$. & \ctxsep     & 
-$\lsymb{xor}\,\varphi_1\,\varphi_2$
- & (\dots) \\
-$j$. & \ctxsep     & 
-$\neg\varphi_1 , \neg\varphi_2$
- & (\currule\;$i$) \\
+$i$. & \ctxsep & $\lsymb{xor}\,\varphi_1\,\varphi_2$ & ($\dots$) \\
+$j$. & \ctxsep & $\neg\varphi_1 , \neg\varphi_2$ & (\currule\;$i$) \\
 \end{AletheX}
-
 \end{RuleDescription}
+
+\endinput
+
 
 \begin{RuleDescription}{not_xor1}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\neg(\lsymb{xor}\,\varphi_1\,\varphi_2)$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\varphi_1 , \neg\varphi_2$
  & (\currule\;$i$) \\
@@ -925,10 +773,9 @@ $\varphi_1 , \neg\varphi_2$
 
 \begin{RuleDescription}{not_xor2}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\neg(\lsymb{xor}\,\varphi_1\,\varphi_2)$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\neg\varphi_1 , \varphi_2$
  & (\currule\;$i$) \\
@@ -937,10 +784,9 @@ $\neg\varphi_1 , \varphi_2$
 
 \begin{RuleDescription}{implies}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\varphi_1\rightarrow\varphi_2$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\neg\varphi_1 , \varphi_2$
  & (\currule\;$i$) \\
@@ -949,10 +795,9 @@ $\neg\varphi_1 , \varphi_2$
 
 \begin{RuleDescription}{not_implies1}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\neg (\varphi_1\rightarrow\varphi_2)$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\varphi_1$
  & (\currule\;$i$) \\
@@ -961,10 +806,9 @@ $\varphi_1$
 
 \begin{RuleDescription}{not_implies2}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\neg (\varphi_1\rightarrow\varphi_2)$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\neg\varphi_2$
  & (\currule\;$i$) \\
@@ -973,23 +817,21 @@ $\neg\varphi_2$
 
 \begin{RuleDescription}{equiv1}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\varphi_1≈\varphi_2$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\neg\varphi_1 , \varphi_2$
  & (\currule\;$i$) \\
 \end{AletheX}
 \end{RuleDescription}
 
-\page
+
 \begin{RuleDescription}{equiv2}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\varphi_1≈\varphi_2$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\varphi_1, \neg\varphi_2$
  & (\currule\;$i$) \\
@@ -998,10 +840,9 @@ $\varphi_1, \neg\varphi_2$
 
 \begin{RuleDescription}{not_equiv1}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\neg(\varphi_1≈\varphi_2)$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\varphi_1 , \varphi_2$
  & (\currule\;$i$) \\
@@ -1011,10 +852,9 @@ $\varphi_1 , \varphi_2$
 
 \begin{RuleDescription}{not_equiv2}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\neg(\varphi_1≈\varphi_2)$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\neg\varphi_1 , \neg\varphi_2$
  & (\currule\;$i$) \\
@@ -1073,7 +913,7 @@ $\neg (\varphi_1\,\lsymb{xor}\,\varphi_2) , \varphi_1 , \varphi_2$
 \end{AletheX}
 \end{RuleDescription}
 
-\page
+
 \begin{RuleDescription}{xor_pos2}
 \begin{AletheX}
 
@@ -1166,10 +1006,9 @@ $\varphi_1 ≈ \varphi_2 , \varphi_1 , \varphi_2$
 
 \begin{RuleDescription}{ite1}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\varphi_1 , \varphi_3$
  & (\currule\;$i$) \\
@@ -1178,10 +1017,9 @@ $\varphi_1 , \varphi_3$
 
 \begin{RuleDescription}{ite2}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\neg\varphi_1 , \varphi_2$
  & (\currule\;$i$) \\
@@ -1226,10 +1064,9 @@ $i$. & \ctxsep     &
 
 \begin{RuleDescription}{not_ite1}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\neg(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3)$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\varphi_1 , \neg\varphi_3$
  & (\currule\;$i$) \\
@@ -1238,10 +1075,9 @@ $\varphi_1 , \neg\varphi_3$
 
 \begin{RuleDescription}{not_ite2}
 \begin{AletheX}
-
 $i$. & \ctxsep     & 
 $\neg(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3)$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep     & 
 $\neg\varphi_1 , \neg\varphi_2$
  & (\currule\;$i$) \\
@@ -1249,7 +1085,7 @@ $\neg\varphi_1 , \neg\varphi_2$
 
 \end{RuleDescription}
 
-\page
+
 \begin{RuleDescription}{connective_def}
   This rule is used to replace connectives by their definition. It can be one
   of the following:
@@ -1304,7 +1140,7 @@ $\varphi_1\land \cdots\land\varphi_n ≈ \psi$
 where $\psi$ is the transformed term.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $\top \land \cdots \land \top ⇒ \top$
     \item $\varphi_1 \land \cdots \land \varphi_n ⇒ \varphi_1
     \land \cdots \land \varphi_{n'} $ where the right-hand side has all
@@ -1320,7 +1156,7 @@ The possible transformations are:
   \NC \varphi_j \NC= \underbrace{\neg \dots \neg}_m \psi
   \stopalign\]
   and one of $n, m$ is odd and the other even.  Either can be $0$.
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{or_simplify}
@@ -1338,7 +1174,7 @@ $(\varphi_1\lor \cdots\lor\varphi_n) ≈ \psi$
 where $\psi$ is the transformed term.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $\bot \lor \cdots \lor \bot ⇒ \bot$
     \item $\varphi_1 \lor \cdots \lor \varphi_n ⇒ \varphi_1
     \lor \cdots \lor \varphi_{n'} $ where the right-hand side has all
@@ -1354,7 +1190,7 @@ The possible transformations are:
   \NC \varphi_j \NC= \underbrace{\neg \dots \neg}_m \psi
   \stopalign\]
   and one of $n, m$ is odd and the other even.  Either can be $0$.
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{not_simplify}
@@ -1372,11 +1208,11 @@ $\neg\varphi ≈ \psi$
 where $\psi$ is the transformed term.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $\neg (\neg \varphi) ⇒ \varphi$
     \item $\neg \bot ⇒ \top$
     \item $\neg \top ⇒ \bot$
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{implies_simplify}
@@ -1394,7 +1230,7 @@ $\varphi_1\rightarrow \varphi_2 ≈ \psi$
 where $\psi$ is the transformed term.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $\neg \varphi_1 \rightarrow \neg \varphi_2 ⇒  \varphi_2\rightarrow \varphi_1$
     \item $\bot \rightarrow  \varphi ⇒ \top$
     \item $ \varphi \rightarrow \top ⇒ \top$
@@ -1404,7 +1240,7 @@ The possible transformations are:
 		\item $\neg \varphi \rightarrow  \varphi ⇒  \varphi$
 		\item $ \varphi \rightarrow \neg \varphi ⇒ \neg \varphi$
 		\item $( \varphi_1\rightarrow \varphi_2)\rightarrow \varphi_2 ⇒  \varphi_1\lor \varphi_2$
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{equiv_simplify}
@@ -1423,7 +1259,7 @@ $(\varphi_1≈ \varphi_2) ≈ \psi$
 where $\psi$ is the transformed term.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $(\neg \varphi_1 ≈ \neg \varphi_2) ⇒ ( \varphi_1≈ \varphi_2)$
     \item $( \varphi≈ \varphi) ⇒ \top$
     \item $( \varphi≈ \neg \varphi) ⇒ \bot$
@@ -1432,7 +1268,7 @@ The possible transformations are:
     \item $( \varphi ≈ \top) ⇒  \varphi$
     \item $(\bot ≈  \varphi) ⇒ \neg \varphi$
     \item $( \varphi ≈ \bot) ⇒ \neg \varphi$
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{bool_simplify}
@@ -1450,7 +1286,7 @@ $\varphi≈ \psi$
 where $\psi$ is the transformed term.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
 	\item $\neg(\varphi_1\rightarrow \varphi_2) ⇒ (\varphi_1 \land \neg \varphi_2)$
 	\item $\neg(\varphi_1\lor \varphi_2) ⇒ (\neg \varphi_1 \land \neg \varphi_2)$
 	\item $\neg(\varphi_1\land \varphi_2) ⇒ (\neg \varphi_1 \lor \neg \varphi_2)$
@@ -1458,10 +1294,10 @@ The possible transformations are:
 	\item $((\varphi_1\rightarrow \varphi_2)\rightarrow \varphi_2)  ⇒ (\varphi_1\lor \varphi_2)$
 	\item $(\varphi_1 \land (\varphi_1\rightarrow \varphi_2)) ⇒ (\varphi_1 \land \varphi_2)$
 	\item $((\varphi_1\rightarrow \varphi_2) \land \varphi_1) ⇒ (\varphi_1 \land \varphi_2)$
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
-\page
+
 \begin{RuleDescription}{ac_simp}
   This rule simplifies nested occurrences of $\lor$ or $\land$:
 
@@ -1498,7 +1334,7 @@ $\lsymb{ite}\,\varphi\,t_1\,t_2 ≈ u$
 where $u$ is the transformed term.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $\lsymb{ite}\, \top      \, t_1 \, t_2 ⇒ t_1$
     \item $\lsymb{ite}\, \bot      \, t_1 \, t_2 ⇒ t_2$
     \item $\lsymb{ite}\, \psi      \, t \, t ⇒ t$
@@ -1513,7 +1349,7 @@ The possible transformations are:
     \item $\lsymb{ite}\, \psi \, \varphi\,\bot ⇒ \psi\land\varphi$
     \item $\lsymb{ite}\, \psi \, \bot\, \varphi ⇒ \neg\psi\land\varphi$
     \item $\lsymb{ite}\, \psi \, \varphi\,\top ⇒ \neg\psi\lor\varphi$
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{qnt_simplify}
@@ -1530,7 +1366,7 @@ $i$. & \ctxsep  & $\Gamma$  &
   where $\varphi$ is either $\top$ or $\bot$.
 \end{RuleDescription}
 
-\page
+
 \begin{RuleDescription}{onepoint}
 The {\currule} rule is the \quotation{one-point-rule}. That is: it eliminates quantified
 variables that can only have one value.
@@ -1540,10 +1376,10 @@ variables that can only have one value.
 \aletheLineS
 \bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
   $\Gamma, x_{k_1},\dots, x_{k_m},  x_{j_1} \mapsto t_{j_1}, \dots ,  x_{j_o} \mapsto t_{j_o}$
-	 & \ctxsep
+	 & \ctxse
    & 
   $\varphi ≈ \varphi'$
-   & (\dots) \\
+   & ($\dots$) \\
 $k$. & \eTD
     \bTD \ctxsep  & 
 $Q x_1, \dots, x_n.\varphi ≈ Q x_{k_1}, \dots, x_{k_m}. \varphi'$
@@ -1567,11 +1403,11 @@ missing.
 
 \end{RuleDescription}
 
-\startruleexample
+\begin{RuleExample}
 An application of the \currule{} rule on the term $(\forall x, y.\, x ≈ y
 \rightarrow (f\,x)\land (f\,y))$ look like this:
 
-\startSMTCode
+\begin{AletheVerb}
 (anchor :step t3 :args ((:= y x)))
 (step t3.t1 (cl (= x y)) :rule refl)
 (step t3.t2 (cl (= (= x y) (= x x)))
@@ -1588,10 +1424,10 @@ An application of the \currule{} rule on the term $(\forall x, y.\, x ≈ y
         (forall ((x S) (y S)) (=> (= x y) (and (f x) (f y))))
         (forall ((x S))       (=> (= x x) (and (f x) (f x))))))
     :rule qnt_simplify)
-\stopSMTCode
-\stopruleexample
+\end{AletheVerb}
+\end{RuleExample}
 
-\page
+
 \begin{RuleDescription}{qnt_join}
 \begin{AletheXS}
 
@@ -1638,11 +1474,11 @@ $i$. & \ctxsep  & $\Gamma$  &
   where $\psi$ is the transformed term.
 
   The possible transformations are:
-  \startitemize[packed]
+  \begin{itemize}
   \item $t ≈ t ⇒ \top$
   \item $(t_1 ≈ t_2) ⇒ \bot$ if $t_1$ and $t_2$ are different numeric constants.
   \item $\neg (t ≈ t) ⇒ \bot$ if $t$ is a numeric constant.
-  \stopitemize
+  \end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{div_simplify}
@@ -1657,16 +1493,16 @@ $(t_1\, /\,  t_2) ⇒ t_3$
 \end{AletheXS}
 
 \noindent The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
   \item $t\, /\, t ⇒ 1$
   \item $t\, /\, 1 ⇒ t$
 	\item $t_1\,  /\,  t_2 ⇒ t_3$
 		if $t_1$ and $t_2$ are constants and $t_3$ is $t_1$
 		divided by $t_2$ according to the semantic of the current theory.
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
-\page
+
 \begin{RuleDescription}{prod_simplify}
 This rule simplifies a product by applying equivalent
 transformations as long as possible. The general form is
@@ -1682,7 +1518,7 @@ $t_1\times\cdots\times t_n ≈ u$
 where $u$ is either a constant or a product.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $t_1\times\cdots\times t_n ⇒ u$ where all
     $t_i$ are constants and $u$ is their product.
     \item $t_1\times\cdots\times t_n ⇒ 0$ if any
@@ -1694,7 +1530,7 @@ The possible transformations are:
 			with the constants removed.
     \item $t_1\times\cdots\times t_n ⇒
 			t_{k_1}\times\cdots\times t_{k_n}$: same as above if $c$ is $1$.
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{unary_minus_simplify}
@@ -1733,14 +1569,14 @@ $t_1- t_2 ≈ u$
 \end{AletheXS}
 
 \noindent The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $t - t ⇒ 0$
     \item $t_1 - t_2 ⇒ t_3$ where $t_1$
     and $t_2$ are numerical constants and $t_3$ is $t_2$ subtracted
     from~$t_1$.
     \item $t - 0 ⇒ t$
     \item $0 - t ⇒ -t$
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{sum_simplify}
@@ -1758,7 +1594,7 @@ $t_1+\cdots+t_n ≈ u$
 where $u$ is either a constant or a product.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $t_1+\cdots+t_n ⇒ c$ where all
     $t_i$ are constants and $c$ is their sum.
     \item $t_1+\cdots+t_n ⇒
@@ -1769,7 +1605,7 @@ The possible transformations are:
     \item $t_1+\cdots+t_n ⇒
 			t_{k_1}+\cdots+t_{k_n}$: same as above if $c$ is
 			$0$.
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 
@@ -1789,7 +1625,7 @@ where $\bowtie$ is as for the proof rule \proofRule{la_generic}, but never
 $≈$.
 
 The possible transformations are:
-\startitemize[packed]
+\begin{itemize}
     \item $t_1 < t_2 ⇒ \varphi$ where $t_1$ and
     $t_2$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
     strictly greater than $t_2$ and $\bot$ otherwise.
@@ -1801,7 +1637,7 @@ The possible transformations are:
     \item $t_1 \geq t_2 ⇒ t_2 \leq t_1$
     \item $t_1 < t_2 ⇒ \neg (t_2 \leq t_1)$
     \item $t_1 > t_2 ⇒ \neg (t_1 \leq t_2)$
-\stopitemize
+\end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{let}
@@ -1810,23 +1646,23 @@ The possible transformations are:
 \begin{AletheXS}
 
 $i_1$. & 
-  $\Gamma$
+  $\Gamma
 	 & \ctxsep  & 
   $t_{1} ≈ s_{1}$
-   & (\dots) \\
+   & ($\dots$) \\
 \aletheLineSB
 $i_n$. & 
-  $\Gamma$
+  $\Gamma
 	 & \ctxsep  & 
   $t_{n} ≈ s_{n}$
-   & (\dots) \\
+   & ($\dots$) \\
 \aletheLineS
 \bTR[bottomframe=on] \bTD[bottomframe=off] $j$. & [leftframe=on]
   $\Gamma, x_1 \mapsto s_1, \dots,  x_n \mapsto s_n$
-	 & \ctxsep
+	 & \ctxse
    & 
   $u ≈ u'$
-   & (\dots) \\
+   & ($\dots$) \\
 $k$. & $\Gamma$ \eTD
     \bTD \ctxsep  & 
      $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u) ≈ u'$
@@ -1840,7 +1676,7 @@ $k$. & $\Gamma$ \eTD
   is skipped.
 \end{RuleDescription}
 
-\page
+
 \begin{RuleDescription}{distinct_elim}
 This rule eliminates the $\lsymb{distinct}$ predicate. If called with one
 argument this predicate always holds:
@@ -1929,10 +1765,9 @@ $\bigcirc_{i=1}^{n} t_i ≈
 
 \begin{RuleDescription}{bfun_elim}
 \begin{AletheX}
-
 $i$. & \ctxsep   & 
 $\psi$
- & (\dots) \\
+ & ($\dots$) \\
 $j$. & \ctxsep   & 
 $\varphi$
  & (\currule\; $i$) \\
@@ -1985,7 +1820,7 @@ constants are unfolded during proof printing. Hence, the slightly strange
 form and the reordering of equalities.
 \end{RuleDescription}
 
-\page % TODO: double sided
+% TODO: double sided
 \subject[sec:alethe:rules-index]{Rule Index}
 \placeruleIndex[textstyle={\ss\addff{table}},style={\bf\WORDS}]
 
