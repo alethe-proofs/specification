@@ -229,7 +229,7 @@ simplifications.}
 \ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
 \end{xltabular}
 
-\subject{Rule List}
+\subsection{Rule List}
 \label{sec:alethe:rules-list}
 
 \begin{RuleDescription}{assume}
@@ -440,7 +440,7 @@ $\geq 0$ if $\bowtie$ is $>$).
 % Just like in ConTeX we can't have minted in the rule environment for some
 % reason.
 \begin{RuleExample}
-A simple \currule{} step in the logic \textsf{LRA} might look like this:
+A simple \proofRule{la_generic} step in the logic \textsf{LRA} might look like this:
 
 \begin{AletheVerb}
 (step t10 (cl (not (> (f a) (f b))) (not (= (f a) (f b))))
@@ -455,7 +455,7 @@ not apply. Finally, after step~5 the conjunction is $(f\,a) - (f\,b) > 0 \land
 \end{RuleExample} 
 
 \begin{RuleExample}
-The following \currule{} step is from a \textsf{QF\_UFLIA} problem:
+The following \proofRule{la_generic} step is from a \textsf{QF\_UFLIA} problem:
 \begin{AletheVerb}
 (step t11 (cl (not (<= f3 0)) (<= (+ 1 (* 4 f3)) 1))
     :rule la_generic :args (1 (div 1 4)))
@@ -724,7 +724,7 @@ into a clause denoted by \inlineAlethe{cl}.
 \end{RuleDescription}
 
 \begin{RuleExample}
-An application of the \currule{} rule.
+An application of the \proofRule{or} rule.
 \begin{AletheVerb}
 (step t15 (cl (or (= a b) (not (<= a b)) (not (<= b a))))
     :rule la_disequality)
@@ -1145,13 +1145,14 @@ $i$. & \ctxsep & $\Gamma$ & $\psi ≈ \varphi_1 \circ\cdots\circ\varphi_n$ & \cu
 
 \begin{RuleDescription}{ite_simplify}
   This rule simplifies an if-then-else term by applying equivalent
-  transformations until fix point\footnote{Note however that the order of the
+  transformations until fixed point\footnote{Note however that the order of the
     application is important, since the set of rules is not confluent. For
     example, the term $(\lsymb{ite} \top \; t_1 \; t_2 ≈
     t_1)$ can be simplified into both $p$ and $(\neg (\neg p))$ depending on the
     order of applications.}
   %
 It has the form
+
 \begin{AletheXS}
 $i$. & \ctxsep & $\Gamma$ & $\lsymb{ite}\,\varphi\,t_1\,t_2 ≈ u$ & \currule \\
 \end{AletheXS}
@@ -1211,7 +1212,7 @@ missing.
 \end{RuleDescription}
 
 \begin{RuleExample}
-An application of the \currule{} rule on the term $(\forall x, y.\, x ≈ y
+An application of the \proofRule{onepoint} rule on the term $(\forall x, y.\, x ≈ y
 \rightarrow (f\,x)\land (f\,y))$ look like this:
 
 \begin{AletheVerb}
@@ -1466,6 +1467,7 @@ $i$. & \ctxsep & $\Gamma$ & $\bigcirc_{i=1}^{n} t_i ≈ (\dots( t_1\circ  t_2) \
 \end{AletheXS}
 
 If the operator $\circ$ is right associative, then the rule has the form
+
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$ & $\bigcirc_{i=1}^{n} t_i ≈
 ( t_1 \circ \cdots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n)\dots)$ & \currule \\
@@ -1527,9 +1529,6 @@ constants are unfolded during proof printing. Hence, the slightly strange
 form and the reordering of equalities.
 \end{RuleDescription}
 
-\endinput
-
-% TODO: double sided
-\subject[sec:alethe:rules-index]{Rule Index}
-\placeruleIndex[textstyle={\ss\addff{table}},style={\bf\WORDS}]
-
+\clearpage
+\subsection{Index of Rules}
+\printindex[rules]

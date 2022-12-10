@@ -2,8 +2,6 @@
 
 
 \usepackage{scrlayer-scrpage}
-\usepackage{hyperref}
-\usepackage{breakurl}
 \usepackage{unicode-math}
 \usepackage{fontsetup}
 
@@ -22,6 +20,20 @@
 \usepackage{fancyvrb} % Gives us \Verb which can be used in footnotes
 \usepackage{amsthm}
 \usepackage{thmtools}
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+
+\usepackage{imakeidx}
+\makeindex
+\makeindex[name=rules,options= -s rule_index_style.ist]
+% We provide a command that discards the argument to the index.  This
+% allows us to do the sectioning of the index manually and give different
+% sectin levels to the rule index and the overall index
+\newcommand\indexsection[1]{}
+\indexsetup{level=\indexsection,firstpagestyle=headings,noclearpage}
+
+% Must come after imakeidx
+\usepackage{hyperref}
+\usepackage{breakurl}
 
 \usepackage{tikz}
 \usetikzlibrary{tikzmark,positioning}
@@ -128,7 +140,7 @@
 
 % Environment for proof-rules
 \newcounter{ProofRuleCounter}
-\newcommand\currule{\proofRule{none}}
+\newcommand\currule{\textbf{ERROR}}
 
 \declaretheoremstyle[
 headfont=\sffamily\bfseries,%
@@ -152,6 +164,7 @@ break
 
 \NewEnviron{RuleDescription}[1]{%
 \renewcommand\currule{\proofRule{#1}}
+\index[rules]{#1}
 
 \begin{inner-rule}[\detokenize{#1}]\label{rule:#1}
 
@@ -507,7 +520,7 @@ where the term $t$\, is the original term, and $u$ is the term after
 preprocessing.  Tautologies with contexts correspond to judgments
 $\vDash_T \subst(\Gamma)(t) ≈ u$.
 
-Formally, the context can be translated to \index{abstraction+lambda}λ-abstractions and
+Formally, the context can be translated to \index{abstraction!lambda}λ-abstractions and
 applications.  This is discussed in Section~\ref{sec:alethe:semantic}.
 
 
@@ -713,7 +726,7 @@ The abstract notation denotes subproofs by marking them with a vertical
 line.  To map this notation to a list of commands, Alethe \index{anchor}uses the
 \inlineAlethe{anchor} command.  This command indicates the start of a subproof.
 A subproof is concluded by a matching \inlineAlethe{step} command.  This step must use
-a \index{rule+concluding}{\em concluding rule}
+a \index{rule!concluding}{\em concluding rule}
 (such as \proofRule{subproof}, \proofRule{bind}, and so forth).
 
 After the \inlineAlethe{anchor} command, the proof uses \inlineAlethe{assume} commands to list
@@ -924,7 +937,7 @@ the calculation of the context of the steps in the subproof.
      a step that uses a concluding rule.
   \end{itemize}
   Then $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$ is the
-  \index{subproof+first-innermost}first-innermost subproof of $P$.
+  \index{subproof!first-innermost}first-innermost subproof of $P$.
 \end{definition}
 
 \begin{example}
@@ -948,7 +961,7 @@ It is easy to calculate the context of the first-innermost subproof.
 	For $\mathit{start} \leq i < \mathit{end}$, let
   $A_1, \dots, A_m$ be the anchors among $C_1, \dots, C_{i-1}$.
 
-  The \index{context+calculated}calculated context of $C_i$ is the context
+  The \index{context!calculated}calculated context of $C_i$ is the context
   \[
   c_{1,1}, \dots, c_{1, n_1}, \dots, c_{m,1}, \dots, c_{m, n_m}
   \]
@@ -981,7 +994,7 @@ Section~\ref{apx:rules}.
 \begin{definition}[Valid First-Innermost Subproof]
 	Let $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$
 	be the first-innermost subproof of $P$.
-	The subproof is \index{subproof+valid}{\em valid} if
+	The subproof is \index{subproof!valid}{\em valid} if
   \begin{itemize}
     \item all steps $C_i$ with $\mathit{start} < i <
     \mathit{end}$ only use premises $C_j$ with $\mathit{start} <
@@ -1043,13 +1056,13 @@ Since this proof contains no subproof, it is also $P_{\mathit{last}}$.
 
 \begin{definition}[Well-Formed Proof]
 	\label{def:well_formed_proof}
-  The Alethe proof $P$ is \index{proof+well-formed}well-formed
+  The Alethe proof $P$ is \index{proof!well-formed}well-formed
   if every step uses a unique index and $P_{\mathit{last}}$
   contains no anchor or step that uses a concluding rule.
 \end{definition}
 
 \begin{definition}[Valid Alethe Proof]
-	The proof $P$ is a \index{proof+valid}{\em valid Alethe proof} if
+	The proof $P$ is a \index{proof!valid}{\em valid Alethe proof} if
   \begin{itemize}
   	\item $P$\, is well-formed,
   	\item $P$\, does not contain any step that uses the \proofRule{hole} rule,
@@ -1073,7 +1086,7 @@ contains the step \textsf{\color{SmtStepId} t7} that concludes with the empty cl
 \end{example}
 
 It is sometimes useful to speak about the steps that are not within a
-subproof.  We call such a step an \index{step+outermost}{\em outermost
+subproof.  We call such a step an \index{step!outermost}{\em outermost
 step}.  In a well-formed proof those are the steps
 of $P_{\mathit{last}}$.
 
@@ -1095,7 +1108,7 @@ To handle subproofs with contexts, we translate the contexts into
 This allows us to
 leverage the \index{lambda calculus}λ-calculus as an existing well-understood theory of \index{binder}binders.
 %
-These λ-terms\index{term+lambda} are called \index{term+meta}\index{metaterms}{\em metaterms}.
+These λ-terms\index{term!lambda} are called \index{term!meta}\index{metaterms}{\em metaterms}.
 
 \begin{definition}[Metaterm]
   Metaterms are expressions constructed by the grammar
@@ -1108,7 +1121,7 @@ all $0 \leq i \leq 1$.
 \end{definition}
 
 According to this definition, a metaterm is either a boxed term, a
-\index{abstraction+lambda}λ-abstraction, or an application to an uncurried λ-term.
+\index{abstraction!lambda}λ-abstraction, or an application to an uncurried λ-term.
 The annotation $\groundbox{$t$}$ delimits terms from the context, a simple
 λ-abstraction is used to express fixed variables, and the
 application expresses simulations substitution of $n$ terms.\footnote{
@@ -1443,7 +1456,7 @@ Theorem~\ref{thm:sound}.
 \end{proof}
 
 
-\section{The Alethe Rules}
+\section{Core Concepts of the Alethe Rules}
 \label{sec:alethe:rules-generic}
 
 Together with the language, the Alethe format also includes a set
@@ -1454,7 +1467,7 @@ proof rules.  Currently, the proof rules correspond to the rules
 that the solver {\verit} can emit.  For the rest of this section, we will discuss some
 general concepts related to the rules.
 
-\paragraph{Tautologous Rules and Simple Deduction.}
+\subsection{Tautologous Rules and Simple Deduction}
 Most rules introduce tautologies. One example is
 the \proofRule{and_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
 \dots \land \varphi_n), \varphi_i$.
@@ -1467,7 +1480,7 @@ rule eliminates an implication: From $\varphi_1 → \varphi_2$,
 it deduces $\neg \varphi_1, \varphi_2$.
 
 
-\paragraph{Resolution.}
+\subsection{Resolution.}
 {\cdclt}-based SMT solvers, and especially their SAT solvers,
 are fundamentally based on resolution of clauses.
 Hence, Alethe also has dedicated clauses and a resolution proof
@@ -1494,7 +1507,8 @@ The premises of a resolution step are clauses, and the conclusion
 is a clause that has been derived from the premises by some binary
 resolution steps.
 
-\paragraph[reference=rule:forall_inst,title={Quantifier Instantiation.}]
+\subsection{Quantifier Instantiation}
+\label{reference=rule:forall_inst}
 To express quantifier instantiation, the rule \proofRule{forall_inst}
 is used. It produces a formula of the form $(\neg \forall \bar
 x_n.\,\varphi) \lor \varphi[\bar t_n]$, where $\varphi$ is
@@ -1511,7 +1525,7 @@ equalities obscures which terms have been used as instances.
 Existential quantifiers are handled by skolemization.
 
 
-\paragraph{Linear Arithmetic.}
+\subsection{Linear Arithmetic}
 Proofs for linear arithmetic use a number of straightforward rules,
 such as \proofRule{la_totality} ($t_1 \leq t_2 \lor t_2 \leq t_1$)\footnote{
 	This rule also has a unit clause with a disjunction as its conclusion.}
@@ -1542,7 +1556,7 @@ of $(x+y<1) \lor$ $(3<x)$, $x≈ 2$, and $0≈ y$.
 \end{Alethe}
 \end{example}
 
-\paragraph{Skolemization and Other Preprocessing Steps.}
+\subsection{Skolemization and Other Preprocessing Steps}
 One typical example for a rule with context is the \proofRule{sko_ex}
 rule that is used to express skolemization of an existentially
 quantified variable.
@@ -1584,15 +1598,21 @@ is functional congruence, and \proofRule{sko_forall} works like
 \end{AletheS}
 \end{example}
 
-\section{Changelog}
-\label{sec:rules}
-\input{changelog}
-
-\section{List of Rules}
-\label{apx:rule}
+\section{The Alethe Rules}
+\label{apx:rules}
 \input{alethe_rules}
 
-\section{Bibliography}
+\clearpage
+\section*{Changelog}
+\label{sec:rules}
+\addcontentsline{toc}{section}{Changelog}
+\input{changelog}
+
+\clearpage
+\section*{Index}
+\addcontentsline{toc}{section}{Index}
+\printindex
+
 \bibliographystyle{plain}
 \bibliography{publications}
 \end{document}
