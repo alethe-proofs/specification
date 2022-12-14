@@ -210,6 +210,7 @@ break
 
 \maketitle
 \tableofcontents
+\thispagestyle{empty}
 \clearpage
 
 \begin{abstract}
@@ -259,6 +260,7 @@ get in touch!
 \hspace*{\fill}The authors.
 \end{abstract}
 
+\section{Introduction}
 This document is a reference of the
 Alethe\footnote{Alethe is a genus of small birds that occur in West Africa~\cite{wp:alethe}.
 The name was chosen, because it
@@ -269,15 +271,19 @@ such as interactive theorem provers or proof checkers.  The design
 is based on natural-deduction style structure
 and rules generating and operating on first-order clauses.
 %
-The Alethe calculus consists of two parts: the proof
+The Alethe proof format consists of two parts: the proof
 language based on {\smtlib} and a collection of proof rules.
 Section~\ref{sec:alethe:language} introduces the language.  First as an
 abstract language, then as a concrete syntax.
+Section~\ref{sec:alethe:semantic} then discusses an abstract procedure
+to check Alethe proofs.  This abstract checking procedure specifies
+the semantic of Alethe proofs.
 %
-Section~\ref{sec:alethe:rules-generic} discusses the core
-concepts behind the Alethe proof rules.
+The Alethe proof rules are discussed in two sections.
+First, Section~\ref{sec:alethe:rules-generic} discusses the core
+concepts behind the rules.
 %
-The Section~\ref{apx:rules} presents a list of
+Second, Section~\ref{apx:rules} presents a list of
 all proof rules currently used by {\verit}.
 
 Alethe follows a few core design principles.  First, proofs should
@@ -291,25 +297,24 @@ be uniform for all theories used by SMT solvers.  With the exception
 of clauses for propositional reasoning, there is no dedicated syntax for
 any theory.
 
-The format is currently used by the SMT solver {\verit}. If requested
+The Alethe format was originally developed for the SMT solver {\verit}. If requested
 by the user, {\verit} outputs a proof if it can deduce that the input problem is
 unsatisfiable. In proof production mode, {\verit} supports the theory of
 uninterpreted functions, the theory of linear integer and real arithmetic, and
 quantifiers.
-%
-The Alethe proofs can be reconstructed by the \tactic{smt} tactic of
-the proof assistant {\isabelle}~\cite{fleury-2019,schurr-2021}~(see
-Section~\ref{sec:reconstruction}).  The \tool{SMTCoq} tool can
-reconstruct an older version of the format in the
-proof assistant \tool{Coq}~\cite{SMTCoq}.  An effort to update the
-tool to the latest version of Alethe is ongoing.
-%
 The SMT solver {\cvcfive}~\cite{barbosa-2022} (the successor of
 {\cvcfour}) supports Alethe experimentally as one of its multiple proof
 output formats.
 %
-Furthermore, there is an experimental
-high-performance proof checker written in Rust.\footnote{Available at
+Alethe proofs can be reconstructed by the \tactic{smt} tactic of
+the proof assistant {\isabelle}~\cite{fleury-2019,schurr-2021}.
+The \tool{SMTCoq} tool can
+reconstruct an older version of the format in the
+proof assistant \tool{Coq}~\cite{SMTCoq}.  An effort to update the
+tool to the latest version of Alethe is ongoing.
+%
+Furthermore, \tool{Carcara} is an experimental
+high-performance \index{proof chcker}proof checker written in Rust.\footnote{Available at
 \url{https://github.com/ufmg-smite/carcara}.}
 
 In addition to this reference, the proof format has been discussed in past
@@ -322,6 +327,49 @@ More recently, the format has gained support for reasoning typically used for
 processing, such as skolemization, substitutions, and other manipulations of
 bound variables~\cite{barbosa-2019}.
 
+\subsection{Notations}
+
+The notation used in this document is similar to the notation
+used by the SMT-LIB standard.  The Alethe proof format uses precisely
+the SMT-LIB logic.  Since the SMT-LIB language is based on
+S-expressions\index{S-expression}, SMT-LIB formulas are written using
+a λ-calculus style.  That is, instead of $f(1,2)$, we write $(f\,1\,2)$.
+However, connectives that a usually written using infix notation, also
+use infix notation here.  That is, we write $t_1 \lor t_2$, not
+$(\lor\,t_1\,t_2)$.
+
+We use $x, y, z$ to indicate variables,
+$f, g$ for functions, and $P, Q$ for predicates (functions with co-domain
+sort $\lsymb{Bool}$.  To indicate terms we use $t, u$ and to indicate
+formulas (terms of sort $\lsymb{Bool}$) we use $\varphi, \psi$.
+To distinguish syntactic equality and the SMT-LIB equality predicate,
+we write $=$ for the former, and $≈$ for the later.
+We will write pre-defined SMT-LIB symbols, such as sorts and functions,
+in bold (e.g., $\lsymb{Bool}$, $\lsymb{ite}$).
+
+We will use $θ$ to denote a
+substitution\index{substitution}.
+The notation $[x₁ ↦ t₁, …, x_n ↦ t_n]$ denotes the substitution
+that maps $x_i$ to $t_i$ for $1 ≤ i ≤ n$ and corresponds to the
+identity function for all other variables.  If $θ$ and $η$ are two
+substitutions, then $θη$ denotes the result of first applying $θ$
+and then $η$ (i.e., $η(θ(.))$).  A substitution can naturally be extended
+to a function that maps terms to terms by replacing the occurrences of
+free variables.
+%
+We write $t[\,]$ for a term with a hole\index{hole} and $t[u]$ for the term where
+the hole has been replaced by $u$. Any term has at most one hole.
+%
+We also use holes with multiple variables.
+%
+The notation $t[x_1, \dots, x_n]$ stands for a term that may depend on distinct
+variables $x_1, \dots, x_n$.
+%
+$t[s_1,\dots, s_n]$ is the respective term where the variables $x_1,\dots, x_n$ are
+simultaneously substituted by $s_1,\dots, s_n$.
+
+Note that we will introduce the Alethe specific notation to write proof steps
+in the following sections.
 
 \section{The Alethe Language}
 \label{sec:alethe:language}
@@ -353,8 +401,7 @@ understand the proof step by step.
 \paragraph{Many-Sorted First-Order Logic.}
 Alethe builds on the {\smtlib} language.
 %
-This includes its many-sorted first-order logic described in
-Section~\ref{sec:ti-logic}. % TODO: clarify!
+This includes its many-sorted first-order logic.
 The available sorts depend on
 the selected {\smtlib} theory/logic as well as on those defined by the user, but the
 distinguished $\lsymb{Bool}$ sort is always available.
@@ -1467,7 +1514,7 @@ proof rules.  Currently, the proof rules correspond to the rules
 that the solver {\verit} can emit.  For the rest of this section, we will discuss some
 general concepts related to the rules.
 
-\subsection{Tautologous Rules and Simple Deduction}
+\paragraph{Tautologous Rules and Simple Deduction}
 Most rules introduce tautologies. One example is
 the \proofRule{and_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
 \dots \land \varphi_n), \varphi_i$.
@@ -1480,7 +1527,7 @@ rule eliminates an implication: From $\varphi_1 → \varphi_2$,
 it deduces $\neg \varphi_1, \varphi_2$.
 
 
-\subsection{Resolution.}
+\paragraph{Resolution.}
 {\cdclt}-based SMT solvers, and especially their SAT solvers,
 are fundamentally based on resolution of clauses.
 Hence, Alethe also has dedicated clauses and a resolution proof
@@ -1507,7 +1554,7 @@ The premises of a resolution step are clauses, and the conclusion
 is a clause that has been derived from the premises by some binary
 resolution steps.
 
-\subsection{Quantifier Instantiation}
+\paragraph{Quantifier Instantiation}
 \label{reference=rule:forall_inst}
 To express quantifier instantiation, the rule \proofRule{forall_inst}
 is used. It produces a formula of the form $(\neg \forall \bar
@@ -1525,7 +1572,7 @@ equalities obscures which terms have been used as instances.
 Existential quantifiers are handled by skolemization.
 
 
-\subsection{Linear Arithmetic}
+\paragraph{Linear Arithmetic}
 Proofs for linear arithmetic use a number of straightforward rules,
 such as \proofRule{la_totality} ($t_1 \leq t_2 \lor t_2 \leq t_1$)\footnote{
 	This rule also has a unit clause with a disjunction as its conclusion.}
@@ -1556,7 +1603,7 @@ of $(x+y<1) \lor$ $(3<x)$, $x≈ 2$, and $0≈ y$.
 \end{Alethe}
 \end{example}
 
-\subsection{Skolemization and Other Preprocessing Steps}
+\paragraph{Skolemization and Other Preprocessing Steps}
 One typical example for a rule with context is the \proofRule{sko_ex}
 rule that is used to express skolemization of an existentially
 quantified variable.
