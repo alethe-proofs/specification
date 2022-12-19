@@ -1,5 +1,8 @@
-\documentclass{scrartcl}
+%
+% This document is licenced under Creative Commons 4.0 Attribution International
+%
 
+\documentclass{scrartcl}
 
 \usepackage{scrlayer-scrpage}
 \usepackage{unicode-math}
@@ -20,6 +23,7 @@
 \usepackage{fancyvrb} % Gives us \Verb which can be used in footnotes
 \usepackage{amsthm}
 \usepackage{thmtools}
+\usepackage{ccicons} % Gives us CC icons for title page
 \usepackage[nottoc,notlot,notlof]{tocbibind}
 
 \usepackage{imakeidx}
@@ -191,6 +195,13 @@ break
 \newtheorem{definition}{Definition}[example]
 \newtheorem{seppara}{}
 
+\newpairofpagestyles{titlestyle}{
+\ofoot{Version \input{|"./version.sh"}\unskip . Typeset on {\today}.}%
+\ifoot{\ccby}%
+}
+\renewcommand*{\titlepagestyle}{titlestyle}
+\setkomafont{publishers}{\small}
+
 \title{The Alethe Proof Format}
 \subtitle{An Evolving Specification and Reference}
 \author{Haniel Barbosa\textsuperscript{1}
@@ -210,7 +221,6 @@ break
 
 \maketitle
 \tableofcontents
-\thispagestyle{empty}
 \clearpage
 
 \begin{abstract}

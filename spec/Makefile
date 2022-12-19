@@ -1,5 +1,5 @@
 backport:
-	latexmk -pdf -pvc -interaction=nonstopmode -shell-escape -lualatex spec
+	SOURCE_DATE_EPOCH=$(date +%s) latexmk -pdf -pvc -interaction=nonstopmode -shell-escape -lualatex spec
 
 comments:
 	latexmk -pdf -shell-escape doc
