@@ -89,7 +89,7 @@
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
 \newcommand{\ruleTypeImpl}[1]{%
-	\microtypesetup{tracking=false}\textsf{#1}\microtypesetup{tracking=true}%
+  \microtypesetup{tracking=false}\textsf{#1}\microtypesetup{tracking=true}%
 }
 \def\ruleType#1{\ruleTypeImpl{\detokenize{#1}}} % non linked rule (for examples)
 \def\proofRule#1{\hyperref[rule:\detokenize{#1}]{\ruleTypeImpl{\detokenize{#1}}}} % linked rule
@@ -199,10 +199,10 @@ break
 \and Hans-Jörg Schurr\textsuperscript{4}}
 \date{}
 \publishers{
-	\textsuperscript{1} Universidade Federal de Minas Gerais, Brazil\\
-	\textsuperscript{2} Albert-Ludwig-Universität Freiburg, Germany\\
-	\textsuperscript{3} Université de Liège, Belgium\\
-	\textsuperscript{4} University of Lorraine, CNRS, Inria, and LORIA, Nancy, France\\
+  \textsuperscript{1} Universidade Federal de Minas Gerais, Brazil\\
+  \textsuperscript{2} Albert-Ludwig-Universität Freiburg, Germany\\
+  \textsuperscript{3} Université de Liège, Belgium\\
+  \textsuperscript{4} University of Lorraine, CNRS, Inria, and LORIA, Nancy, France\\
 }
 
 
@@ -583,7 +583,7 @@ variable.
 \spsep
 5.& & \ctxsep & $\forall x.\,(P\,x) ≈ \forall y.\,(P\,y)$ & $\proofRule{bind}$ \\
 6.& & \ctxsep &
-	    $\neg(\forall x.\,(P\,x) ≈ \forall y.\,(P\,y))$, $\neg(\forall x.\,(P\,x)), (\forall y.\,(P\,y))$
+      $\neg(\forall x.\,(P\,x) ≈ \forall y.\,(P\,y))$, $\neg(\forall x.\,(P\,x)), (\forall y.\,(P\,y))$
     & $\proofRule{equiv_pos2}$ \\
 7.& &\ctxsep & $\bot$ & $(\proofRule{resolution}\,1, 2, 5, 6)$ \\
 \end{AletheS}
@@ -630,7 +630,7 @@ logic and term language, it also uses commands to structure the proof.
 An Alethe proof is a list of commands.
 
 \begin{figure}[t]
-	  \begin{AletheVerb}
+    \begin{AletheVerb}
 (assume h1 (not (p a)))
 (assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
 ...
@@ -650,7 +650,7 @@ An Alethe proof is a list of commands.
 (step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
           :rule or :premises (t15))
 (step t17 (cl) :rule resolution :premises (t16 h1 t14))
-	  \end{AletheVerb}
+    \end{AletheVerb}
 \caption{Example proof output. Assumptions are
   introduced;   a subproof renames bound variables; the proof finishes with
   instantiation and resolution steps.}
@@ -660,7 +660,7 @@ An Alethe proof is a list of commands.
 
 \begin{figure}[t]
 \[
-	\begin{array}{r c l}
+  \begin{array}{r c l}
  \grNT{proof}           &\grRule & \grNT{proof\_command}^{*} \\
  \grNT{proof\_command}  &\grRule & \textAlethe{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)} \\
                         &\grOr   & \textAlethe{(step}\; \grNT{symbol}\; \grNT{clause}
@@ -681,10 +681,10 @@ An Alethe proof is a list of commands.
  \grNT{context\_annotation}  &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}  \\
  \grNT{context\_assignment}  &\grRule & \textAlethe{(}    \,\grNT{sorted\_var}\,\textAlethe{)}  \\
                              & \grOr  & \textAlethe{(:=}\, \grNT{symbol}\;\grNT{proof\_term}\,\textAlethe{)} \\
-	\end{array}
-	\]
-	\caption{The proof grammar.}
-	\label{fig:grammar}
+  \end{array}
+  \]
+  \caption{The proof grammar.}
+  \label{fig:grammar}
 \end{figure}
 
 
@@ -840,7 +840,7 @@ expressed as a concrete proof.
      system/.style={draw, thin, rounded corners},
 }
 
-	\begin{figure}[t]
+  \begin{figure}[t]
 \center
 \begin{tikzpicture}[node distance=2cm, auto,>=latex', thick,scale=0.8]
     \node[solver] (unsat) {\textsf{Unsat mode}};
@@ -926,18 +926,18 @@ no \inlineAlethe{define-fun} commands are issued, and the constants are expanded
 \paragraph{Implicit Transformations}
 Overall, the following aspects are treated implicitly by Alethe.
 \begin{itemize}
-	\item Symmetry of equalities that are not top-most equalities in steps with
-	      non-empty context.
-	\item The order of literals in the clauses.
-	\item The unfolding of names introduced by
-	   \inlineAlethe{(!}\,$t$\,\inlineAlethe{:named }\;$s$\,\inlineAlethe{)}.
-	\item The removal of other {\smtlib} annotations of the form
-	   \inlineAlethe{(!}\,$t$\,\dots\,\inlineAlethe{)}.
-	\item The unfolding of function symbols introduced by
-	\inlineAlethe{define-fun}.\footnote{For {\verit} this is only used when the user
-	introduces {\verit} to print Skolem terms as defined functions. User defined
-	functions in the input problem are not supported by {\verit} in proof production
-	mode.}
+  \item Symmetry of equalities that are not top-most equalities in steps with
+        non-empty context.
+  \item The order of literals in the clauses.
+  \item The unfolding of names introduced by
+     \inlineAlethe{(!}\,$t$\,\inlineAlethe{:named }\;$s$\,\inlineAlethe{)}.
+  \item The removal of other {\smtlib} annotations of the form
+     \inlineAlethe{(!}\,$t$\,\dots\,\inlineAlethe{)}.
+  \item The unfolding of function symbols introduced by
+  \inlineAlethe{define-fun}.\footnote{For {\verit} this is only used when the user
+  introduces {\verit} to print Skolem terms as defined functions. User defined
+  functions in the input problem are not supported by {\verit} in proof production
+  mode.}
 \end{itemize}
 
 Alethe proofs contain steps for other aspects that are commonly left implicit, such
@@ -1005,7 +1005,7 @@ It is easy to calculate the context of the first-innermost subproof.
 \begin{definition}[Calculated Context]
   Let $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$ be
   the first-innermost subproof of $P$.
-	For $\mathit{start} \leq i < \mathit{end}$, let
+  For $\mathit{start} \leq i < \mathit{end}$, let
   $A_1, \dots, A_m$ be the anchors among $C_1, \dots, C_{i-1}$.
 
   The \index{context!calculated}calculated context of $C_i$ is the context
@@ -1039,9 +1039,9 @@ in the subproof.  The conditions of each rule are listed in
 Section~\ref{apx:rules}.
 
 \begin{definition}[Valid First-Innermost Subproof]
-	Let $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$
-	be the first-innermost subproof of $P$.
-	The subproof is \index{subproof!valid}{\em valid} if
+  Let $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$
+  be the first-innermost subproof of $P$.
+  The subproof is \index{subproof!valid}{\em valid} if
   \begin{itemize}
     \item all steps $C_i$ with $\mathit{start} < i <
     \mathit{end}$ only use premises $C_j$ with $\mathit{start} <
@@ -1049,7 +1049,7 @@ Section~\ref{apx:rules}.
     \item all $C_i$ that are steps adhere to the conditions of their
     rule under the calculated context of $C_i$,
     \item the step $C_{\mathit{end}}$
-		adheres to the conditions of its
+    adheres to the conditions of its
     rule under the calculated context of $C_{\mathit{start}}$.
   \end{itemize}
 \end{definition}
@@ -1102,19 +1102,19 @@ Since this proof contains no subproof, it is also $P_{\mathit{last}}$.
 
 
 \begin{definition}[Well-Formed Proof]
-	\label{def:well_formed_proof}
+  \label{def:well_formed_proof}
   The Alethe proof $P$ is \index{proof!well-formed}well-formed
   if every step uses a unique index and $P_{\mathit{last}}$
   contains no anchor or step that uses a concluding rule.
 \end{definition}
 
 \begin{definition}[Valid Alethe Proof]
-	The proof $P$ is a \index{proof!valid}{\em valid Alethe proof} if
+  The proof $P$ is a \index{proof!valid}{\em valid Alethe proof} if
   \begin{itemize}
-  	\item $P$\, is well-formed,
-  	\item $P$\, does not contain any step that uses the \proofRule{hole} rule,
+    \item $P$\, is well-formed,
+    \item $P$\, does not contain any step that uses the \proofRule{hole} rule,
     \item $P_{\mathit{last}}$ contains a step that has the empty clause as its conclusion,
-		\item the first-innermost subproof of every $P_i$, $i < \mathit{last}$ is valid,
+    \item the first-innermost subproof of every $P_i$, $i < \mathit{last}$ is valid,
     \item all steps $C_i$ in $P_{\mathit{last}}$ only use premises
           $C_j$ in $P_{\mathit{last}}$ with $1 \leq j < i$,
     \item all steps $C_i$ in $P_{\mathit{last}}$ adhere to the conditions of their
@@ -1172,8 +1172,8 @@ According to this definition, a metaterm is either a boxed term, a
 The annotation $\groundbox{$t$}$ delimits terms from the context, a simple
 λ-abstraction is used to express fixed variables, and the
 application expresses simulations substitution of $n$ terms.\footnote{
-	The box annotation used here is unrelated to the boxes
-	within the SMT solver discussed in the introduction.}
+  The box annotation used here is unrelated to the boxes
+  within the SMT solver discussed in the introduction.}
 
 We use $=_{\alpha\beta}$ to denote syntactic equivalence modulo
 α-equivalence and β-reduction.
@@ -1296,13 +1296,13 @@ In this section we will address the soundness of concrete Alethe
 proofs.
 
 \begin{theorem}[Soundness of Concrete Alethe Proofs]
-	\label{thm:sound}
-	If there is a valid Alethe proof $P = [C_1, \dots, C_n]$ that has the formulas
-	$\varphi_1, \dots, \varphi_m$ as the conclusions of the outermost \proofRule{assume}
-	steps, then
-	\[
-	\varphi_1, \dots, \varphi_m \vDash \bot.
-	\]
+  \label{thm:sound}
+  If there is a valid Alethe proof $P = [C_1, \dots, C_n]$ that has the formulas
+  $\varphi_1, \dots, \varphi_m$ as the conclusions of the outermost \proofRule{assume}
+  steps, then
+  \[
+  \varphi_1, \dots, \varphi_m \vDash \bot.
+  \]
 \end{theorem}
 
 Here, $\vDash$ represents
@@ -1321,7 +1321,7 @@ We start with simple subproofs with empty contexts and without
 nested subproofs.
 
 \begin{lemma}
-	\label{lem:sound_subproof}
+  \label{lem:sound_subproof}
   Let $P$\, be a proof that contains a valid first-innermost subproof where
   $C_{\mathit{end}}$ is a \proofRule{subproof} step.  Let
   $\psi$ be the conclusion of $C_{\mathit{end}}$.
@@ -1359,22 +1359,22 @@ nested subproofs.
 
   The step $C_{\mathit{end}-1}$ is the last step of the subproof that
   does not use a concluding rule.
-	At this step we have $V_{\mathit{end}-1} \vDash \psi_{\mathit{end}-1}$.
-	Since $C_{\mathit{end}}$ is not an \proofRule{assume} step, the
-	set $V_{\mathit{end}-1} = \{\varphi_1, \dots, \varphi_m\}$ contains
-	all assumptions in the subproof.
-	By the deduction theorem we get
-	\[
-	\vDash \varphi_1 \land \cdots \land \varphi_m → \psi_{\mathit{end}-1}.
-	\]
-	This can be transformed into the clause
-	\[
-	\vDash \neg\varphi_1, \cdots, \neg\varphi_m, l_1, \dots, l_o.
-	\]
-	where $l_1, \dots, l_o$ are the literals of $\psi_{\mathit{end}-1}$.
-	This clause is exactly the conclusion of the 
-	step $C_{\mathit{end}}$
-	according to the definition of the \proofRule{subproof} rule.
+  At this step we have $V_{\mathit{end}-1} \vDash \psi_{\mathit{end}-1}$.
+  Since $C_{\mathit{end}}$ is not an \proofRule{assume} step, the
+  set $V_{\mathit{end}-1} = \{\varphi_1, \dots, \varphi_m\}$ contains
+  all assumptions in the subproof.
+  By the deduction theorem we get
+  \[
+  \vDash \varphi_1 \land \cdots \land \varphi_m → \psi_{\mathit{end}-1}.
+  \]
+  This can be transformed into the clause
+  \[
+  \vDash \neg\varphi_1, \cdots, \neg\varphi_m, l_1, \dots, l_o.
+  \]
+  where $l_1, \dots, l_o$ are the literals of $\psi_{\mathit{end}-1}$.
+  This clause is exactly the conclusion of the 
+  step $C_{\mathit{end}}$
+  according to the definition of the \proofRule{subproof} rule.
 \end{proof}
 
 \noindent
@@ -1407,7 +1407,7 @@ subproofs with contexts.  This is slightly complicated by the
   $C_{\mathit{start}}$, and let $\Gamma$ be the calculated context
   of $C_{\mathit{start}}$.
   $\Gamma' = \Gamma, c_1, \dots, c_n$.
-	is the calculated context of the steps in the subproof after
+  is the calculated context of the steps in the subproof after
   $C_{\mathit{start}}$.
 
   The step $C_{\mathit{end}}$ is a step
@@ -1461,45 +1461,45 @@ a valid, concrete Alethe proof is sound. That is, we can show
 Theorem~\ref{thm:sound}.
 
 \begin{proof}
-	Since $P =[C_1, \dots, C_n]$ is valid, all steps that do not use the
-	\proofRule{hole} rule adhere to their rule.  Since we assume that the
-	abstract notation and the rules are sound, we only have to
-	worry about the steps using the \proofRule{hole} rule.
-	Those should be sound, i.e., for a \proofRule{hole} step with the conclusion
-	$\psi$, premises $V$, and context $\Gamma$
-	the judgment $V \vDash \Gamma \vartriangleright \psi$ must hold.
+  Since $P =[C_1, \dots, C_n]$ is valid, all steps that do not use the
+  \proofRule{hole} rule adhere to their rule.  Since we assume that the
+  abstract notation and the rules are sound, we only have to
+  worry about the steps using the \proofRule{hole} rule.
+  Those should be sound, i.e., for a \proofRule{hole} step with the conclusion
+  $\psi$, premises $V$, and context $\Gamma$
+  the judgment $V \vDash \Gamma \vartriangleright \psi$ must hold.
 
-	Since $P$\, is a valid proof there is a sequence
-	$[P_0, \dots, P_{\mathit{last}}]$ as discussed in Section~\ref{sec:alethe:semantic}.
-	For $i < \mathit{last}$, $E(P_i) = P_{i+1}$ replaces the
-	first-innermost subproof in $P_i$ by a hole with the conclusion
-	$\psi$.  Furthermore, the context of the introduced hole
-	corresponds to the context $\Gamma$ of the start of the subproof.
-	Since $P$ is a valid proof, the first-innermost subproof eliminated by $E$ is
-	always valid.
-	Therefore,
-	we can apply Lemma~\ref{lem:sound_subproof}
-	or Lemma~\ref{lem:sound_subproof_context} to conclude that the hole introduced
-	by $E$ is sound.
+  Since $P$\, is a valid proof there is a sequence
+  $[P_0, \dots, P_{\mathit{last}}]$ as discussed in Section~\ref{sec:alethe:semantic}.
+  For $i < \mathit{last}$, $E(P_i) = P_{i+1}$ replaces the
+  first-innermost subproof in $P_i$ by a hole with the conclusion
+  $\psi$.  Furthermore, the context of the introduced hole
+  corresponds to the context $\Gamma$ of the start of the subproof.
+  Since $P$ is a valid proof, the first-innermost subproof eliminated by $E$ is
+  always valid.
+  Therefore,
+  we can apply Lemma~\ref{lem:sound_subproof}
+  or Lemma~\ref{lem:sound_subproof_context} to conclude that the hole introduced
+  by $E$ is sound.
 
-	Since $P_0$ does not contain any holes, the holes in each proof
-	$P_i$ are all introduced by innermost-first subproof elimination.
-	Therefore, they are sound. In consequence, all holes in $P_{\mathit{last}}$ are
-	sound and we can perform the same
-	argument as
-	in the proof of Lemma~\ref{lem:sound_subproof} to the proof
-	$P_{\mathit{last}}$.
+  Since $P_0$ does not contain any holes, the holes in each proof
+  $P_i$ are all introduced by innermost-first subproof elimination.
+  Therefore, they are sound. In consequence, all holes in $P_{\mathit{last}}$ are
+  sound and we can perform the same
+  argument as
+  in the proof of Lemma~\ref{lem:sound_subproof} to the proof
+  $P_{\mathit{last}}$.
 
-	Let $j$ be the index of the step in $P_{\mathit{last}}$ that concludes
-	with the empty clause.
-	Let $\mathit{start} = 1$
-	and $\mathit{end} = j$ in the argument of Lemma~\ref{lem:sound_subproof}.
-	This shows that $V \vDash \bot$, where $V$ is the
-	conclusion of the \proofRule{assume} steps in the sublist $[C_1, \dots, C_j]$
-	of $P_{\mathit{last}}$.  We can weaken
-	this by adding the conclusions of the \proofRule{assume} steps in
-	$[C_j, \dots, C_n]$ of $P_{\mathit{last}}$
-	to get $\varphi_1, \dots, \varphi_m \vDash \bot$.
+  Let $j$ be the index of the step in $P_{\mathit{last}}$ that concludes
+  with the empty clause.
+  Let $\mathit{start} = 1$
+  and $\mathit{end} = j$ in the argument of Lemma~\ref{lem:sound_subproof}.
+  This shows that $V \vDash \bot$, where $V$ is the
+  conclusion of the \proofRule{assume} steps in the sublist $[C_1, \dots, C_j]$
+  of $P_{\mathit{last}}$.  We can weaken
+  this by adding the conclusions of the \proofRule{assume} steps in
+  $[C_j, \dots, C_n]$ of $P_{\mathit{last}}$
+  to get $\varphi_1, \dots, \varphi_m \vDash \bot$.
 \end{proof}
 
 
@@ -1561,8 +1561,8 @@ is used. It produces a formula of the form $(\neg \forall \bar
 x_n.\,\varphi) \lor \varphi[\bar t_n]$, where $\varphi$ is
 a term containing the free variables $\bar x_n$, and for each $i$ the
 ground term $t_i$ is a new term with the same sort as $x_i$.\footnote{
-	For historical reasons, \proofRule{forall} has a unit clause with a disjunction
-	as its conclusion and not the clause $(\neg \forall \bar x_n.\,\varphi), \varphi[\bar t_n]$.
+  For historical reasons, \proofRule{forall} has a unit clause with a disjunction
+  as its conclusion and not the clause $(\neg \forall \bar x_n.\,\varphi), \varphi[\bar t_n]$.
 }
 
 The arguments of a \proofRule{forall_inst} step is the list $(x_1 , t_1),
@@ -1575,7 +1575,7 @@ Existential quantifiers are handled by skolemization.
 \paragraph{Linear Arithmetic}
 Proofs for linear arithmetic use a number of straightforward rules,
 such as \proofRule{la_totality} ($t_1 \leq t_2 \lor t_2 \leq t_1$)\footnote{
-	This rule also has a unit clause with a disjunction as its conclusion.}
+  This rule also has a unit clause with a disjunction as its conclusion.}
 and the main rule \proofRule{la_generic}.  The conclusion of an
 \proofRule{la_generic} step is a tautology $\neg \varphi_1, \neg
 \varphi_2, \dots, \neg \varphi_n$ where the $\varphi_i$ are linear
