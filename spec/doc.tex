@@ -73,7 +73,10 @@
 \newcommand\lsymb[1]{\mathbf{#1}}
 \DeclareMathOperator*{\subst}{subst}
 \DeclareMathOperator*{\reify}{reify}
-\DeclareMathOperator*{\bvexplode}{bvexplode}
+\DeclareMathOperator*{\bvblast}{bvblast}
+\DeclareMathOperator*{\carry}{carry}
+\DeclareMathOperator*{\res}{res}
+\DeclareMathOperator*{\sh}{sh}
 \newcommand\groundbox[1]{\boxed{#1}}
 
 % Proofs
@@ -1658,37 +1661,38 @@ is functional congruence, and \proofRule{sko_forall} works like
 
 \paragraph{Bitblasting}
 
-% Note: we could also use an equality wih bvexplode (maybe called bvpack then)
+% Note: we could also use an equality wih bvblast (maybe called bvpack then)
 % TODO: Add example
 Bitblasting\index{bitblasting} is the translation of
 bit-vector\index{bit-vector} functions to propositional formulas.  To express
 this in the Alethe proof rules, the format uses a family of helper predicates
-$\lsymb{bvexplode}$, one for each bit-vector sort $(\lsymb{BitVec}\;n)$.
+$\lsymb{bvblast}$, one for each bit-vector sort $(\lsymb{BitVec}\;n)$.
 \[
-\lsymb{bvexplode} : (\lsymb{BitVec}\;n)\,\underbrace{\lsymb{Bool} \dots \lsymb{Bool}}_n\,\lsymb{Bool}.
+\lsymb{bvblast} : (\lsymb{BitVec}\;n)\,\underbrace{\lsymb{Bool} \dots \lsymb{Bool}}_n\,\lsymb{Bool}.
 \]
 
-Intuitively, the predicate $\lsymb{bvexplode}$ is true if the boolean arguments
+Intuitively, the predicate $\lsymb{bvblast}$ is true if the boolean arguments
 correspond to the bits in the first argument.
-Let ${<}u_1, \dots, u_n{>}$ denote a bit-vector of sort $(\lsymb{BitVec}\;n)$
+The booleans are ordered from least significant to most significant bit.
+Hence, let ${<}u_n, \dots, u_1{>}$ denote a bit-vector of sort $(\lsymb{BitVec}\;n)$
 where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise.
 \[
-\lsymb{bvexplode}\; {<}u_1, \dots, u_n{>} \,v_1 \dots v_n = \top.
+\lsymb{bvblast}\; {<}u_1, \dots, u_n{>} \,v_1 \dots v_n = \top.
 \]
-iff $u_i = v_i$ for all $1 ≤ i ≤ n$.
+iff $u_i = v_i$ for all $1 ≤ i ≤ n$.  
 
-The addition of the $\lsymb{bvexplode}$ predicates is a conservative extension.
+The addition of the $\lsymb{bvblast}$ predicates is a conservative extension.
 They could be defined in terms of standard SMT-LIB functions.
 \begin{align*}
-\lsymb{bvexplode}\; {<}u_1, \dots, u_n{>} \,v_1 \dots v_n :=\;
+\lsymb{bvblast}\; {<}u_1, \dots, u_n{>} \,v_1 \dots v_n :=\;
            &(\lsymb{extract}\;1\;1) ≈ (\lsymb{ite}\,v_1\,{<}\top{>}\,{<}\bot{>})\,\land\\
            &(\lsymb{extract}\;2\;2) ≈ (\lsymb{ite}\,v_2\,{<}\top{>}\,{<}\bot{>})\,\land\\
            &\cdots \\
            &(\lsymb{extract}\;n\;n) ≈ (\lsymb{ite}\,v_n\,{<}\top{>}\,{<}\bot{>})
 \end{align*}
 
-To avoid name clashes with user defined functions, $\lsymb{bvexplode}$
-is written as \inlineAlethe{.bvexplode}.  The SMT-LIB standard specifies
+To avoid name clashes with user defined functions, $\lsymb{bvblast}$
+is written as \inlineAlethe{.bvblast}.  The SMT-LIB standard specifies
 that simple symbols starting with ``\inlineAlethe{.}'' are reserved for
 solver generated functions.
 

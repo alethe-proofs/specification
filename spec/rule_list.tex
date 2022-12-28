@@ -1528,6 +1528,213 @@ constants are unfolded during proof printing. Hence, the slightly strange
 form and the reordering of equalities.
 \end{RuleDescription}
 
+% TODO: what do we need this for?  Imho the next two correspond to applying
+% the function.
+\begin{RuleDescription}{bb_var}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;x\;x_1 \dots x_n)$ & (\currule) \\
+\end{AletheX}
+where $x, x_1, \dots, x_n$ are all variables.
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_const}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;v\;v_1 \dots v_n)$ & (\currule) \\
+\end{AletheX}
+where $v, v_1, \dots, v_n$ are all contants and
+$(\lsymb{bvblast}\,v\,v_1,\dots,v_n)$ evaluates to $\top$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_and}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_n)$ & (\dots) \\
+$k$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{bvand}\;t\;u)\;(t_1 \land u_1) \dots (t_n\land u_n))$ & (\currule\;$i$, $j$) \\
+\end{AletheX}
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_or}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_n)$ & (\dots) \\
+$k$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{bvor}\;t\;u)\;(t_1 \lor u_1) \dots (t_n\lor u_n))$ & (\currule\;$i$, $j$) \\
+\end{AletheX}
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_xor}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_n)$ & (\dots) \\
+$k$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{bvxor}\;t\;u)\;(\lsymb{xor}\,t_1 u_1) \dots (\lsymb{xor}\,t_n u_n))$ & (\currule\;$i$, $j$) \\
+\end{AletheX}
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_xnor}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_n)$ & (\dots) \\
+$k$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{bvxnor}\;t\;u)\;(t_1 ≈ u_1) \dots (t_n ≈ u_n))$ & (\currule\;$i$, $j$) \\
+\end{AletheX}
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_not}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{bvnot}\;t)\;(¬t_1) \dots (¬t_n))$ & (\currule\;$i$) \\
+\end{AletheX}
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_add}
+Bit-blasted of additons follows the \emph{ripple carry adder}.
+
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_n)$ & (\dots) \\
+$k$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{bvadd}\;t\;u)\;
+      (\lsymb{xor}\;t_1\,u_1 \carry_1) \dots (\lsymb{xor}\;t_n\,u_n \carry_n))$
+& (\currule\;$i$, $j$) \\
+\end{AletheX}
+
+\noindent
+in which, for $i\geq 0$,
+\[
+  \begin{array}{lcl}
+    \carry_1&=&\bot\\
+    \carry_{i+1}&=&(t_i\wedge u_i)\vee((\lsymb{xor}\;t_i\,u_i)\wedge \carry_i)
+  \end{array}
+\]
+\end{RuleDescription}
+
+% TODO: why this \bot?
+\begin{RuleDescription}{bb_neg}
+Bit-blasted by using the identity
+$(\lsymb{bvneg}\,a) = (\lsymb{bvadd}\,(\lsymb{bvnot}\,a)\,{<}\top{>})$ .
+
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{bvneg}\;t)\;
+      (\lsymb{xor}\;¬t_1\,\bot \carry_1) \dots (\lsymb{xor}\;¬t_n\,\bot \carry_n))$
+& (\currule\;$i$) \\
+\end{AletheX}
+
+\noindent
+in which, for $i\geq 0$,
+\[
+  \begin{array}{lcl}
+    \carry_1&=&\top\\
+    \carry_{i+1}&=&(\neg x_i\wedge \bot)\vee((\lsymb{xor}\;\neg x_i\,
+                            \bot)\wedge \carry_i)
+  \end{array}
+\]
+
+\end{RuleDescription}
+
+% TODO: add good example
+\begin{RuleDescription}{bb_mul}
+Bit-blasted using the \emph{shift add multiplier}.
+
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_n)$ & (\dots) \\
+$k$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{bvmult}\;t\;u)\;
+(\res_0^{n}\,\dots\,\res_{n}^{n}$
+& (\currule\;$i$, $j$) \\
+\end{AletheX}
+
+\noindent
+in which, for $i,j\geq 0$,
+\[
+\begin{array}{lcl}
+\res^1_i&=&\mathrm{sh}^1_i\\[1ex]
+\res^j_0&=&\mathrm{sh}^1_1\\[1ex]
+\res^{j+1}_i&=&(\lsymb{xor}\;\res^j_i\; \sh^{j+1}_i\; \carry^{j+1}_i)\\[1ex]
+\carry^1_i&=&\bot\\[1ex]
+\carry^{j+1}_{i+1}&=&\left\{
+                              \begin{tabular}{ll}
+                                $\res^j_i\wedge\sh^{j+1}_i\vee((\lsymb{xor}\;\res^j_i\;\sh^{j+1}_i)\wedge\carry^{j+1}_i)$ &if $j < i$\\
+                                $\bot$ &otherwise\\
+                              \end{tabular}\right.\\[3ex]
+\sh^j_i&=&\left\{
+                   \begin{tabular}{ll}
+                     $x_{i-j}\wedge y_j$&if $j \leq i$\\
+                     $\bot$ &otherwise\\
+                   \end{tabular}\right.
+\end{array}
+\]
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_concat}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_m)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{concat}\;t\;u)\;t_1 \dots t_n\;u_1 \dots u_m)$ & (\currule\;$i$, $j$) \\
+\end{AletheX}
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_eq}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bveq}\;t\;u) ≈ (t_1 ≈ u_1 \land \cdots \land t_n ≈ u_n)$ & (\currule\;$i$, $j$) \\
+\end{AletheX}
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_ult}
+This rule bit-blasts the unsigned less-than predicate. 
+
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvult}\;t\;u) ≈ \res_n $ & (\currule\;$i$, $j$) \\
+\end{AletheX}
+
+\noindent
+in which, for $i\geq 0$,
+\[
+  \begin{array}{lcl}
+    \res_1&=&\neg t_0 \wedge y_0\\
+    \res_{i+1}&=&((t_{i+1}\leftrightarrow u_{i+1})\wedge
+                          \res_i)\vee (\neg t_{i+1}\wedge u_{i+1})
+  \end{array}
+\]
+\end{RuleDescription}
+
+\begin{RuleDescription}{bb_slt}
+
+This rule bit-blasts the signed less-than predicate.  It holds that
+$t < u$ iff $t$ is negative and $u$ postive, or they havethe same sign and
+the value of$t$ is less than the value of $u$. The second case is
+like $\proofRule{bb_ult}$.
+
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;u\;u_1 \dots u_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvslt}\;t\;u) ≈
+(t_n \land \neg u_n) \lor (( t_n \land u_n) \land \res_{n-1}) $ & (\currule\;$i$, $j$) \\
+\end{AletheX}
+
+\noindent
+in which, for $i\geq 0$,
+\[
+  \begin{array}{lcl}
+    \res_1&=&t_0 \wedge \neg y_0\\
+    \res_{i+1}&=&((t_{i+1}\leftrightarrow u_{i+1})\wedge
+                          \res_i)\vee (t_{i+1}\wedge \neg u_{i+1})
+  \end{array}
+\]
+
+\end{RuleDescription}
+
+% TODO: what is "bbsextend"?? cvc5 extension
+\begin{RuleDescription}{bb_sextend}
+\begin{AletheX}
+$i$. & \ctxsep & $(\lsymb{bvblast}\;t\;t_1 \dots t_n)$ & (\dots) \\
+$j$. & \ctxsep & $(\lsymb{bvblast}\;(\lsymb{bbsextend}\;k\;t)\;t_1 \dots t_n \underbrace{t_n \dots t_n}_k)$ & (\currule\;$i$) \\
+\end{AletheX}
+
+This is signed extension.
+\end{RuleDescription}
+
 \clearpage
 \subsection{Index of Rules}
 \printindex[rules]
