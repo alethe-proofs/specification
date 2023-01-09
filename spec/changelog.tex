@@ -26,6 +26,13 @@ following changes were implemented in this release.
   \item An index that lists all proof rules was added.
 \end{itemize}
 
+Proof rules:
+\begin{itemize}
+  \item The rule \proofRule{implies_simplify} is no longer allowed to
+  perform the simplification $(\varphi_1\rightarrow \varphi_2)\rightarrow \varphi_2
+  ⇒  \varphi_1\lor \varphi_2$.  This is covered by \proofRule{bool_simplify}.
+\end{itemize}
+
 \subsection*{0.2 --- \DTMdisplaydate{2022}{12}{19}{-1}}
 
 This is an intermediate release.  It collects all changes to the original
