@@ -9,9 +9,9 @@ Table~\ref{rule-tab:special} lists rules that serve a special purpose.
 Table~\ref{rule-tab:tautologies} lists all rules that introduce
 tautologies.  That is, regular rules that do not use premises.
 
-The subsequent section, starting at ref{sec:alethe:rules-list}, defines
+The subsequent section, starting at \ref{sec:alethe:rules-list}, defines
 all rules and provides example proofs for complicated rules.
-The index of proof rules at ref{sec:alethe:rules-index} can be used
+The index of proof rules at \ref{sec:alethe:rules-index} can be used
 to quickly find the definition of rules.
 
 \subsection{Classifications of the Rules}
@@ -22,7 +22,7 @@ to quickly find the definition of rules.
 \label{rule-tab:special}\\
   Rule & Description \\
   \hline
-  \ruleref{assume}   & Repetition of an input assumption. \\
+  \ruleref{assume}   & Introduction of an assumption. \\
   \ruleref{hole}     & Placeholder for rules not defined here. \\
   \ruleref{subproof} & Concludes a subproof and discharges local assumptions. \\
 \end{xltabular}
@@ -61,7 +61,7 @@ to quickly find the definition of rules.
 \ruleref{and_pos} & $\neg (\varphi_1 \land \dots \land \varphi_n) , \varphi_k $ \\
 \ruleref{and_neg} & $ (\varphi_1 \land \dots \land \varphi_n), \neg\varphi_1  , \dots , \neg\varphi_n $ \\
 \ruleref{or_pos} & $ \neg (\varphi_1 \lor \dots \lor \varphi_n) , \varphi_1 , \dots , \varphi_n $ \\
-\ruleref{or_neg} & $ (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k $ \\
+\ruleref{or_neg} & $ (\varphi_1 \lor \dots \lor \varphi_n) , \neg \varphi_k $; with $1\leq k \leq n$ \\
 \ruleref{xor_pos1} & $ \neg (\varphi_1 \,\lsymb{xor}\, \varphi_2) , \varphi_1 , \varphi_2 $ \\
 \ruleref{xor_pos2} & $ \neg (\varphi_1 \,\lsymb{xor}\, \varphi_2), \neg \varphi_1, \neg \varphi_2 $ \\
 \ruleref{xor_neg1} & $ \varphi_1 \,\lsymb{xor}\, \varphi_2, \varphi_1 , \neg \varphi_2 $ \\
@@ -73,18 +73,18 @@ to quickly find the definition of rules.
 \ruleref{equiv_pos2} & $\neg (\varphi_1 ≈ \varphi_2) , \neg \varphi_1 , \varphi_2$ \\
 \ruleref{equiv_neg1} & $\varphi_1 ≈ \varphi_2 , \neg \varphi_1 , \neg \varphi_2$ \\
 \ruleref{equiv_neg2} & $\varphi_1 ≈ \varphi_2 , \varphi_1 , \varphi_2$ \\
-\ruleref{ite_pos1} & $\neg (\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3) , \varphi_1 , \varphi_3$ \\
-\ruleref{ite_pos2} & $\neg (\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3) , \neg \varphi_1 , \varphi_2$ \\
-\ruleref{ite_neg1} & $\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3 , \varphi_1 , \neg \varphi_3$ \\
-\ruleref{ite_neg2} & $\lsymb{ite} \varphi_1\;\varphi_2\;\varphi_3 , \neg \varphi_1 , \neg \varphi_2$ \\
-\ruleref{connective_def} & Definition of the Boolean connectives. \\
+\ruleref{ite_pos1} & $\neg (\lsymb{ite}\ \varphi_1\;\varphi_2\;\varphi_3) , \varphi_1 , \varphi_3$ \\
+\ruleref{ite_pos2} & $\neg (\lsymb{ite}\ \varphi_1\;\varphi_2\;\varphi_3) , \neg \varphi_1 , \varphi_2$ \\
+\ruleref{ite_neg1} & $(\lsymb{ite}\ \varphi_1\;\varphi_2\;\varphi_3) , \varphi_1 , \neg \varphi_3$ \\
+\ruleref{ite_neg2} & $(\lsymb{ite}\ \varphi_1\;\varphi_2\;\varphi_3) , \neg \varphi_1 , \neg \varphi_2$ \\
+\ruleref{connective_def} & Definition of some connectives. \\
 \ruleref{and_simplify} & Simplification of a conjunction. \\
 \ruleref{or_simplify} & Simplification of a disjunction. \\
 \ruleref{not_simplify} & Simplification of a Boolean negation. \\
 \ruleref{implies_simplify} & Simplification of an implication. \\
 \ruleref{equiv_simplify} & Simplification of an equivalence. \\
 \ruleref{bool_simplify} & Simplification of combined Boolean connectives. \\
-\ruleref{ac_simp} & Flattening of nested $\lor$ or $\land$. \\
+\ruleref{ac_simp} & Flattening and removal of duplicates for $\lor$ or $\land$. \\
 \ruleref{ite_simplify} & Simplification of if-then-else. \\
 \ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
 \ruleref{qnt_join} & Joining of consecutive quantifiers. \\
@@ -96,9 +96,9 @@ to quickly find the definition of rules.
 \ruleref{minus_simplify} & Simplification of subtractions. \\
 \ruleref{sum_simplify} & Simplification of sums. \\
 \ruleref{comp_simplify} & Simplification of arithmetic comparisons. \\
-\ruleref{distinct_elim} & Elimination of the distinction predicate. \\
+\ruleref{distinct_elim} & Elimination of the $\lsymb{distinct}$ operator. \\
 \ruleref{la_rw_eq} & $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \\
-\ruleref{nary_elim} & Replace $n$-ary operators with binary application. \\
+\ruleref{nary_elim} & Eliminate $n$-ary application of operators via binary applications. \\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
@@ -125,10 +125,10 @@ to quickly find the definition of rules.
 \label{rule-tab:quants}\\
   Rule & Description \\
   \hline
-\ruleref{forall_inst} & Instantiation of a universal variable. \\
+\ruleref{forall_inst} & Instantiation of a universal quantifier. \\
 \ruleref{bind} & Renaming of bound variables. \\
-\ruleref{sko_ex} & Skolemization of existential variables. \\
-\ruleref{sko_forall} & Skolemization of universal variables. \\
+\ruleref{sko_ex} & Skolemization of an existential quantifier. \\
+\ruleref{sko_forall} & Skolemization of an universal quantifier. \\
 \ruleref{qnt_cnf} & Clausification of quantified formulas. \\
 \ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
 \ruleref{onepoint} & The one-point rule. \\
@@ -155,10 +155,10 @@ clausification.}
 \ruleref{not_or} & Elimination of a negated disjunction. \\
 \ruleref{or} & Disjunction to clause. \\
 \ruleref{not_and} & Distribution of negation over a conjunction. \\
-\ruleref{xor1} & From $\,\lsymb{xor}\, \varphi_1 \varphi_2$ to $\varphi_1, \varphi_2$. \\
-\ruleref{xor2} & From $\,\lsymb{xor}\, \varphi_1 \varphi_2$ to $\neg\varphi_1, \neg\varphi_2$. \\
-\ruleref{not_xor1} & From $\neg(\,\lsymb{xor}\, \varphi_1 \varphi_2)$ to $\varphi_1, \neg\varphi_2$. \\
-\ruleref{not_xor2} & From $\neg(\,\lsymb{xor}\, \varphi_1 \varphi_2)$ to $\neg\varphi_1, \varphi_2$. \\
+\ruleref{xor1} & From $\,(\lsymb{xor}\, \varphi_1\, \varphi_2)$ to $\varphi_1, \varphi_2$. \\
+\ruleref{xor2} & From $\,(\lsymb{xor}\, \varphi_1\, \varphi_2)$ to $\neg\varphi_1, \neg\varphi_2$. \\
+\ruleref{not_xor1} & From $\neg(\,\lsymb{xor}\, \varphi_1\, \varphi_2)$ to $\varphi_1, \neg\varphi_2$. \\
+\ruleref{not_xor2} & From $\neg(\,\lsymb{xor}\, \varphi_1\, \varphi_2)$ to $\neg\varphi_1, \varphi_2$. \\
 \ruleref{implies} & From $ \varphi_1\rightarrow\varphi_2 $ to $\neg\varphi_1 , \varphi_2 $. \\
 \ruleref{not_implies1} & From $\neg (\varphi_1\rightarrow\varphi_2)$ to $\varphi_1$. \\
 \ruleref{not_implies2} & From $\neg (\varphi_1\rightarrow\varphi_2)$ to $\neg\varphi_2$. \\
@@ -213,7 +213,7 @@ simplifications.}
 \ruleref{implies_simplify} & Simplification of an implication. \\
 \ruleref{equiv_simplify} & Simplification of an equivalence. \\
 \ruleref{bool_simplify} & Simplification of combined Boolean connectives. \\
-\ruleref{ac_simp} & Simplification of nested disjunctions and conjunctions. \\
+\ruleref{ac_simp} & Flattening and removal of duplicates for $\lor$ or $\land$. \\
 \ruleref{ite_simplify} & Simplification of if-then-else. \\
 \ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
 \ruleref{onepoint} & The one-point rule. \\
@@ -237,7 +237,8 @@ simplifications.}
 $i$. & \ctxsep & $\varphi$ & \currule \\
 \end{AletheX}
   where $\varphi$ corresponds up to the orientation of equalities
-  to a formula asserted in the input problem.
+  to a formula asserted in the input problem, or $\varphi$ is a local assumption
+  in a subproof.
   \ruleparagraph{Remark.}
   This rule can not be used by the
   \inlineAlethe{(step }\dots\inlineAlethe{)} command. Instead it corresponds to the dedicated
@@ -308,7 +309,7 @@ See the equivalent \proofRule{resolution} rule for the rule emitted by the
 SAT solver.
 
 \ruleparagraph{Remark.} The definition given here is very general.  The motivation
-for this to ensure the definition covers all possible resolution steps generated
+for this is to ensure the definition covers all possible resolution steps generated
 by the existing proof generation code in veriT.  It will be restricted after
 a full review of the code.  As a consequence of this checking this rule is
 theoretically NP-complete.  In practice, however, the \currule-steps
@@ -543,7 +544,7 @@ $k$. & & \ctxsep &
     $\forall x_1, \dots, x_n.\varphi ≈ \forall y_1, \dots, y_n. \varphi'$
      & \currule{} \\
 \end{AletheXS}
-  where the variables $y_1, \dots, y_n$ is not free in $\forall x_1,
+  where the variables $y_1, \dots, y_n$ are not free in $\forall x_1,
   \dots, x_n.\varphi$.
 \end{RuleDescription}
 
@@ -559,7 +560,7 @@ $j$. &
 $k$. & & \ctxsep & $\exists x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 \end{AletheXS}
 where $\varepsilon_i$ stands for $\varepsilon x_i. (\exists x_{i+1}, \dots,
-x_n. \varphi[x_1\mapsto \varepsilon_1,\dots,x_{i-1}\mapsto\varepsilon_{i-1}])$.
+x_n. \varphi)$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{sko_forall}
@@ -618,7 +619,7 @@ $i_2$. & \ctxsep  & $\Gamma$  & $t_2 ≈ u_2 $ & ($\dots$) \\
 $i_n$. & \ctxsep  & $\Gamma$  & $t_n ≈ u_n $ & ($\dots$) \\
 $j$. & \ctxsep  & $\Gamma$  & $(f\,t_1\,\cdots\,t_n) ≈ (f\,u_1\,\cdots\,u_n)$  & (\currule\; $i_1$, $\dots$, $i_n$) \\
 \end{AletheXS}
-where $f$ is any $n$-ary function symbol of appropriate sort.
+where $f$ is any function symbol of appropriate sort.
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_reflexive}
@@ -729,7 +730,7 @@ An application of the \proofRule{or} rule.
 (step t15 (cl (or (= a b) (not (<= a b)) (not (<= b a))))
     :rule la_disequality)
 (step t16 (cl     (= a b) (not (<= a b)) (not (<= b a)))
-    :rule or :premises (t15))
+     :rule or :premises (t15))
 \end{AletheVerb}
 \end{RuleExample}
 
@@ -742,7 +743,7 @@ $j$. & \ctxsep & $\neg\varphi_1 , \dots , \neg\varphi_n$ & (\currule\;$i$) \\
 
 \begin{RuleDescription}{xor1}
 \begin{AletheX}
-$i$. & \ctxsep & $\lsymb{xor}\,\varphi_1\,\varphi_2$
+$i$. & \ctxsep & ($\lsymb{xor}\,\varphi_1\,\varphi_2$)
  & ($\dots$) \\
 $j$. & \ctxsep & $\varphi_1, \varphi_2$ & (\currule\;$i$) \\
 \end{AletheX}
@@ -750,7 +751,7 @@ $j$. & \ctxsep & $\varphi_1, \varphi_2$ & (\currule\;$i$) \\
 
 \begin{RuleDescription}{xor2}
 \begin{AletheX}
-$i$. & \ctxsep & $\lsymb{xor}\,\varphi_1\,\varphi_2$ & ($\dots$) \\
+$i$. & \ctxsep & ($\lsymb{xor}\,\varphi_1\,\varphi_2$) & ($\dots$) \\
 $j$. & \ctxsep & $\neg\varphi_1 , \neg\varphi_2$ & (\currule\;$i$) \\
 \end{AletheX}
 \end{RuleDescription}
@@ -846,25 +847,25 @@ with $1 \leq k \leq n$.
 
 \begin{RuleDescription}{xor_pos1}
 \begin{AletheX}
-$i$. & \ctxsep & $\neg (\varphi_1\,\lsymb{xor}\,\varphi_2) , \varphi_1 , \varphi_2$ & \currule \\
+$i$. & \ctxsep & $\neg (\lsymb{xor}\,\varphi_1\,\varphi_2) , \varphi_1 , \varphi_2$ & \currule \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{xor_pos2}
 \begin{AletheX}
-$i$. & \ctxsep & $\neg (\varphi_1\,\lsymb{xor}\,\varphi_2), \neg \varphi_1, \neg \varphi_2$ & \currule \\
+$i$. & \ctxsep & $\neg (\lsymb{xor}\,\varphi_1\,\varphi_2), \neg \varphi_1, \neg \varphi_2$ & \currule \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{xor_neg1}
 \begin{AletheX}
-$i$. & \ctxsep & $\varphi_1 \,\lsymb{xor}\, \varphi_2, \varphi_1 , \neg \varphi_2$ & \currule \\
+$i$. & \ctxsep & $(\lsymb{xor}\,\varphi_1\,\varphi_2), \varphi_1 , \neg \varphi_2$ & \currule \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{xor_neg2}
 \begin{AletheX}
-$i$. & \ctxsep & $\varphi_1\,\lsymb{xor}\,\varphi_2, \neg \varphi_1, \varphi_2$ & \currule \\
+$i$. & \ctxsep & $(\lsymb{xor}\,\varphi_1\,\varphi_2), \neg \varphi_1, \varphi_2$ & \currule \\
 \end{AletheX}
 \end{RuleDescription}
 
@@ -912,14 +913,14 @@ $i$. & \ctxsep & $\varphi_1 ≈ \varphi_2, \varphi_1, \varphi_2$ & \currule \\
 
 \begin{RuleDescription}{ite1}
 \begin{AletheX}
-$i$. & \ctxsep & $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3$ & ($\dots$) \\
+$i$. & \ctxsep & $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3)$ & ($\dots$) \\
 $j$. & \ctxsep & $\varphi_1 , \varphi_3$ & (\currule\;$i$) \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{ite2}
 \begin{AletheX}
-$i$. & \ctxsep & $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3$ & ($\dots$) \\
+$i$. & \ctxsep & $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3)$ & ($\dots$) \\
 $j$. & \ctxsep & $\neg\varphi_1, \varphi_2$ & (\currule\;$i$) \\
 \end{AletheX}
 \end{RuleDescription}
@@ -938,13 +939,13 @@ $i$. & \ctxsep & $\neg (\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3), \neg \var
 
 \begin{RuleDescription}{ite_neg1}
 \begin{AletheX}
-$i$. & \ctxsep & $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3, \varphi_1, \neg \varphi_3$ & (\currule) \\
+$i$. & \ctxsep & $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3, \varphi_1, \neg \varphi_3)$ & (\currule) \\
 \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{ite_neg2}
 \begin{AletheX}
-$i$. & \ctxsep & $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3, \neg \varphi_1, \neg \varphi_2$ & (\currule) \\
+$i$. & \ctxsep & $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3, \neg \varphi_1, \neg \varphi_2)$ & (\currule) \\
 \end{AletheX}
 \end{RuleDescription}
 
@@ -967,31 +968,31 @@ $j$. & \ctxsep & $\neg\varphi_1 , \neg\varphi_2$ & (\currule\;$i$) \\
   of the following:
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$  & 
-    $\varphi_1\,\lsymb{xor}\,\varphi_2 ≈
-    (\neg\varphi_1 \land \varphi_2) \lor (\varphi_1 \land \neg\varphi_2)$ & \currule \\
+    $(\lsymb{xor}\,\varphi_1\,\varphi_2) ≈
+    ((\neg\varphi_1 \land \varphi_2) \lor (\varphi_1 \land \neg\varphi_2))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$  & 
-      $\varphi_1≈\varphi_2 ≈
-      (\varphi_1 \rightarrow \varphi_2) \land (\varphi_2 \rightarrow \varphi_1)$ & \currule \\
+      $(\varphi_1 ≈ \varphi_2) ≈
+      ((\varphi_1 \rightarrow \varphi_2) \land (\varphi_2 \rightarrow \varphi_1))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$  & 
-      $\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3 ≈
-      (\varphi_1 \rightarrow \varphi_2) \land (\neg\varphi_1 \rightarrow \varphi_3)$ & \currule \\
+      $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) ≈
+      ((\varphi_1 \rightarrow \varphi_2) \land (\neg\varphi_1 \rightarrow \varphi_3))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$  & 
-      $\forall x_1, \dots, x_n.\,\varphi ≈ \neg(\exists x_1, \dots, x_n.\,
+      $(\forall x_1, \dots, x_n.\,\varphi) ≈ \neg(\exists x_1, \dots, x_n.\,
       \neg\varphi)$ & \currule \\
 \end{AletheXS}
 \end{RuleDescription}
 
 \begin{RuleDescription}{and_simplify}
-This rule simplifies an $\land$ term by applying equivalent
+This rule simplifies an $\land$ term by applying equivalence-preserving
 transformations as long as possible. Hence, the general form is
 
 \begin{AletheXS}
@@ -1020,7 +1021,7 @@ The possible transformations are:
 \end{RuleDescription}
 
 \begin{RuleDescription}{or_simplify}
-This rule simplifies an $\lor$ term by applying equivalent
+This rule simplifies an $\lor$ term by applying equivalence-preserving
 transformations as long as possible. Hence, the general form is
 
 \begin{AletheXS}
@@ -1049,7 +1050,7 @@ The possible transformations are:
 \end{RuleDescription}
 
 \begin{RuleDescription}{not_simplify}
-This rule simplifies an $\neg$ term by applying equivalent
+This rule simplifies an $\neg$ term by applying equivalence-preserving
 transformations as long as possible. Hence, the general form is
 
 \begin{AletheXS}
@@ -1066,7 +1067,7 @@ The possible transformations are:
 \end{RuleDescription}
 
 \begin{RuleDescription}{implies_simplify}
-This rule simplifies an $\rightarrow$ term by applying equivalent
+This rule simplifies an $\rightarrow$ term by applying equivalence-preserving
 transformations as long as possible. Hence, the general form is
 
 \begin{AletheXS}
@@ -1089,7 +1090,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{equiv_simplify}
 This rule simplifies a formula with the head symbol $≈\,: \lsymb{Bool}\,\lsymb{Bool}\,\lsymb{Bool}$
-by applying equivalent
+by applying equivalence-preserving
 transformations as long as possible. Hence, the general form is
 
 \begin{AletheXS}
@@ -1111,7 +1112,7 @@ The possible transformations are:
 \end{RuleDescription}
 
 \begin{RuleDescription}{bool_simplify}
-This rule simplifies a boolean term by applying equivalent
+This rule simplifies a boolean term by applying equivalence-preserving
 transformations as long as possible. Hence, the general form is
 
 \begin{AletheXS}
@@ -1143,7 +1144,7 @@ $i$. & \ctxsep & $\Gamma$ & $\psi ≈ \varphi_1 \circ\cdots\circ\varphi_n$ & \cu
 \end{RuleDescription}
 
 \begin{RuleDescription}{ite_simplify}
-  This rule simplifies an if-then-else term by applying equivalent
+  This rule simplifies an if-then-else term by applying equivalence-preserving
   transformations until fixed point\footnote{Note however that the order of the
     application is important, since the set of rules is not confluent. For
     example, the term $(\lsymb{ite} \top \; t_1 \; t_2 ≈
@@ -1153,26 +1154,26 @@ $i$. & \ctxsep & $\Gamma$ & $\psi ≈ \varphi_1 \circ\cdots\circ\varphi_n$ & \cu
 It has the form
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\lsymb{ite}\,\varphi\,t_1\,t_2 ≈ u$ & \currule \\
+$i$. & \ctxsep & $\Gamma$ & $(\lsymb{ite}\,\varphi\,t_1\,t_2) ≈ u$ & \currule \\
 \end{AletheXS}
 where $u$ is the transformed term.
 
 The possible transformations are:
 \begin{itemize}
-    \item $\lsymb{ite}\, \top      \, t_1 \, t_2 ⇒ t_1$
-    \item $\lsymb{ite}\, \bot      \, t_1 \, t_2 ⇒ t_2$
-    \item $\lsymb{ite}\, \psi      \, t \, t ⇒ t$
-    \item $\lsymb{ite}\, \neg \varphi \, t_1 \, t_2 ⇒ \lsymb{ite}\, \varphi \, t_2 \, t_1$
-    \item $\lsymb{ite}\, \psi \, (\lsymb{ite}\, \psi\,t_1\,t_2)\, t_3 ⇒
-      \lsymb{ite}\, \psi\, t_1\, t_3$
-    \item $\lsymb{ite}\, \psi \, t_1\, (\lsymb{ite}\, \psi\,t_2\,t_3) ⇒
-      \lsymb{ite}\, \psi\, t_1\, t_3$
-    \item $\lsymb{ite}\, \psi \, \top\, \bot ⇒ \psi$
-    \item $\lsymb{ite}\, \psi \, \bot\, \top ⇒ \neg\psi$
-    \item $\lsymb{ite}\, \psi \, \top \, \varphi ⇒ \psi\lor\varphi$
-    \item $\lsymb{ite}\, \psi \, \varphi\,\bot ⇒ \psi\land\varphi$
-    \item $\lsymb{ite}\, \psi \, \bot\, \varphi ⇒ \neg\psi\land\varphi$
-    \item $\lsymb{ite}\, \psi \, \varphi\,\top ⇒ \neg\psi\lor\varphi$
+    \item $(\lsymb{ite}\, \top      \, t_1 \, t_2) ⇒ t_1$
+    \item $(\lsymb{ite}\, \bot      \, t_1 \, t_2) ⇒ t_2$
+    \item $(\lsymb{ite}\, \psi      \, t \, t) ⇒ t$
+    \item $(\lsymb{ite}\, \neg \varphi \, t_1 \, t_2) ⇒ (\lsymb{ite}\, \varphi \, t_2 \, t_1)$
+    \item $(\lsymb{ite}\, \psi \, (\lsymb{ite}\, \psi\,t_1\,t_2)\, t_3) ⇒
+      (\lsymb{ite}\, \psi\, t_1\, t_3)$
+    \item $(\lsymb{ite}\, \psi \, t_1\, (\lsymb{ite}\, \psi\,t_2\,t_3) ⇒
+      (\lsymb{ite}\, \psi\, t_1\, t_3)$
+    \item $(\lsymb{ite}\, \psi \, \top\, \bot) ⇒ \psi$
+    \item $(\lsymb{ite}\, \psi \, \bot\, \top) ⇒ \neg\psi$
+    \item $(\lsymb{ite}\, \psi \, \top \, \varphi) ⇒ \psi\lor\varphi$
+    \item $(\lsymb{ite}\, \psi \, \varphi\,\bot) ⇒ \psi\land\varphi$
+    \item $(\lsymb{ite}\, \psi \, \bot\, \varphi) ⇒ \neg\psi\land\varphi$
+    \item $(\lsymb{ite}\, \psi \, \varphi\,\top) ⇒ \neg\psi\lor\varphi$
 \end{itemize}
 \end{RuleDescription}
 
@@ -1180,7 +1181,7 @@ The possible transformations are:
   This rule simplifies a $\forall$-formula with a constant predicate.
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\forall x_1, \dots, x_n. \varphi ≈ \varphi$ & \currule \\
+$i$. & \ctxsep & $\Gamma$ & $(\forall x_1, \dots, x_n. \varphi) ≈ \varphi$ & \currule \\
 \end{AletheXS}
   where $\varphi$ is either $\top$ or $\bot$.
 \end{RuleDescription}
@@ -1255,7 +1256,7 @@ $i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,\varphi ≈ Q x_{k_1}, \dots, x
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_simplify}
-  This rule simplifies an $≈$ term by applying equivalent
+  This rule simplifies an $≈$ term by applying equivalence-preserving
   transformations as long as possible. Hence, the general form is
 
 \begin{AletheXS}
@@ -1272,7 +1273,7 @@ $i$. & \ctxsep & $\Gamma$ & $(t_1≈ t_2) ≈ \varphi$ & \currule \\
 \end{RuleDescription}
 
 \begin{RuleDescription}{div_simplify}
-This rule simplifies a division by applying equivalent
+This rule simplifies a division by applying equivalence-preserving
 transformations. The general form is
 
 \begin{AletheXS}
@@ -1284,12 +1285,12 @@ The possible transformations are:
   \item $t\, /\, 1 ⇒ t$
   \item $t_1\,  /\,  t_2 ⇒ t_3$
     if $t_1$ and $t_2$ are constants and $t_3$ is $t_1$
-    divided by $t_2$ according to the semantic of the current theory.
+    divided by $t_2$ according to the semantics of the current theory.
 \end{itemize}
 \end{RuleDescription}
 
 \begin{RuleDescription}{prod_simplify}
-This rule simplifies a product by applying equivalent
+This rule simplifies a product by applying equivalence-preserving
 transformations as long as possible. The general form is
 
 \begin{AletheXS}
@@ -1328,7 +1329,7 @@ where $u$ is the negated numerical constant $t$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{minus_simplify}
-This rule simplifies a subtraction by applying equivalent
+This rule simplifies a subtraction by applying equivalence-preserving
 transformations. The general form is
 
 \begin{AletheXS}
@@ -1346,7 +1347,7 @@ The possible transformations are:
 \end{RuleDescription}
 
 \begin{RuleDescription}{sum_simplify}
-This rule simplifies a sum by applying equivalent
+This rule simplifies a sum by applying equivalence-preserving
 transformations as long as possible. The general form is
 
 \begin{AletheXS}
@@ -1370,7 +1371,7 @@ The possible transformations are:
 \end{RuleDescription}
 
 \begin{RuleDescription}{comp_simplify}
-This rule simplifies a comparison by applying equivalent
+This rule simplifies a comparison by applying equivalence-preserving
 transformations as long as possible. The general form is
 
 \begin{AletheXS}
