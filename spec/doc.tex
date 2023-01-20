@@ -176,7 +176,7 @@ break
 \end{inner-rule}
 }
 
-\theoremstyle{definition} 
+\theoremstyle{definition}
 \newtheorem{RuleExample}{Example}[inner-rule]
 
 % TODO: synchronize colors!
@@ -403,10 +403,10 @@ The paragraphs below describe the concepts necessary to
 understand the proof step by step.
 
 \begin{Alethe}
-1.& \ctxsep & $\forall x.\, (P\,x)$ & $ \proofRule{assume}$ \\ 
-2.& \ctxsep & $\neg (P\,a)        $ & $ \proofRule{assume}$ \\ 
-3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[(x, a)]$ \\ 
-4.& \ctxsep & $\neg (\forall x.\, (P\,x)), (P\,a)$ & $ (\proofRule{or}\:3)$ \\ 
+1.& \ctxsep & $\forall x.\, (P\,x)$ & $ \proofRule{assume}$ \\
+2.& \ctxsep & $\neg (P\,a)        $ & $ \proofRule{assume}$ \\
+3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[(x, a)]$ \\
+4.& \ctxsep & $\neg (\forall x.\, (P\,x)), (P\,a)$ & $ (\proofRule{or}\:3)$ \\
 5.& \ctxsep & $\bot             $ & $ (\proofRule{resolution}\: 1, 2, 4)$ \\
 \end{Alethe}
 
@@ -500,7 +500,7 @@ introduce local assumptions. The \proofRule{subproof} {\em rule} discharges the
 local assumptions.
 From an
 assumption $\varphi$ and a formula $\psi$ proved
-from $\varphi$, the \proofRule{subproof} rule deduces the clause $\neg \varphi, 
+from $\varphi$, the \proofRule{subproof} rule deduces the clause $\neg \varphi,
 \psi$ that discharges the local assumption $\varphi$.
 %
 A \proofRule{subproof} step cannot use a premise from a subproof nested
@@ -518,15 +518,15 @@ formula $(2 + 2) ≈ 5$. The proof uses a subproof to prove the
 lemma $((2 + 2) ≈ 5) \Rightarrow 4 ≈ 5$.
 
 \begin{Alethe}
-1.&  \ctxsep &  $(2 + 2) ≈ 5$ &  $\proofRule{assume}$ \\ 
-2.&  \spctxsep &  $(2 + 2) ≈ 5 $ &  $\proofRule{assume}$ \\ 
-3.&  \spctxsep &  $(2 + 2) ≈ 4 $ &  $\proofRule{sum_simplify}$ \\ 
+1.&  \ctxsep &  $(2 + 2) ≈ 5$ &  $\proofRule{assume}$ \\
+2.&  \spctxsep &  $(2 + 2) ≈ 5 $ &  $\proofRule{assume}$ \\
+3.&  \spctxsep &  $(2 + 2) ≈ 4 $ &  $\proofRule{sum_simplify}$ \\
 4.&  \spctxsep &  $4 ≈ 5       $ &  $(\proofRule{trans}\ 2, 3)$ \\
 \spsep
-5.&  \ctxsep &  $\neg((2 + 2) ≈ 5), 4 ≈ 5$ &  $\proofRule{subproof}$ \\ 
-6.&  \ctxsep &  $(4 ≈ 5)≈ \bot$ &  $\proofRule{eq_simplify}$ \\ 
-7.&  \ctxsep &  $\neg((4 ≈ 5)≈ \bot), \neg(4≈ 5), \bot $ &  $\proofRule{equiv_pos2}$ \\ 
-8.&  \ctxsep &  $\bot $ &  $(\proofRule{resolution}\ 1, 5, 6, 7)$ \\ 
+5.&  \ctxsep &  $\neg((2 + 2) ≈ 5), 4 ≈ 5$ &  $\proofRule{subproof}$ \\
+6.&  \ctxsep &  $(4 ≈ 5)≈ \bot$ &  $\proofRule{eq_simplify}$ \\
+7.&  \ctxsep &  $\neg((4 ≈ 5)≈ \bot), \neg(4≈ 5), \bot $ &  $\proofRule{equiv_pos2}$ \\
+8.&  \ctxsep &  $\bot $ &  $(\proofRule{resolution}\ 1, 5, 6, 7)$ \\
 \end{Alethe}
 
 \end{example}
@@ -543,7 +543,7 @@ denoted $x_i\mapsto t_i$.
 In the first case, we say that $c_i$ {\em fixes} the
 variable.  The second case is a mapping.
 Throughout this chapter, $\Gamma$ denotes
-an arbitrary context. 
+an arbitrary context.
 
 % TODO: define \subst and related
 Every context $\Gamma$ induces a substitution
@@ -716,7 +716,7 @@ as if proxy names introduced by \inlineAlethe{:named} annotations have been
 expanded and annotations have been removed.  For example, the term
 \inlineAlethe{(or (! (P a) :named baz) (! baz :foo))} and
 \inlineAlethe{(or (P a) (P a))} are considered to be syntactically equal.
-Here \inlineAlethe{:foo} is an arbitrary {\smtlib} annotation. 
+Here \inlineAlethe{:foo} is an arbitrary {\smtlib} annotation.
 
 Figure~\ref{fig:grammar} shows the grammar of the proof text. It
 is based on the {\smtlib} grammar, as defined in the {\smtlib}
@@ -976,10 +976,10 @@ $C_i$ in $P$ uses $i$ as its index.
 The context
 only changes at anchors and subproof-concluding steps.
 Therefore, the elements of $C_1, \dots, C_n$ that are steps
-are not associated with a context.  
+are not associated with a context.
 Instead, the context can be computed
 from the prior anchors.
-The anchors only ever extend the context. 
+The anchors only ever extend the context.
 
 To check an Alethe proof we can iteratively eliminate the first-innermost
 subproof, i.e., the innermost subproof that does not come after a
@@ -1157,7 +1157,7 @@ It is useful to give precise semantics
 to contexts to have the tools to check that rules that use contexts
 are sound.
 Contexts are local in the sense that they affect only the
-proof step they are applied to. 
+proof step they are applied to.
 For the full details on contexts see~\cite{barbosa-2019}.
 The presentation here is adapted from this publication, but omits some
 details.
@@ -1361,7 +1361,7 @@ nested subproofs.
   $\psi_{\mathit{start}+n} \vDash \psi_{\mathit{start}+n}$ which can
   be weakened to $V_n \vDash \psi_{\mathit{start}+n}$.
   In the first case, the step $C_{\mathit{start}+n}$ has a set of
-  premises $S$.  
+  premises $S$.
   For each step $C_{\mathit{start}+i} \in S$ we have $i < n$ and
   $V_i \vDash \psi_{\mathit{start}+i}$ due to the induction
   hypothesis. Since $i < n$, the premises $V_i$ are a subset of $V_n$ and
@@ -1385,7 +1385,7 @@ nested subproofs.
   \vDash \neg\varphi_1, \cdots, \neg\varphi_m, l_1, \dots, l_o.
   \]
   where $l_1, \dots, l_o$ are the literals of $\psi_{\mathit{end}-1}$.
-  This clause is exactly the conclusion of the 
+  This clause is exactly the conclusion of the
   step $C_{\mathit{end}}$
   according to the definition of the \proofRule{subproof} rule.
 \end{proof}
@@ -1411,7 +1411,7 @@ subproofs with contexts.  This is slightly complicated by the
   C_{\mathit{start}}]$ where $δ$ is either the largest index
   $δ < {\mathit{start}}$ such
   that $s_{δ}$ is an anchor, or $1$ if no such index exist.
-  Hence, there is no anchor between $C_{δ}$ and $C_{\mathit{start}}$. 
+  Hence, there is no anchor between $C_{δ}$ and $C_{\mathit{start}}$.
 \end{lemma}
 \begin{proof}
   The step $C_{\mathit{start}}$ is an anchor due to the definition
@@ -1458,7 +1458,7 @@ $\mathit{end}$.   & $\Gamma$          & \ctxsep & $\psi$    & $(\ruleType{rule}\
   depend on some \proofRule{assume} steps that appear before them
   in their subproof.  This is the case if the steps are outermost steps, or
   if the subproof that starts at $C_{δ}$ concludes with
-  a \proofRule{subproof} step. 
+  a \proofRule{subproof} step.
   %
   In this case we can, as we saw in the proof of
   Lemma~\ref{lem:sound_subproof}, weaken their judgments to include
@@ -1626,7 +1626,7 @@ The left-hand side is a formula starting with an existential quantifier
 over some variable $x$.  In the formula on the right-hand side, the
 variable is replaced by the appropriate Skolem term.
 To provide a proof for the replacement, the \proofRule{sko_ex} step
-uses one premise. 
+uses one premise.
 The premise
 has a context that maps the existentially quantified variable
 to the appropriate Skolem term.
@@ -1649,7 +1649,7 @@ is functional congruence, and \proofRule{sko_forall} works like
 \begin{AletheS}
 1. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$}
      & \ctxsep
-     &  $x  ≈   \varepsilon x.\,\neg (p\,x) $ & 
+     &  $x  ≈   \varepsilon x.\,\neg (p\,x) $ &
      $\proofRule{refl}$ \\
 2. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$} & \ctxsep &  $ (p\,x) ≈ p(\varepsilon x.\,\neg (p\,x))$ &  $(\proofRule{cong}\, 1)$ \\
  \spsep

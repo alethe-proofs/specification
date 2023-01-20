@@ -292,7 +292,7 @@ This rule is the resolution of two or more clauses.
 $i_1$. & \ctxsep & $l^1_1$, $\dots$, $l^1_{k^1}$  & ($\ruleType{...}$) \\
 \aletheLine
 $i_n$. & \ctxsep & $l^n_1$, $\dots$, $l^n_{k^n}$  & ($\ruleType{...}$) \\
-  $j$. & \ctxsep & $l^{r_1}_{s_1}$, $\dots$, $l^{r_m}_{s_m}$  & ($\currule\;i_1,\dots, i_n$) \\ 
+  $j$. & \ctxsep & $l^{r_1}_{s_1}$, $\dots$, $l^{r_m}_{s_m}$  & ($\currule\;i_1,\dots, i_n$) \\
 \end{AletheX}
 where $l^{r_1}_{s_1} , \dots , l^{r_m}_{s_m}$ are from $l^{i}_{j}$ and
 are the result of a chain of predicate resolution steps on the clauses of
@@ -356,11 +356,11 @@ last step of the subproof is the conclusion.
 \begin{AletheX}
 $i_1$. & \spctxsep  & $\varphi_1$  & $\proofRule{assume}$ \\
 \aletheLine
-$i_n$. & \spctxsep  & $\varphi_n$  & $\proofRule{assume}$ \\ 
+$i_n$. & \spctxsep  & $\varphi_n$  & $\proofRule{assume}$ \\
 \aletheLineB
 $j$. & \spctxsep  & $\psi$  & ($\dots$) \\
 \spsep
-k. & \ctxsep  & $\neg\varphi_1$,\dots, $\neg\varphi_n$, $\psi$   & $\proofRule{subproof}$ \\ 
+k. & \ctxsep  & $\neg\varphi_1$,\dots, $\neg\varphi_n$, $\psi$   & $\proofRule{subproof}$ \\
 \end{AletheX}
 
 \end{RuleDescription}
@@ -402,10 +402,10 @@ each $i$, let $\varphi := \varphi_i$ and $a := a_i$.
 \begin{enumerate}
     \item If $\varphi = s_1 > s_2$, then let $\varphi := s_1 \leq s_2$.
       If $\varphi = s_1 \geq s_2$, then let $\varphi := s_1 < s_2$.
-      If $\varphi = s_1 < s_2$, then let $\varphi := s_1 \geq s_2$. 
+      If $\varphi = s_1 < s_2$, then let $\varphi := s_1 \geq s_2$.
       If $\varphi = s_1 \leq s_2$, then let $\varphi := s_1 > s_2$. This negates
       the literal.
-     \item If $\varphi = \neg (s_1 \bowtie s_2)$, then let $\varphi := s_1 \bowtie s_2$. 
+     \item If $\varphi = \neg (s_1 \bowtie s_2)$, then let $\varphi := s_1 \bowtie s_2$.
     \item Replace $\varphi$ by $\sum_{i=0}^{n}c_i\times{}t_i - \sum_{i=n+1}^{m} c_i\times{}t_i
     \bowtie d$ where $d := d_2 - d_1$.
     \item \label{la_generic:str}Now $\varphi$ has the form $s_1 \bowtie d$. If all
@@ -453,7 +453,7 @@ To verify this we have to check the insatisfiability of $(f\,a) > (f\,b) \land
 (f\,a) - (f\,b) ≈ 0$. Since we don't have an integer sort in this logic step~4 does
 not apply. Finally, after step~5 the conjunction is $(f\,a) - (f\,b) > 0 \land
 - (f\,a) + (f\,b) ≈ 0$. This sums to $0 > 0$, which is a contradiction.
-\end{RuleExample} 
+\end{RuleExample}
 
 \begin{RuleExample}
 The following \proofRule{la_generic} step is from a \textsf{QF\_UFLIA} problem:
@@ -487,7 +487,7 @@ can be NP-hard. Hence, this rule should be avoided when possible.
 
 \begin{RuleDescription}{la_disequality}
 \begin{AletheX}
-$i$. & \ctxsep  & 
+$i$. & \ctxsep  &
 $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$
 & (\currule) \\
 \end{AletheX}
@@ -513,7 +513,7 @@ checking the \proofRule{la_generic} the result is trivially unsatisfiable.
 The second form handles bounds on linear combinations. It is binary clause:
 
 \begin{AletheX}
-$i$. & \ctxsep & 
+$i$. & \ctxsep &
 $\varphi_1 \lor \varphi_2$ % Checked: this is a proper disjunction not a cl
  & (\currule) \\
 \end{AletheX}
@@ -540,7 +540,7 @@ as for the rule \proofRule{la_generic}.
 $j$. & \spctx{ $\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$}
    & \ctxsep & $\varphi ≈ \varphi'$ & ($\dots$) \\
    \spsep
-$k$. & & \ctxsep & 
+$k$. & & \ctxsep &
     $\forall x_1, \dots, x_n.\varphi ≈ \forall y_1, \dots, y_n. \varphi'$
      & \currule{} \\
 \end{AletheXS}
@@ -568,7 +568,7 @@ The \currule{} rule skolemizes universal quantifiers.
 
 \begin{AletheXS}
 \aletheLineS
-$j$. & 
+$j$. &
 \spctx{$\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)$}
    & \ctxsep & $\varphi ≈ \psi$ & ($\dots$) \\
  \spsep
@@ -579,7 +579,7 @@ $k$. & & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 
 \begin{RuleDescription}{forall_inst}
 \begin{AletheX}
-$i$. & \ctxsep & 
+$i$. & \ctxsep &
 $\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1]\dots[x_n\mapsto t_n]$
  & \currule\, [$(x_{k_1}, t_{k_1})$, $\dots$, $(x_{k_n}, t_{k_n})$] \\
 \end{AletheX}
@@ -637,7 +637,7 @@ $t_1 ≈ t_n$ & \currule \\
 
 \begin{RuleDescription}{eq_congruent}
 \begin{AletheX}
-$i$. & \ctxsep & 
+$i$. & \ctxsep &
 $\neg (t_1 ≈ u_1)$, $\dots$ ,$\neg (t_n ≈ u_n)$,
 $(f\,t_1\, \cdots\,t_n) ≈ (f\,u_1\, \cdots\,u_n)$
  & \currule \\
@@ -647,7 +647,7 @@ $(f\,t_1\, \cdots\,t_n) ≈ (f\,u_1\, \cdots\,u_n)$
 \begin{RuleDescription}{eq_congruent_pred}
 \begin{AletheX}
 
-$i$. & \ctxsep     & 
+$i$. & \ctxsep     &
 $\neg (t_1 ≈ u_1)$, \dots ,$\neg (t_n ≈ u_n)$,
 $(P\,t_1\, \cdots\,t_n) ≈ (P\,u_1\, \cdots\,u_n)$
  & \currule \\
@@ -657,7 +657,7 @@ where $P$\, is a function symbol with co-domain sort $\lsymb{Bool}$.
 
 \begin{RuleDescription}{qnt_cnf}
 \begin{AletheX}
-$i$. & \ctxsep & 
+$i$. & \ctxsep &
 $\neg(\forall x_1, \dots, x_n. \varphi) \lor \forall x_{k_1}, \dots, x_{k_m}.\varphi'$
  & \currule \\
 \end{AletheX}
@@ -715,7 +715,7 @@ and $1 \leq k \leq n$.
 
 \begin{RuleDescription}{or}
 \begin{AletheX}
-$i$. & \ctxsep & 
+$i$. & \ctxsep &
 $\varphi_1 \lor \cdots \lor \varphi_n$ & ($\dots$) \\
 $j$. & \ctxsep & $\varphi_1, \dots, \varphi_n$ & (\currule\;$i$) \\
 \end{AletheX}
@@ -967,25 +967,25 @@ $j$. & \ctxsep & $\neg\varphi_1 , \neg\varphi_2$ & (\currule\;$i$) \\
   This rule is used to replace connectives by their definition. It can be one
   of the following:
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  & 
+$i$. & \ctxsep  & $\Gamma$  &
     $(\lsymb{xor}\,\varphi_1\,\varphi_2) ≈
     ((\neg\varphi_1 \land \varphi_2) \lor (\varphi_1 \land \neg\varphi_2))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  & 
+$i$. & \ctxsep  & $\Gamma$  &
       $(\varphi_1 ≈ \varphi_2) ≈
       ((\varphi_1 \rightarrow \varphi_2) \land (\varphi_2 \rightarrow \varphi_1))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  & 
+$i$. & \ctxsep  & $\Gamma$  &
       $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) ≈
       ((\varphi_1 \rightarrow \varphi_2) \land (\neg\varphi_1 \rightarrow \varphi_3))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  & 
+$i$. & \ctxsep  & $\Gamma$  &
       $(\forall x_1, \dots, x_n.\,\varphi) ≈ \neg(\exists x_1, \dots, x_n.\,
       \neg\varphi)$ & \currule \\
 \end{AletheXS}
@@ -1407,7 +1407,7 @@ $i_n$. & $\Gamma$ & \ctxsep & $t_{n} ≈ s_{n}$ & ($\dots$) \\
 $j$. & \spctx{$\Gamma, x_1 \mapsto s_1, \dots,  x_n \mapsto s_n$}
    & \ctxsep &  $u ≈ u'$ & ($\dots$) \\
 \spsep
-$k$. & $\Gamma$ & \ctxsep & 
+$k$. & $\Gamma$ & \ctxsep &
      $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u) ≈ u'$
      & (\currule{}\;$i_1$, \dots, $i_n$) \\
 \end{AletheXS}
@@ -1430,7 +1430,7 @@ If applied to terms of type $\lsymb{Bool}$ more than two terms can never be
 distinct, hence only two cases are possible:
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & 
+$i$. & \ctxsep & $\Gamma$ &
 $(\lsymb{distinct}\,\varphi\,\psi) ≈ \neg (\varphi ≈ \psi)$ & \currule \\
 \end{AletheXS}
 and
@@ -1443,7 +1443,7 @@ $(\lsymb{distinct}\,\varphi_1\,\varphi_2\,\varphi_3\,\dots) ≈ \bot$ & \currule
 The general case is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & 
+$i$. & \ctxsep & $\Gamma$ &
 $(\lsymb{distinct}\,t_1\,\dots\, t_n) ≈
 \bigwedge_{i=1}^{n}\bigwedge_{j=i+1}^{n} t_i\;{\not≈}\;t_j$ & \currule \\
 \end{AletheXS}
