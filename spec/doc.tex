@@ -344,7 +344,7 @@ bound variables~\cite{barbosa-2019}.
 \subsection{Notations}
 
 The notation used in this document is similar to the notation
-used by the SMT-LIB standard.  The Alethe proof format uses precisely
+used by the SMT-LIB standard.  The Alethe proof format uses
 the SMT-LIB logic.  Since the SMT-LIB language is based on
 S-expressions\index{S-expression}, SMT-LIB formulas are written using
 a λ-calculus style.  That is, instead of $f(1,2)$, we write $(f\,1\,2)$.
@@ -357,12 +357,11 @@ $f, g$ for functions, and $P, Q$ for predicates (functions with co-domain
 sort $\lsymb{Bool}$.  To indicate terms we use $t, u$ and to indicate
 formulas (terms of sort $\lsymb{Bool}$) we use $\varphi, \psi$.
 To distinguish syntactic equality and the SMT-LIB equality predicate,
-we write $=$ for the former, and $≈$ for the later.
+we write $=$ for the former, and $≈$ for the latter.
 We will write pre-defined SMT-LIB symbols, such as sorts and functions,
 in bold (e.g., $\lsymb{Bool}$, $\lsymb{ite}$).
 
-We will use $θ$ to denote a
-substitution\index{substitution}.
+We will use $θ$ to denote a substitution\index{substitution}.
 The notation $[x₁ ↦ t₁, …, x_n ↦ t_n]$ denotes the substitution
 that maps $x_i$ to $t_i$ for $1 ≤ i ≤ n$ and corresponds to the
 identity function for all other variables.  If $θ$ and $η$ are two
@@ -371,15 +370,16 @@ and then $η$ (i.e., $η(θ(.))$).  A substitution can naturally be extended
 to a function that maps terms to terms by replacing the occurrences of
 free variables.
 %
-We write $t[\,]$ for a term with a hole\index{hole} and $t[u]$ for the term where
-the hole has been replaced by $u$. Any term has at most one hole.
+We write $t[u]$ for a term that contains the term $u$ as a subterm.  If $u$
+is subsequently replaced by a term $v$, we write $t[v]$ for the
+new term.
 %
-We also use holes with multiple variables.
+We also use this notation with multiple variables.
 %
-The notation $t[x_1, \dots, x_n]$ stands for a term that may depend on distinct
+The notation $t[x_1, \dots, x_n]$ stands for a term may contain the distinct
 variables $x_1, \dots, x_n$.
 %
-$t[s_1,\dots, s_n]$ is the respective term where the variables $x_1,\dots, x_n$ are
+Then, $t[s_1,\dots, s_n]$ is the respective term where the variables $x_1,\dots, x_n$ are
 simultaneously substituted by $s_1,\dots, s_n$.
 
 Note that we will introduce the Alethe specific notation to write proof steps
@@ -701,8 +701,7 @@ An Alethe proof is a list of commands.
   \label{fig:grammar}
 \end{figure}
 
-
-Usually, an Alethe proof is associated with a concrete {\smtlib} problem
+Every Alethe proof is associated with an  {\smtlib} problem
 that is proved by the Alethe proof.  This can either be a concrete
 problem file or, if the incremental solving commands of {\smtlib}
 are used, the implicit problem constructed at the invocation of a
@@ -760,6 +759,8 @@ represent unary or empty clauses. To circumvent this, we introduce a new
 function
 extended to one argument, where it is equal to the identity, and zero
 arguments, where it is equal to \inlineAlethe{false}.
+Every step must use the \inlineAlethe{cl} operator, even if its conclusion
+is a unit clause.
 The \inlineAlethe{anchor} and \inlineAlethe{define-fun} commands are used for
 subproofs and sharing, respectively. The \inlineAlethe{define-fun} command
 corresponds exactly to the \inlineAlethe{define-fun} command of the
@@ -812,7 +813,7 @@ The \inlineAlethe{:step} annotation of the anchor command is used to indicate th
 command that will end the subproof.  The clause of this \inlineAlethe{step}
 command is the conclusion of the subproof.   While it is possible to infer the
 step that concludes a subproof from the structure of the proof, the explicit
-annotation simplifies reconstruction and makes the proof easier to read.
+annotation simplifies proof checking and makes the proof easier to read.
 If the subproof uses a
 context, the \inlineAlethe{:args} annotation of the \inlineAlethe{anchor} command
 indicates the arguments added to the context for this subproof.  The
@@ -1018,8 +1019,7 @@ It is easy to calculate the context of the first-innermost subproof.
 \begin{definition}[Calculated Context]
   Let $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$ be
   the first-innermost subproof of $P$.
-  For $\mathit{start} \leq i < \mathit{end}$, let
-  $A_1, \dots, A_m$ be the anchors among $C_1, \dots, C_{i-1}$.
+  Let $A_1, \dots, A_m$ be the anchors among $C_1, \dots, C_{\mathit{start}-1}$.
 
   The \index{context!calculated}calculated context of $C_i$ is the context
   \[
@@ -1321,7 +1321,7 @@ proofs.
 Here, $\vDash$ represents
 semantic consequence in the many-sorted first order logic of {\smtlib}
 with the theories of uninterpreted functions and linear arithmetic extended
-to clauses.
+with the choice operator and  clauses.
 
 To show the soundness of a valid Alethe proof $P = [C_1, \dots, C_n]$,
 we can use the same approach as for the definition of validity: consider
@@ -1554,11 +1554,11 @@ syntax for clauses uses the \inlineAlethe{cl} operator, while disjunctions
 use the standard {\smtlib} \inlineAlethe{or} operator. The \proofRule{or}
 \emph{rule} is responsible for converting disjunctions into clauses.
 
+The Alethe proofs use a generalized propositional resolution
+rule with the name \proofRule{resolution} or \proofRule{th_resolution}.
+Both names denote the same rule.  The difference only serves to distinguish
+if the rule was introduced by
 the SAT solver or by a theory solver. The resolution step is purely
-resolution rule with the name \proofRule{resolution} or
-\proofRule{th_resolution}. Both names denote the same rule. The
-difference only serves to distinguish if the rule was introduced by
-The Alethe proofs use a generalized propositional
 propositional; there is no notion of a unifier.  The resolution
 rules also implicitly simplifies repeated negations at the head
 of literals.
