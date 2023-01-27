@@ -364,23 +364,30 @@ in bold (e.g., $\lsymb{Bool}$, $\lsymb{ite}$).
 We will use $θ$ to denote a substitution\index{substitution}.
 The notation $[x₁ ↦ t₁, …, x_n ↦ t_n]$ denotes the substitution
 that maps $x_i$ to $t_i$ for $1 ≤ i ≤ n$ and corresponds to the
-identity function for all other variables.  If $θ$ and $η$ are two
+identity function for all other variables.
+%
+If $θ$ and $η$ are two
 substitutions, then $θη$ denotes the result of first applying $θ$
 and then $η$ (i.e., $η(θ(.))$).  A substitution can naturally be extended
 to a function that maps terms to terms by replacing the occurrences of
 free variables.
 %
+The application of a substitution $θ$ to a term $t$ (i.e., $θ(t)$)
+is capture-avoiding; bound variables in $t$ are renamed as necessary.
+
 We write $t[u]$ for a term that contains the term $u$ as a subterm.  If $u$
 is subsequently replaced by a term $v$, we write $t[v]$ for the
 new term.
 %
-We also use this notation with multiple variables.
+We also use this notation with multiple terms.
 %
-The notation $t[x_1, \dots, x_n]$ stands for a term may contain the distinct
-variables $x_1, \dots, x_n$.
+The notation $t[u_1, \dots, u_n]$ stands for a term may contain the
+pairwise distinct terms $u_1, \dots, u_n$.
 %
-Then, $t[s_1,\dots, s_n]$ is the respective term where the variables $x_1,\dots, x_n$ are
-simultaneously substituted by $s_1,\dots, s_n$.
+Then, $t[s_1,\dots, s_n]$ is the respective term where the
+variables $u_1,\dots, u_n$ are
+simultaneously replaced by $s_1,\dots, s_n$.  Usually, $u_1, \dots, u_n$ will
+be variables.
 
 Note that we will introduce the Alethe specific notation to write proof steps
 in the following sections.
@@ -545,8 +552,7 @@ variable.  The second case is a mapping.
 Throughout this chapter, $\Gamma$ denotes
 an arbitrary context.
 
-% TODO: define \subst and related
-Every context $\Gamma$ induces a substitution
+Every context $\Gamma$ induces a capture-avoiding substitution
 $\subst(\Gamma)$. If $\Gamma$ is the empty list,
 $\subst(\Gamma)$ is the empty substitution, i.e, the
 identity function.
@@ -564,8 +570,7 @@ with this mapping:
         \subst([c_1,\dots, c_{n-1}])\circ \{x_n\mapsto t_n\}.
 \]
 
-
-\label{ex:alethe:substctx}The following example illustrates this idea:
+\label{ex:alethe:substctx}The following example illustrates this idea.
 \begin{align*}
     \subst([x\mapsto 7, x \mapsto g(x)]) &= \{x\mapsto g(7)\} \\
     \subst([x\mapsto 7, x, x \mapsto g(x)]) &= \{x\mapsto g(x)\} \\
@@ -581,9 +586,14 @@ where the term $t$\, is the original term, and $u$ is the term after
 preprocessing.  Tautologies with contexts correspond to judgments
 $\vDash_T \subst(\Gamma)(t) ≈ u$.
 
+Since the substitution induced by a context is capture-avoiding,
+applying it might rename bound variables to avoid binding variables
+in substituent terms.
+This is an implicit term transformation without a proof.  Therefore,
+the Alethe rules are designed to avoid such contexts.
+
 Formally, the context can be translated to \index{abstraction!lambda}λ-abstractions and
 applications.  This is discussed in Section~\ref{sec:alethe:semantics}.
-
 
 \begin{example}\label{ex:ti:ctx-abstract}
 This example shows a proof that uses a subproof with a context to rename a bound
