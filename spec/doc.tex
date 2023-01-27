@@ -475,7 +475,9 @@ t_i)$ where $x_i$ is a variable and $t_i$ is a term. The interpretation
 of the arguments is rule specific.  The list $c_1, \dots, c_j$ is
 the \index{context}{\em context} of the step.  Contexts are discussed below.
 Every proof ends with a step that has the empty clause as the conclusion
-and an empty context.  The list of proof rules in the appendix also uses
+and an empty context.  The list of proof rules
+in Section~\ref{apx:rules}
+also uses
 this notation to define the proof rules.
 
 The example above consists of five steps. Step~4 and~5 use premises.
@@ -564,7 +566,7 @@ substitution for $x_n$:
 \]
 
 When $\Gamma$ ends in a mapping, the substitution is extended
-with this mapping:
+with this mapping\label{page:ctxdef}:
 \[
 \subst([c_1,\dots, c_{n-1}, x_n\mapsto t_n]) =
         \subst([c_1,\dots, c_{n-1}])\circ \{x_n\mapsto t_n\}.
@@ -584,7 +586,11 @@ i. & $\Gamma$ & \ctxsep & $t ≈ u$ & ($\ruleType{rule}$, …) \\
 
 where the term $t$\, is the original term, and $u$ is the term after
 preprocessing.  Tautologies with contexts correspond to judgments
-$\vDash_T \subst(\Gamma)(t) ≈ u$.
+$\vDash_T \subst(\Gamma)(t) ≈ u$.   Note that, some proof rules require
+an empty context.  In the list of proof rules
+in Section~\ref{apx:rules}
+this is indicated by omitting
+the $\Gamma$.
 
 The substitution induced by $\Gamma$ is capture-avoiding.
 Hence, some bound variables could be renamed in
@@ -720,8 +726,10 @@ problem file or, if the incremental solving commands of {\smtlib}
 are used, the implicit problem constructed at the invocation of a
 \inlineAlethe{get-proof} command.
 In this document, we will call this {\smtlib} problem the {\em input problem}.
+An Alethe proof inherits the namespace of its {\smtlib} problem.
 All symbols declared or defined in the input problem remain declared or
-defined, respectively.  Furthermore, the symbolic names introduced
+defined, respectively.
+Furthermore, the symbolic names introduced
 by the \inlineAlethe{:named} annotation also stay valid and can be used
 in the script.  For the purpose of the proof rules, terms are treated
 as if proxy names introduced by \inlineAlethe{:named} annotations have been
@@ -806,8 +814,6 @@ a \index{rule!concluding}{\em concluding rule}
 After the \inlineAlethe{anchor} command, the proof uses \inlineAlethe{assume} commands to list
 the assumptions of the subproof.  Subsequently, the subproof is a list of
 \inlineAlethe{step} commands that can use prior steps in the subproofs as premises.
-% the assumptions of any parent subproof
-% as premises.
 
 In the abstract notation, every step is associated with a context.  The
 concrete syntax uses anchors to optimize this.
@@ -821,10 +827,16 @@ corresponding \inlineAlethe{step} commands pop from the context.
 To indicate these changes to the context, every anchor is associated with a list
 of fixed variables and mappings.
 This list can be empty.
+Note that, when an \inlineAlethe{anchor} command extends a context $\Gamma$ with
+some mappings $x_1 \mapsto t_1, \dots,  x_n \mapsto t_n$,
+then the terms $t_i$ are normalized by applying
+the substitution $\subst(\Gamma)$ to $t_i$.  This is because the definition
+on page~\pageref{page:ctxdef} extends the context by composing the substitutions.
 
-The \inlineAlethe{:step} annotation of the anchor command is used to indicate the \inlineAlethe{step}
-command that will end the subproof.  The clause of this \inlineAlethe{step}
-command is the conclusion of the subproof.   While it is possible to infer the
+The \inlineAlethe{:step} annotation of the anchor command is used to indicate
+the \inlineAlethe{step} command that will end the subproof.  The clause of
+this \inlineAlethe{step} command is the conclusion of the subproof.
+While it is possible to infer the
 step that concludes a subproof from the structure of the proof, the explicit
 annotation simplifies proof checking and makes the proof easier to read.
 If the subproof uses a
@@ -867,7 +879,7 @@ expressed as a concrete proof.
      system/.style={draw, thin, rounded corners},
 }
 
-  \begin{figure}[t]
+\begin{figure}[h]
 \center
 \begin{tikzpicture}[node distance=2cm, auto,>=latex', thick,scale=0.8]
     \node[solver] (unsat) {\textsf{Unsat mode}};
@@ -957,7 +969,8 @@ Overall, the following aspects are treated implicitly by Alethe.
         non-empty context.
   \item The order of literals in the clauses.
   \item The unfolding of names introduced by
-     \inlineAlethe{(!}\,$t$\,\inlineAlethe{:named }\;$s$\,\inlineAlethe{)}.
+     \inlineAlethe{(!}\,$t$\,\inlineAlethe{:named }\;$s$\,\inlineAlethe{)} in the
+     original {\smtlib} problem or in the proof.
   \item The removal of other {\smtlib} annotations of the form
      \inlineAlethe{(!}\,$t$\,\dots\,\inlineAlethe{)}.
   \item The unfolding of function symbols introduced by
@@ -977,10 +990,13 @@ In this section we present an abstract procedure to check if an Alethe
 proof is \index{well-formed}well-formed and valid.  An Alethe proof is
 well-formed only if its anchors and steps are balanced.  To check that
 this is the case, we replace innermost subproofs by holes until there is
-no subproof left.  If the resulting proof is free of anchors and steps
-that use concluding rules, then the proof is well-formed.
-If all the steps in the subproofs adhere to the conditions of
-their rules, the subproof is valid.  If all subproofs are valid,
+no subproof left.  If the resulting reduced proof is free of anchors and steps
+that use concluding rules, then the overall proof is well-formed.
+To check if a proof is valid we have to check if all steps of a subproof
+adhere to the conditions of
+their rules before replacing the subproof by a hole.
+If all subproofs are valid and all steps in the reduced
+proof adhere to the conditions of their rule,
 then the entire proof is valid.
 
 Formally, an Alethe proof $P$ is a list $[C_1, \dots, C_n]$ of steps
@@ -1080,8 +1096,9 @@ Section~\ref{apx:rules}.
   \end{itemize}
 \end{definition}
 
-Since the \proofRule{assume} rule expects an empty context, an admissible
-subproof can contain assumptions only if the rule used by $C_{\mathit{end}}$
+The only rule that can discharge assumptions in a subproof is the
+\proofRule{subproof} rule.  Therefore, an admissible subproof can only
+contain \proofRule{assume} step if $C_{\mathit{end}}$
 is the \proofRule{subproof} rule.
 
 To eliminate a subproof we can replace the subproof with a hole that has
@@ -1215,7 +1232,7 @@ i. & $\Gamma$ & \ctxsep & $t ≈ u$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m
 is encoded into
 
 \begin{AletheS}
-i. &  & \ctxsep & $L(\Gamma)[t] \simeq R(\Gamma)[u]$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
+i. &  & \ctxsep & $L(\Gamma)[t] ≈ R(\Gamma)[u]$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
 \end{AletheS}
 
 \noindent
@@ -1581,13 +1598,12 @@ is a clause that has been derived from the premises by some binary
 resolution steps.
 
 \paragraph{Quantifier Instantiation}
-\label{reference=rule:forall_inst}
 To express quantifier instantiation, the rule \proofRule{forall_inst}
 is used. It produces a formula of the form $(\neg \forall \bar
 x_n.\,\varphi) \lor \varphi[\bar t_n]$, where $\varphi$ is
 a term containing the free variables $\bar x_n$, and for each $i$ the
 ground term $t_i$ is a new term with the same sort as $x_i$.\footnote{
-  For historical reasons, \proofRule{forall} has a unit clause with a disjunction
+  For historical reasons, \proofRule{forall_inst} has a unit clause with a disjunction
   as its conclusion and not the clause $(\neg \forall \bar x_n.\,\varphi), \varphi[\bar t_n]$.
 }
 
