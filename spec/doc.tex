@@ -10,9 +10,9 @@
 
 \usepackage{minted}
 \usemintedstyle{trac}
-% TODO: tweak hilighter
-\newminted[AletheVerb]{smtlib2.py -x}{}
-\newmintinline[inlineAlethe]{smtlib2.py -x}{}
+\renewcommand{\MintedPygmentize}{./highlight.py}
+\newminted[AletheVerb]{smt-lib}{}
+\newmintinline[inlineAlethe]{smt-lib}{}
 
 \usepackage{cite}
 \usepackage{url}

@@ -1,19 +1,33 @@
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This is a thin wraper arround pygmentize that adds support for SMT-LIB/Alethe.
+# More precicely: it parses the command line arguments and uses a custom
+# SMT-LIB lexer if the user selects smt-lib as the language.
+# This wrapper was made necessary by version 2.7 of minted:  it started to
+# quote command line arguments hended to pygmentize and thereby made the old
+# tick to use "smtlib2.py -x" as the language unworkable.
+
 import re
+import argparse
+import sys
 
-from pygments.lexer import Lexer, RegexLexer, bygroups, do_insertions, \
-    default, include
+import pygments.cmdline as _cmdline
+from pygments.lexer import RegexLexer
 from pygments.token import Text, Comment, Operator, Keyword, Name, String, \
-    Number, Punctuation, Generic
-from pygments import unistring as uni
+    Number, Punctuation
 
-__all__ = ['Smt2Lexer']
-
+def main(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-l', dest='lexer', type=str)
+    opts, rest = parser.parse_known_args(args[1:])
+    if opts.lexer == 'smt-lib':
+        args = [__file__, '-l', __file__ + ':SMTLibLexer', '-x', *rest]
+    _cmdline.main(args)
 
 line_re = re.compile('.*?\n')
 
-class CustomLexer(RegexLexer):
+class SMTLibLexer(RegexLexer):
     """
     A SMT-Lib 2 parser
     """
@@ -117,3 +131,6 @@ class CustomLexer(RegexLexer):
             (r'[^()]+', Comment),
         ],
     }
+
+if __name__ == '__main__':
+    main(sys.argv)
