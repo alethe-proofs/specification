@@ -1,8 +1,5 @@
 image: dockershelf/latex:full
 
-before_script:
-    - apt-get install -qy python3-pygments
-
 build:
     script:
     - cd spec

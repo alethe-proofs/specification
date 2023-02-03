@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # This is a thin wraper arround pygmentize that adds support for SMT-LIB/Alethe.
