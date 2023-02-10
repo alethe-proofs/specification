@@ -586,11 +586,14 @@ where the term $t$\, is the original term, and $u$ is the term after
 preprocessing.  Tautologies with contexts correspond to judgments
 $\vDash_T \subst(\Gamma)(t) ≈ u$.
 
-Since the substitution induced by a context is capture-avoiding,
-applying it might rename bound variables to avoid binding variables
-in substituent terms.
-This is an implicit term transformation without a proof.  Therefore,
-the Alethe rules are designed to avoid such contexts.
+The substitution induced by $\Gamma$ is capture-avoiding.
+Hence, some bound variables could be renamed in
+$\subst(\Gamma)(t)$ with respect to the original term $t$.
+A consequence of this is that steps that use a context must be checked
+under α-equivalence.  The \proofRule{bind} rule can be used
+to express renaming of bound variables explicitly.  The \proofRule{refl}
+rule, on the other hand, can be exploited to directly rename bound variables
+without an explicit proof.
 
 Formally, the context can be translated to \index{abstraction!lambda}λ-abstractions and
 applications.  This is discussed in Section~\ref{sec:alethe:semantics}.
