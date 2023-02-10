@@ -41,6 +41,34 @@
 
 \usepackage{cite}
 \usepackage{url}
+\usepackage[useregional]{datetime2}
+\usepackage{xltabular} % Gives us stretchable, breakable tables. for proofs
+\usepackage{longtable} % Gives us longtables for proof
+\usepackage{environ} % Gives us NewEnviron to define environements with tables
+\usepackage{fancyvrb} % Gives us \Verb which can be used in footnotes
+\usepackage{amsthm}
+\usepackage{thmtools}
+\usepackage{ccicons} % Gives us CC icons for title page
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+
+\usepackage{imakeidx}
+\makeindex
+\makeindex[name=rules,options= -s rule_index_style.ist]
+% We provide a command that discards the argument to the index.  This
+% allows us to do the sectioning of the index manually and give different
+% sectin levels to the rule index and the overall index
+\newcommand\indexsection[1]{}
+\indexsetup{level=\indexsection,firstpagestyle=headings,noclearpage}
+
+% Must come after imakeidx
+\usepackage[hidelinks=true]{hyperref}
+\usepackage{breakurl}
+
+\usepackage{tikz}
+\usetikzlibrary{tikzmark,positioning}
+\usetikzlibrary{shapes,arrows,fit, scopes}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{svg.path}
 
 \usepackage{bussproofs}
 \EnableBpAbbreviations
