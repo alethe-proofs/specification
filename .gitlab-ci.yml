@@ -1,6 +1,11 @@
 image: dockershelf/latex:full
 
+stages:
+  - build
+  - publish
+
 build:
+    stage: build
     script:
     - cd spec
     - lualatex -shell-escape -recorder '\def\nocomments{}\input{doc.tex}'
@@ -13,4 +18,17 @@ build:
     artifacts:
         paths:
         - specification.pdf
+
+pages:
+    stage: publish
+    dependencies:
+    - build
+    script:
+    - mkdir public
+    - cp specification.pdf public/
+    artifacts:
+        paths:
+        - public
+    only:
+    - master
 
