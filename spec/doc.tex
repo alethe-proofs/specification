@@ -865,7 +865,7 @@ expressed as a concrete proof.
                               :rule bind)
 (step t6 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y)))
              (not (forall ((x S)) (P x)))
-             (forall ((y S)) (P y)))) :rule equiv_pos2)
+             (forall ((y S)) (P y))) :rule equiv_pos2)
 (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
 \end{AletheVerb}
 \end{example}
