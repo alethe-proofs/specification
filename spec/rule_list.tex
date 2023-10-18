@@ -1530,6 +1530,21 @@ constants are unfolded during proof printing. Hence, the slightly strange
 form and the reordering of equalities.
 \end{RuleDescription}
 
+\begin{RuleDescription}{bitblast_extract}
+\begin{AletheX}
+$i$. & \ctxsep & $((\_\ \mathrm{extract}\ i\ j)\ x) \simeq (\mathrm{bbterm}\ x_j; \ldots; x_i)$ & (\currule) \\
+\end{AletheX}
+
+Each term $x_i$ corresponds to whether $i$-th bit of $x$ is true or not, which
+will be represented via an application of the operator ``bit\_of'', i.e.,
+$((\_\ bit\_of\ i)\ x)$, which has a Boolean return type.
+%
+The ``bbterm'' operator takes $n$ Booleans and yields a bit-vector of size $n$
+where the least significant bit is is 1 if the $n$-th argument is true, 0
+otherwise, and so on.
+
+\end{RuleDescription}
+
 \clearpage
 \subsection{Index of Rules}
 \label{sec:alethe:rules-index}
