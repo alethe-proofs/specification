@@ -1532,16 +1532,23 @@ form and the reordering of equalities.
 
 \begin{RuleDescription}{bitblast_extract}
 \begin{AletheX}
-$i$. & \ctxsep & $((\_\ \mathrm{extract}\ i\ j)\ x) \simeq (\mathrm{bbterm}\ x_j; \ldots; x_i)$ & (\currule) \\
+$i$. & \ctxsep & $((\_\ \mathrm{extract}\ j\ i)\ x) \simeq (\mathrm{bbterm}\ x[i]\ \ldots\ x[j])$ & (\currule) \\
 \end{AletheX}
 
-Each term $x_i$ corresponds to whether $i$-th bit of $x$ is true or not, which
+Each term $x[i]$ corresponds to whether $i$-th bit of $x$ is true or not, which
 will be represented via an application of the operator ``bit\_of'', i.e.,
 $((\_\ bit\_of\ i)\ x)$, which has a Boolean return type.
 %
 The ``bbterm'' operator takes $n$ Booleans and yields a bit-vector of size $n$
-where the least significant bit is is 1 if the $n$-th argument is true, 0
+where the least significant bit is 1 if the first argument 1 is true, 0
 otherwise, and so on.
+%
+Alternatively, we also have:
+
+\begin{AletheX}
+$i$. & \ctxsep & $((\_\ \mathrm{extract}\ j\ i)\ (\mathrm{bbterm}\ x_0\ \ldots\
+x_i\ \ldots \ x_j\ \ldots\ x_n)) \simeq (\mathrm{bbterm}\ x_i\ \ldots\ x_j)$ & (\currule) \\
+\end{AletheX}
 
 \end{RuleDescription}
 
