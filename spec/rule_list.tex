@@ -1535,7 +1535,7 @@ form and the reordering of equalities.
 $i$. & \ctxsep & $((\_\ \mathrm{extract}\ j\ i)\ x) \simeq (\mathrm{bbterm}\ x[i]\ \ldots\ x[j])$ & (\currule) \\
 \end{AletheX}
 
-Each term $x[i]$ corresponds to whether $i$-th bit of $x$ is true or not, which
+Each term $x[i]$ corresponds to whether the $i$-th bit of $x$ is true or not, which
 will be represented via an application of the operator ``bit\_of'', i.e.,
 $((\_\ bit\_of\ i)\ x)$, which has a Boolean return type.
 %
@@ -1543,12 +1543,88 @@ The ``bbterm'' operator takes $n$ Booleans and yields a bit-vector of size $n$
 where the least significant bit is 1 if the first argument 1 is true, 0
 otherwise, and so on.
 %
-Alternatively, we also have:
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ is a ``bbterm'' application:
 
+\medskip
 \begin{AletheX}
 $i$. & \ctxsep & $((\_\ \mathrm{extract}\ j\ i)\ (\mathrm{bbterm}\ x_0\ \ldots\
 x_i\ \ldots \ x_j\ \ldots\ x_n)) \simeq (\mathrm{bbterm}\ x_i\ \ldots\ x_j)$ & (\currule) \\
 \end{AletheX}
+
+This alternative is based on the validity of the equality
+$$(\mathrm{bbterm}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)[i]\simeq x_i$$
+for any bit-vector $x$ of size $n+1$, where $0\leq i\leq n$.
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_ult}
+\begin{AletheX}
+$i$. & \ctxsep & $(\mathrm{bvult}\ x\ y) \simeq res_{n-1}$ & (\currule) \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type $(\_\ \mathrm{BitVec}\ n)$ and, for
+$i\geq 0$:
+\[
+  \begin{array}{lcl}
+    \mathrm{res}_0&=&\neg x[0] \wedge y[0]\\
+    \mathrm{res}_{i+1}&=&((x[i+1]\simeq y[i+1])\wedge
+                          \mathrm{res}_i)\vee (\neg x[i+1]\wedge y[i+1])
+  \end{array}
+\]
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ and $y$ are ``bbterm'' applications. So given that
+\[
+  \begin{array}{lcl}
+    x&=&(\mathrm{bbterm}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)\\
+    y&=&(\mathrm{bbterm}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n)\\
+  \end{array}
+\]
+then ``res'' can be defined, for $i \geq 0$, as 
+\[
+  \begin{array}{lcl}
+    \mathrm{res}_0&=&\neg x_0 \wedge y_0\\
+    \mathrm{res}_{i+1}&=&((x_{i+1}\simeq y_{i+1})\wedge
+                          \mathrm{res}_i)\vee (\neg x_{i+1}\wedge y_{i+1})
+  \end{array}
+\]
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_add}
+\begin{AletheX}
+$i$. & \ctxsep & $(\mathrm{bvadd}\ x\ y) \simeq (\mathrm{bbterm}\ (x[0] \oplus y[0])\oplus\mathrm{carry}_0\ \ldots\ (x[n-1]
+        \oplus y[n-1])\oplus\mathrm{carry}_{n-1})$ & (\currule) \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type $(\_\ \mathrm{BitVec}\ n)$ and, for
+$i\geq 0$:
+    \[
+      \begin{array}{lcl}
+        \mathrm{carry}_0&=&\bot\\
+        \mathrm{carry}_{i+1}&=&(x[i]\wedge y[i])\vee((x[i]\oplus y[i])\wedge \mathrm{carry}_i)
+      \end{array}
+    \]
+
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ and $y$ are ``bbterm'' applications. So given that
+\[
+  \begin{array}{lcl}
+    x&=&(\mathrm{bbterm}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)\\
+    y&=&(\mathrm{bbterm}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n)\\
+  \end{array}
+\]
+then the rule can be alternatively phrased as
+
+\begin{AletheX}
+$i$. & \ctxsep & $(\mathrm{bvadd}\ x\ y) \simeq (\mathrm{bbterm}\ (x_0 \oplus y_0)\oplus\mathrm{carry}_0\ \ldots\ (x_{n-1}
+        \oplus y_{n-1})\oplus\mathrm{carry}_{n-1})$ & (\currule) \\
+\end{AletheX}
+with ``carry'' being defined, for $i \geq 0$, as 
+\[
+  \begin{array}{lcl}
+    \mathrm{carry}_0&=&\bot\\
+    \mathrm{carry}_{i+1}&=&(x_i\wedge y_i)\vee((x_i\oplus y_i)\wedge \mathrm{carry}_i)
+  \end{array}
+\]
 
 \end{RuleDescription}
 
