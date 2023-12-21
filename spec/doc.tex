@@ -691,7 +691,7 @@ An Alethe proof is a list of commands.
 \[
   \begin{array}{r c l}
  \grNT{proof}           &\grRule & \grNT{proof\_command}^{*} \\
- \grNT{proof\_command}  &\grRule & \textAlethe{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)} \\
+ \grNT{proof\_command}  &\grRule & \textAlethe{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
                         &\grOr   & \textAlethe{(step}\; \grNT{symbol}\; \grNT{clause}
                                         \; \textAlethe{:rule}\; \grNT{symbol} \\
                         &        & \quad \grNT{premises\_annotation}^{?} \\
