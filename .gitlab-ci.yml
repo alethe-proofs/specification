@@ -1,4 +1,4 @@
-image: dockershelf/latex:full
+image: kjarosh/latex:2023.1
 
 stages:
   - build
@@ -6,6 +6,8 @@ stages:
 
 build:
     stage: build
+    before_script:
+    - apk add py3-pygments
     script:
     - cd spec
     - lualatex -shell-escape -recorder '\def\nocomments{}\input{doc.tex}'
