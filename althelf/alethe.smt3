@@ -1,0 +1,459 @@
+% Rule: assume is native
+
+% Note: The hole here does not allow for args or premises.
+(declare-rule hole ((Ls Bool :list))
+  :match-conclusion (cl Ls)
+)
+
+(declare-rule true ()
+  :conclusion (cl true)
+)
+
+(declare-rule false ()
+  :conclusion (cl (not false))
+)
+
+(program check_not_not ((phi Bool))
+    (Bool) Bool
+    (
+    ((check_not_not (cl (not (not (not phi))) phi)) true)
+    ((check_not_not (cl phi (not (not (not phi))))) true)
+    )
+)
+
+(declare-rule not_not ((CL Bool))
+  :requires ((check_not_not CL) true)
+  :match-conclusion CL
+)
+
+% TODO
+(declare-rule th_resolution)
+(declare-rule resolution)
+
+% TODO: sidecondition
+(declare-rule tautology ((CL1 Bool))
+  :premises (CL1)
+  :requires ((check_tautology CL) true)
+  :conclusion true
+)
+
+% TODO: sidecondition
+(declare-rule contraction ((CL1 Bool) (CL Bool))
+  :premises (CL1)
+  :requires ((check_contraction CL1 CL) true)
+  :match-conclusion CL
+)
+
+% TODO
+(declare-rule subproof ()
+  :args ()
+  :conclusion true
+)
+
+% TODO: side condition
+(declare-rule la_generic ((CL Bool) (coeffs Real :int))
+  :args (coeffs)
+  :requires ((check_la_generic coeffs CL) true)
+  :match-conclusion CL
+)
+
+% TODO: side condition (will be incomplete)
+(declare-rule lia_generic ((CL Bool))
+  :requires ((check_lia_generic CL) true)
+  :match-conclusion CL
+)
+
+(declare-rule la_disequality ((t1 Real) (t2 Real))
+  :match-conclusion (cl (or (= t1 t2) (not (<= t1 t2)) (not (<= t2 t1))))
+)
+
+(declare-rule la_totality ((t1 Real) (t2 Real))
+  :match-conclusion (cl (or (<= t1 t2) (<= t2 t1)))
+)
+
+(declare-rule la_tautology ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule bind ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule sko_ex ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule sko_forall ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule forall_inst ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule refl ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule trans ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule cong ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule eq_reflexive ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule eq_transitive ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule eq_congruent ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule eq_congruent_pred ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule qnt_cnf ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule and ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_or ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule or ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_and ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule xor1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule xor2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_xor1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_xor2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule implies ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_implies1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_implies2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule equiv1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule equiv2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_equiv1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_equiv2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule and_pos ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule and_neg ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule or_pos ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule or_neg ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule xor_pos1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule xor_pos2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule xor_neg1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule xor_neg2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule implies_pos ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule implies_neg1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule implies_neg2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule equiv_pos1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule equiv_pos2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule equiv_neg1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule equiv_neg2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule ite1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule ite2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule ite_pos1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule ite_pos2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule ite_neg1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule ite_neg2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_ite1 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_ite2 ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule connective_def ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule and_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule or_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule not_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule implies_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule equiv_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule bool_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule ac_simp ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule ite_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule qnt_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule onepoint ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule qnt_join ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule qnt_rm_unused ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule eq_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule div_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule prod_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule unary_minus_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule minus_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule sum_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule comp_simplify ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule let ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule distinct_elim ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule la_rw_eq ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule nary_elim ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule bfun_elim ()
+  :args ()
+  :conclusion true
+)
+
+(declare-rule ite_intro ()
+  :args ()
+  :conclusion true
+)
+
+
