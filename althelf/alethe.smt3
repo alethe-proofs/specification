@@ -20,7 +20,6 @@
     ((check_not_not (cl phi (not (not (not phi))))) true)
     )
 )
-
 (declare-rule not_not ((CL Bool))
   :requires ((check_not_not CL) true)
   :match-conclusion CL
@@ -71,145 +70,180 @@
   :match-conclusion (cl (or (<= t1 t2) (<= t2 t1)))
 )
 
-(declare-rule la_tautology ()
-  :args ()
-  :conclusion true
+% TODO: side conditions
+(declare-rule la_tautology ((CL Bool))
+  :requires ((check_la_tautology CL) true)
+  :match-conclusion CL
 )
 
+% TODO
 (declare-rule bind ()
   :args ()
   :conclusion true
 )
 
+% TODO
 (declare-rule sko_ex ()
   :args ()
   :conclusion true
 )
 
+% TODO
 (declare-rule sko_forall ()
   :args ()
   :conclusion true
 )
 
+% TODO
 (declare-rule forall_inst ()
   :args ()
   :conclusion true
 )
 
+% TODO
 (declare-rule refl ()
   :args ()
   :conclusion true
 )
 
+% TODO
 (declare-rule trans ()
   :args ()
   :conclusion true
 )
 
+% TODO
 (declare-rule cong ()
   :args ()
   :conclusion true
 )
 
-(declare-rule eq_reflexive ()
-  :args ()
-  :conclusion true
+(declare-rule eq_reflexive ((T Type) (t T))
+  :match-conclusion (= t t)
 )
 
-(declare-rule eq_transitive ()
-  :args ()
-  :conclusion true
+% TODO: side conditions
+(declare-rule eq_transitive ((CL Bool))
+  :requires ((check_eq_transitive CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule eq_congruent ()
-  :args ()
-  :conclusion true
+% TODO: side conditions
+(declare-rule eq_congruent ((CL Bool))
+  :requires ((check_eq_congruent CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule eq_congruent_pred ()
-  :args ()
-  :conclusion true
+% TODO: side conditions
+(declare-rule eq_congruent_pred ((CL Bool))
+  :requires ((check_eq_congruent_pred CL) true)
+  :match-conclusion CL
 )
 
+% TODO
 (declare-rule qnt_cnf ()
   :args ()
   :conclusion true
 )
 
-(declare-rule and ()
-  :args ()
-  :conclusion true
+(declare-rule and ((C Bool) (CN Bool :list) (phi Bool))
+  :premises ((cl (and C CN)))
+  :requres ((contains (and C CN) phi) true)
+  :match-conclusion phi
 )
 
-(declare-rule not_or ()
-  :args ()
-  :conclusion true
+(declare-rule not_or ((C Bool) (CN Bool :list) (phi Bool))
+  :premises ((cl (not (or C CN))))
+  :requres ((contains (or C CN) phi) true)
+  :match-conclusion (not phi)
 )
 
-(declare-rule or ()
-  :args ()
-  :conclusion true
+(declare-rule or ((C Bool) (CN Bool :list) (C' Bool) (CN' Bool :list))
+  :premises ((cl (or C CN)))
+  :requres ((check_or (or C CN) (cl C' CN')) true)
+  :match-conclusion (cl C' CN')
 )
 
-(declare-rule not_and ()
-  :args ()
-  :conclusion true
+% Claimed function: clEqual that is true if two clauses
+% are the same up to permuatation.
+
+(declare-rule not_and ((CL Bool) (C Bool) (CN Bool :list))
+  :premises (not (and C CN))
+  :requires ((clEqual (transform_not_and (and C CN)) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule xor1 ()
-  :args ()
-  :conclusion true
+(declare-rule xor1 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((xor phi1 phi2))
+  :requires ((clEqual (cl phi1 phi2) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule xor2 ()
-  :args ()
-  :conclusion true
+(declare-rule xor2 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((xor phi1 phi2))
+  :requires ((clEqual (cl (not phi1) (not phi2)) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule not_xor1 ()
-  :args ()
-  :conclusion true
+(declare-rule not_xor1 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((not (xor phi1 phi2)))
+  :requires ((clEqual (cl phi1 (not phi2)) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule not_xor2 ()
-  :args ()
-  :conclusion true
+(declare-rule not_xor2 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((not (xor phi1 phi2)))
+  :requires ((clEqual (cl (not phi1) phi2) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule implies ()
-  :args ()
-  :conclusion true
+(declare-rule implies ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((=> phi1 phi2))
+  :requires ((clEqual (cl (not phi1) phi2) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule not_implies1 ()
-  :args ()
-  :conclusion true
+(declare-rule not_implies1 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((not (=> phi1 phi2)))
+  :conclusion phi1
 )
 
-(declare-rule not_implies2 ()
-  :args ()
-  :conclusion true
+(declare-rule not_implies2 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((not (=> phi1 phi2)))
+  :conclusion (not phi2)
 )
 
-(declare-rule equiv1 ()
-  :args ()
-  :conclusion true
+(declare-rule equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((= phi1 phi2))
+  :requires ((clEqual (cl (not phi1) phi2) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule equiv2 ()
-  :args ()
-  :conclusion true
+(declare-rule equiv2 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((= phi1 phi2))
+  :requires ((clEqual (cl phi1 (not phi2)) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule not_equiv1 ()
-  :args ()
-  :conclusion true
+(declare-rule not_equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((not (= phi1 phi2)))
+  :requires ((clEqual (cl phi1 phi2) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule not_equiv2 ()
-  :args ()
-  :conclusion true
+(declare-rule not_equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
+  :premises ((not (= phi1 phi2)))
+  :requires ((clEqual (cl (not phi1) (not phi2)) CL) true)
+  :match-conclusion CL
 )
+
+% TODO: sidecondition
+(declare-rule and_pos ((CL Bool))
+  :requires ((check_and_pos CL) true)
+  :match-conclusion CL
+)
+
+% I am here
 
 (declare-rule and_pos ()
   :args ()
