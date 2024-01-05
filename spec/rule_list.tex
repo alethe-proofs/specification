@@ -518,7 +518,7 @@ $\varphi_1 \lor \varphi_2$ % Checked: this is a proper disjunction not a cl
  & (\currule) \\
 \end{AletheX}
 
-It can be checked by using the procedure for \proofRule{la_generic} with
+It can be checked by using the procedure for \proofRule{la_generic}
 while setting the arguments to $1$. Informally, the rule follows one of several
 cases:
 \begin{itemize}
@@ -528,7 +528,7 @@ cases:
     \item $s_1 \geq d_1 \lor \neg (s_1 \geq d_2)$ where $d_1 = d_2$
     \item $\neg (s_1 \leq d_1) \lor \neg(s_1 \geq d_2)$ where $d_1 < d_2$
 \end{itemize}
-The inequalities $s_1 \bowtie d$ are are the result of applying normalization
+The inequalities $s_1 \bowtie d$ are the result of applying normalization
 as for the rule \proofRule{la_generic}.
 \end{RuleDescription}
 
