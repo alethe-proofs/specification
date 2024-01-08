@@ -243,121 +243,137 @@
   :match-conclusion CL
 )
 
-% I am here
-
-(declare-rule and_pos ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule and_neg ((CL Bool))
+  :requires ((check_and_neg CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule and_neg ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule or_pos ((CL Bool))
+  :requires ((check_or_pos CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule or_pos ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule or_neg ((CL Bool))
+  :requires ((check_or_neg CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule or_neg ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule xor_pos1 ((CL Bool))
+  :requires ((check_xor_pos1 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule xor_pos1 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule xor_pos2 ((CL Bool))
+  :requires ((check_xor_pos2 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule xor_pos2 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule xor_neg1 ((CL Bool))
+  :requires ((check_xor_neg1 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule xor_neg1 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule xor_neg2 ((CL Bool))
+  :requires ((check_xor_neg2 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule xor_neg2 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule implies_pos ((CL Bool))
+  :requires ((check_implies_pos CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule implies_pos ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule implies_neg1 ((CL Bool))
+  :requires ((check_implies_neg1 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule implies_neg1 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule implies_neg2 ((CL Bool))
+  :requires ((check_implies_neg2 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule implies_neg2 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule equiv_pos1 ((CL Bool))
+  :requires ((check_equiv_pos1 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule equiv_pos1 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule equiv_pos2 ((CL Bool))
+  :requires ((check_equiv_pos2 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule equiv_pos2 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule equiv_neg1 ((CL Bool))
+  :requires ((check_equiv_neg1 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule equiv_neg1 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule equiv_neg2 ((CL Bool))
+  :requires ((check_equiv_neg2 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule equiv_neg2 ()
-  :args ()
-  :conclusion true
+(declare-rule ite1 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool)
+  :premises ((ite phi1 phi2 phi3))
+  :requires ((clEqual (cl phi1 phi3) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule ite1 ()
-  :args ()
-  :conclusion true
+(declare-rule ite2 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool)
+  :premises ((ite phi1 phi2 phi3))
+  :requires ((clEqual (cl (not phi1) phi2) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule ite2 ()
-  :args ()
-  :conclusion true
+
+% TODO: sidecondition
+(declare-rule ite_pos1 ((CL Bool))
+  :requires ((check_ite_pos1 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule ite_pos1 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule ite_pos2 ((CL Bool))
+  :requires ((check_ite_pos2 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule ite_pos2 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule ite_neg1 ((CL Bool))
+  :requires ((check_ite_neg1 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule ite_neg1 ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule ite_neg2 ((CL Bool))
+  :requires ((check_ite_neg2 CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule ite_neg2 ()
-  :args ()
-  :conclusion true
+(declare-rule not_ite1 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
+  :premises ((not (ite phi1 phi2 phi3)))
+  :requires ((clEqual (cl phi1 (not phi3)) CL) true)
+  :match-conclusion CL
 )
 
-(declare-rule not_ite1 ()
-  :args ()
-  :conclusion true
-)
-
-(declare-rule not_ite2 ()
-  :args ()
-  :conclusion true
+(declare-rule not_ite2 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
+  :premises ((not (ite phi1 phi2 phi3)))
+  :requires ((clEqual (cl (not phi1) (not phi2)) CL) true)
+  :match-conclusion CL
 )
 
 (declare-rule connective_def ()
