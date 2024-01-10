@@ -43,10 +43,10 @@
   :match-conclusion CL
 )
 
-% TODO
-(declare-rule subproof ()
-  :args ()
-  :conclusion true
+(declare-rule subproof ((F Bool) (G Bool))
+  :assumption F
+  :premises (G)
+  :conclusion (=> F G)
 )
 
 % TODO: side condition
@@ -76,10 +76,12 @@
   :match-conclusion CL
 )
 
-% TODO
-(declare-rule bind ()
-  :args ()
-  :conclusion true
+% TODO: side conditiion
+(declare-rule bind ((ctx Bool))
+  :assumption ctx
+  :premises ((cl (= phi phi')))
+  :requires ((check_bind ctx xs ys) true)
+  :match-conclusion (cl (= (forall xs phi) (forall ys phi')))
 )
 
 % TODO
