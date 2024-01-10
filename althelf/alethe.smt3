@@ -376,104 +376,123 @@
   :match-conclusion CL
 )
 
-(declare-rule connective_def ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule connective_def ((l Bool) (r Bool))
+  :requires ((check_connective_dev l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule and_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule and_simplify ((l Bool) (r Bool))
+  :requires ((check_and_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule or_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule or_simplify ((l Bool) (r Bool))
+  :requires ((check_or_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule not_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule not_simplify ((l Bool) (r Bool))
+  :requires ((check_not_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule implies_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule implies_simplify ((l Bool) (r Bool))
+  :requires ((check_implies_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule equiv_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule equiv_simplify ((l Bool) (r Bool))
+  :requires ((check_equiv_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule bool_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule bool_simplify ((l Bool) (r Bool))
+  :requires ((check_bool_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule ac_simp ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule ac_simp ((l Bool) (r Bool))
+  :requires ((check_ac_simp l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule ite_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule ite_simplify ((l Bool) (r Bool))
+  :requires ((check_simplify_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule qnt_simplify ()
-  :args ()
-  :conclusion true
+(declare-rule qnt_simplify ((l Bool) (r Bool))
+  :requires ((check_simplify_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
+% TODO (needs scope)
 (declare-rule onepoint ()
   :args ()
   :conclusion true
 )
 
-(declare-rule qnt_join ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule qnt_join ((l Bool) (r Bool))
+  :requires ((check_qnt_join l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule qnt_rm_unused ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule qnt_rm_unused ((l Bool) (r Bool))
+  :requires ((check_rm_unused l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule eq_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule eq_simplify ((l Bool) (r Bool))
+  :requires ((check_eq_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule div_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule div_simplify ((l Bool) (r Bool))
+  :requires ((check_div_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule prod_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule prod_simplify ((l Bool) (r Bool))
+  :requires ((check_prod_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule unary_minus_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule unary_minus_simplify ((l Bool) (r Bool))
+  :requires ((check_unary_minus_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule minus_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule minus_simplify ((l Bool) (r Bool))
+  :requires ((check_minus_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule sum_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule sum_simplify ((l Bool) (r Bool))
+  :requires ((check_sum_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule comp_simplify ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule comp_simplify ((l Bool) (r Bool))
+  :requires ((check_comp_simplify l r) true)
+  :match-conclusion (cl (= l r))
 )
 
 (declare-rule let ()
