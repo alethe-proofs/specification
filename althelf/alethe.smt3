@@ -495,34 +495,39 @@
   :match-conclusion (cl (= l r))
 )
 
+% TODO (needs scope)
 (declare-rule let ()
   :args ()
   :conclusion true
 )
 
-(declare-rule distinct_elim ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule distinct_elim ((l Bool) (r Bool))
+  :requires ((check_distinct_elim l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule la_rw_eq ()
-  :args ()
-  :conclusion true
+% TODO: other number types. Can the equality be flipped?
+(declare-rule la_rw_eq ((t Real) (u Real))
+  :match-conclusion (cl (= (= t u) (and (<= t u) (<= u t))))
 )
 
-(declare-rule nary_elim ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule nary_elim ((l Bool) (r Bool))
+  :requires ((check_nary_elim l r) true)
+  :match-conclusion (cl (= l r))
 )
 
-(declare-rule bfun_elim ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule bfun_elim ((l Bool) (r Bool))
+  :premises ((cl psi))
+  :requires ((check_bfun_elim psi phi) true)
+  :match-conclusion (cl phi)
 )
 
-(declare-rule ite_intro ()
-  :args ()
-  :conclusion true
+% TODO: sidecondition
+(declare-rule ite_intro ((l Bool) (r Bool))
+  :requires ((check_ite_intro l r) true)
+  :match-conclusion (cl (= l r))
 )
-
 
