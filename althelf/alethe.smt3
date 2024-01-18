@@ -76,36 +76,49 @@
   :match-conclusion CL
 )
 
-% TODO: side conditiion
-(declare-rule bind ((ctx Bool))
+% TODO: side condition, vars
+(declare-rule bind ((ctx Bool) (T Type) (phi T) (phi' T))
   :assumption ctx
   :premises ((cl (= phi phi')))
   :requires ((check_bind ctx xs ys) true)
   :match-conclusion (cl (= (forall xs phi) (forall ys phi')))
 )
 
-% TODO
-(declare-rule sko_ex ()
-  :args ()
-  :conclusion true
+% TODO: side condition, vars
+(declare-rule sko_ex ((ctx Bool) (phi Bool) (psi Bool))
+  :assumption ctx
+  :premises ((cl (= phi psi)))
+  :requires ((check_sko_ex ctx xs) true)
+  :match-conclusion (cl (= (exists xs phi) psi))
 )
 
-% TODO
-(declare-rule sko_forall ()
-  :args ()
-  :conclusion true
+% TODO: side condition, vars
+(declare-rule sko_forall ((ctx Bool) (phi Bool) (psi Bool))
+  :assumption ctx
+  :premises ((cl (= phi psi)))
+  :requires ((check_sko_forall ctx xs) true)
+  :match-conclusion (cl (= (forall xs phi) psi))
 )
 
-% TODO
-(declare-rule forall_inst ()
-  :args ()
-  :conclusion true
+% TODO: side condition
+(declare-rule forall_inst ((ctx Bool) (phi Bool) (psi Bool))
+  :assumption ctx
+  :premises ((cl (= phi psi)))
+  :requires ((check_sko_forall ctx xs) true)
+  :match-conclusion (cl (= (forall xs phi) psi))
 )
 
-% TODO
-(declare-rule refl ()
-  :args ()
-  :conclusion true
+% TODO: side condition, vars
+(declare-rule forall_inst ((P Bool) (P' Bool))
+  :requires ((check_forall_inst xs P P') true)
+  :match-conclusion (cl (or (not (forall xs P) P')))
+)
+
+% TODO: side condition
+(declare-rule refl ((T Type) (t1 T) (t2 T))
+  :premises (ctx)
+  :requires ((check_refl ctx t1 t2) true)
+  :match-conclusion (cl (= t1 t2))
 )
 
 % TODO

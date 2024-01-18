@@ -30,3 +30,5 @@ context become assumptions of the scope and premises of steps that use contexts.
 Hence, the equivalent to an `anchor` is an `assume-push`.  The
 context-manipulating rules are rules with `:assumption` that check that the
 assumption is the appropriately extended context.
+
+TODO: should the context have its own type?
