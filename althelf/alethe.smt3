@@ -33,7 +33,7 @@
 (declare-rule tautology ((CL1 Bool))
   :premises (CL1)
   :requires ((check_tautology CL) true)
-  :conclusion true
+  :conclusion (cl true)
 )
 
 % TODO: sidecondition
@@ -46,7 +46,7 @@
 (declare-rule subproof ((F Bool) (G Bool))
   :assumption F
   :premises (G)
-  :conclusion (=> F G)
+  :conclusion (cl (=> F G))
 )
 
 % TODO: side condition
@@ -183,71 +183,71 @@
 % are the same up to permuatation.
 
 (declare-rule not_and ((CL Bool) (C Bool) (CN Bool :list))
-  :premises (not (and C CN))
+  :premises ((cl (not (and C CN))))
   :requires ((clEqual (transform_not_and (and C CN)) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule xor1 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((xor phi1 phi2))
+  :premises ((cl (xor phi1 phi2)))
   :requires ((clEqual (cl phi1 phi2) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule xor2 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((xor phi1 phi2))
+  :premises ((cl (xor phi1 phi2)))
   :requires ((clEqual (cl (not phi1) (not phi2)) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule not_xor1 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((not (xor phi1 phi2)))
+  :premises ((cl (not (xor phi1 phi2))))
   :requires ((clEqual (cl phi1 (not phi2)) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule not_xor2 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((not (xor phi1 phi2)))
+  :premises ((cl (not (xor phi1 phi2))))
   :requires ((clEqual (cl (not phi1) phi2) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule implies ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((=> phi1 phi2))
+  :premises ((cl (=> phi1 phi2)))
   :requires ((clEqual (cl (not phi1) phi2) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule not_implies1 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((not (=> phi1 phi2)))
-  :conclusion phi1
+  :premises ((cl (not (=> phi1 phi2))))
+  :conclusion (cl phi1)
 )
 
 (declare-rule not_implies2 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((not (=> phi1 phi2)))
-  :conclusion (not phi2)
+  :premises ((cl (not (=> phi1 phi2))))
+  :conclusion (cl (not phi2))
 )
 
 (declare-rule equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((= phi1 phi2))
+  :premises ((cl (= phi1 phi2)))
   :requires ((clEqual (cl (not phi1) phi2) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule equiv2 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((= phi1 phi2))
+  :premises ((cl (= phi1 phi2)))
   :requires ((clEqual (cl phi1 (not phi2)) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule not_equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((not (= phi1 phi2)))
+  :premises ((cl (not (= phi1 phi2))))
   :requires ((clEqual (cl phi1 phi2) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule not_equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((not (= phi1 phi2)))
+  :premises ((cl (not (= phi1 phi2))))
   :requires ((clEqual (cl (not phi1) (not phi2)) CL) true)
   :match-conclusion CL
 )
@@ -343,17 +343,16 @@
 )
 
 (declare-rule ite1 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool)
-  :premises ((ite phi1 phi2 phi3))
+  :premises ((cl (ite phi1 phi2 phi3)))
   :requires ((clEqual (cl phi1 phi3) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule ite2 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool)
-  :premises ((ite phi1 phi2 phi3))
+  :premises ((cl (ite phi1 phi2 phi3)))
   :requires ((clEqual (cl (not phi1) phi2) CL) true)
   :match-conclusion CL
 )
-
 
 % TODO: sidecondition
 (declare-rule ite_pos1 ((CL Bool))
@@ -380,13 +379,13 @@
 )
 
 (declare-rule not_ite1 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
-  :premises ((not (ite phi1 phi2 phi3)))
+  :premises ((cl (not (ite phi1 phi2 phi3))))
   :requires ((clEqual (cl phi1 (not phi3)) CL) true)
   :match-conclusion CL
 )
 
 (declare-rule not_ite2 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
-  :premises ((not (ite phi1 phi2 phi3)))
+  :premises ((cl (not (ite phi1 phi2 phi3))))
   :requires ((clEqual (cl (not phi1) (not phi2)) CL) true)
   :match-conclusion CL
 )
