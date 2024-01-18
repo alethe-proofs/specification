@@ -121,20 +121,21 @@
   :match-conclusion (cl (= t1 t2))
 )
 
-% TODO
-(declare-rule trans ()
-  :args ()
-  :conclusion true
+% TODO: implement mkTrans
+(declare-rule trans ((Eqs Bool))
+  :premise-list Eqs and
+  :conclusion (cl (mkTrans Eqs))
 )
 
-% TODO
-(declare-rule cong ()
-  :args ()
-  :conclusion true
+% TODO: side condition
+(declare-rule cong ((Eqs Bool) (CEq))
+  :premise-list Eqs and
+  :requires ((check_cong Eqs CEq) true)
+  :match-conclusion (cl (CEq))
 )
 
 (declare-rule eq_reflexive ((T Type) (t T))
-  :match-conclusion (= t t)
+  :match-conclusion (cl (= t t))
 )
 
 % TODO: side conditions
@@ -155,22 +156,21 @@
   :match-conclusion CL
 )
 
-% TODO
-(declare-rule qnt_cnf ()
-  :args ()
-  :conclusion true
+% TODO: vars
+(declare-rule qnt_cnf ((phi Bool) (phi' Bool))
+  :match-conclusion (cl (or (not (forall xs phi)) (forall xs' phi')))
 )
 
 (declare-rule and ((C Bool) (CN Bool :list) (phi Bool))
   :premises ((cl (and C CN)))
   :requres ((contains (and C CN) phi) true)
-  :match-conclusion phi
+  :match-conclusion (cl phi)
 )
 
 (declare-rule not_or ((C Bool) (CN Bool :list) (phi Bool))
   :premises ((cl (not (or C CN))))
   :requres ((contains (or C CN) phi) true)
-  :match-conclusion (not phi)
+  :match-conclusion (cl (not phi))
 )
 
 (declare-rule or ((C Bool) (CN Bool :list) (C' Bool) (CN' Bool :list))
@@ -179,7 +179,7 @@
   :match-conclusion (cl C' CN')
 )
 
-% Claimed function: clEqual that is true if two clauses
+% TODO: Used function: clEqual that is true if two clauses
 % are the same up to permuatation.
 
 (declare-rule not_and ((CL Bool) (C Bool) (CN Bool :list))
