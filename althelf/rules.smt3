@@ -1,3 +1,5 @@
+(include "./theory.smt3")
+
 % Rule: assume is native
 
 % Note: The hole here does not allow for args or premises.
@@ -101,7 +103,7 @@
 )
 
 % TODO: side condition
-(declare-rule bind ((ctx Context) (xs VarList) (ys VarList) (T Type) (phi T) (phi' T))
+(declare-rule bind ((ctx @Context) (xs @VarList) (ys @VarList) (T Type) (phi T) (phi' T))
   :assumption ctx
   :premises ((cl (= phi phi')))
   :args ((cl (= (forall xs phi) (forall ys phi'))))
@@ -110,7 +112,7 @@
 )
 
 % TODO: side condition
-(declare-rule sko_ex ((ctx Context) (xs VarList) (phi Bool) (psi Bool))
+(declare-rule sko_ex ((ctx @Context) (xs @VarList) (phi Bool) (psi Bool))
   :assumption ctx
   :premises ((cl (= phi psi)))
   :args ((cl (= (exists xs phi) psi)))
@@ -119,7 +121,7 @@
 )
 
 % TODO: side condition
-(declare-rule sko_forall ((ctx Context) (xs VarList) (phi Bool) (psi Bool))
+(declare-rule sko_forall ((ctx @Context) (xs @VarList) (phi Bool) (psi Bool))
   :assumption ctx
   :premises ((cl (= phi psi)))
   :args ((cl (= (forall xs phi) psi)))
@@ -128,7 +130,7 @@
 )
 
 % TODO: side condition
-(declare-rule forall_inst ((ctx Bool) (xs VarList) (phi Bool) (psi Bool))
+(declare-rule forall_inst ((ctx Bool) (xs @VarList) (phi Bool) (psi Bool))
   :assumption ctx
   :premises ((cl (= phi psi)))
   :args ((cl (= (forall xs phi) psi)))
@@ -137,14 +139,14 @@
 )
 
 % TODO: side condition
-(declare-rule forall_inst ((P Bool) (P' Bool) (xs VarList))
+(declare-rule forall_inst ((P Bool) (P' Bool) (xs @VarList))
   :args ((cl (or (not (forall xs P) P'))))
   :requires ((check_forall_inst xs P P') true)
   :conclusion (cl (or (not (forall xs P) P')))
 )
 
 % TODO: side condition
-(declare-rule refl ((ctx Context) (T Type) (t1 T) (t2 T))
+(declare-rule refl ((ctx @Context) (T Type) (t1 T) (t2 T))
   :premises (ctx)
   :args ((cl (= t1 t2)))
   :requires ((check_refl ctx t1 t2) true)
@@ -192,7 +194,7 @@
   :conclusion CL
 )
 
-(declare-rule qnt_cnf ((phi Bool) (phi' Bool) (xs VarList) (xs' VarList))
+(declare-rule qnt_cnf ((phi Bool) (phi' Bool) (xs @VarList) (xs' @VarList))
   :args ((cl (or (not (forall xs phi)) (forall xs' phi'))))
   :conclusion (cl (or (not (forall xs phi)) (forall xs' phi')))
 )
@@ -534,7 +536,7 @@
 )
 
 % TODO: sidecondition
-(declare-rule onepoint ((ctx Context) (xs VarList) (ys VarList) (Q (-> VarList Bool Bool)) (T Type) (phi T) (phi' T))
+(declare-rule onepoint ((ctx @Context) (xs @VarList) (ys @VarList) (Q (-> @VarList Bool Bool)) (T Type) (phi T) (phi' T))
   :assumption ctx
   :premises ((cl (= phi phi')))
   :args (((cl (= (Q xs phi) (Q ys phi')))))

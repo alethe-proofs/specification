@@ -16,6 +16,8 @@ changing its parser.
   `false`.  Hence, a the simple `false` term should be parsed as the empty
   clause, and `cl false` is the clause containing the literal `false`.
 * Sharing doesn't use `! .. :named`, but instead uses `define` statements.
+* Since AletheLF doesn't support overloading, arithmetic negation uses
+  the operator `u-`.
 
 ## Contexts
 
