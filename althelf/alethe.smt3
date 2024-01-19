@@ -25,9 +25,19 @@
   :match-conclusion CL
 )
 
-% TODO
-(declare-rule th_resolution)
-(declare-rule resolution)
+% TODO: sidecodition
+(declare-rule th_resolution ((Cs Bool))
+  :premise-list Cs and
+  :requires ((check_resolution Cs CL) true)
+  :match-conclusion CL
+)
+
+% TODO: sidecodition
+(declare-rule resolution ((Cs Bool))
+  :premise-list Cs and
+  :requires ((check_resolution Cs CL) true)
+  :match-conclusion CL
+)
 
 % TODO: sidecondition
 (declare-rule tautology ((CL1 Bool))
