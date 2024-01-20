@@ -31,31 +31,55 @@
   :conclusion CL
 )
 
-; TODO: sidecodition
-(declare-rule th_resolution ((Cs Bool))
+;TODO
+(program check_resolution ((Cs Bool) (CL Bool))
+  (Bool Bool) Bool
+  (
+   ((check_resolution Cs CL) true)
+  )
+)
+
+;TRUST
+(declare-rule th_resolution ((Cs Bool) (CL Bool))
   :premise-list Cs and
   :args ((CL))
   :requires ((check_resolution Cs CL) true)
   :conclusion CL
 )
 
-; TODO: sidecodition
-(declare-rule resolution ((Cs Bool))
+;TRUST
+(declare-rule resolution ((Cs Bool) (CL Bool))
   :premise-list Cs and
   :args ((CL))
   :requires ((check_resolution Cs CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_tautology ((CL1 Bool))
+  (Bool) Bool
+  (
+   ((check_tautology CL1) true)
+  )
+)
+
+;TRUST
 (declare-rule tautology ((CL1 Bool))
   :premises (CL1)
   :args ((cl true))
-  :requires ((check_tautology CL) true)
+  :requires ((check_tautology CL1) true)
   :conclusion (cl true)
 )
 
-; TODO: sidecondition
+;TODO
+(program check_contraction ((CL1 Bool) (CL Bool))
+  (Bool Bool) Bool
+  (
+   ((check_contraction CL1 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule contraction ((CL1 Bool) (CL Bool))
   :premises (CL1)
   :args ((CL))
@@ -70,7 +94,15 @@
   :conclusion (cl (=> F G))
 )
 
-; TODO: side condition
+;TODO
+(program check_la_generic ((coeffs Real) (CL Bool))
+  (Real Bool) Bool
+  (
+   ((check_la_generic coeffs CL) true)
+  )
+)
+
+;TRUST
 (declare-rule la_generic ((CL Bool) (coeffs Real :int))
   :args (coeffs)
   :args ((CL))
@@ -78,7 +110,15 @@
   :conclusion CL
 )
 
-; TODO: side condition (will be incomplete)
+;TODO
+(program check_la_generic ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_lia_generic CL) true)
+  )
+)
+
+;TRUST
 (declare-rule lia_generic ((CL Bool))
   :args ((CL))
   :requires ((check_lia_generic CL) true)
@@ -95,7 +135,15 @@
   :conclusion (cl (or (<= t1 t2) (<= t2 t1)))
 )
 
-; TODO: side conditions
+;TODO
+(program check_la_generic ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_lia_generic CL) true)
+  )
+)
+
+;TRUST
 (declare-rule la_tautology ((CL Bool))
   :args ((CL))
   :requires ((check_la_tautology CL) true)
