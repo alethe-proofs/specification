@@ -362,9 +362,15 @@
   :conclusion (cl C' CN')
 )
 
-; TODO: Used function: clEqual that is true if two clauses
-; are the same up to permuatation.
+;TODO true if CL2 is a permuation of CL1
+(program clEqual ((CL1 Bool) (CL2 Bool))
+  (Bool Bool) Bool
+  (
+   ((clEqual CL1 CL2) true)
+  )
+)
 
+;TODO implement transform_not_and
 (declare-rule not_and ((CL Bool) (C Bool) (CN Bool :list))
   :premises ((cl (not (and C CN))))
   :args ((CL))
@@ -372,6 +378,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule xor1 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((cl (xor phi1 phi2)))
   :args ((CL))
@@ -379,6 +386,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule xor2 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((cl (xor phi1 phi2)))
   :args ((CL))
@@ -386,6 +394,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule not_xor1 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((cl (not (xor phi1 phi2))))
   :args ((CL))
@@ -393,6 +402,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule not_xor2 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((cl (not (xor phi1 phi2))))
   :args ((CL))
@@ -400,6 +410,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule implies ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((cl (=> phi1 phi2)))
   :args ((CL))
@@ -419,6 +430,7 @@
   :conclusion (cl (not phi2))
 )
 
+;TRUST
 (declare-rule equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((cl (= phi1 phi2)))
   :args ((CL))
@@ -426,6 +438,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule equiv2 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((cl (= phi1 phi2)))
   :args ((CL))
@@ -433,6 +446,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule not_equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((cl (not (= phi1 phi2))))
   :args ((CL))
@@ -440,6 +454,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule not_equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((cl (not (= phi1 phi2))))
   :args ((CL))
@@ -447,28 +462,60 @@
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_and_pos ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_and_pos CL) true)
+  )
+)
+
+;TRUST
 (declare-rule and_pos ((CL Bool))
   :args ((CL))
   :requires ((check_and_pos CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_and_neg ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_and_neg CL) true)
+  )
+)
+
+;TRUST
 (declare-rule and_neg ((CL Bool))
   :args ((CL))
   :requires ((check_and_neg CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_or_pos ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_or_pos CL) true)
+  )
+)
+
+;TRUST
 (declare-rule or_pos ((CL Bool))
   :args ((CL))
   :requires ((check_or_pos CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_or_neg ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_or_neg CL) true)
+  )
+)
+
+;TRUST
 (declare-rule or_neg ((CL Bool))
   :args ((CL))
   :requires ((check_or_neg CL) true)
