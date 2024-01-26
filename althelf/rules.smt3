@@ -522,63 +522,135 @@
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_xor_pos1 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_xor_pos1 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule xor_pos1 ((CL Bool))
   :args (CL)
   :requires ((check_xor_pos1 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_xor_pos2 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_xor_pos2 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule xor_pos2 ((CL Bool))
   :args (CL)
   :requires ((check_xor_pos2 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_xor_neg1 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_xor_neg1 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule xor_neg1 ((CL Bool))
   :args (CL)
   :requires ((check_xor_neg1 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_xor_neg2 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_xor_neg2 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule xor_neg2 ((CL Bool))
   :args (CL)
   :requires ((check_xor_neg2 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_implies_pos ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_implies_pos CL) true)
+  )
+)
+
+;TRUST
 (declare-rule implies_pos ((CL Bool))
   :args (CL)
   :requires ((check_implies_pos CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_implies_neg1 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_implies_neg1 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule implies_neg1 ((CL Bool))
   :args (CL)
   :requires ((check_implies_neg1 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_implies_neg2 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_implies_neg2 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule implies_neg2 ((CL Bool))
   :args (CL)
   :requires ((check_implies_neg2 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_equiv_pos1 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_equiv_pos1 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule equiv_pos1 ((CL Bool))
   :args (CL)
   :requires ((check_equiv_pos1 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_equiv_pos2 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_equiv_pos2 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule equiv_pos2 ((CL Bool))
   :args (CL)
   :requires ((check_equiv_pos2 CL) true)
@@ -599,6 +671,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule ite1 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool)
   :premises ((cl (ite phi1 phi2 phi3)))
   :args (CL)
@@ -606,6 +679,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule ite2 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool)
   :premises ((cl (ite phi1 phi2 phi3)))
   :args (CL)
@@ -641,6 +715,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule not_ite1 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
   :premises ((cl (not (ite phi1 phi2 phi3))))
   :args (CL)
@@ -648,6 +723,7 @@
   :conclusion CL
 )
 
+;TRUST
 (declare-rule not_ite2 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
   :premises ((cl (not (ite phi1 phi2 phi3))))
   :args (CL)
@@ -714,13 +790,14 @@
 ; TODO: sidecondition
 (declare-rule ite_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
-  :requires ((check_simplify_simplify l r) true)
+  :requires ((check_ite_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
+; TODO: sidecondition
 (declare-rule qnt_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
-  :requires ((check_simplify_simplify l r) true)
+  :requires ((check_qnt_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
