@@ -657,14 +657,30 @@
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_equiv_neg1 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_equiv_neg1 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule equiv_neg1 ((CL Bool))
   :args (CL)
   :requires ((check_equiv_neg1 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_equiv_neg2 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_equiv_neg2 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule equiv_neg2 ((CL Bool))
   :args (CL)
   :requires ((check_equiv_neg2 CL) true)
@@ -687,28 +703,60 @@
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_ite_pos1 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_ite_pos1 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule ite_pos1 ((CL Bool))
   :args (CL)
   :requires ((check_ite_pos1 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_ite_pos2 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_ite_pos2 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule ite_pos2 ((CL Bool))
   :args (CL)
   :requires ((check_ite_pos2 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_ite_neg1 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_ite_neg1 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule ite_neg1 ((CL Bool))
   :args (CL)
   :requires ((check_ite_neg1 CL) true)
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_ite_neg2 ((CL Bool))
+  (Bool) Bool
+  (
+   ((check_ite_neg2 CL) true)
+  )
+)
+
+;TRUST
 (declare-rule ite_neg2 ((CL Bool))
   :args (CL)
   :requires ((check_ite_neg2 CL) true)
@@ -731,142 +779,302 @@
   :conclusion CL
 )
 
-; TODO: sidecondition
+;TODO
+(program check_connective_dev ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_connective_dev l r) true)
+  )
+)
+
+;TRUST
 (declare-rule connective_def ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_connective_dev l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_and_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_and_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule and_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_and_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_or_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_or_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule or_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_or_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_not_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_not_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule not_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_not_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_implies_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_implies_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule implies_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_implies_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_equiv_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_equiv_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule equiv_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_equiv_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_bool_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_bool_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule bool_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_bool_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_ac_simp ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_ac_simp l r) true)
+  )
+)
+
+;TRUST
 (declare-rule ac_simp ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_ac_simp l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_ite_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_ite_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule ite_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_ite_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_qnt_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_qnt_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule qnt_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_qnt_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_onepoint ((ctx @Context) (xs @VarList) (ys @VarList) (Q (-> @VarList Bool Bool)) (T Type) (phi T) (phi' T))
+  (@Context (-> @VarList Bool Bool) @VarList T T) Bool
+  (
+   ((check_onepoint ctx Q xs ys phi phi') true)
+  )
+)
+
+;TRUST
 (declare-rule onepoint ((ctx @Context) (xs @VarList) (ys @VarList) (Q (-> @VarList Bool Bool)) (T Type) (phi T) (phi' T))
   :assumption ctx
   :premises ((cl (= phi phi')))
   :args (((cl (= (Q xs phi) (Q ys phi')))))
-  :requires ((check_onepoint Q ctx xs ys phi phi') true)
+  :requires ((check_onepoint ctx Q xs ys phi phi') true)
   :conclusion (cl (= (Q xs phi) (Q ys phi')))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_qnt_join ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_qnt_join l r) true)
+  )
+)
+
+;TRUST
 (declare-rule qnt_join ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_qnt_join l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_qnt_rm_unused ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_qnt_rm_unused l r) true)
+  )
+)
+
+;TRUST
 (declare-rule qnt_rm_unused ((l Bool) (r Bool))
   :args ((cl (= l r)))
-  :requires ((check_rm_unused l r) true)
+  :requires ((check_qnt_rm_unused l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_eq_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_eq_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule eq_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_eq_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_div_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_div_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule div_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_div_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_prod_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_prod_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule prod_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_prod_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_unary_minus_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_unary_minus_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule unary_minus_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_unary_minus_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_minus_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_minus_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule minus_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_minus_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_sum_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_sum_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule sum_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_sum_simplify l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_comp_simplify ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_comp_simplify l r) true)
+  )
+)
+
+;TRUST
 (declare-rule comp_simplify ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_comp_simplify l r) true)
@@ -880,7 +1088,15 @@
   :conclusion true
 )
 
-; TODO: sidecondition
+;TODO
+(program check_distinct_elim ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_distinct_elim l r) true)
+  )
+)
+
+;TRUST
 (declare-rule distinct_elim ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_distinct_elim l r) true)
@@ -893,14 +1109,30 @@
   :conclusion (cl (= (= t u) (and (<= t u) (<= u t))))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_nary_elim ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_nary_elim l r) true)
+  )
+)
+
+;TRUST
 (declare-rule nary_elim ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_nary_elim l r) true)
   :conclusion (cl (= l r))
 )
 
-; TODO: sidecondition
+;TODO
+(program check_bfun_elim ((psi Bool) (phi Bool))
+  (Bool Bool) Bool
+  (
+   ((check_bfun_elim psi phi) true)
+  )
+)
+
+;TRUST
 (declare-rule bfun_elim ((l Bool) (r Bool))
   :premises ((cl psi))
   :args ((cl phi))
@@ -908,7 +1140,15 @@
   :conclusion (cl phi)
 )
 
-; TODO: sidecondition
+;TODO
+(program check_ite_intro ((l Bool) (r Bool))
+  (Bool Bool) Bool
+  (
+   ((check_ite_intro l r) true)
+  )
+)
+
+;TRUST
 (declare-rule ite_intro ((l Bool) (r Bool))
   :args ((cl (= l r)))
   :requires ((check_ite_intro l r) true)
