@@ -12,9 +12,10 @@ changing its parser.
 * Every rule has at least one argument.  This argument is the conclusion of the
   rule.  This argument is always the first argument. If a rule has further
   arguments, these come afterwards.
-* `cl` cannot be used without arguments.  To write `(cl)` AletheLF uses the term
-  `false`.  Hence, a the simple `false` term should be parsed as the empty
-  clause, and `cl false` is the clause containing the literal `false`.
+* `cl` is now `@cl` to avoid name clashes.
+* `@cl` cannot be used without arguments.  To write `(cl)`, AletheLF uses the
+  term `false`.  Hence, a the simple `false` term should be parsed as the empty
+  clause, and `@cl false` is the clause containing the literal `false`.
 * Sharing doesn't use `! .. :named`, but instead uses `define` statements.
 * Since AletheLF doesn't support overloading, arithmetic negation uses
   the operator `u-`.

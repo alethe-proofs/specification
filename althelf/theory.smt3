@@ -2,6 +2,9 @@
 ;   Builtin
 ; -----------
 
+; The famous Alethe cl
+(declare-const @cl (-> Bool Bool Bool) :right-assoc-nil false)
+
 (declare-const ite (-> (! Type :var A :implicit) Bool A A A))
 (declare-const not (-> Bool Bool))
 (declare-const or (-> Bool Bool Bool) :right-assoc-nil false)
@@ -118,4 +121,4 @@
 (declare-sort @Context 0)
 (declare-const @ctx.nil @Context)
 ; The first argument is an equality (= v t) mapping term t to the variable v.
-(declare-const @ctx.map (-> Bool @Context @Context :right-assoc-nil @ctx.nil)
+(declare-const @ctx.map (-> Bool @Context @Context) :right-assoc-nil @ctx.nil)
