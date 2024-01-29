@@ -103,7 +103,7 @@
 )
 
 ;TRUST
-(declare-rule la_generic ((CL Bool) (coeffs Real :int))
+(declare-rule la_generic ((CL Bool) (coeffs Real))
   :args (CL coeffs)
   :requires (((check_la_generic coeffs CL) true))
   :conclusion CL
@@ -231,11 +231,28 @@
   :conclusion (@cl (= t1 t2))
 )
 
+(program last_eq_right ((T Type) (t1 T) (t2 T) (eqs Bool))
+  (Bool) Bool
+  (
+    ((last_eq_right (and (@cl (= t1 t2)) true)) t2)
+    ((last_eq_right (and (@cl (= t1 t2)) eqs)) (last_eq_right eqs))
+  )
+)
+
+(program make_trans ((T Type) (t1 T) (t2 T) (eqs Bool :list))
+  (Bool) Bool
+  (
+   ((make_trans (and (@cl (= t1 t2) true))) (= t1 t2))
+   ((make_trans (and (@cl (= t1 t2) eqs))) (= t1 (last_eq_right eqs)))
+  )
+)
+
+;TODO what about scopes here? can a premise come from an outers scope
 ;TODO: implement mkTrans
 (declare-rule trans ((Eqs Bool))
   :premise-list Eqs and
-  :args ((@cl (mkTrans Eqs)))
-  :conclusion (@cl (mkTrans Eqs))
+  :args ((@cl (make_trans Eqs)))
+  :conclusion (@cl (make_trans Eqs))
 )
 
 ;TODO
@@ -332,7 +349,7 @@
 (declare-rule and ((C Bool) (CN Bool :list) (phi Bool))
   :premises ((@cl (and C CN)))
   :args ((@cl phi))
-  :requres ((contains (and C CN) phi) true)
+  :requires (((contains (and C CN) phi) true))
   :conclusion (@cl phi)
 )
 
@@ -340,12 +357,12 @@
 (declare-rule not_or ((C Bool) (CN Bool :list) (phi Bool))
   :premises ((@cl (not (or C CN))))
   :args ((@cl (not phi)))
-  :requres ((contains (or C CN) phi) true)
+  :requires (((contains (or C CN) phi) true))
   :conclusion (@cl (not phi))
 )
 
 ;TODO
-(program check_or ((ors Bool) (@clause Bool))
+(program check_or ((ors Bool) (clause Bool))
   (Bool Bool) Bool
   (
    ((check_or ors clause) true)
@@ -357,7 +374,7 @@
 (declare-rule or ((C Bool) (CN Bool :list) (CP Bool) (CNP Bool :list))
   :premises ((@cl (or C CN)))
   :args ((@cl CP CNP))
-  :requres ((check_or (or C CN) (@cl CP CNP)) true)
+  :requires (((check_or (or C CN) (@cl CP CNP)) true))
   :conclusion (@cl CP CNP)
 )
 
@@ -365,7 +382,15 @@
 (program clEqual ((CL1 Bool) (CL2 Bool))
   (Bool Bool) Bool
   (
-   ((@clEqual CL1 CL2) true)
+   ((clEqual CL1 CL2) true)
+  )
+)
+
+;TODO: test this is likely wrong
+(program transform_not_and ((l Bool) (ls Bool :list))
+  (Bool Bool) Bool
+  (
+   ((transform_not_and l ls) (@cl (not l) (transform_not_and ls)))
   )
 )
 
@@ -373,7 +398,7 @@
 (declare-rule not_and ((CL Bool) (C Bool) (CN Bool :list))
   :premises ((@cl (not (and C CN))))
   :args (CL)
-  :requires (((@clEqual (transform_not_and (and C CN)) CL) true))
+  :requires (((clEqual (transform_not_and (and C CN)) CL) true))
   :conclusion CL
 )
 
@@ -381,7 +406,7 @@
 (declare-rule xor1 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((@cl (xor phi1 phi2)))
   :args (CL)
-  :requires (((@clEqual (@cl phi1 phi2) CL) true))
+  :requires (((clEqual (@cl phi1 phi2) CL) true))
   :conclusion CL
 )
 
@@ -389,7 +414,7 @@
 (declare-rule xor2 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((@cl (xor phi1 phi2)))
   :args (CL)
-  :requires (((@clEqual (@cl (not phi1) (not phi2)) CL) true))
+  :requires (((clEqual (@cl (not phi1) (not phi2)) CL) true))
   :conclusion CL
 )
 
@@ -397,7 +422,7 @@
 (declare-rule not_xor1 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((@cl (not (xor phi1 phi2))))
   :args (CL)
-  :requires (((@clEqual (@cl phi1 (not phi2)) CL) true))
+  :requires (((clEqual (@cl phi1 (not phi2)) CL) true))
   :conclusion CL
 )
 
@@ -405,7 +430,7 @@
 (declare-rule not_xor2 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((@cl (not (xor phi1 phi2))))
   :args (CL)
-  :requires (((@clEqual (@cl (not phi1) phi2) CL) true))
+  :requires (((clEqual (@cl (not phi1) phi2) CL) true))
   :conclusion CL
 )
 
@@ -413,7 +438,7 @@
 (declare-rule implies ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((@cl (=> phi1 phi2)))
   :args (CL)
-  :requires (((@clEqual (@cl (not phi1) phi2) CL) true))
+  :requires (((clEqual (@cl (not phi1) phi2) CL) true))
   :conclusion CL
 )
 
@@ -433,7 +458,7 @@
 (declare-rule equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((@cl (= phi1 phi2)))
   :args (CL)
-  :requires (((@clEqual (@cl (not phi1) phi2) CL) true))
+  :requires (((clEqual (@cl (not phi1) phi2) CL) true))
   :conclusion CL
 )
 
@@ -441,7 +466,7 @@
 (declare-rule equiv2 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((@cl (= phi1 phi2)))
   :args (CL)
-  :requires (((@clEqual (@cl phi1 (not phi2)) CL) true))
+  :requires (((clEqual (@cl phi1 (not phi2)) CL) true))
   :conclusion CL
 )
 
@@ -449,15 +474,7 @@
 (declare-rule not_equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
   :premises ((@cl (not (= phi1 phi2))))
   :args (CL)
-  :requires (((@clEqual (@cl phi1 phi2) CL) true))
-  :conclusion CL
-)
-
-;TRUST
-(declare-rule not_equiv1 ((CL Bool) (phi1 Bool) (phi2 Bool))
-  :premises ((@cl (not (= phi1 phi2))))
-  :args (CL)
-  :requires (((@clEqual (@cl (not phi1) (not phi2)) CL) true))
+  :requires (((clEqual (@cl phi1 phi2) CL) true))
   :conclusion CL
 )
 
@@ -687,18 +704,18 @@
 )
 
 ;TRUST
-(declare-rule ite1 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool)
+(declare-rule ite1 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
   :premises ((@cl (ite phi1 phi2 phi3)))
   :args (CL)
-  :requires (((@clEqual (@cl phi1 phi3) CL) true))
+  :requires (((clEqual (@cl phi1 phi3) CL) true))
   :conclusion CL
 )
 
 ;TRUST
-(declare-rule ite2 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool)
+(declare-rule ite2 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
   :premises ((@cl (ite phi1 phi2 phi3)))
   :args (CL)
-  :requires (((@clEqual (@cl (not phi1) phi2) CL) true))
+  :requires (((clEqual (@cl (not phi1) phi2) CL) true))
   :conclusion CL
 )
 
@@ -766,7 +783,7 @@
 (declare-rule not_ite1 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
   :premises ((@cl (not (ite phi1 phi2 phi3))))
   :args (CL)
-  :requires (((@clEqual (@cl phi1 (not phi3)) CL) true))
+  :requires (((clEqual (@cl phi1 (not phi3)) CL) true))
   :conclusion CL
 )
 
@@ -774,7 +791,7 @@
 (declare-rule not_ite2 ((phi1 Bool) (phi2 Bool) (phi3 Bool) (CL Bool))
   :premises ((@cl (not (ite phi1 phi2 phi3))))
   :args (CL)
-  :requires (((@clEqual (@cl (not phi1) (not phi2)) CL) true))
+  :requires (((clEqual (@cl (not phi1) (not phi2)) CL) true))
   :conclusion CL
 )
 
@@ -930,7 +947,7 @@
 
 ;TODO
 (program check_onepoint ((ctx @Context) (xs @VarList) (ys @VarList) (Q (-> @VarList Bool Bool)) (T Type) (phi T) (phiP T))
-  (@Context (-> @VarList Bool Bool) @VarList T T) Bool
+  (@Context (-> @VarList Bool Bool) @VarList @VarList T T) Bool
   (
    ((check_onepoint ctx Q xs ys phi phiP) true)
   )
@@ -940,7 +957,7 @@
 (declare-rule onepoint ((ctx @Context) (xs @VarList) (ys @VarList) (Q (-> @VarList Bool Bool)) (T Type) (phi T) (phiP T))
   :assumption ctx
   :premises ((@cl (= phi phiP)))
-  :args (((@cl (= (Q xs phi) (Q ys phiP)))))
+  :args ((@cl (= (Q xs phi) (Q ys phiP))))
   :requires (((check_onepoint ctx Q xs ys phi phiP) true))
   :conclusion (@cl (= (Q xs phi) (Q ys phiP)))
 )
@@ -1081,11 +1098,11 @@
 )
 
 ; TODO: We don't have a representation of Let!
-(declare-rule let ()
-  :premise-list Eqs and
-  :args ((true))
-  :conclusion true
-)
+; (declare-rule let ()
+;   :premise-list Eqs and
+;   :args ((true))
+;   :conclusion true
+; )
 
 ;TODO
 (program check_distinct_elim ((l Bool) (r Bool))
@@ -1132,7 +1149,7 @@
 )
 
 ;TRUST
-(declare-rule bfun_elim ((l Bool) (r Bool))
+(declare-rule bfun_elim ((psi Bool) (phi Bool))
   :premises ((@cl psi))
   :args ((@cl phi))
   :requires (((check_bfun_elim psi phi) true))
