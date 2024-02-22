@@ -663,7 +663,7 @@ An Alethe proof is a list of commands.
 (assume h1 (not (p a)))
 (assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
 ...
-(anchor :step t9 :args ((:= z2 vr4)))
+(anchor :step t9 :args ((vr4 U) (:= z2 vr4)))
 (step t9.t1 (cl (= z2 vr4)) :rule refl)
 (step t9.t2 (cl (= (p z2) (p vr4)))
          :rule cong :premises (t9.t1))
