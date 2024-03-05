@@ -18,6 +18,6 @@ pkgs.stdenvNoCC.mkDerivation {
   buildInputs = with pkgs; [
     gnumake
     entr
-    python39Packages.pygments
+    python311Packages.pygments
 	];
 }
