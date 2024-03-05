@@ -820,9 +820,14 @@ pushes precisely $c_1,\dots, c_n$ onto the context.
 Since contexts can only be manipulated by push and pop, context manipulations
 are nested.  The \inlineAlethe{anchor} commands push onto the context and the
 corresponding \inlineAlethe{step} commands pop from the context.
+%
 To indicate these changes to the context, every anchor is associated with a list
-of fixed variables and mappings.
-This list can be empty.
+of fixed variables and mappings.  The list is provided by the \inlineAlethe{:args}
+annotation.  If the list is empty, the \inlineAlethe{:args} annotation is
+omitted\footnote{The only rule that allows an empty list is the
+\proofRule{subproof} rule.  Since this rule corresponds to implication introduction,
+it does not interact with binders.}.
+%
 Note that, when an \inlineAlethe{anchor} command extends a context $\Gamma$ with
 some mappings $x_1 \mapsto t_1, \dots,  x_n \mapsto t_n$,
 then the terms $t_i$ are normalized by applying
