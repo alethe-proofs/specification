@@ -1689,41 +1689,62 @@ is functional congruence, and \proofRule{sko_forall} works like
 \end{AletheS}
 \end{example}
 
-\paragraph{Bitblasting}
+\subsection{Bitvector Reasoning with Bitblasting}
 
-% Note: we could also use an equality wih bvexplode (maybe called bvpack then)
-% TODO: Add example
-Bitblasting\index{bitblasting} is the translation of
-bit-vector\index{bit-vector} functions to propositional formulas.  To express
-this in the Alethe proof rules, the format uses a family of helper predicates
-$\lsymb{bvexplode}$, one for each bit-vector sort $(\lsymb{BitVec}\;n)$.
+A standard approach to handle bitvector reasoning in SMT solvers is bitblasting. 
+Bitblasting\index{bitblasting} is the translation of bit-vector\index{bit-vector}
+functions to propositional formulas.
+
+To express bitplasting in the Alethe proof rules, the format uses multiple families
+helper functions: $\lsymb{bbT}$, $\lsymb{bitOf}$, $\lsymb{bvsize}$, and $\lsymb{bv}$.
+To avoid name clashes with user defined functions, $\lsymb{bbT}$
+is written as \inlineAlethe{@bbT}, $\lsymb{bitOf}$ as \inlineAlethe{@bitOf},
+$\lsymb{bvsize}$ as \inlineAlethe{@bvsize}, and $\lsymb{bv}$ as \inlineAlethe{@bv}.
+The SMT-LIB standard specifies
+that simple symbols starting with ``\inlineAlethe{@}'' are reserved for
+solver generated functions.
+
+The family $\lsymb{bbT}$ consists of one function for each bit-vector sort
+$(\lsymb{BitVec}\;n)$.
 \[
-\lsymb{bvexplode} : (\lsymb{BitVec}\;n)\,\underbrace{\lsymb{Bool} \dots \lsymb{Bool}}_n\,\lsymb{Bool}.
+\lsymb{bbT} : \underbrace{\lsymb{Bool} \dots \lsymb{Bool}}_n\;(\lsymb{BitVec}\;n).
 \]
 
-Intuitively, the predicate $\lsymb{bvexplode}$ is true if the boolean arguments
-correspond to the bits in the first argument.
-Let ${<}u_1, \dots, u_n{>}$ denote a bit-vector of sort $(\lsymb{BitVec}\;n)$
+\noindent
+Intuitively, the predicate $\lsymb{bbT}$ takes a list of boolean arguments and
+packs them into a bitvector.
+Let $\langle u_1, \dots, u_n\rangle$ denote a bit-vector of sort $(\lsymb{BitVec}\;n)$
 where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise.
-\[
-\lsymb{bvexplode}\; {<}u_1, \dots, u_n{>} \,v_1 \dots v_n = \top.
-\]
-iff $u_i = v_i$ for all $1 ≤ i ≤ n$.
+The bit $u_n$ is the least significant bit.  Then
 
-The addition of the $\lsymb{bvexplode}$ predicates is a conservative extension.
+\[
+\lsymb{bbT}\; v_1 \dots v_n = \langle v_1, \dots, v_n\rangle .
+\]
+
+\noindent
+The addition of the $\lsymb{bbT}$ predicates is a conservative extension.
 They could be defined in terms of standard SMT-LIB functions.
 \begin{align*}
-\lsymb{bvexplode}\; {<}u_1, \dots, u_n{>} \,v_1 \dots v_n :=\;
-           &(\lsymb{extract}\;1\;1) ≈ (\lsymb{ite}\,v_1\,{<}\top{>}\,{<}\bot{>})\,\land\\
-           &(\lsymb{extract}\;2\;2) ≈ (\lsymb{ite}\,v_2\,{<}\top{>}\,{<}\bot{>})\,\land\\
-           &\cdots \\
-           &(\lsymb{extract}\;n\;n) ≈ (\lsymb{ite}\,v_n\,{<}\top{>}\,{<}\bot{>})
+\lsymb{bbT}\;v_1 \dots v_n :=\;
+ &\lsymb{concat}\,(\lsymb{concat}\,(\dots \\
+ &(\lsymb{concat}\,(\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle)\,(\lsymb{ite}\,v_2\,\langle\top\rangle\,\langle\bot\rangle))\\
+ & \dots \\
+ & (\lsymb{ite}\,v_{n-1}\,\langle\top\rangle\,\langle\bot\rangle)) \\
+ & (\lsymb{ite}\,v_n\,\langle\top\rangle\,\langle\bot\rangle)) \\
 \end{align*}
 
-To avoid name clashes with user defined functions, $\lsymb{bvexplode}$
-is written as \inlineAlethe{.bvexplode}.  The SMT-LIB standard specifies
-that simple symbols starting with ``\inlineAlethe{.}'' are reserved for
-solver generated functions.
+\noindent
+The functions $\lsymb{bitOf}$ are the inverse of $\lsymb{bbT}$.  They extract
+a bit of a bitvector as a boolean.  Just as the built in $\lsymb{extract}$
+symbol, $\lsymb{bitOf}$ is used as an indexed symbol.  Hence, for $n \leq m$, we
+write \inlineAlethe{(_ @bitOf} $n$ \inlineAlethe{)}, to denote functions
+\[
+\lsymb{bitOf}_n : (\lsymb{BitVec}\;m) \to \lsymb{Bool}.
+\]
+These functions are defined as 
+\[
+\lsymb{bitOf}_n \langle u_1, \dots, u_m \rangle := u_n.
+\]
 
 \section{The Alethe Rules}
 \label{apx:rules}
