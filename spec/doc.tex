@@ -695,20 +695,20 @@ An Alethe proof is a list of commands.
                         &\grOr   & \textAlethe{(step}\; \grNT{symbol}\; \grNT{clause}
                                         \; \textAlethe{:rule}\; \grNT{symbol} \\
                         &        & \quad \grNT{premises\_annotation}^{?} \\
-                        &        & \quad \grNT{context\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
+                        &        & \quad \grNT{args\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
                         & \grOr  & \textAlethe{(anchor :step}\; \grNT{symbol}\;
                                             \\
-                        &        & \quad \grNT{args\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
+                        &        & \quad \grNT{context\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
                         & \grOr  & \textAlethe{(define-fun}\; \grNT{function\_def}\,\textAlethe{)} \\
  \grNT{clause}          &\grRule & \textAlethe{(cl}\; \grNT{proof\_term}^{*}\,\textAlethe{)} \\
  \grNT{proof\_term}     &\grRule & \grNT{term}\text{ extended with } \\
                         &        & \textAlethe{(choice (}\, \grNT{sorted\_var}\,\textAlethe{)}\; \grNT{proof\_term}\,\textAlethe{)}  \\
  \grNT{premises\_annotation} &\grRule & \textAlethe{:premises (}\; \grNT{symbol}^{+}\textAlethe{)} \\
  \grNT{args\_annotation}     &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{step\_arg}^{+}\,\textAlethe{)}  \\
- \grNT{step\_arg}            &\grRule & \grNT{symbol} \grOr
+ \grNT{step\_arg}            &\grRule & \grNT{symbol}\;\grOr\;
                                           \textAlethe{(}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)} \\
  \grNT{context\_annotation}  &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}  \\
- \grNT{context\_assignment}  &\grRule & \textAlethe{(}    \,\grNT{sorted\_var}\,\textAlethe{)}  \\
+ \grNT{context\_assignment}  &\grRule & \grNT{sorted\_var} \\
                              & \grOr  & \textAlethe{(:=}\, \grNT{symbol}\;\grNT{proof\_term}\,\textAlethe{)} \\
   \end{array}
   \]
