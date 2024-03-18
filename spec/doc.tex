@@ -1691,29 +1691,33 @@ is functional congruence, and \proofRule{sko_forall} works like
 
 \subsection{Bitvector Reasoning with Bitblasting}
 
-A standard approach to handle bitvector reasoning in SMT solvers is bitblasting. 
-Bitblasting\index{bitblasting} is the translation of bit-vector\index{bit-vector}
-functions to propositional formulas.
+A standard approach to handle bitvector reasoning in SMT solvers
+is bitblasting.  Bitblasting\index{bitblasting} works by translating
+bitvector\index{bitvector} functions to propositional formulas that
+model the logical circuit of the bitvector function.
 
-To express bitplasting in the Alethe proof rules, the format uses multiple families
-helper functions: $\lsymb{bbT}$, $\lsymb{bitOf}$, $\lsymb{bvsize}$, and $\lsymb{bv}$.
-To avoid name clashes with user defined functions, $\lsymb{bbT}$
-is written as \inlineAlethe{@bbT}, $\lsymb{bitOf}$ as \inlineAlethe{@bitOf},
-$\lsymb{bvsize}$ as \inlineAlethe{@bvsize}, and $\lsymb{bv}$ as \inlineAlethe{@bv}.
-The SMT-LIB standard specifies
+To express bitblasting in Alethe proof rules, the the Alethe calculus uses
+multiple families of helper functions: $\lsymb{bbT}$, $\lsymb{bitOf}_m$,
+$\lsymb{bvsize}$, and $\lsymb{bv}_n^i$.  Functions in the families are
+distinguished either by overloading ($\lsymb{bbT}$ and $\lsymb{bvsize}$)
+or by explicit indexing ($\lsymb{bitOf}_m$ and $\lsymb{bv}_n^i$).
+To avoid name clashes with user defined
+functions, $\lsymb{bbT}$ is written as \inlineAlethe{@bbT}, $\lsymb{bitOf}$
+as \inlineAlethe{@bitOf}, $\lsymb{bvsize}$ as \inlineAlethe{@bvsize}, and
+$\lsymb{bv}$ as \inlineAlethe{@bv}.  The SMT-LIB standard specifies
 that simple symbols starting with ``\inlineAlethe{@}'' are reserved for
 solver generated functions.
 
-The family $\lsymb{bbT}$ consists of one function for each bit-vector sort
+The family $\lsymb{bbT}$ consists of one function for each bitvector sort
 $(\lsymb{BitVec}\;n)$.
 \[
-\lsymb{bbT} : \underbrace{\lsymb{Bool} \dots \lsymb{Bool}}_n\;(\lsymb{BitVec}\;n).
+\lsymb{bbT}\,:\,\underbrace{\lsymb{Bool}\,\dots\,\lsymb{Bool}}_n\;(\lsymb{BitVec}\;n).
 \]
 
 \noindent
-Intuitively, the predicate $\lsymb{bbT}$ takes a list of boolean arguments and
+Intuitively, the function $\lsymb{bbT}$ takes a list of boolean arguments and
 packs them into a bitvector.
-Let $\langle u_1, \dots, u_n\rangle$ denote a bit-vector of sort $(\lsymb{BitVec}\;n)$
+Let $\langle u_1, \dots, u_n\rangle$ denote a bitvector of sort $(\lsymb{BitVec}\;n)$
 where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise.
 The bit $u_n$ is the least significant bit.  Then
 
@@ -1722,8 +1726,7 @@ The bit $u_n$ is the least significant bit.  Then
 \]
 
 \noindent
-The addition of the $\lsymb{bbT}$ predicates is a conservative extension.
-They could be defined in terms of standard SMT-LIB functions.
+The $\lsymb{bbT}$ functions could be defined in terms of standard SMT-LIB functions.
 \begin{align*}
 \lsymb{bbT}\;v_1 \dots v_n :=\;
  &\lsymb{concat}\,(\lsymb{concat}\,(\dots \\
@@ -1734,17 +1737,39 @@ They could be defined in terms of standard SMT-LIB functions.
 \end{align*}
 
 \noindent
-The functions $\lsymb{bitOf}$ are the inverse of $\lsymb{bbT}$.  They extract
+The functions $\lsymb{bitOf}_m$ are the inverse of $\lsymb{bbT}$.  They extract
 a bit of a bitvector as a boolean.  Just as the built in $\lsymb{extract}$
-symbol, $\lsymb{bitOf}$ is used as an indexed symbol.  Hence, for $n \leq m$, we
-write \inlineAlethe{(_ @bitOf} $n$ \inlineAlethe{)}, to denote functions
+symbol, $\lsymb{bitOf}_m$ is used as an indexed symbol.  Hence, for $m \leq n$, we
+write \inlineAlethe{(_ @bitOf} $m$ \inlineAlethe{)}, to denote functions
 \[
-\lsymb{bitOf}_n : (\lsymb{BitVec}\;m) \to \lsymb{Bool}.
+\lsymb{bitOf}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
 \]
 These functions are defined as 
 \[
-\lsymb{bitOf}_n \langle u_1, \dots, u_m \rangle := u_n.
+\lsymb{bitOf}_m \langle u_1, \dots, u_n \rangle := u_m.
 \]
+
+
+\noindent
+The functions $\lsymb{bvsize}$ return the size of a bitvector.  Formally, there
+is one $\lsymb{bvsize}$ for for each bitvector sort $(\lsymb{BitVec}\;n)$.  Each
+$\lsymb{bvsize}$ is a constant function that returns $n$.  Using notation:
+
+\begin{align*}
+\lsymb{bvsize}& : (\lsymb{BitVec}\;n) \to \mathbb{N}\\
+\lsymb{bvsize}&\;b := n
+\end{align*}
+
+\noindent
+Finally, $\lsymb{bv}_n^i$ is a family of constants indexed by two parameters:
+a bitvector length $n$, and a natural number $i$.  We
+write \inlineAlethe{(_ @bv}$n$ $i$ \inlineAlethe{)} for $\lsymb{bv}_n^i$.
+The space before $n$ is omitted for historical reasons.
+Each $\lsymb{bv}_n^i$ is the bitvector constant that represents the bitvector
+of length $n$ that encodes the integer $i$.  Formally, it corresponds
+to \inlineAlethe{nat2bv[n](i)}, where \inlineAlethe{nat2bv} is defined
+as in the SMT-LIB
+standard.\footnote{See \url{https://smt-lib.github.io/theories-FixedSizeBitVectors.shtml}.}
 
 \section{The Alethe Rules}
 \label{apx:rules}
