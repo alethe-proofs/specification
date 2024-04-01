@@ -808,9 +808,12 @@ A subproof is concluded by a matching \inlineAlethe{step} command.  This step mu
 a \index{rule!concluding}{\em concluding rule}
 (such as \proofRule{subproof}, \proofRule{bind}, and so forth).
 
-After the \inlineAlethe{anchor} command, the proof uses \inlineAlethe{assume} commands to list
-the assumptions of the subproof.  Subsequently, the subproof is a list of
-\inlineAlethe{step} commands that can use prior steps in the subproofs as premises.
+After the \inlineAlethe{anchor} command, the proof uses
+\inlineAlethe{assume} commands to list the assumptions of the subproof.
+Subsequently, the subproof is a list of \inlineAlethe{step} commands
+that can use prior steps in the subproofs as premises.  It is not allowed
+to issue \inlineAlethe{assume} commands after the first \inlineAlethe{step}
+command of a subproof has been issued.
 
 In the abstract notation, every step is associated with a context.  The
 concrete syntax uses anchors to optimize this.
