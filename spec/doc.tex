@@ -664,7 +664,7 @@ An Alethe proof is a list of commands.
 (assume h1 (not (p a)))
 (assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
 ...
-(anchor :step t9 :args ((vr4 U) (:= z2 vr4)))
+(anchor :step t9 :args ((vr4 U) (:= (z2 U) vr4)))
 (step t9.t1 (cl (= z2 vr4)) :rule refl)
 (step t9.t2 (cl (= (p z2) (p vr4)))
          :rule cong :premises (t9.t1))
@@ -710,7 +710,7 @@ An Alethe proof is a list of commands.
                                           \textAlethe{(}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)} \\
  \grNT{context\_annotation}  &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}  \\
  \grNT{context\_assignment}  &\grRule & \grNT{sorted\_var} \\
-                             & \grOr  & \textAlethe{(:=}\, \grNT{symbol}\;\grNT{proof\_term}\,\textAlethe{)} \\
+                             & \grOr  & \textAlethe{(:=}\, \grNT{sorted\_var}\;\grNT{proof\_term}\,\textAlethe{)} \\
   \end{array}
   \]
   \caption{The proof grammar.}
@@ -867,7 +867,7 @@ expressed as a concrete proof.
 \begin{AletheVerb}
 (assume h1 (forall ((x S)) (P x)))
 (assume h2 (not (forall ((y S)) (P y))))
-(anchor :step t5 :args ((y S) (:= x y)))
+(anchor :step t5 :args ((y S) (:= (x S) y)))
 (step t3 (cl (= x y)) :rule refl)
 (step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
 (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
@@ -1039,7 +1039,7 @@ the calculation of the context of the steps in the subproof.
 The proof in Example~\ref{ex:ti:ctx-concrete} has only one subproof
 and this subproof is also a first-innermost subproof.  It is the subproof
 \begin{AletheVerb}
-(anchor :step t5 :args ((:= x y)))
+(anchor :step t5 :args ((y S) (:= (x S) y)))
 (step t3 (cl (= x y)) :rule refl)
 (step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
 (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))

@@ -11,6 +11,9 @@ Proof rules:
 Breaking changes:
 \begin{itemize}
   \item Allow arbitrary extra annotations in \texttt{assume} commands.
+  \item Add the sort to all variables in contexts.  Before, the context
+        of a bind could be \texttt{(x S) (:= y x)}.  Now it must
+        be \texttt{(x S) (:= (y S) x)}.
 \end{itemize}
 
 \noindent
