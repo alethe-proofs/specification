@@ -1227,7 +1227,7 @@ An application of the \proofRule{onepoint} rule on the term $(\forall x, y.\, x 
 \rightarrow (f\,x)\land (f\,y))$ look like this:
 
 \begin{AletheVerb}
-(anchor :step t3 :args ((:= y x)))
+(anchor :step t3 :args ((x S) (:= (y S) x)))
 (step t3.t1 (cl (= x y)) :rule refl)
 (step t3.t2 (cl (= (= x y) (= x x)))
     :rule cong :premises (t3.t1))
@@ -1242,7 +1242,7 @@ An application of the \proofRule{onepoint} rule on the term $(\forall x, y.\, x 
 (step t3 (cl (=
         (forall ((x S) (y S)) (=> (= x y) (and (f x) (f y))))
         (forall ((x S))       (=> (= x x) (and (f x) (f x))))))
-    :rule qnt_simplify)
+    :rule onepoint)
 \end{AletheVerb}
 \end{RuleExample}
 
