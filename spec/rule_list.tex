@@ -551,11 +551,14 @@ $j$. & \spctx{ $\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y
    & \ctxsep & $\varphi ≈ \varphi'$ & ($\dots$) \\
    \spsep
 $k$. & $\Gamma$ & \ctxsep &
-    $\forall x_1, \dots, x_n.\varphi ≈ \forall y_1, \dots, y_n. \varphi'$
+    $Q x_1, \dots, x_n.\varphi ≈ Q y_1, \dots, y_n. \varphi'$
      & \currule{} \\
 \end{AletheXS}
-  where the variables $y_1, \dots, y_n$ are neither free in $\forall x_1,
-  \dots, x_n.\varphi$ nor occur in $\Gamma$.
+
+\noindent
+where $Q \in \{\forall, \exists\}$,
+and the variables $y_1, \dots, y_n$ are neither free in $Q x_1,
+\dots, x_n.\varphi$ nor occur in $\Gamma$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{sko_ex}
@@ -569,6 +572,8 @@ $j$. &
    \spsep
 $k$. & $\Gamma$ & \ctxsep & $\exists x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 \end{AletheXS}
+
+\noindent
 where $\varepsilon_i$ stands for $\varepsilon x_i. (\exists x_{i+1}, \dots,
 x_n. \varphi)$.
 \end{RuleDescription}
