@@ -593,8 +593,10 @@ $i$. & \ctxsep &
 $\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1]\dots[x_n\mapsto t_n]$
  & \currule\, [$(x_{k_1}, t_{k_1})$, $\dots$, $(x_{k_n}, t_{k_n})$] \\
 \end{AletheX}
-where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_i$ and
-$k_i$ have the same sort. The arguments $(x_{k_i}, t_{k_i})$ are printed as
+
+\noindent
+where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_{k_i}$ and
+$t_{k_i}$ have the same sort. The arguments $(x_{k_i}, t_{k_i})$ are printed as
 \inlineAlethe{(:= xki tki)}.
 \end{RuleDescription}
 
@@ -603,6 +605,8 @@ $k_i$ have the same sort. The arguments $(x_{k_i}, t_{k_i})$ are printed as
 \begin{AletheXS}
 $j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_2 $ & \currule \\
 \end{AletheXS}
+
+\noindent
 where, if $\sigma = \subst(\Gamma)$,
 the terms $t_1\sigma$ and $t_2$ are
 syntactically equal up to  renaming of
