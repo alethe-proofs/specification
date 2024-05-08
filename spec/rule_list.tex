@@ -550,7 +550,7 @@ as for the rule \proofRule{la_generic}.
 $j$. & \spctx{ $\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$}
    & \ctxsep & $\varphi ≈ \varphi'$ & ($\dots$) \\
    \spsep
-$k$. & & \ctxsep &
+$k$. & $\Gamma$ & \ctxsep &
     $\forall x_1, \dots, x_n.\varphi ≈ \forall y_1, \dots, y_n. \varphi'$
      & \currule{} \\
 \end{AletheXS}
@@ -567,7 +567,7 @@ $j$. &
 \spctx{$\Gamma, x_1 \mapsto \varepsilon_1, \dots ,  x_n \mapsto \varepsilon_n$}
    & \ctxsep &  $\varphi ≈ \psi$ & ($\dots$) \\
    \spsep
-$k$. & & \ctxsep & $\exists x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
+$k$. & $\Gamma$ & \ctxsep & $\exists x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 \end{AletheXS}
 where $\varepsilon_i$ stands for $\varepsilon x_i. (\exists x_{i+1}, \dots,
 x_n. \varphi)$.
@@ -582,7 +582,7 @@ $j$. &
 \spctx{$\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)$}
    & \ctxsep & $\varphi ≈ \psi$ & ($\dots$) \\
  \spsep
-$k$. & & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
+$k$. & $\Gamma$ & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 \end{AletheXS}
 
 \end{RuleDescription}
@@ -1206,7 +1206,7 @@ variables that can only have one value.
 $j$. & \spctx{$\Gamma, x_{k_1},\dots, x_{k_m},  x_{j_1} \mapsto t_{j_1}, \dots ,  x_{j_o} \mapsto t_{j_o}$}
    & \ctxsep & $\varphi ≈ \varphi'$ & ($\dots$) \\
  \spsep
-$k$. & & \ctxsep  & $Q x_1, \dots, x_n.\varphi ≈ Q x_{k_1}, \dots, x_{k_m}. \varphi'$ & \currule{} \\
+$k$. & $\Gamma$ & \ctxsep  & $Q x_1, \dots, x_n.\varphi ≈ Q x_{k_1}, \dots, x_{k_m}. \varphi'$ & \currule{} \\
 \end{AletheXS}
 where $Q\in\{\forall, \exists\}$,  $n = m + o$,  $k_1, \dots, k_m$ and
 $j_1, \dots, j_o$ are monotone
