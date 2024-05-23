@@ -427,9 +427,9 @@ $i$. & \ctxsep & $\varphi_1$, \dots , $\varphi_o$  & \currule\, [$a_1$, \dots, $
 where $\varphi_i$ is either $\neg l_i$ or $l_i$, but never $s_1
 ≈ s_2$.
 
-If the current theory does not have rational numbers, then the $a_i$ are
-printed using integer division. They should, nevertheless, be interpreted
-as rational numbers. If $d_1$ or $d_2$ are $0$, they might not be printed.
+The constants $a_i$ are of sort \inlineAlethe{Real} and must be printed
+using one of the productions $\grNT{rational}$
+$\grNT{decimal}$, $\grNT{neg\_decimal}$.
 
 To check the unsatisfiability of the negation of $\varphi_1\lor \dots
 \lor \varphi_o$ one performs the following steps for each literal. For
@@ -481,7 +481,7 @@ A simple \proofRule{la_generic} step in the logic \textsf{LRA} might look like t
 
 \begin{AletheVerb}
 (step t10 (cl (not (> (f a) (f b))) (not (= (f a) (f b))))
-    :rule la_generic :args (1.0 (- 1.0)))
+    :rule la_generic :args (1.0 -1.0))
 \end{AletheVerb}
 
 To verify this we have to check the insatisfiability of $(f\,a) > (f\,b) \land
@@ -495,7 +495,7 @@ not apply. Finally, after step~5 the conjunction is $(f\,a) - (f\,b) > 0 \land
 The following \proofRule{la_generic} step is from a \textsf{QF\_UFLIA} problem:
 \begin{AletheVerb}
 (step t11 (cl (not (<= f3 0)) (<= (+ 1 (* 4 f3)) 1))
-    :rule la_generic :args (1 (div 1 4)))
+    :rule la_generic :args (1.0 1/4))
 \end{AletheVerb}
 After normalization we get $-f_3 \geq 0 \land 4\times f_3 > 0$.
 This time step~4 applies and we can strengthen this to
