@@ -704,7 +704,9 @@ An Alethe proof is a list of commands.
  \grNT{clause}          &\grRule & \textAlethe{(cl}\; \grNT{proof\_term}^{*}\,\textAlethe{)} \\
  \grNT{proof\_term}     &\grRule & \grNT{term}\text{ extended with } \\
                         &        & \textAlethe{(choice (}\, \grNT{sorted\_var}\,\textAlethe{)}\; \grNT{proof\_term}\,\textAlethe{)}  \\
-                        & \grOr  & \grNT{rational}\;\grOr\;\grNT{neg\_numeral}\;\grOr\;\grNT{neg\_decimal} \\
+                        & \grOr  & \grNT{rational} \\
+                        & \grOr  & \grNT{nonpositive\_numeral} \\
+                        & \grOr  & \grNT{nonpositive\_decimal} \\
  \grNT{premises\_annotation} &\grRule & \textAlethe{:premises (}\; \grNT{symbol}^{+}\textAlethe{)} \\
  \grNT{args\_annotation}     &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{step\_arg}^{+}\,\textAlethe{)}  \\
  \grNT{step\_arg}            &\grRule & \grNT{symbol}\;\grOr\;
@@ -714,8 +716,8 @@ An Alethe proof is a list of commands.
                              & \grOr  & \textAlethe{(:=}\, \grNT{sorted\_var}\;\grNT{proof\_term}\,\textAlethe{)} \\
  \grNT{positive\_numeral}    &\grRule & \text{any }\grNT{numeral}\text{ except } 0\\
  \grNT{rational}             &\grRule & -^{?}\grNT{numeral}/\grNT{positive\_numeral} \\
- \grNT{negative\_numeral}         &\grRule & -\grNT{numeral} \\
- \grNT{negative\_decimal}        &\grRule & -\grNT{decimal} \\
+ \grNT{nonpositive\_numeral}         &\grRule & -\grNT{numeral} \\
+ \grNT{nonpositive\_decimal}        &\grRule & -\grNT{decimal} \\
   \end{array}
   \]
   \caption{The proof grammar.}
@@ -818,14 +820,14 @@ For example, $-\frac{1}{2}$ is written as
 \inlineAlethe{(/ (- 1) 2)}.
 The $\grNT{rational}$ non-terminal makes it possible to write this constant
 as a single literal: \inlineAlethe{-1/2}.
-Furthermore, the non-terminals $\grNT{negative\_numeral}$ and $\grNT{negative\_decimal}$
+Furthermore, the non-terminals $\grNT{nonpositive\_numeral}$ and $\grNT{nonpositive\_decimal}$
 achieve the same for unary negation.
 
 The sorting rules for $\grNT{proof\_term}$ are as for {\smtlib} terms with
 one key difference.
 The sort of terms produced by $\grNT{rational}$, $\grNT{decimal}$, and
-$\grNT{negative\_decimal}$ is always \inlineAlethe{Real}.
-The sort of terms produced by $\grNT{integer}$ and $\grNT{negative\_numeral}$
+$\grNT{nonpositive\_decimal}$ is always \inlineAlethe{Real}.
+The sort of terms produced by $\grNT{integer}$ and $\grNT{nonpositive\_numeral}$
 is always \inlineAlethe{Int}.
 For example, in standard {\smtlib}, the term \inlineAlethe{(+ 5 3)}
 has the sort \inlineAlethe{Int} in the logic \texttt{QF\_LIA}, but
