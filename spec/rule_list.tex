@@ -562,7 +562,7 @@ with $\bowtie \in \{<,>, \le,\ge, ≈\}$.\\
 
 \begin{AletheX}
 	$i$. & \ctxsep  &
-	$(t_1 > 0 \wedge \neg (t_2 ≈ t_3)) \to \neg (t_1 * t_2 ≈ t_1 * t_3)$ 
+	$(t_1 > 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$ 
 	& (\currule) \\
 \end{AletheX}
 
@@ -574,7 +574,7 @@ Either of the form:
 
 	\begin{AletheX}
 		$i$. & \ctxsep  &
-		$(t_1 < 0 \wedge t_2 \bowtie t_3) \to t_1 * t_2 \bowtie_{inv} t_1 * t_3$
+		$(t_1 < 0 \land t_2 \bowtie t_3) \rightarrow t_1 * t_2 \bowtie_{inv} t_1 * t_3$
 		& (\currule) \\
 	\end{AletheX}
 
@@ -598,18 +598,11 @@ Either of the form:
 
 	\begin{AletheX}
 		$i$. & \ctxsep  &
-		$(t_1 < 0 \wedge \neg (t_2 ≈ t_3)) \to \neg (t_1 * t_2 ≈ t_1 * t_3)$
+		$(t_1 < 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$
 		& (\currule) \\
 	\end{AletheX}
 	.
 \end{RuleDescription}
-
-\begin{RuleDescription}{la_totality}
-	\begin{AletheX}
-		$i$. & \ctxsep & $t_1 \leq t_2 \lor t_2 \leq t_1$ & (\currule) \\
-	\end{AletheX}
-\end{RuleDescription}
-
 
 \begin{RuleDescription}{bind}
   The \currule{} rule is used to rename bound variables.
