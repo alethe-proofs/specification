@@ -51,6 +51,8 @@ to quickly find the definition of rules.
 \ruleref{la_disequality} & $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$ \\
 \ruleref{la_totality} & $t_1 \leq t_2 \lor t_2 \leq t_1$ \\
 \ruleref{la_tautology} & A trivial linear tautology. \\
+\ruleref{la_mult_pos} & Multiplication with a positive factor. \\
+\ruleref{la_mult_neg} & Multiplication with a negative factor.\\
 \ruleref{forall_inst} & Quantifier instantiation. \\
 \ruleref{refl} & Reflexivity after applying the context. \\
 \ruleref{eq_reflexive} & $t ≈ t$ without context. \\
@@ -111,6 +113,8 @@ to quickly find the definition of rules.
 \ruleref{la_disequality} & $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$ \\
 \ruleref{la_totality} & $t_1 \leq t_2 \lor t_2 \leq t_1$ \\
 \ruleref{la_tautology} & A trivial linear tautology. \\
+\ruleref{la_mult_pos} & Multiplication with a positive factor. \\
+\ruleref{la_mult_neg} & Multiplication with a negative factor.\\
 \ruleref{la_rw_eq} & $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \\
 \ruleref{div_simplify} & Simplification of division. \\
 \ruleref{prod_simplify} & Simplification of products. \\
@@ -540,6 +544,63 @@ cases:
 \end{itemize}
 The inequalities $s_1 \bowtie d$ are the result of applying normalization
 as for the rule \proofRule{la_generic}.
+\end{RuleDescription}
+
+\begin{RuleDescription}{la_mult_pos}
+
+Either of the form:
+
+	\begin{AletheX}
+		$i$. & \ctxsep  &
+		 $(t_1 > 0 \wedge t_2 \bowtie t_3) \to t_1 * t_2 \bowtie t_1 * t_3$
+		& (\currule) \\
+	\end{AletheX}
+
+with $\bowtie \in \{<,>, \le,\ge, ≈\}$.\\
+
+\noindent Or of the form:
+
+\begin{AletheX}
+	$i$. & \ctxsep  &
+	$(t_1 > 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$ 
+	& (\currule) \\
+\end{AletheX}
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{la_mult_neg}
+
+Either of the form:
+
+	\begin{AletheX}
+		$i$. & \ctxsep  &
+		$(t_1 < 0 \land t_2 \bowtie t_3) \rightarrow t_1 * t_2 \bowtie_{inv} t_1 * t_3$
+		& (\currule) \\
+	\end{AletheX}
+
+	with $\bowtie \in \{<,>, \le,\ge, ≈\}$ and $\bowtie_{inv}$ being defined according to the following table.
+
+	\begin{center}
+	\begin{tabular}{|c | c|}
+	\hline
+	$\bowtie$ & $\bowtie_{inv}$ is defined as: \\
+	\hline
+	$ < $ & $ > $ \\
+	$ \le $ & $ \ge $ \\
+	$ ≈ $ & $ ≈ $ \\
+	$ > $ & $ < $ \\
+	$ \ge $ & $ \le $ \\
+	\hline
+	\end{tabular}
+	\end{center}
+
+\noindent Or of the form:
+
+	\begin{AletheX}
+		$i$. & \ctxsep  &
+		$(t_1 < 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$
+		& (\currule) \\
+	\end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{bind}
