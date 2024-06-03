@@ -31,6 +31,9 @@ Breaking changes:
         for \proofRule{la_generic}.
   \item Restrict sorting of numbers such that the sort of a constant is
         only determined by its syntactic category.
+  \item The arguments for \proofRule{forall_inst} have been changed to
+        no longer take the shape of bindings using \texttt{(:= x c)}.
+        Instead, the list of instatiation terms must follow the variable order.
 \end{itemize}
 
 \noindent
