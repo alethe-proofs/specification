@@ -670,14 +670,21 @@ $k$. & $\Gamma$ & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \curru
 \begin{AletheX}
 $i$. & \ctxsep &
 $\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1]\dots[x_n\mapsto t_n]$
- & \currule\, [$(x_{k_1}, t_{k_1})$, $\dots$, $(x_{k_n}, t_{k_n})$] \\
+ & \currule\, [$t_1$, $\dots$, $t_n$] \\
 \end{AletheX}
 
 \noindent
-where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_{k_i}$ and
-$t_{k_i}$ have the same sort. The arguments $(x_{k_i}, t_{k_i})$ are printed as
-\inlineAlethe{(:= xki tki)}.
+where $x_i$ and $t_i$ have the same sort.
 \end{RuleDescription}
+
+\begin{RuleExample}
+An application of the \proofRule{forall_inst} rule.
+\begin{AletheVerb}
+(step t16 (cl (or (not (forall ((x S) (y T)) (P y x    )))
+                                             (P b (f a))
+      :rule forall_inst :args ((f a) b)
+\end{AletheVerb}
+\end{RuleExample}
 
 
 \begin{RuleDescription}{refl}
@@ -1763,7 +1770,7 @@ $j$. & \ctxsep & $ \neg (\psi ≈ \varphi)$  & (\currule\; $i$) \\
 \noindent
 If $\varphi \neq \psi$ then the conclusion \emph{must not} be $\neg (\varphi ≈ \psi)$.
 
-See \ruleref{symm} for an explanation of this rule.
+See \proofRule{symm} for an explanation of this rule.
 
 \end{RuleDescription}
 
