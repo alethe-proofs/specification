@@ -253,6 +253,8 @@ simplifications.}
 \ruleref{bitblast_add} & Bitblasting of $\lsymb{add}$. \\
 \ruleref{la_mult_pos} & Multiplication with a positive factor. \\
 \ruleref{la_mult_neg} & Multiplication with a negative factor.\\
+\ruleref{symm}     & Symmetry of equality. \\
+\ruleref{not_symm} & Symmetry of not-equal.\\
 \end{xltabular}
 \subsection{Rule List}
 \label{sec:alethe:rules-list}
@@ -1724,6 +1726,44 @@ with $A_2 := (\lsymb{bbT}\ (x_0 \,\lsymb{xor}\, y_0)\,\lsymb{xor}\,\mathrm{carry
     \mathrm{carry}_{i+1}&=&(x_i\wedge y_i)\vee((x_i\,\lsymb{xor}\, y_i)\wedge \mathrm{carry}_i)
   \end{array}
 \]
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{symm}
+\begin{AletheX}
+$i$. & \ctxsep & $ \varphi ≈ \psi$ & ($\dots$) \\
+$j$. & \ctxsep & $ \psi ≈ \varphi$ & (\currule\; $i$) \\
+\end{AletheX}
+
+\noindent
+If $\varphi \neq \psi$ then the conclusion \emph{must not} be $\varphi ≈ \psi$.
+
+Note that since Alethe allows the implicit reordering of equalities, this
+rule is technically superfluous.  However, the rule is useful to indicate
+an explicit usage of the symmetry of equality to aid proof reconstruction.
+
+\begin{RuleExample}
+The side condition ensures that the following example is not a valid application
+of the rule.  Without this condition, this derivation could be obtained by
+applying symmetry of equality implicitly to the conclusion.
+
+\begin{AletheX}
+$10$. & \ctxsep & $ P(a) ≈ Q(b)$ & ($\dots$) \\
+$11$. & \ctxsep & $ P(a) ≈ Q(b)$ & (\currule\; $10$) \\
+\end{AletheX}
+\end{RuleExample}
+\end{RuleDescription}
+
+\begin{RuleDescription}{not_symm}
+\begin{AletheX}
+$i$. & \ctxsep & $ \neg (\varphi ≈ \psi)$  & ($\dots$) \\
+$j$. & \ctxsep & $ \neg (\psi ≈ \varphi)$  & (\currule\; $i$) \\
+\end{AletheX}
+
+\noindent
+If $\varphi \neq \psi$ then the conclusion \emph{must not} be $\neg (\varphi ≈ \psi)$.
+
+See \ruleref{symm} for an explanation of this rule.
 
 \end{RuleDescription}
 
