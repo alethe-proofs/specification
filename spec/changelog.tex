@@ -7,6 +7,10 @@ Proof rules:
       \proofRule{bitblast_ult}.
   \item Addition of rules \proofRule{la_mult_pos} and \proofRule{la_mult_neg} to describe multiplication with a positive or negative factor.
   \item Addition of rules \proofRule{symm} and \proofRule{not_symm} to express symmetry of equality explicitly.
+  \item Addition of the rule \proofRule{eq_symmetric} to express symmetry
+  of equality explicitly but as an equivalence. Note that in principle this
+  could be done with the rule \proofRule{symm} above, but would require a long
+  and tedious use of \proofRule{subproof} for each direction of the equivalence.
 \end{itemize}
 
 \noindent
@@ -47,9 +51,9 @@ command.
 Beyond many smaller clarifications and typographic improvements, the
 following changes are implemented in this release.
 \begin{itemize}
-	\item Add an abstract proof checking procedure to clarify
-	the semantics of the proof format.
-	\item Add a description of the semantics of contexts based on λ-terms.
+  \item Add an abstract proof checking procedure to clarify
+  the semantics of the proof format.
+  \item Add a description of the semantics of contexts based on λ-terms.
   \item List all transformations that are implicit in Alethe proofs.
   \item Change the notation used for terms from first-order style
    (e.g., $f(x,g(y))$) to higher-order style (e.g.,
