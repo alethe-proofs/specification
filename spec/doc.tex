@@ -409,7 +409,7 @@ understand the proof step by step.
 \begin{Alethe}
 1.& \ctxsep & $\forall x.\, (P\,x)$ & $ \proofRule{assume}$ \\
 2.& \ctxsep & $\neg (P\,a)        $ & $ \proofRule{assume}$ \\
-3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[(x, a)]$ \\
+3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[a]$ \\
 4.& \ctxsep & $\neg (\forall x.\, (P\,x)), (P\,a)$ & $ (\proofRule{or}\:3)$ \\
 5.& \ctxsep & $\bot             $ & $ (\proofRule{resolution}\: 1, 2, 4)$ \\
 \end{Alethe}
@@ -467,8 +467,7 @@ empty list of arguments $[a_1, \dots, a_m]$. The list of premises
 only references earlier steps, such that the proof forms a directed
 acyclic graph.  If the list of premises is empty, we will drop the
 parentheses around the proof rule.
-The arguments $a_i$ are either terms or tuples $(x_i,
-t_i)$ where $x_i$ is a variable and $t_i$ is a term. The interpretation
+The arguments $a_i$ are terms. The interpretation
 of the arguments is rule specific.  The list $c_1, \dots, c_j$ is
 the \index{context}{\em context} of the step.  Contexts are discussed below.
 Every proof ends with a step that has the empty clause as the conclusion
@@ -676,7 +675,7 @@ An Alethe proof is a list of commands.
           :rule th_resolution :premises (t11 t12 t13))
 (step t15 (cl (or (not (forall ((vr5 U)) (p vr5)))
                   (p a)))
-          :rule forall_inst :args ((:= vr5 a)))
+          :rule forall_inst :args (a))
 (step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
           :rule or :premises (t15))
 (step t17 (cl) :rule resolution :premises (t16 h1 t14))
@@ -706,8 +705,7 @@ An Alethe proof is a list of commands.
                         &        & \textAlethe{(choice (}\, \grNT{sorted\_var}\,\textAlethe{)}\; \grNT{proof\_term}\,\textAlethe{)}  \\
  \grNT{premises\_annotation} &\grRule & \textAlethe{:premises (}\; \grNT{symbol}^{+}\textAlethe{)} \\
  \grNT{args\_annotation}     &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{step\_arg}^{+}\,\textAlethe{)}  \\
- \grNT{step\_arg}            &\grRule & \grNT{symbol}\;\grOr\;
-                                          \textAlethe{(}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)} \\
+ \grNT{step\_arg}            &\grRule & \grNT{proof\_term} \\
  \grNT{context\_annotation}  &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}  \\
  \grNT{context\_assignment}  &\grRule & \grNT{sorted\_var} \\
                              & \grOr  & \textAlethe{(:=}\, \grNT{sorted\_var}\;\grNT{proof\_term}\,\textAlethe{)} \\
@@ -1458,6 +1456,7 @@ subproofs with contexts.  This is slightly complicated by the
   is the calculated context of the steps in the subproof after
   $C_{\mathit{start}}$.
 
+\newpage
   The step $C_{\mathit{end}}$ is a step
 
 \begin{AletheS}
@@ -1611,9 +1610,9 @@ ground term $t_i$ is a new term with the same sort as $x_i$.\footnote{
   For historical reasons, \proofRule{forall_inst} has a unit clause with a disjunction
   as its conclusion and not the clause $(\neg \forall \bar x_n.\,\varphi), \varphi[\bar t_n]$.
 }
-
-The arguments of a \proofRule{forall_inst} step are the list $(x_1 , t_1),
-\dots, (x_n, t_n)$. While this information can be recovered from the term,
+%
+The arguments of a \proofRule{forall_inst} step are the list $t_1,
+\dots, t_n$. While this information can be recovered from the term,
 providing it explicitly helps reconstruction because the implicit reordering of
 equalities obscures which terms have been used as instances.
 Existential quantifiers are handled by skolemization.
