@@ -101,6 +101,7 @@ to quickly find the definition of rules.
 \ruleref{distinct_elim} & Elimination of the $\lsymb{distinct}$ operator. \\
 \ruleref{la_rw_eq} & $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \\
 \ruleref{nary_elim} & Eliminate $n$-ary application of operators via binary applications. \\
+\ruleref{eq_symmetric} & Symmetry of equality as equivalence. \\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
@@ -255,6 +256,14 @@ simplifications.}
 \ruleref{la_mult_neg} & Multiplication with a negative factor.\\
 \ruleref{symm}     & Symmetry of equality. \\
 \ruleref{not_symm} & Symmetry of not-equal.\\
+\end{xltabular}
+
+\begin{xltabular}{\linewidth}{l X}
+\caption{Rules used by the Carcara elaborator.}
+\label{rule-tab:cvc5}\\
+  Rule & Description \\
+  \hline
+\ruleref{eq_symmetric} & Symmetry of equality as equivalence. \\
 \end{xltabular}
 \subsection{Rule List}
 \label{sec:alethe:rules-list}
