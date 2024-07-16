@@ -51,6 +51,8 @@ to quickly find the definition of rules.
 \ruleref{la_disequality} & $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$ \\
 \ruleref{la_totality} & $t_1 \leq t_2 \lor t_2 \leq t_1$ \\
 \ruleref{la_tautology} & A trivial linear tautology. \\
+\ruleref{la_mult_pos} & Multiplication with a positive factor. \\
+\ruleref{la_mult_neg} & Multiplication with a negative factor.\\
 \ruleref{forall_inst} & Quantifier instantiation. \\
 \ruleref{refl} & Reflexivity after applying the context. \\
 \ruleref{eq_reflexive} & $t ≈ t$ without context. \\
@@ -99,6 +101,7 @@ to quickly find the definition of rules.
 \ruleref{distinct_elim} & Elimination of the $\lsymb{distinct}$ operator. \\
 \ruleref{la_rw_eq} & $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \\
 \ruleref{nary_elim} & Eliminate $n$-ary application of operators via binary applications. \\
+\ruleref{eq_symmetric} & Symmetry of equality as equivalence. \\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
@@ -111,6 +114,8 @@ to quickly find the definition of rules.
 \ruleref{la_disequality} & $t_1 ≈ t_2 \lor \neg (t_1 \leq t_2) \lor \neg (t_2 \leq t_1)$ \\
 \ruleref{la_totality} & $t_1 \leq t_2 \lor t_2 \leq t_1$ \\
 \ruleref{la_tautology} & A trivial linear tautology. \\
+\ruleref{la_mult_pos} & Multiplication with a positive factor. \\
+\ruleref{la_mult_neg} & Multiplication with a negative factor.\\
 \ruleref{la_rw_eq} & $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \\
 \ruleref{div_simplify} & Simplification of division. \\
 \ruleref{prod_simplify} & Simplification of products. \\
@@ -229,6 +234,37 @@ simplifications.}
 \ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
 \end{xltabular}
 
+\begin{xltabular}{\linewidth}{l X}
+\caption{Bitvector rules.}
+\label{rule-tab:bitblasting}\\
+  Rule & Description \\
+  \hline
+\ruleref{bitblast_extract} & Bitblasting of $\lsymb{extract}$. \\
+\ruleref{bitblast_ult} & Bitblasting of $\lsymb{ult}$. \\
+\ruleref{bitblast_add} & Bitblasting of $\lsymb{add}$. \\
+\end{xltabular}
+
+\begin{xltabular}{\linewidth}{l X}
+\caption{Rules used by cvc5, but not by veriT.}
+\label{rule-tab:cvc5}\\
+  Rule & Description \\
+  \hline
+\ruleref{bitblast_extract} & Bitblasting of $\lsymb{extract}$. \\
+\ruleref{bitblast_ult} & Bitblasting of $\lsymb{ult}$. \\
+\ruleref{bitblast_add} & Bitblasting of $\lsymb{add}$. \\
+\ruleref{la_mult_pos} & Multiplication with a positive factor. \\
+\ruleref{la_mult_neg} & Multiplication with a negative factor.\\
+\ruleref{symm}     & Symmetry of equality. \\
+\ruleref{not_symm} & Symmetry of not-equal.\\
+\end{xltabular}
+
+\begin{xltabular}{\linewidth}{l X}
+\caption{Rules used by the Carcara elaborator.}
+\label{rule-tab:cvc5}\\
+  Rule & Description \\
+  \hline
+\ruleref{eq_symmetric} & Symmetry of equality as equivalence. \\
+\end{xltabular}
 \subsection{Rule List}
 \label{sec:alethe:rules-list}
 
@@ -518,7 +554,7 @@ $\varphi_1 \lor \varphi_2$ % Checked: this is a proper disjunction not a cl
  & (\currule) \\
 \end{AletheX}
 
-It can be checked by using the procedure for \proofRule{la_generic} with
+It can be checked by using the procedure for \proofRule{la_generic}
 while setting the arguments to $1$. Informally, the rule follows one of several
 cases:
 \begin{itemize}
@@ -528,8 +564,65 @@ cases:
     \item $s_1 \geq d_1 \lor \neg (s_1 \geq d_2)$ where $d_1 = d_2$
     \item $\neg (s_1 \leq d_1) \lor \neg(s_1 \geq d_2)$ where $d_1 < d_2$
 \end{itemize}
-The inequalities $s_1 \bowtie d$ are are the result of applying normalization
+The inequalities $s_1 \bowtie d$ are the result of applying normalization
 as for the rule \proofRule{la_generic}.
+\end{RuleDescription}
+
+\begin{RuleDescription}{la_mult_pos}
+
+Either of the form:
+
+  \begin{AletheX}
+    $i$. & \ctxsep  &
+     $(t_1 > 0 \wedge t_2 \bowtie t_3) \to t_1 * t_2 \bowtie t_1 * t_3$
+    & (\currule) \\
+  \end{AletheX}
+
+with $\bowtie \in \{<,>, \le,\ge, ≈\}$.\\
+
+\noindent Or of the form:
+
+\begin{AletheX}
+  $i$. & \ctxsep  &
+  $(t_1 > 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$
+  & (\currule) \\
+\end{AletheX}
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{la_mult_neg}
+
+Either of the form:
+
+  \begin{AletheX}
+    $i$. & \ctxsep  &
+    $(t_1 < 0 \land t_2 \bowtie t_3) \rightarrow t_1 * t_2 \bowtie_{inv} t_1 * t_3$
+    & (\currule) \\
+  \end{AletheX}
+
+  with $\bowtie \in \{<,>, \le,\ge, ≈\}$ and $\bowtie_{inv}$ being defined according to the following table.
+
+  \begin{center}
+  \begin{tabular}{|c | c|}
+  \hline
+  $\bowtie$ & $\bowtie_{inv}$ is defined as: \\
+  \hline
+  $ < $ & $ > $ \\
+  $ \le $ & $ \ge $ \\
+  $ ≈ $ & $ ≈ $ \\
+  $ > $ & $ < $ \\
+  $ \ge $ & $ \le $ \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+\noindent Or of the form:
+
+  \begin{AletheX}
+    $i$. & \ctxsep  &
+    $(t_1 < 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$
+    & (\currule) \\
+  \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{bind}
@@ -540,12 +633,15 @@ as for the rule \proofRule{la_generic}.
 $j$. & \spctx{ $\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$}
    & \ctxsep & $\varphi ≈ \varphi'$ & ($\dots$) \\
    \spsep
-$k$. & & \ctxsep &
-    $\forall x_1, \dots, x_n.\varphi ≈ \forall y_1, \dots, y_n. \varphi'$
+$k$. & $\Gamma$ & \ctxsep &
+    $Q x_1, \dots, x_n.\varphi ≈ Q y_1, \dots, y_n. \varphi'$
      & \currule{} \\
 \end{AletheXS}
-  where the variables $y_1, \dots, y_n$ are neither free in $\forall x_1,
-  \dots, x_n.\varphi$ nor occur in $\Gamma$.
+
+\noindent
+where $Q \in \{\forall, \exists\}$,
+and the variables $y_1, \dots, y_n$ are neither free in $Q x_1,
+\dots, x_n.\varphi$ nor occur in $\Gamma$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{sko_ex}
@@ -557,8 +653,10 @@ $j$. &
 \spctx{$\Gamma, x_1 \mapsto \varepsilon_1, \dots ,  x_n \mapsto \varepsilon_n$}
    & \ctxsep &  $\varphi ≈ \psi$ & ($\dots$) \\
    \spsep
-$k$. & & \ctxsep & $\exists x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
+$k$. & $\Gamma$ & \ctxsep & $\exists x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 \end{AletheXS}
+
+\noindent
 where $\varepsilon_i$ stands for $\varepsilon x_i. (\exists x_{i+1}, \dots,
 x_n. \varphi)$.
 \end{RuleDescription}
@@ -572,7 +670,7 @@ $j$. &
 \spctx{$\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)$}
    & \ctxsep & $\varphi ≈ \psi$ & ($\dots$) \\
  \spsep
-$k$. & & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
+$k$. & $\Gamma$ & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 \end{AletheXS}
 
 \end{RuleDescription}
@@ -581,18 +679,29 @@ $k$. & & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
 \begin{AletheX}
 $i$. & \ctxsep &
 $\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1]\dots[x_n\mapsto t_n]$
- & \currule\, [$(x_{k_1}, t_{k_1})$, $\dots$, $(x_{k_n}, t_{k_n})$] \\
+ & \currule\, [$t_1$, $\dots$, $t_n$] \\
 \end{AletheX}
-where $k_1, \dots, k_n$ is a permutation of $1, \dots, n$ and $x_i$ and
-$k_i$ have the same sort. The arguments $(x_{k_i}, t_{k_i})$ are printed as
-\inlineAlethe{(:= xki tki)}.
+
+\noindent
+where $x_i$ and $t_i$ have the same sort.
 \end{RuleDescription}
+
+\begin{RuleExample}
+An application of the \proofRule{forall_inst} rule.
+\begin{AletheVerb}
+(step t16 (cl (or (not (forall ((x S) (y T)) (P y x    )))
+                                             (P b (f a))
+      :rule forall_inst :args ((f a) b)
+\end{AletheVerb}
+\end{RuleExample}
 
 
 \begin{RuleDescription}{refl}
 \begin{AletheXS}
 $j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_2 $ & \currule \\
 \end{AletheXS}
+
+\noindent
 where, if $\sigma = \subst(\Gamma)$,
 the terms $t_1\sigma$ and $t_2$ are
 syntactically equal up to  renaming of
@@ -1196,7 +1305,7 @@ variables that can only have one value.
 $j$. & \spctx{$\Gamma, x_{k_1},\dots, x_{k_m},  x_{j_1} \mapsto t_{j_1}, \dots ,  x_{j_o} \mapsto t_{j_o}$}
    & \ctxsep & $\varphi ≈ \varphi'$ & ($\dots$) \\
  \spsep
-$k$. & & \ctxsep  & $Q x_1, \dots, x_n.\varphi ≈ Q x_{k_1}, \dots, x_{k_m}. \varphi'$ & \currule{} \\
+$k$. & $\Gamma$ & \ctxsep  & $Q x_1, \dots, x_n.\varphi ≈ Q x_{k_1}, \dots, x_{k_m}. \varphi'$ & \currule{} \\
 \end{AletheXS}
 where $Q\in\{\forall, \exists\}$,  $n = m + o$,  $k_1, \dots, k_m$ and
 $j_1, \dots, j_o$ are monotone
@@ -1217,7 +1326,7 @@ An application of the \proofRule{onepoint} rule on the term $(\forall x, y.\, x 
 \rightarrow (f\,x)\land (f\,y))$ look like this:
 
 \begin{AletheVerb}
-(anchor :step t3 :args ((:= y x)))
+(anchor :step t3 :args ((x S) (:= (y S) x)))
 (step t3.t1 (cl (= x y)) :rule refl)
 (step t3.t2 (cl (= (= x y) (= x x)))
     :rule cong :premises (t3.t1))
@@ -1232,7 +1341,7 @@ An application of the \proofRule{onepoint} rule on the term $(\forall x, y.\, x 
 (step t3 (cl (=
         (forall ((x S) (y S)) (=> (= x y) (and (f x) (f y))))
         (forall ((x S))       (=> (= x x) (and (f x) (f x))))))
-    :rule qnt_simplify)
+    :rule onepoint)
 \end{AletheVerb}
 \end{RuleExample}
 
@@ -1532,58 +1641,58 @@ form and the reordering of equalities.
 
 \begin{RuleDescription}{bitblast_extract}
 \begin{AletheX}
-$i$. & \ctxsep & $((\_\ \mathrm{extract}\ j\ i)\ x) \simeq (\mathrm{bbterm}\ x[i]\ \ldots\ x[j])$ & (\currule) \\
+$i$. & \ctxsep & $((\lsymb{extract}\ j\ i)\ x) ≈ (\lsymb{bbT}\ \varphi_i\ \ldots\ \varphi_j)$ & (\currule) \\
 \end{AletheX}
 
-Each term $x[i]$ corresponds to whether the $i$-th bit of $x$ is true or not, which
-will be represented via an application of the operator ``bit\_of'', i.e.,
-$((\_\ bit\_of\ i)\ x)$, which has a Boolean return type.
-%
-The ``bbterm'' operator takes $n$ Booleans and yields a bit-vector of size $n$
-where the least significant bit is 1 if the first argument 1 is true, 0
-otherwise, and so on.
-%
+\noindent
+where the formulas $\varphi_k$ are $(\lsymb{bitOf}_k\ x)$ for $i \leq k \leq j$.
+
 Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
-above when $x$ is a ``bbterm'' application:
+above when $x$ is a $\lsymb{bbT}$ application:
 
 \medskip
 \begin{AletheX}
-$i$. & \ctxsep & $((\_\ \mathrm{extract}\ j\ i)\ (\mathrm{bbterm}\ x_0\ \ldots\
-x_i\ \ldots \ x_j\ \ldots\ x_n)) \simeq (\mathrm{bbterm}\ x_i\ \ldots\ x_j)$ & (\currule) \\
+$i$. & \ctxsep & $((\lsymb{extract}\ j\ i)\ (\lsymb{bbT}\ x_0\ \ldots\
+x_i\ \ldots \ x_j\ \ldots\ x_n)) ≈ (\lsymb{bbT}\ x_i\ \ldots\ x_j)$ & (\currule) \\
 \end{AletheX}
 
+\noindent
 This alternative is based on the validity of the equality
-$$(\mathrm{bbterm}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)[i]\simeq x_i$$
-for any bit-vector $x$ of size $n+1$, where $0\leq i\leq n$.
+\[
+\lsymb{bitOf}_k\ (\lsymb{bbT}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n) ≈ x_k
+\]
+for any bit-vector $x$ of size $n+1$, where $0\leq k\leq n$.
 
 \end{RuleDescription}
 
 \begin{RuleDescription}{bitblast_ult}
 \begin{AletheX}
-$i$. & \ctxsep & $(\mathrm{bvult}\ x\ y) \simeq res_{n-1}$ & (\currule) \\
+$i$. & \ctxsep & $(\lsymb{bvult}\ x\ y) ≈ \mathrm{res}_{n-1}$ & (\currule) \\
 \end{AletheX}
-in which both $x$ and $y$ must have the same type $(\_\ \mathrm{BitVec}\ n)$ and, for
-$i\geq 0$:
+in which both $x$ and $y$ must have the same type $(\lsymb{BitVec}\ n)$ and, for
+$i\geq 0$
 \[
   \begin{array}{lcl}
-    \mathrm{res}_0&=&\neg x[0] \wedge y[0]\\
-    \mathrm{res}_{i+1}&=&((x[i+1]\simeq y[i+1])\wedge
-                          \mathrm{res}_i)\vee (\neg x[i+1]\wedge y[i+1])
+    \mathrm{res}_0&=&\neg (\lsymb{bitOf}_0\ x) \wedge (\lsymb{bitOf}_0\ y)\\
+    \mathrm{res}_{i+1}&=&(((\lsymb{bitOf}_{i+1}\ x) ≈ (\lsymb{bitOf}_{i+1}\ y))\wedge \mathrm{res}_i)\vee
+                       (\neg (\lsymb{bitOf}_{i+1}\ x) \wedge (\lsymb{bitOf}_{i+1}\ y))
   \end{array}
 \]
+
+\noindent
 Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
-above when $x$ and $y$ are ``bbterm'' applications. So given that
+above when $x$ and $y$ are ``$\lsymb{bbT}$'' applications. So given that
 \[
   \begin{array}{lcl}
-    x&=&(\mathrm{bbterm}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)\\
-    y&=&(\mathrm{bbterm}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n)\\
+    x&=&(\lsymb{bbT}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)\\
+    y&=&(\lsymb{bbT}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n)\\
   \end{array}
 \]
-then ``res'' can be defined, for $i \geq 0$, as 
+then ``$\mathrm{res}$'' can be defined, for $i \geq 0$, as
 \[
   \begin{array}{lcl}
     \mathrm{res}_0&=&\neg x_0 \wedge y_0\\
-    \mathrm{res}_{i+1}&=&((x_{i+1}\simeq y_{i+1})\wedge
+    \mathrm{res}_{i+1}&=&((x_{i+1} ≈ y_{i+1})\wedge
                           \mathrm{res}_i)\vee (\neg x_{i+1}\wedge y_{i+1})
   \end{array}
 \]
@@ -1592,40 +1701,97 @@ then ``res'' can be defined, for $i \geq 0$, as
 
 \begin{RuleDescription}{bitblast_add}
 \begin{AletheX}
-$i$. & \ctxsep & $(\mathrm{bvadd}\ x\ y) \simeq (\mathrm{bbterm}\ (x[0] \oplus y[0])\oplus\mathrm{carry}_0\ \ldots\ (x[n-1]
-        \oplus y[n-1])\oplus\mathrm{carry}_{n-1})$ & (\currule) \\
+$i$. & \ctxsep & $(\lsymb{bvadd}\ x\ y) ≈ A_1$ & (\currule) \\
 \end{AletheX}
-in which both $x$ and $y$ must have the same type $(\_\ \mathrm{BitVec}\ n)$ and, for
-$i\geq 0$:
-    \[
-      \begin{array}{lcl}
-        \mathrm{carry}_0&=&\bot\\
-        \mathrm{carry}_{i+1}&=&(x[i]\wedge y[i])\vee((x[i]\oplus y[i])\wedge \mathrm{carry}_i)
-      \end{array}
-    \]
-
-Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
-above when $x$ and $y$ are ``bbterm'' applications. So given that
+in which both $x$ and $y$ must have the same type $(\lsymb{BitVec}\ n)$.
+The term ``$A_1$'' is
+\begin{align*}
+(\lsymb{bbT}\;& (((\lsymb{bitOf}_{0}\ x) \,\lsymb{xor}\,(\lsymb{bitOf}_{0}\ y))\,\lsymb{xor}\,\mathrm{carry}_0) \\
+              & (((\lsymb{bitOf}_{1}\ x) \,\lsymb{xor}\,(\lsymb{bitOf}_{1}\ y))\,\lsymb{xor}\,\mathrm{carry}_1) \\
+              & \ldots \\
+              & (((\lsymb{bitOf}_{n-1}\ x) \,\lsymb{xor}\, (\lsymb{bitOf}_{n-1}\ y))\,\lsymb{xor}\,\mathrm{carry}_{n-1}))
+\end{align*}
+and for $i\geq 0$
 \[
   \begin{array}{lcl}
-    x&=&(\mathrm{bbterm}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)\\
-    y&=&(\mathrm{bbterm}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n)\\
+    \mathrm{carry}_0&=&\bot\\
+    \mathrm{carry}_{i+1}&=&((\lsymb{bitOf}_{i}\ x) \wedge (\lsymb{bitOf}_{i}\ y))\vee(((\lsymb{bitOf}_{i}\ x)\,\lsymb{xor}\, (\lsymb{bitOf}_{i}\ y))\wedge \mathrm{carry}_i)
+  \end{array}
+\]
+
+\noindent
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ and $y$ are ``$\lsymb{bbT}$'' applications. So given that
+\[
+  \begin{array}{lcl}
+    x&=&(\lsymb{bbT}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)\\
+    y&=&(\lsymb{bbT}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n)\\
   \end{array}
 \]
 then the rule can be alternatively phrased as
 
 \begin{AletheX}
-$i$. & \ctxsep & $(\mathrm{bvadd}\ x\ y) \simeq (\mathrm{bbterm}\ (x_0 \oplus y_0)\oplus\mathrm{carry}_0\ \ldots\ (x_{n-1}
-        \oplus y_{n-1})\oplus\mathrm{carry}_{n-1})$ & (\currule) \\
+$i$. & \ctxsep & $(\mathrm{bvadd}\ x\ y) ≈ A_2$ & (\currule) \\
 \end{AletheX}
-with ``carry'' being defined, for $i \geq 0$, as 
+with $A_2 := (\lsymb{bbT}\ (x_0 \,\lsymb{xor}\, y_0)\,\lsymb{xor}\,\mathrm{carry}_0\ \ldots\ (x_{n-1}
+        \,\lsymb{xor}\, y_{n-1})\,\lsymb{xor}\,\mathrm{carry}_{n-1})$ and
+``$\mathrm{carry}$'' being defined, for $i \geq 0$, as
 \[
   \begin{array}{lcl}
     \mathrm{carry}_0&=&\bot\\
-    \mathrm{carry}_{i+1}&=&(x_i\wedge y_i)\vee((x_i\oplus y_i)\wedge \mathrm{carry}_i)
+    \mathrm{carry}_{i+1}&=&(x_i\wedge y_i)\vee((x_i\,\lsymb{xor}\, y_i)\wedge \mathrm{carry}_i)
   \end{array}
 \]
 
+\end{RuleDescription}
+
+\begin{RuleDescription}{symm}
+\begin{AletheX}
+$i$. & \ctxsep & $ \varphi ≈ \psi$ & ($\dots$) \\
+$j$. & \ctxsep & $ \psi ≈ \varphi$ & (\currule\; $i$) \\
+\end{AletheX}
+
+\noindent
+If $\varphi \neq \psi$ then the conclusion \emph{must not} be $\varphi ≈ \psi$.
+
+Note that since Alethe allows the implicit reordering of equalities, this
+rule is technically superfluous.  However, the rule is useful to indicate
+an explicit usage of the symmetry of equality to aid proof reconstruction.
+
+\begin{RuleExample}
+The side condition ensures that the following example is not a valid application
+of the rule.  Without this condition, this derivation could be obtained by
+applying symmetry of equality implicitly to the conclusion.
+
+\begin{AletheX}
+$10$. & \ctxsep & $ P(a) ≈ Q(b)$ & ($\dots$) \\
+$11$. & \ctxsep & $ P(a) ≈ Q(b)$ & (\currule\; $10$) \\
+\end{AletheX}
+\end{RuleExample}
+\end{RuleDescription}
+
+\begin{RuleDescription}{not_symm}
+\begin{AletheX}
+$i$. & \ctxsep & $ \neg (\varphi ≈ \psi)$  & ($\dots$) \\
+$j$. & \ctxsep & $ \neg (\psi ≈ \varphi)$  & (\currule\; $i$) \\
+\end{AletheX}
+
+\noindent
+If $\varphi \neq \psi$ then the conclusion \emph{must not} be $\neg (\varphi ≈ \psi)$.
+
+See \proofRule{symm} for an explanation of this rule.
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{eq_symmetric}
+\begin{AletheX}
+$i$. & \ctxsep & $ (t_1 ≈ t_2) ≈ (t_2 ≈ t_1)$ & (\currule) \\
+\end{AletheX}
+
+\noindent
+Note that since Alethe allows the implicit reordering of equalities, this
+rule is technically superfluous.  However, the rule is useful to state
+an explicit usage of symmetry of equality reasoning to aid proof reconstruction.
 \end{RuleDescription}
 
 \clearpage

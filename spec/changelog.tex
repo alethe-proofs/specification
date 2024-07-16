@@ -1,3 +1,44 @@
+\subsection*{Unreleased}
+
+Proof rules:
+\begin{itemize}
+  \item Addition of a section describing bitvector proofs.
+  \item Bitblasting rules: \proofRule{bitblast_extract},  \proofRule{bitblast_add},
+      \proofRule{bitblast_ult}.
+  \item Addition of rules \proofRule{la_mult_pos} and \proofRule{la_mult_neg} to describe multiplication with a positive or negative factor.
+  \item Addition of rules \proofRule{symm} and \proofRule{not_symm} to express symmetry of equality explicitly.
+  \item Addition of the rule \proofRule{eq_symmetric} to express symmetry
+  of equality explicitly but as an equivalence. Note that in principle this
+  could be done with the rule \proofRule{symm} above, but would require a long
+  and tedious use of \proofRule{subproof} for each direction of the equivalence.
+\end{itemize}
+
+\noindent
+Breaking changes:
+\begin{itemize}
+  \item Allow arbitrary extra annotations in \texttt{assume} commands.
+  \item Add the sort to all variables in contexts.  Before, the context
+        of a bind could be \texttt{(x S) (:= y x)}.  Now it must
+        be \texttt{(x S) (:= (y S) x)}.
+  \item The arguments for \proofRule{forall_inst} have been changed to
+        no longer take the shape of bindings using \texttt{(:= x c)}.
+        Instead, the list of instatiation terms must follow the variable order and cover all the respective bound variables.
+\end{itemize}
+
+\noindent
+Clarifications and corrected errors:
+\begin{itemize}
+  \item Clarify that the \texttt{:args} annotation in \texttt{anchor} can be
+        omitted if the list is empty.
+  \item Clarify that \proofRule{bind} can work on existential and universal
+        quantifiers.
+  \item Fix mistake in proof grammar.  It now uses the \texttt{context\_annotation}
+        non-terminal in the rule for the \texttt{anchor} command.
+  \item Fix the example of \proofRule{onepoint}.
+  \item Add the missing context to the conclusion of \proofRule{bind},
+        \proofRule{sko_ex}, \proofRule{sko_forall}, \proofRule{onepoint}.
+\end{itemize}
+
 \subsection*{0.3 --- \DTMdisplaydate{2023}{02}{10}{-1}}
 
 This release overhauls the entire document, but introduces only few
@@ -10,9 +51,9 @@ command.
 Beyond many smaller clarifications and typographic improvements, the
 following changes are implemented in this release.
 \begin{itemize}
-	\item Add an abstract proof checking procedure to clarify
-	the semantics of the proof format.
-	\item Add a description of the semantics of contexts based on λ-terms.
+  \item Add an abstract proof checking procedure to clarify
+  the semantics of the proof format.
+  \item Add a description of the semantics of contexts based on λ-terms.
   \item List all transformations that are implicit in Alethe proofs.
   \item Change the notation used for terms from first-order style
    (e.g., $f(x,g(y))$) to higher-order style (e.g.,

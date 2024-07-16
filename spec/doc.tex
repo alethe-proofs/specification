@@ -36,7 +36,7 @@
 \indexsetup{level=\indexsection,firstpagestyle=headings,noclearpage}
 
 % Must come after imakeidx
-\usepackage[hidelinks=true]{hyperref}
+\usepackage[hidelinks,hypertexnames=false]{hyperref}
 \usepackage{breakurl}
 
 \usepackage{tikz}
@@ -73,6 +73,7 @@
 \newcommand\lsymb[1]{\mathbf{#1}}
 \DeclareMathOperator*{\subst}{subst}
 \DeclareMathOperator*{\reify}{reify}
+\DeclareMathOperator*{\bvexplode}{bvexplode}
 \newcommand\groundbox[1]{\boxed{#1}}
 
 % Proofs
@@ -663,7 +664,7 @@ An Alethe proof is a list of commands.
 (assume h1 (not (p a)))
 (assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
 ...
-(anchor :step t9 :args ((:= z2 vr4)))
+(anchor :step t9 :args ((vr4 U) (:= (z2 U) vr4)))
 (step t9.t1 (cl (= z2 vr4)) :rule refl)
 (step t9.t2 (cl (= (p z2) (p vr4)))
          :rule cong :premises (t9.t1))
@@ -691,25 +692,25 @@ An Alethe proof is a list of commands.
 \[
   \begin{array}{r c l}
  \grNT{proof}           &\grRule & \grNT{proof\_command}^{*} \\
- \grNT{proof\_command}  &\grRule & \textAlethe{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)} \\
+ \grNT{proof\_command}  &\grRule & \textAlethe{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
                         &\grOr   & \textAlethe{(step}\; \grNT{symbol}\; \grNT{clause}
                                         \; \textAlethe{:rule}\; \grNT{symbol} \\
                         &        & \quad \grNT{premises\_annotation}^{?} \\
-                        &        & \quad \grNT{context\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
+                        &        & \quad \grNT{args\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
                         & \grOr  & \textAlethe{(anchor :step}\; \grNT{symbol}\;
                                             \\
-                        &        & \quad \grNT{args\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
+                        &        & \quad \grNT{context\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
                         & \grOr  & \textAlethe{(define-fun}\; \grNT{function\_def}\,\textAlethe{)} \\
  \grNT{clause}          &\grRule & \textAlethe{(cl}\; \grNT{proof\_term}^{*}\,\textAlethe{)} \\
  \grNT{proof\_term}     &\grRule & \grNT{term}\text{ extended with } \\
                         &        & \textAlethe{(choice (}\, \grNT{sorted\_var}\,\textAlethe{)}\; \grNT{proof\_term}\,\textAlethe{)}  \\
  \grNT{premises\_annotation} &\grRule & \textAlethe{:premises (}\; \grNT{symbol}^{+}\textAlethe{)} \\
  \grNT{args\_annotation}     &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{step\_arg}^{+}\,\textAlethe{)}  \\
- \grNT{step\_arg}            &\grRule & \grNT{symbol} \grOr
+ \grNT{step\_arg}            &\grRule & \grNT{symbol}\;\grOr\;
                                           \textAlethe{(}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)} \\
  \grNT{context\_annotation}  &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}  \\
- \grNT{context\_assignment}  &\grRule & \textAlethe{(}    \,\grNT{sorted\_var}\,\textAlethe{)}  \\
-                             & \grOr  & \textAlethe{(:=}\, \grNT{symbol}\;\grNT{proof\_term}\,\textAlethe{)} \\
+ \grNT{context\_assignment}  &\grRule & \grNT{sorted\_var} \\
+                             & \grOr  & \textAlethe{(:=}\, \grNT{sorted\_var}\;\grNT{proof\_term}\,\textAlethe{)} \\
   \end{array}
   \]
   \caption{The proof grammar.}
@@ -807,9 +808,12 @@ A subproof is concluded by a matching \inlineAlethe{step} command.  This step mu
 a \index{rule!concluding}{\em concluding rule}
 (such as \proofRule{subproof}, \proofRule{bind}, and so forth).
 
-After the \inlineAlethe{anchor} command, the proof uses \inlineAlethe{assume} commands to list
-the assumptions of the subproof.  Subsequently, the subproof is a list of
-\inlineAlethe{step} commands that can use prior steps in the subproofs as premises.
+After the \inlineAlethe{anchor} command, the proof uses
+\inlineAlethe{assume} commands to list the assumptions of the subproof.
+Subsequently, the subproof is a list of \inlineAlethe{step} commands
+that can use prior steps in the subproofs as premises.  It is not allowed
+to issue \inlineAlethe{assume} commands after the first \inlineAlethe{step}
+command of a subproof has been issued.
 
 In the abstract notation, every step is associated with a context.  The
 concrete syntax uses anchors to optimize this.
@@ -820,9 +824,14 @@ pushes precisely $c_1,\dots, c_n$ onto the context.
 Since contexts can only be manipulated by push and pop, context manipulations
 are nested.  The \inlineAlethe{anchor} commands push onto the context and the
 corresponding \inlineAlethe{step} commands pop from the context.
+%
 To indicate these changes to the context, every anchor is associated with a list
-of fixed variables and mappings.
-This list can be empty.
+of fixed variables and mappings.  The list is provided by the \inlineAlethe{:args}
+annotation.  If the list is empty, the \inlineAlethe{:args} annotation is
+omitted\footnote{The only rule that allows an empty list is the
+\proofRule{subproof} rule.  Since this rule corresponds to implication introduction,
+it does not interact with binders.}.
+%
 Note that, when an \inlineAlethe{anchor} command extends a context $\Gamma$ with
 some mappings $x_1 \mapsto t_1, \dots,  x_n \mapsto t_n$,
 then the terms $t_i$ are normalized by applying
@@ -858,12 +867,12 @@ expressed as a concrete proof.
 \begin{AletheVerb}
 (assume h1 (forall ((x S)) (P x)))
 (assume h2 (not (forall ((y S)) (P y))))
-(anchor :step t5 :args ((:= x y)))
+(anchor :step t5 :args ((y S) (:= (x S) y)))
 (step t3 (cl (= x y)) :rule refl)
 (step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
 (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
                               :rule bind)
-(step t6 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y)))
+(step t6 (cl (not (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
              (not (forall ((x S)) (P x)))
              (forall ((y S)) (P y))) :rule equiv_pos2)
 (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
@@ -1030,7 +1039,7 @@ the calculation of the context of the steps in the subproof.
 The proof in Example~\ref{ex:ti:ctx-concrete} has only one subproof
 and this subproof is also a first-innermost subproof.  It is the subproof
 \begin{AletheVerb}
-(anchor :step t5 :args ((:= x y)))
+(anchor :step t5 :args ((y S) (:= (x S) y)))
 (step t3 (cl (= x y)) :rule refl)
 (step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
 (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
@@ -1682,6 +1691,88 @@ is functional congruence, and \proofRule{sko_forall} works like
 4. &  & \ctxsep &  $(\neg\forall x.\,(p\,x))≈ \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{cong}\, 3)$ \\
 \end{AletheS}
 \end{example}
+
+\subsection{Bitvector Reasoning with Bitblasting}
+
+A standard approach to handle bitvector reasoning in SMT solvers
+is bitblasting.  Bitblasting\index{bitblasting} works by translating
+bitvector\index{bitvector} functions to propositional formulas that
+model the logical circuit of the bitvector function.
+
+To express bitblasting in Alethe proof rules, the the Alethe calculus uses
+multiple families of helper functions: $\lsymb{bbT}$, $\lsymb{bitOf}_m$,
+$\lsymb{bvsize}$, and $\lsymb{bv}_n^i$.  Functions in the families are
+distinguished either by overloading ($\lsymb{bbT}$ and $\lsymb{bvsize}$)
+or by explicit indexing ($\lsymb{bitOf}_m$ and $\lsymb{bv}_n^i$).
+To avoid name clashes with user defined
+functions, $\lsymb{bbT}$ is written as \inlineAlethe{@bbT}, $\lsymb{bitOf}$
+as \inlineAlethe{@bitOf}, $\lsymb{bvsize}$ as \inlineAlethe{@bvsize}, and
+$\lsymb{bv}$ as \inlineAlethe{@bv}.  The SMT-LIB standard specifies
+that simple symbols starting with ``\inlineAlethe{@}'' are reserved for
+solver generated functions.
+
+The family $\lsymb{bbT}$ consists of one function for each bitvector sort
+$(\lsymb{BitVec}\;n)$.
+\[
+\lsymb{bbT}\,:\,\underbrace{\lsymb{Bool}\,\dots\,\lsymb{Bool}}_n\;(\lsymb{BitVec}\;n).
+\]
+
+\noindent
+Intuitively, the function $\lsymb{bbT}$ takes a list of boolean arguments and
+packs them into a bitvector.
+Let $\langle u_1, \dots, u_n\rangle$ denote a bitvector of sort $(\lsymb{BitVec}\;n)$
+where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise.
+The bit $u_n$ is the least significant bit.  Then
+
+\[
+\lsymb{bbT}\; v_1 \dots v_n = \langle v_1, \dots, v_n\rangle .
+\]
+
+\noindent
+The $\lsymb{bbT}$ functions could be defined in terms of standard SMT-LIB functions.
+\begin{align*}
+\lsymb{bbT}\;v_1 \dots v_n :=\;
+ &\lsymb{concat}\,(\lsymb{concat}\,(\dots \\
+ &(\lsymb{concat}\,(\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle)\,(\lsymb{ite}\,v_2\,\langle\top\rangle\,\langle\bot\rangle))\\
+ & \dots \\
+ & (\lsymb{ite}\,v_{n-1}\,\langle\top\rangle\,\langle\bot\rangle)) \\
+ & (\lsymb{ite}\,v_n\,\langle\top\rangle\,\langle\bot\rangle)) \\
+\end{align*}
+
+\noindent
+The functions $\lsymb{bitOf}_m$ are the inverse of $\lsymb{bbT}$.  They extract
+a bit of a bitvector as a boolean.  Just as the built in $\lsymb{extract}$
+symbol, $\lsymb{bitOf}_m$ is used as an indexed symbol.  Hence, for $m \leq n$, we
+write \inlineAlethe{(_ @bitOf} $m$ \inlineAlethe{)}, to denote functions
+\[
+\lsymb{bitOf}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
+\]
+These functions are defined as 
+\[
+\lsymb{bitOf}_m \langle u_1, \dots, u_n \rangle := u_m.
+\]
+
+
+\noindent
+The functions $\lsymb{bvsize}$ return the size of a bitvector.  Formally, there
+is one $\lsymb{bvsize}$ for for each bitvector sort $(\lsymb{BitVec}\;n)$.  Each
+$\lsymb{bvsize}$ is a constant function that returns $n$.  Using notation:
+
+\begin{align*}
+\lsymb{bvsize}& : (\lsymb{BitVec}\;n) \to \mathbb{N}\\
+\lsymb{bvsize}&\;b := n
+\end{align*}
+
+\noindent
+Finally, $\lsymb{bv}_n^i$ is a family of constants indexed by two parameters:
+a bitvector length $n$, and a natural number $i$.  We
+write \inlineAlethe{(_ @bv}$n$ $i$ \inlineAlethe{)} for $\lsymb{bv}_n^i$.
+The space before $n$ is omitted for historical reasons.
+Each $\lsymb{bv}_n^i$ is the bitvector constant that represents the bitvector
+of length $n$ that encodes the integer $i$.  Formally, it corresponds
+to \inlineAlethe{nat2bv[n](i)}, where \inlineAlethe{nat2bv} is defined
+as in the SMT-LIB
+standard.\footnote{See \url{https://smt-lib.github.io/theories-FixedSizeBitVectors.shtml}.}
 
 \section{The Alethe Rules}
 \label{apx:rules}
