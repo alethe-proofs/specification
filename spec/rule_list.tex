@@ -810,7 +810,7 @@ done during clausification.
 \begin{RuleDescription}{and}
 \begin{AletheX}
 $i$. & \ctxsep & $\varphi_1 \land \cdots \land \varphi_n$ & ($\dots$) \\
-$j$. & \ctxsep & $\varphi_k$ & (\currule\;$i$) \\
+$j$. & \ctxsep & $\varphi_k$ & (\currule\;$i$)\, k\\
 \end{AletheX}
 and $1 \leq k \leq n$.
 \end{RuleDescription}
@@ -818,7 +818,7 @@ and $1 \leq k \leq n$.
 \begin{RuleDescription}{not_or}
 \begin{AletheX}
 $i$. & \ctxsep & $\neg (\varphi_1 \lor \cdots \lor \varphi_n)$ & ($\dots$) \\
-$j$. & \ctxsep & $\neg \varphi_k$  & (\currule\;$i$) \\
+$j$. & \ctxsep & $\neg \varphi_k$  & (\currule\;$i$)\, k\\
 \end{AletheX}
 and $1 \leq k \leq n$.
 \end{RuleDescription}
@@ -931,7 +931,8 @@ $j$. & \ctxsep & $\neg\varphi_1, \neg\varphi_2$ & (\currule\;$i$) \\
 
 \begin{RuleDescription}{and_pos}
 \begin{AletheX}
-$i$. & \ctxsep & $\neg (\varphi_1 \land \cdots \land \varphi_n) , \varphi_k$ & \currule \\
+$i$. & \ctxsep & $\neg (\varphi_1 \land \cdots \land \varphi_n) , \varphi_k$ &
+  \currule\, k\\
 \end{AletheX}
 with $1 \leq k \leq n$.
 \end{RuleDescription}
@@ -950,7 +951,8 @@ $i$. & \ctxsep & $\neg (\varphi_1 \lor \cdots \lor \varphi_n) , \varphi_1 , \dot
 
 \begin{RuleDescription}{or_neg}
 \begin{AletheX}
-$i$. & \ctxsep & $(\varphi_1 \lor \cdots \lor \varphi_n), \neg \varphi_k$ & \currule \\
+$i$. & \ctxsep & $(\varphi_1 \lor \cdots \lor \varphi_n), \neg \varphi_k$ &
+  \currule\, k\\
 \end{AletheX}
 with $1 \leq k \leq n$.
 \end{RuleDescription}
