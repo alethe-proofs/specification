@@ -22,7 +22,11 @@ Breaking changes:
         be \texttt{(x S) (:= (y S) x)}.
   \item The arguments for \proofRule{forall_inst} have been changed to
         no longer take the shape of bindings using \texttt{(:= x c)}.
-        Instead, the list of instatiation terms must follow the variable order and cover all the respective bound variables.
+        Instead, the list of instatiation terms must follow the variable
+        order and cover all the respective bound variables.
+  \item The rules \proofRule{and_pos}, \proofRule{or_neg}, \proofRule{and},
+        \proofRule{not_or} now have one argument that indicates which subterm
+        they use.
 \end{itemize}
 
 \noindent
