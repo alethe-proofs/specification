@@ -691,6 +691,12 @@ An Alethe proof is a list of commands.
 \begin{figure}[t]
 \[
   \begin{array}{r c l}
+
+\multicolumn{3}{c}{
+	\text{A }\grNT{symbol}\text{ is an SMT-LIB }\grNT{symbol}\text{ that is not a}}\\
+& & -\grNT{numeral}/\grNT{positive\_numeral},\\
+& & -\grNT{numeral},\text{ or} -\grNT{decimal}.\\
+
  \grNT{proof}           &\grRule & \grNT{proof\_command}^{*} \\
  \grNT{proof\_command}  &\grRule & \textAlethe{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
                         &\grOr   & \textAlethe{(step}\; \grNT{symbol}\; \grNT{clause}
@@ -715,9 +721,9 @@ An Alethe proof is a list of commands.
  \grNT{context\_assignment}  &\grRule & \grNT{sorted\_var} \\
                              & \grOr  & \textAlethe{(:=}\, \grNT{sorted\_var}\;\grNT{proof\_term}\,\textAlethe{)} \\
  \grNT{positive\_numeral}    &\grRule & \text{any }\grNT{numeral}\text{ except } 0\\
- \grNT{rational}             &\grRule & -^{?}\grNT{numeral}/\grNT{positive\_numeral} \\
- \grNT{nonpositive\_numeral}         &\grRule & -\grNT{numeral} \\
- \grNT{nonpositive\_decimal}        &\grRule & -\grNT{decimal} \\
+ \grNT{rational}              &\grRule & -^{?}\grNT{numeral}/\grNT{positive\_numeral} \\
+ \grNT{nonpositive\_numeral}  &\grRule & -\grNT{numeral} \\
+ \grNT{nonpositive\_decimal}  &\grRule & -\grNT{decimal} \\
   \end{array}
   \]
   \caption{The proof grammar.}
@@ -747,10 +753,17 @@ is based on the {\smtlib} grammar, as defined in the {\smtlib}
 standard~\cite[Appendix~B]{SMTLIB}.  The non-terminals
 $\grNT{attribute}$,
 $\grNT{function\_def}$,
-$\grNT{sorted\_var}$,
-$\grNT{symbol}$, and
+$\grNT{sorted\_var}$, and
 $\grNT{term}$
 are as defined in the standard.
+A special restriction applies to the $\grNT{symbol}$ non-terminal.
+Alethe has an extended set of number literals.  Since these can start
+with a negation sign, they overlap SMT-LIB's $\grNT{symbol}$ non-terminal.
+For example, \inlineAlethe{-1} is a valid $\grNT{symbol}$ in SMT-LIB.
+These sequences cannot be used as symbols when using Alethe.
+Note that symbols are also used to name user defined constants and functions
+in the input problem.  Hence, Alethe cannot express proofs about problems
+that use such symbols.
 
 Alethe proofs are a list of commands.
 The \inlineAlethe{assume} command introduces a new assumption. While this

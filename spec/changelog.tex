@@ -22,7 +22,7 @@ Breaking changes:
         be \texttt{(x S) (:= (y S) x)}.
   \item The arguments for \proofRule{forall_inst} have been changed to
         no longer take the shape of bindings using \texttt{(:= x c)}.
-        Instead, the list of instatiation terms must follow the variable
+        Instead, the list of instantiation terms must follow the variable
         order and cover all the respective bound variables.
   \item The rules \proofRule{and_pos}, \proofRule{or_neg}, \proofRule{and},
         \proofRule{not_or} now have one argument that indicates which subterm
@@ -31,12 +31,10 @@ Breaking changes:
         for \proofRule{la_generic}.
   \item Restrict sorting of numbers such that the sort of a constant is
         only determined by its syntactic category.
-  \item The arguments for \proofRule{forall_inst} have been changed to
-        no longer take the shape of bindings using \texttt{(:= x c)}.
-        Instead, the list of instatiation terms must follow the variable
-        order and cover all the respective bound variables.
-  \item Add new syntax for decimal and negative numbers and use it
-        for \proofRule{la_generic}.
+  \item Add new syntax for decimal and negative numbers and clarify that
+        the set of allowed symbols is restricted to not conflict with this
+        new syntax.
+  \item Always use decimals for the constants in \proofRule{la_generic}.
   \item Restrict sorting of numbers such that the sort of a constant is
         only determined by its syntactic category.
 \end{itemize}
