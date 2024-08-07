@@ -263,6 +263,7 @@ simplifications.}
 \label{rule-tab:cvc5}\\
   Rule & Description \\
   \hline
+\ruleref{or_intro} & Weakening of a clause. \\
 \ruleref{eq_symmetric} & Symmetry of equality as equivalence. \\
 \end{xltabular}
 \subsection{Rule List}
@@ -843,6 +844,15 @@ An application of the \proofRule{or} rule.
      :rule or :premises (t15))
 \end{AletheVerb}
 \end{RuleExample}
+
+\begin{RuleDescription}{or_intro}
+\begin{AletheX}
+$i$. & \ctxsep &
+$\varphi_1, \cdots, \varphi_n$ & ($\dots$) \\
+$j$. & \ctxsep & $\varphi_1, \cdots, \varphi_n, \psi_1, \dots, \psi_m$ & (\currule\;$i$) \\
+\end{AletheX}
+where $m \geq 1$.
+\end{RuleDescription}
 
 \begin{RuleDescription}{not_and}
 \begin{AletheX}
