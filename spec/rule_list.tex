@@ -1494,17 +1494,17 @@ $≈$.
 
 The possible transformations are:
 \begin{itemize}
-    \item $t_1 < t_2 ⇒ \varphi$ where $t_1$ and
-    $t_2$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
-    strictly greater than $t_2$ and $\bot$ otherwise.
-    \item $t < t ⇒ \bot$
-    \item $t_1 \leq t_2 ⇒ \varphi$ where $t_1$ and
-    $t_2$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
-    greater than $t_2$ or equal and $\bot$ otherwise.
-    \item $t \leq t ⇒ \top$
-    \item $t_1 \geq t_2 ⇒ t_2 \leq t_1$
-    \item $t_1 < t_2 ⇒ \neg (t_2 \leq t_1)$
-    \item $t_1 > t_2 ⇒ \neg (t_1 \leq t_2)$
+    \item $t_i < t_{i+1} ⇒ \varphi$ where $t_i$ and
+    $t_{i+1}$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
+    strictly greater than $t_{i+1}$ and $\bot$ otherwise.
+    \item $t_i < t_i ⇒ \bot$
+    \item $t_i \leq t_{i+1} ⇒ \varphi$ where $t_i$ and
+    $t_{i+1}$ are numerical constants and $\varphi$ is $\top$ if $t_i$ is
+    greater than $t_{i+1}$ or equal and $\bot$ otherwise.
+    \item $t_i \leq t_i ⇒ \top$
+    \item $t_i \geq t_{i+1} ⇒ t_{i+1} \leq t_i$
+    \item $t_i < t_{i+1} ⇒ \neg (t_{i+1} \leq t_i)$
+    \item $t_i > t_{i+1} ⇒ \neg (t_i \leq t_{i+1})$
 \end{itemize}
 \end{RuleDescription}
 
