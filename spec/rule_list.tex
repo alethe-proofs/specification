@@ -1548,8 +1548,49 @@ $k$. & $\Gamma$ & \ctxsep &
   The premise $i_1, \dots, i_n$ must be in the same subproof as
   the \currule{} step.  If for $t_i≈ s_i$ the $t_i$ and $s_i$
   are syntactically equal, the premise
-  is skipped.
+  is omitted.
 \end{RuleDescription}
+
+\begin{RuleDescription}{bind_let}
+  This rule corresponds to the \proofRule{bind} rule for \inlineAlethe{let}.
+  It allows the renaming of the variable bound by the \inlineAlethe{let} step,
+  and rewriting of the substituted term without removing the \inlineAlethe{let}.
+  It has the form
+
+\begin{AletheXS}
+$i_1$. & $\Gamma$ & \ctxsep & $t_{1} ≈ s_{1}$ & ($\dots$) \\
+\aletheLineS
+$i_n$. & $\Gamma$ & \ctxsep & $t_{n} ≈ s_{n}$ & ($\dots$) \\
+\aletheLineS
+$j$. & \spctx{$\Gamma, x_1, \dots,  x_n$}
+   & \ctxsep &  $u ≈ u'$ & ($\dots$) \\
+\spsep
+$k$. & $\Gamma$ & \ctxsep &
+     $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u) ≈
+      (\lsymb{let}\,x_1~=~s_1,\, \dots,\, x_n~=~s_n\,\lsymb{in}\, u')$
+     & (\currule{}\;$i_1$, \dots, $i_n$) \\
+\end{AletheXS}
+
+  The premise $i_1, \dots, i_n$ must be in the same subproof as
+  the \currule{} step.  If for $t_i≈ s_i$ the $t_i$ and $s_i$
+  are syntactically equal, the premise
+  is omitted.
+\end{RuleDescription}
+
+\begin{RuleExample}
+The following example shows how this rule is used in a proof generated
+by Carcara's elaborator.  It elaborates an implicit application of
+symmetry of equality.
+\begin{AletheVerb}
+(step t1 (cl (= (= 0 1) (= 1 0))) :rule eq_symmetric)
+(anchor :step t2 :args ((p Bool)))
+(step t2.t1 (cl (= (= p false) (= false p))) :rule eq_symmetric)
+(step t2 (cl (= (let ((p (= 0 1))) (= p false))
+                (let ((p (= 1 0))) (= false p))))
+         :rule bind_let :premises (t1))
+\end{AletheVerb}
+ 
+\end{RuleExample}
 
 \begin{RuleDescription}{distinct_elim}
 This rule eliminates the $\lsymb{distinct}$ predicate. If called with one
