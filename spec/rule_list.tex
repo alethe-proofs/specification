@@ -573,20 +573,20 @@ as for the rule \proofRule{la_generic}.
 
 Either of the form:
 
-	\begin{AletheX}
-		$i$. & \ctxsep  &
-		 $(t_1 > 0 \wedge t_2 \bowtie t_3) \to t_1 * t_2 \bowtie t_1 * t_3$
-		& (\currule) \\
-	\end{AletheX}
+  \begin{AletheX}
+    $i$. & \ctxsep  &
+     $(t_1 > 0 \wedge t_2 \bowtie t_3) \to t_1 * t_2 \bowtie t_1 * t_3$
+    & (\currule) \\
+  \end{AletheX}
 
 with $\bowtie \in \{<,>, \le,\ge, ≈\}$.\\
 
 \noindent Or of the form:
 
 \begin{AletheX}
-	$i$. & \ctxsep  &
-	$(t_1 > 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$ 
-	& (\currule) \\
+  $i$. & \ctxsep  &
+  $(t_1 > 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$ 
+  & (\currule) \\
 \end{AletheX}
 
 \end{RuleDescription}
@@ -595,35 +595,35 @@ with $\bowtie \in \{<,>, \le,\ge, ≈\}$.\\
 
 Either of the form:
 
-	\begin{AletheX}
-		$i$. & \ctxsep  &
-		$(t_1 < 0 \land t_2 \bowtie t_3) \rightarrow t_1 * t_2 \bowtie_{inv} t_1 * t_3$
-		& (\currule) \\
-	\end{AletheX}
+  \begin{AletheX}
+    $i$. & \ctxsep  &
+    $(t_1 < 0 \land t_2 \bowtie t_3) \rightarrow t_1 * t_2 \bowtie_{inv} t_1 * t_3$
+    & (\currule) \\
+  \end{AletheX}
 
-	with $\bowtie \in \{<,>, \le,\ge, ≈\}$ and $\bowtie_{inv}$ being defined according to the following table.
+  with $\bowtie \in \{<,>, \le,\ge, ≈\}$ and $\bowtie_{inv}$ being defined according to the following table.
 
-	\begin{center}
-	\begin{tabular}{|c | c|}
-	\hline
-	$\bowtie$ & $\bowtie_{inv}$ is defined as: \\
-	\hline
-	$ < $ & $ > $ \\
-	$ \le $ & $ \ge $ \\
-	$ ≈ $ & $ ≈ $ \\
-	$ > $ & $ < $ \\
-	$ \ge $ & $ \le $ \\
-	\hline
-	\end{tabular}
-	\end{center}
+  \begin{center}
+  \begin{tabular}{|c | c|}
+  \hline
+  $\bowtie$ & $\bowtie_{inv}$ is defined as: \\
+  \hline
+  $ < $ & $ > $ \\
+  $ \le $ & $ \ge $ \\
+  $ ≈ $ & $ ≈ $ \\
+  $ > $ & $ < $ \\
+  $ \ge $ & $ \le $ \\
+  \hline
+  \end{tabular}
+  \end{center}
 
 \noindent Or of the form:
 
-	\begin{AletheX}
-		$i$. & \ctxsep  &
-		$(t_1 < 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$
-		& (\currule) \\
-	\end{AletheX}
+  \begin{AletheX}
+    $i$. & \ctxsep  &
+    $(t_1 < 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$
+    & (\currule) \\
+  \end{AletheX}
 \end{RuleDescription}
 
 \begin{RuleDescription}{bind}
@@ -1115,7 +1115,7 @@ $i$. & \ctxsep  & $\Gamma$  &
 
 \begin{RuleDescription}{and_simplify}
 This rule simplifies an $\land$ term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$  & $\varphi_1\land \cdots\land\varphi_n ≈ \psi$ & \currule \\
@@ -1144,7 +1144,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{or_simplify}
 This rule simplifies an $\lor$ term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$  & $(\varphi_1\lor \cdots\lor\varphi_n) ≈ \psi$ & \currule \\
@@ -1173,7 +1173,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{not_simplify}
 This rule simplifies an $\neg$ term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$ & $\neg\varphi ≈ \psi$ & \currule \\
@@ -1190,7 +1190,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{implies_simplify}
 This rule simplifies an $\rightarrow$ term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$ & $\varphi_1\rightarrow \varphi_2 ≈ \psi$ & \currule \\
@@ -1213,7 +1213,7 @@ The possible transformations are:
 \begin{RuleDescription}{equiv_simplify}
 This rule simplifies a formula with the head symbol $≈\,: \lsymb{Bool}\,\lsymb{Bool}\,\lsymb{Bool}$
 by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$ & $(\varphi_1≈ \varphi_2) ≈ \psi$ & \currule \\
@@ -1235,7 +1235,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{bool_simplify}
 This rule simplifies a boolean term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep & $\Gamma$ & $\varphi≈ \psi$ & \currule \\
@@ -1379,7 +1379,7 @@ $i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,\varphi ≈ Q x_{k_1}, \dots, x
 
 \begin{RuleDescription}{eq_simplify}
   This rule simplifies an $≈$ term by applying equivalence-preserving
-  transformations as long as possible. Hence, the general form is
+  transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep & $\Gamma$ & $(t_1≈ t_2) ≈ \varphi$ & \currule \\
@@ -1413,7 +1413,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{prod_simplify}
 This rule simplifies a product by applying equivalence-preserving
-transformations as long as possible. The general form is
+transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep & $\Gamma$ & $t_1\times\cdots\times t_n ≈ u$ & \currule \\
@@ -1470,7 +1470,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{sum_simplify}
 This rule simplifies a sum by applying equivalence-preserving
-transformations as long as possible. The general form is
+transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep & $\Gamma$ & $t_1+\cdots+t_n ≈ u$ & \currule \\
@@ -1494,27 +1494,30 @@ The possible transformations are:
 
 \begin{RuleDescription}{comp_simplify}
 This rule simplifies a comparison by applying equivalence-preserving
-transformations as long as possible. The general form is
+transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1 \bowtie t_n ≈ \psi$ & \currule \\
+$i$. & \ctxsep & $\Gamma$ & $t_1 \bowtie t_2 ≈ \psi$ & \currule \\
 \end{AletheXS}
-where $\bowtie$ is as for the proof rule \proofRule{la_generic}, but never
-$≈$.
+where $\bowtie \in \{<, >, \leq, \geq\}$.
 
-The possible transformations are:
+The following transformation rules are used to simplify $t_1 \bowtie t_2$:
 \begin{itemize}
-    \item $t_1 < t_2 ⇒ \varphi$ where $t_1$ and
-    $t_2$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
-    strictly greater than $t_2$ and $\bot$ otherwise.
-    \item $t < t ⇒ \bot$
-    \item $t_1 \leq t_2 ⇒ \varphi$ where $t_1$ and
-    $t_2$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
-    greater than $t_2$ or equal and $\bot$ otherwise.
-    \item $t \leq t ⇒ \top$
-    \item $t_1 \geq t_2 ⇒ t_2 \leq t_1$
-    \item $t_1 < t_2 ⇒ \neg (t_2 \leq t_1)$
-    \item $t_1 > t_2 ⇒ \neg (t_1 \leq t_2)$
+    \item $s_1 < s_2 ⇒ \top$ if $s_1, s_2$ are numerical constants and
+      $s_1$ is strictly less than $s_2$
+    \item $s_1 < s_2 ⇒ \bot$ if $s_1, s_2$ are numerical constants and
+      $s_1$ is greater or equal than $s_2$
+
+    \item $s_1 \leq s_2 ⇒ \top$ if $s_1, s_2$ are numerical constants and
+      $s_1$ is less or equal than $s_2$
+    \item $s_1 \leq s_2 ⇒ \bot$ if $s_1, s_2$ are numerical constants and
+      $s_1$ is strictly greater than $s_2$
+
+    \item $s < s ⇒ \bot$
+    \item $s \leq s ⇒ \top$
+    \item $s_1 \geq s_2 ⇒ s_2 \leq s_1$
+    \item $s_1 < s_2 ⇒ \neg (s_2 \leq s_1)$
+    \item $s_1 > s_2 ⇒ \neg (s_1 \leq s_2)$
 \end{itemize}
 \end{RuleDescription}
 
