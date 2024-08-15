@@ -1566,13 +1566,15 @@ $i_n$. & $\Gamma$ & \ctxsep & $t_{n} ≈ s_{n}$ & ($\dots$) \\
 $j$. & \spctx{$\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$}
    & \ctxsep &  $u ≈ u'$ & ($\dots$) \\
 \spsep
-$k$. & $\Gamma$ & \ctxsep &
-     $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u) ≈
-      (\lsymb{let}\,y_1~=~s_1,\, \dots,\, y_n~=~s_n\,\lsymb{in}\, u')$
+$k$. & $\Gamma$ & \kern-5.5em\ctxsep & % The kern hacking here is to make the rule readable
+     $ \kern-3em (\lsymb{let}\,x_1~=~t_1,\, \dots,\, x_n~=~t_n \lsymb{in}\, u) ≈
+                 (\lsymb{let}\,y_1~=~s_1,\, \dots,\, y_n~=~s_n\,\lsymb{in}\, u')$
      & (\currule{}\;$i_1$, \dots, $i_n$) \\
 \end{AletheXS}
 
-  The variables $y_1, \dots, y_n$ are neither free in $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u)$ nor, for each $y_i$ different from $x_i$, occur in $\Gamma$.
+  The variables $y_1, \dots, y_n$ are neither free in
+  $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u)$ nor, for each
+  $y_i$ different from $x_i$, occur in $\Gamma$.
 
   The premise $i_1, \dots, i_n$ must be in the same subproof as
   the \currule{} step.  If for $t_i≈ s_i$ the $t_i$ and $s_i$
@@ -1586,7 +1588,7 @@ by Carcara's elaborator.  It elaborates an implicit application of
 symmetry of equality.
 \begin{AletheVerb}
 (step t1 (cl (= (= 0 1) (= 1 0))) :rule eq_symmetric)
-(anchor :step t2 :args ((p Bool)))
+(anchor :step t2 :args ((p Bool) (:= (p Bool) p)))
 (step t2.t1 (cl (= (= p false) (= false p))) :rule eq_symmetric)
 (step t2 (cl (= (let ((p (= 0 1))) (= p false))
                 (let ((p (= 1 0))) (= false p))))
