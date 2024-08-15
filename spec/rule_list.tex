@@ -256,6 +256,7 @@ simplifications.}
 \ruleref{la_mult_neg} & Multiplication with a negative factor.\\
 \ruleref{symm}     & Symmetry of equality. \\
 \ruleref{not_symm} & Symmetry of not-equal.\\
+\ruleref{reordering} & Reording of the literals in a clause.\\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
@@ -852,6 +853,16 @@ $\varphi_1, \cdots, \varphi_n$ & ($\dots$) \\
 $j$. & \ctxsep & $\varphi_1, \cdots, \varphi_n, \psi_1, \dots, \psi_m$ & (\currule\;$i$) \\
 \end{AletheX}
 where $m \geq 1$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{reordering}
+\begin{AletheX}
+$i$. & \ctxsep & $\varphi_1, \cdots, \varphi_n$ & ($\dots$) \\
+$j$. & \ctxsep & $\psi_1, \cdots, \psi_n$ & (\currule\;$i$) \\
+\end{AletheX}
+where the multisets $\{\varphi_1, \cdots, \varphi_n\}$ and $\{\psi_1, \cdots, \psi_n\}$
+are the same.  That is, the conclusion of the rule is a reordering of the
+literals in the premise.
 \end{RuleDescription}
 
 \begin{RuleDescription}{not_and}
