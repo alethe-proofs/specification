@@ -586,7 +586,7 @@ with $\bowtie \in \{<,>, \le,\ge, ≈\}$.\\
 
 \begin{AletheX}
   $i$. & \ctxsep  &
-  $(t_1 > 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$ 
+  $(t_1 > 0 \land \neg (t_2 ≈ t_3)) \rightarrow \neg (t_1 * t_2 ≈ t_1 * t_3)$
   & (\currule) \\
 \end{AletheX}
 
@@ -811,18 +811,18 @@ done during clausification.
 
 \begin{RuleDescription}{and}
 \begin{AletheX}
-$i$. & \ctxsep & $\varphi_1 \land \cdots \land \varphi_n$ & ($\dots$) \\
+$i$. & \ctxsep & $\varphi_0 \land \cdots \land \varphi_n$ & ($\dots$) \\
 $j$. & \ctxsep & $\varphi_k$ & (\currule\;$i$)\, k\\
 \end{AletheX}
-and $1 \leq k \leq n$.
+and $0 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{not_or}
 \begin{AletheX}
-$i$. & \ctxsep & $\neg (\varphi_1 \lor \cdots \lor \varphi_n)$ & ($\dots$) \\
+$i$. & \ctxsep & $\neg (\varphi_0 \lor \cdots \lor \varphi_n)$ & ($\dots$) \\
 $j$. & \ctxsep & $\neg \varphi_k$  & (\currule\;$i$)\, k\\
 \end{AletheX}
-and $1 \leq k \leq n$.
+and $0 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{or}
@@ -952,10 +952,10 @@ $j$. & \ctxsep & $\neg\varphi_1, \neg\varphi_2$ & (\currule\;$i$) \\
 
 \begin{RuleDescription}{and_pos}
 \begin{AletheX}
-$i$. & \ctxsep & $\neg (\varphi_1 \land \cdots \land \varphi_n) , \varphi_k$ &
+$i$. & \ctxsep & $\neg (\varphi_0 \land \cdots \land \varphi_n) , \varphi_k$ &
   \currule\, k\\
 \end{AletheX}
-with $1 \leq k \leq n$.
+with $0 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{and_neg}
@@ -972,10 +972,10 @@ $i$. & \ctxsep & $\neg (\varphi_1 \lor \cdots \lor \varphi_n) , \varphi_1 , \dot
 
 \begin{RuleDescription}{or_neg}
 \begin{AletheX}
-$i$. & \ctxsep & $(\varphi_1 \lor \cdots \lor \varphi_n), \neg \varphi_k$ &
+$i$. & \ctxsep & $(\varphi_0 \lor \cdots \lor \varphi_n), \neg \varphi_k$ &
   \currule\, k\\
 \end{AletheX}
-with $1 \leq k \leq n$.
+with $0 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{xor_pos1}
@@ -1557,8 +1557,8 @@ $k$. & $\Gamma$ & \ctxsep &
 \begin{RuleDescription}{bind_let}
   This rule corresponds to the \proofRule{bind} rule for \inlineAlethe{let}.
   It allows the renaming of the variables bound by the \inlineAlethe{let} step,
-  the rewriting of the substituted terms, and the rewriting of the body of the 
-  \inlineAlethe{let}, resulting in a new \inlineAlethe{let} term.  
+  the rewriting of the substituted terms, and the rewriting of the body of the
+  \inlineAlethe{let}, resulting in a new \inlineAlethe{let} term.
   It has the form
 
 \begin{AletheXS}
@@ -1597,7 +1597,7 @@ symmetry of equality.
                 (let ((p (= 1 0))) (= false p))))
          :rule bind_let :premises (t1))
 \end{AletheVerb}
- 
+
 \end{RuleExample}
 
 \begin{RuleDescription}{distinct_elim}
@@ -1760,7 +1760,7 @@ above when $x$ and $y$ are ``$\lsymb{bbT}$'' applications. So given that
     y&=&(\lsymb{bbT}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n)\\
   \end{array}
 \]
-then ``$\mathrm{res}$'' can be defined, for $i \geq 0$, as 
+then ``$\mathrm{res}$'' can be defined, for $i \geq 0$, as
 \[
   \begin{array}{lcl}
     \mathrm{res}_0&=&\neg x_0 \wedge y_0\\
@@ -1807,7 +1807,7 @@ $i$. & \ctxsep & $(\mathrm{bvadd}\ x\ y) ≈ A_2$ & (\currule) \\
 \end{AletheX}
 with $A_2 := (\lsymb{bbT}\ (x_0 \,\lsymb{xor}\, y_0)\,\lsymb{xor}\,\mathrm{carry}_0\ \ldots\ (x_{n-1}
         \,\lsymb{xor}\, y_{n-1})\,\lsymb{xor}\,\mathrm{carry}_{n-1})$ and
-``$\mathrm{carry}$'' being defined, for $i \geq 0$, as 
+``$\mathrm{carry}$'' being defined, for $i \geq 0$, as
 \[
   \begin{array}{lcl}
     \mathrm{carry}_0&=&\bot\\
