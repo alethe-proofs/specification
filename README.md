@@ -2,7 +2,11 @@ The Proof Format -- Speculative Specification
 =============================================
 
 This repository hosts a specification of the proof format used by veriT
-right now.  It will also soon be available on CVC5.
+and cvc5.
+
+A PDF version of the specification is available at
+
+> https://verit.gitlabpages.uliege.be/alethe/specification.pdf
 
 Right now the specification is speculative: rather than being cast
 in stone, it will improve as solvers, proof reconstructions, and
