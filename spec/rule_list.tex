@@ -1385,7 +1385,7 @@ $i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,\varphi ≈ Q x_{k_1}, \dots, x
 \end{AletheXS}
   where $m \leq n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_m$ is
   a monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
-  n\} \land j\in\not \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
+  n\} \land j\notin \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_simplify}
@@ -1410,7 +1410,7 @@ This rule simplifies a division by applying equivalence-preserving
 transformations. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(t_1\, /\,  t_2) ⇒ t_3$ & \currule \\
+$i$. & \ctxsep & $\Gamma$ & $(t_1\, /\,  t_2) ≈ t_3$ & \currule \\
 \end{AletheXS}
 The possible transformations are:
 \begin{itemize}
