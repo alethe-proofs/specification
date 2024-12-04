@@ -256,12 +256,13 @@ simplifications.}
 \ruleref{la_mult_neg} & Multiplication with a negative factor.\\
 \ruleref{symm}     & Symmetry of equality. \\
 \ruleref{not_symm} & Symmetry of not-equal.\\
-\ruleref{reordering} & Reording of the literals in a clause.\\
+\ruleref{reordering} & Permutation of the literals in a clause.\\
+\ruleref{shuffle} & Permutation of the arguments of a commutative operator.\\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
 \caption{Rules used by the Carcara elaborator.}
-\label{rule-tab:cvc5}\\
+\label{rule-tab:carcara}\\
   Rule & Description \\
   \hline
 \ruleref{weakening} & Weakening of a clause. \\
@@ -486,7 +487,7 @@ A simple \proofRule{la_generic} step in the logic \textsf{LRA} might look like t
     :rule la_generic :args (1.0 -1.0))
 \end{AletheVerb}
 
-To verify this we have to check the insatisfiability of $(f\,a) > (f\,b) \land
+To verify this we have to check the unsatisfiability of $(f\,a) > (f\,b) \land
 (f\,a) ≈ (f\,b)$ (step 2). After step~3 we get $(f\,a) - (f\,b) > 0 \land
 (f\,a) - (f\,b) ≈ 0$. Since we don't have an integer sort in this logic step~4 does
 not apply. Finally, after step~5 the conjunction is $(f\,a) - (f\,b) > 0 \land
@@ -864,6 +865,26 @@ where the multisets $\{\varphi_1, \cdots, \varphi_n\}$ and $\{\psi_1, \cdots, \p
 are the same.  That is, the conclusion of the rule is a reordering of the
 literals in the premise.
 \end{RuleDescription}
+
+\begin{RuleDescription}{shuffle}
+
+\begin{AletheXS}
+$i$. & \ctxsep  & $\Gamma$  &
+      $\circ\ t_1 \dots t_n ≈ \circ\ u_1 \dots u_n $ & \currule \\
+\end{AletheXS}
+
+where $\circ$ is a commutative operator, and
+the multisets $\{t_1, \cdots, t_n\}$ and $\{u_1, \cdots, u_n\}$
+are the same.
+
+In the logics currently supported
+by Alethe $\circ \in\{+, *, \land, \lor\}$.
+
+\ruleparagraph{Remark.} To permute the literals in a clause the
+\proofRule{reordering} rule can be used.
+
+\end{RuleDescription}
+
 
 \begin{RuleDescription}{not_and}
 \begin{AletheX}
