@@ -555,7 +555,8 @@ Every context $\Gamma$ induces a capture-avoiding substitution
 $\subst(\Gamma)$. If $\Gamma$ is the empty list,
 $\subst(\Gamma)$ is the empty substitution, i.e, the
 identity function.
-The first case fixes $x_n$ and allows the context to shadow a previously defined
+Otherwise, if $\Gamma$ ends with variable $x_n$, this fixes the variable 
+and allows the context to shadow a previously defined
 substitution for $x_n$:
 \[
 \subst([c_1,\dots, c_{n-1}, x_n])
