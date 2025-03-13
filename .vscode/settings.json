@@ -1,0 +1,36 @@
+{
+    "latex-workshop.latex.recipe.default": "lualatex+bibtex",
+    "latex-workshop.latex.tools": [
+        {
+            "name": "lualatex",
+            "command": "lualatex",
+            "args": [
+                "-shell-escape",
+                "-recorder",
+                "\\def\\nocomments{}\\input{spec/doc.tex}"
+            ],
+            "env": {},
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "spec/doc"
+            ],
+            "env": {},
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "lualatex+bibtex",
+            "tools": [
+                "lualatex",
+                "bibtex",
+                "lualatex",
+                "bibtex",
+                "lualatex"
+            ]
+        }
+    ],
+    "latex-workshop.latex.autoBuild.run": "onSave"
+}

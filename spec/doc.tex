@@ -10,9 +10,9 @@
 
 \usepackage{minted}
 \usemintedstyle{trac}
-\renewcommand{\MintedPygmentize}{./highlight.py}
-\newminted[AletheVerb]{smt-lib}{}
-\newmintinline[inlineAlethe]{smt-lib}{}
+% 2023+ minted for custom lexers
+\newminted[AletheVerb]{./highlight.py:SMTLibLexer}{}
+\newmintinline[inlineAlethe]{./highlight.py:SMTLibLexer}{}
 
 \usepackage{cite}
 \usepackage{url}
@@ -225,57 +225,57 @@ break
 \clearpage
 
 \begin{abstract}
-\section*{Foreword}
-This document is a speculative specification and reference of a proof
-format for SMT solvers.  The format consists of a language to express
-proofs and a set of proof rules.  On the one side, the language is
-inspired by natural-deduction and is based on the widely used SMT-LIB
-format.  The language also includes a flexible mechanism to reason
-about bound variables which allows fine-grained preprocessing proofs.
-%
-On the other side, the rules are structured around resolution and the
-introduction of theory lemmas, in the same way as CDCL(T)-based SMT
-solvers.
+  \section*{Foreword}
+  This document is a speculative specification and reference of a proof
+  format for SMT solvers.  The format consists of a language to express
+  proofs and a set of proof rules.  On the one side, the language is
+  inspired by natural-deduction and is based on the widely used SMT-LIB
+  format.  The language also includes a flexible mechanism to reason
+  about bound variables which allows fine-grained preprocessing proofs.
+  %
+  On the other side, the rules are structured around resolution and the
+  introduction of theory lemmas, in the same way as CDCL(T)-based SMT
+  solvers.
 
-The specification is not yet
-cast in stone, but it will evolve over time. It emerged from a list
-of proof rules used by the SMT solver veriT collected in a document
-called ``Proofonomicon''. Following the fate presupposed by its name,
-it informally circulated among researchers interested in the proofs
-produced by veriT after a few months.  We now polished this document
-and gave it a respectable name.
+  The specification is not yet
+  cast in stone, but it will evolve over time. It emerged from a list
+  of proof rules used by the SMT solver veriT collected in a document
+  called ``Proofonomicon''. Following the fate presupposed by its name,
+  it informally circulated among researchers interested in the proofs
+  produced by veriT after a few months.  We now polished this document
+  and gave it a respectable name.
 
-Instead of aiming for theoretical purity, our approach
-is pragmatic: the specification describes the format as it is in use
-right now. It will develop in parallel with practical support for the
-format within SMT solvers, proof checkers, and other tools.  We believe
-it is not a perfect specification that fosters the adaption of a format,
-but great tooling. This document will be a guide to develop
-such tools.
+  Instead of aiming for theoretical purity, our approach
+  is pragmatic: the specification describes the format as it is in use
+  right now. It will develop in parallel with practical support for the
+  format within SMT solvers, proof checkers, and other tools.  We believe
+  it is not a perfect specification that fosters the adaption of a format,
+  but great tooling. This document will be a guide to develop
+  such tools.
 
-Nevertheless, it not only serves as a norm to ensure compatibility
-between tools, it also allows us to uncover the unsatisfactory aspects
-that would otherwise be hidden deep within the nooks and crannies of
-solver and checker implementations.
-%
-Every uncovered problem presents an opportunity
-to improve the format. The authors of this document overlap with the
-authors of those tools and we are committed to improve the tools, the
-format, and ultimately the specification together.
-This document is also an invitation to other researchers to join
-these efforts. To read the reference and provide feedback, or to even
-implement support for Alethe into their own tools. Please
-get in touch!
+  Nevertheless, it not only serves as a norm to ensure compatibility
+  between tools, it also allows us to uncover the unsatisfactory aspects
+  that would otherwise be hidden deep within the nooks and crannies of
+  solver and checker implementations.
+  %
+  Every uncovered problem presents an opportunity
+  to improve the format. The authors of this document overlap with the
+  authors of those tools and we are committed to improve the tools, the
+  format, and ultimately the specification together.
+  This document is also an invitation to other researchers to join
+  these efforts. To read the reference and provide feedback, or to even
+  implement support for Alethe into their own tools. Please
+  get in touch!
 
-\bigskip
-\hspace*{\fill}The authors.
+  \bigskip
+  \hspace*{\fill}The authors.
 \end{abstract}
 
 \section{Introduction}
 This document is a reference of the
 Alethe\footnote{Alethe is a genus of small birds that occur in West Africa~\cite{wp:alethe}.
-The name was chosen because it
-resembles the Greek word {αλήθεια} (alítheia) -- truth.} proof format.  Alethe is
+  The name was chosen because it
+  resembles the Greek word {αλήθεια} (alítheia) -- truth.} proof format.  Alethe is
 designed to be a flexible format to represent unsatisfiability proofs
 generated by SMT solvers.  Alethe proofs can be consumed by other systems,
 such as interactive theorem provers or proof checkers.  The design
@@ -301,7 +301,7 @@ Alethe follows a few core design principles.  First, proofs should
 be easy to understand by humans to ensure working with Alethe proofs
 is easy.  Second, the language of the format should directly
 correspond to the language used by the solver.  Since many solvers use the
-{\smtlib} language, Alethe also uses this language.
+  {\smtlib} language, Alethe also uses this language.
 Therefore, Alethe's base logic is the many-sorted first-order logic of {\smtlib}.
 Third, the format should
 be uniform for all theories used by SMT solvers.  With the exception
@@ -326,7 +326,7 @@ tool to the latest version of Alethe is ongoing.
 %
 Furthermore, \tool{Carcara} is an experimental
 high-performance \index{proof checker}proof checker written in Rust.\footnote{Available at
-\url{https://github.com/ufmg-smite/carcara}.}
+  \url{https://github.com/ufmg-smite/carcara}.}
 
 In addition to this reference, the proof format has been discussed in past
 publications, which provide valuable background information.  The core of
@@ -400,19 +400,19 @@ Then, it introduces the concrete, {\smtlib}-based syntax.  Finally,
 we show how a concrete Alethe proof can be checked.
 
 \begin{example}
-The following example shows a simple Alethe proof
-expressed in the abstract notation used in this document.
-It uses quantifier instantiation and resolution to show a contradiction.
-The paragraphs below describe the concepts necessary to
-understand the proof step by step.
+  The following example shows a simple Alethe proof
+  expressed in the abstract notation used in this document.
+  It uses quantifier instantiation and resolution to show a contradiction.
+  The paragraphs below describe the concepts necessary to
+  understand the proof step by step.
 
-\begin{Alethe}
-1.& \ctxsep & $\forall x.\, (P\,x)$ & $ \proofRule{assume}$ \\
-2.& \ctxsep & $\neg (P\,a)        $ & $ \proofRule{assume}$ \\
-3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[(x, a)]$ \\
-4.& \ctxsep & $\neg (\forall x.\, (P\,x)), (P\,a)$ & $ (\proofRule{or}\:3)$ \\
-5.& \ctxsep & $\bot             $ & $ (\proofRule{resolution}\: 1, 2, 4)$ \\
-\end{Alethe}
+  \begin{Alethe}
+    1.& \ctxsep & $\forall x.\, (P\,x)$ & $ \proofRule{assume}$ \\
+    2.& \ctxsep & $\neg (P\,a)        $ & $ \proofRule{assume}$ \\
+    3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[(x, a)]$ \\
+    4.& \ctxsep & $\neg (\forall x.\, (P\,x)), (P\,a)$ & $ (\proofRule{or}\:3)$ \\
+    5.& \ctxsep & $\bot             $ & $ (\proofRule{resolution}\: 1, 2, 4)$ \\
+  \end{Alethe}
 
 \end{example}
 
@@ -443,8 +443,8 @@ To mimic the concrete syntax of Alethe proofs, proof steps in the
 abstract notation have the form
 
 \begin{AletheS}
-$i$.& $c_1,\,\dots,\, c_j$ & \ctxsep &
-$l_1,\dots ,l_k$ & $(\ruleType{rule}\; p_1,\,\dots,\, p_n)\,[a_1,\,\dots,\,a_m]$ \\
+  $i$.& $c_1,\,\dots,\, c_j$ & \ctxsep &
+  $l_1,\dots ,l_k$ & $(\ruleType{rule}\; p_1,\,\dots,\, p_n)\,[a_1,\,\dots,\,a_m]$ \\
 \end{AletheS}
 
 \noindent
@@ -461,14 +461,14 @@ notation.  We will remark on the difference if it is relevant.  The rule
 name \ruleType{rule} is taken from a set of possible proof
 rules (see Section~\ref{apx:rules}).
 Furthermore, each step has a possibly empty set of premises $\{p_1,
-\dots, p_n\} \subseteq \mathbb{I}$,
+  \dots, p_n\} \subseteq \mathbb{I}$,
 and a rule-dependent and possibly
 empty list of arguments $[a_1, \dots, a_m]$. The list of premises
 only references earlier steps, such that the proof forms a directed
 acyclic graph.  If the list of premises is empty, we will drop the
 parentheses around the proof rule.
 The arguments $a_i$ are either terms or tuples $(x_i,
-t_i)$ where $x_i$ is a variable and $t_i$ is a term. The interpretation
+  t_i)$ where $x_i$ is a variable and $t_i$ is a term. The interpretation
 of the arguments is rule specific.  The list $c_1, \dots, c_j$ is
 the \index{context}{\em context} of the step.  Contexts are discussed below.
 Every proof ends with a step that has the empty clause as the conclusion
@@ -507,7 +507,7 @@ local assumptions.
 From an
 assumption $\varphi$ and a formula $\psi$ proved
 from $\varphi$, the \proofRule{subproof} rule deduces the clause $\neg \varphi,
-\psi$ that discharges the local assumption $\varphi$.
+  \psi$ that discharges the local assumption $\varphi$.
 %
 A \proofRule{subproof} step cannot use a premise from a subproof nested
 within the current subproof.
@@ -519,21 +519,21 @@ concludes with a step that does not use the \proofRule{subproof} rule,
 but another rule, such as the \proofRule{bind} rule.
 
 \begin{example}
-This example shows a refutation of the
-formula $(2 + 2) ≈ 5$. The proof uses a subproof to prove the
-lemma $((2 + 2) ≈ 5) \Rightarrow 4 ≈ 5$.
+  This example shows a refutation of the
+  formula $(2 + 2) ≈ 5$. The proof uses a subproof to prove the
+  lemma $((2 + 2) ≈ 5) \Rightarrow 4 ≈ 5$.
 
-\begin{Alethe}
-1.&  \ctxsep &  $(2 + 2) ≈ 5$ &  $\proofRule{assume}$ \\
-2.&  \spctxsep &  $(2 + 2) ≈ 5 $ &  $\proofRule{assume}$ \\
-3.&  \spctxsep &  $(2 + 2) ≈ 4 $ &  $\proofRule{sum_simplify}$ \\
-4.&  \spctxsep &  $4 ≈ 5       $ &  $(\proofRule{trans}\ 2, 3)$ \\
-\spsep
-5.&  \ctxsep &  $\neg((2 + 2) ≈ 5), 4 ≈ 5$ &  $\proofRule{subproof}$ \\
-6.&  \ctxsep &  $(4 ≈ 5)≈ \bot$ &  $\proofRule{eq_simplify}$ \\
-7.&  \ctxsep &  $\neg((4 ≈ 5)≈ \bot), \neg(4≈ 5), \bot $ &  $\proofRule{equiv_pos2}$ \\
-8.&  \ctxsep &  $\bot $ &  $(\proofRule{resolution}\ 1, 5, 6, 7)$ \\
-\end{Alethe}
+  \begin{Alethe}
+    1.&  \ctxsep &  $(2 + 2) ≈ 5$ &  $\proofRule{assume}$ \\
+    2.&  \spctxsep &  $(2 + 2) ≈ 5 $ &  $\proofRule{assume}$ \\
+    3.&  \spctxsep &  $(2 + 2) ≈ 4 $ &  $\proofRule{sum_simplify}$ \\
+    4.&  \spctxsep &  $4 ≈ 5       $ &  $(\proofRule{trans}\ 2, 3)$ \\
+    \spsep
+    5.&  \ctxsep &  $\neg((2 + 2) ≈ 5), 4 ≈ 5$ &  $\proofRule{subproof}$ \\
+    6.&  \ctxsep &  $(4 ≈ 5)≈ \bot$ &  $\proofRule{eq_simplify}$ \\
+    7.&  \ctxsep &  $\neg((4 ≈ 5)≈ \bot), \neg(4≈ 5), \bot $ &  $\proofRule{equiv_pos2}$ \\
+    8.&  \ctxsep &  $\bot $ &  $(\proofRule{resolution}\ 1, 5, 6, 7)$ \\
+  \end{Alethe}
 
 \end{example}
 
@@ -543,7 +543,7 @@ is the step \index{context}context.
 Alethe contexts are a general mechanism to write
 substitutions and to change them by attaching new elements.
 A context is a possibly empty list $c_1,
-\dots, c_l$, where each element is either a variable or a variable-term tuple
+  \dots, c_l$, where each element is either a variable or a variable-term tuple
 denoted $x_i\mapsto t_i$.
 %
 In the first case, we say that $c_i$ {\em fixes} the
@@ -558,27 +558,27 @@ identity function.
 The first case fixes $x_n$ and allows the context to shadow a previously defined
 substitution for $x_n$:
 \[
-\subst([c_1,\dots, c_{n-1}, x_n])
-\text{ is }\subst([c_1,\dots, c_{n-1}])\text{, but }x_n\text{ maps to }x_n.
+  \subst([c_1,\dots, c_{n-1}, x_n])
+  \text{ is }\subst([c_1,\dots, c_{n-1}])\text{, but }x_n\text{ maps to }x_n.
 \]
 
 When $\Gamma$ ends in a mapping, the substitution is extended
 with this mapping\label{page:ctxdef}:
 \[
-\subst([c_1,\dots, c_{n-1}, x_n\mapsto t_n]) =
-        \subst([c_1,\dots, c_{n-1}])\circ \{x_n\mapsto t_n\}.
+  \subst([c_1,\dots, c_{n-1}, x_n\mapsto t_n]) =
+  \subst([c_1,\dots, c_{n-1}])\circ \{x_n\mapsto t_n\}.
 \]
 
 \label{ex:alethe:substctx}The following example illustrates this idea.
 \begin{align*}
-    \subst([x\mapsto 7, x \mapsto g(x)]) &= \{x\mapsto g(7)\} \\
-    \subst([x\mapsto 7, x, x \mapsto g(x)]) &= \{x\mapsto g(x)\} \\
+  \subst([x\mapsto 7, x \mapsto g(x)])    & = \{x\mapsto g(7)\} \\
+  \subst([x\mapsto 7, x, x \mapsto g(x)]) & = \{x\mapsto g(x)\} \\
 \end{align*}
 
 Contexts are used to express proofs about the preprocessing of terms.  The
 conclusions of proof rules that use contexts always have the form
 \begin{AletheS}
-i. & $\Gamma$ & \ctxsep & $t ≈ u$ & ($\ruleType{rule}$, …) \\
+  i. & $\Gamma$ & \ctxsep & $t ≈ u$ & ($\ruleType{rule}$, …) \\
 \end{AletheS}
 
 where the term $t$\, is the original term, and $u$ is the term after
@@ -602,21 +602,21 @@ Formally, the context can be translated to \index{abstraction!lambda}λ-abstract
 applications.  This is discussed in Section~\ref{sec:alethe:semantics}.
 
 \begin{example}\label{ex:ti:ctx-abstract}
-This example shows a proof that uses a subproof with a context to rename a bound
-variable.
-\begin{AletheS}
-1.& & \ctxsep & $\forall x.\,(P\,x)$ &        $\proofRule{assume}$ \\
-2.& & \ctxsep & $\neg (\forall y.\,(P\,y))$ & $\proofRule{assume}$ \\
-3.& \spctx{$y, x \mapsto y$} & \ctxsep & $x ≈ y$  & $\proofRule{refl}$\\
-4.& \spctx{$y, x \mapsto y$} & \ctxsep & $(P\,x) ≈ (P\,y)$
-     & $(\proofRule{cong}\,3) $\\
-\spsep
-5.& & \ctxsep & $\forall x.\,(P\,x) ≈ \forall y.\,(P\,y)$ & $\proofRule{bind}$ \\
-6.& & \ctxsep &
-      $\neg(\forall x.\,(P\,x) ≈ \forall y.\,(P\,y))$, $\neg(\forall x.\,(P\,x)), (\forall y.\,(P\,y))$
+  This example shows a proof that uses a subproof with a context to rename a bound
+  variable.
+  \begin{AletheS}
+    1.& & \ctxsep & $\forall x.\,(P\,x)$ &        $\proofRule{assume}$ \\
+    2.& & \ctxsep & $\neg (\forall y.\,(P\,y))$ & $\proofRule{assume}$ \\
+    3.& \spctx{$y, x \mapsto y$} & \ctxsep & $x ≈ y$  & $\proofRule{refl}$\\
+    4.& \spctx{$y, x \mapsto y$} & \ctxsep & $(P\,x) ≈ (P\,y)$
+    & $(\proofRule{cong}\,3) $\\
+    \spsep
+    5.& & \ctxsep & $\forall x.\,(P\,x) ≈ \forall y.\,(P\,y)$ & $\proofRule{bind}$ \\
+    6.& & \ctxsep &
+    $\neg(\forall x.\,(P\,x) ≈ \forall y.\,(P\,y))$, $\neg(\forall x.\,(P\,x)), (\forall y.\,(P\,y))$
     & $\proofRule{equiv_pos2}$ \\
-7.& &\ctxsep & $\bot$ & $(\proofRule{resolution}\,1, 2, 5, 6)$ \\
-\end{AletheS}
+    7.& &\ctxsep & $\bot$ & $(\proofRule{resolution}\,1, 2, 5, 6)$ \\
+  \end{AletheS}
 \end{example}
 
 
@@ -660,71 +660,71 @@ logic and term language, it also uses commands to structure the proof.
 An Alethe proof is a list of commands.
 
 \begin{figure}[t]
-    \begin{AletheVerb}
-(assume h1 (not (p a)))
-(assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
-...
-(anchor :step t9 :args ((vr4 U) (:= (z2 U) vr4)))
-(step t9.t1 (cl (= z2 vr4)) :rule refl)
-(step t9.t2 (cl (= (p z2) (p vr4)))
-         :rule cong :premises (t9.t1))
-(step t9 (cl (= (forall ((z2 U)) (p z2))
-                (forall ((vr4 U)) (p vr4))))
-         :rule bind)
-...
-(step t14 (cl (forall ((vr5 U)) (p vr5)))
-          :rule th_resolution :premises (t11 t12 t13))
-(step t15 (cl (or (not (forall ((vr5 U)) (p vr5)))
-                  (p a)))
-          :rule forall_inst :args ((:= vr5 a)))
-(step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
-          :rule or :premises (t15))
-(step t17 (cl) :rule resolution :premises (t16 h1 t14))
-    \end{AletheVerb}
-\caption{Example proof output. Assumptions are
-  introduced;   a subproof renames bound variables; the proof finishes with
-  instantiation and resolution steps.}
-\label{fig:proof_ex}
+  \begin{AletheVerb}
+    (assume h1 (not (p a)))
+    (assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
+    ...
+    (anchor :step t9 :args ((vr4 U) (:= (z2 U) vr4)))
+    (step t9.t1 (cl (= z2 vr4)) :rule refl)
+    (step t9.t2 (cl (= (p z2) (p vr4)))
+    :rule cong :premises (t9.t1))
+    (step t9 (cl (= (forall ((z2 U)) (p z2))
+    (forall ((vr4 U)) (p vr4))))
+    :rule bind)
+    ...
+    (step t14 (cl (forall ((vr5 U)) (p vr5)))
+    :rule th_resolution :premises (t11 t12 t13))
+    (step t15 (cl (or (not (forall ((vr5 U)) (p vr5)))
+    (p a)))
+    :rule forall_inst :args ((:= vr5 a)))
+    (step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
+    :rule or :premises (t15))
+    (step t17 (cl) :rule resolution :premises (t16 h1 t14))
+  \end{AletheVerb}
+  \caption{Example proof output. Assumptions are
+    introduced;   a subproof renames bound variables; the proof finishes with
+    instantiation and resolution steps.}
+  \label{fig:proof_ex}
 \end{figure}
 
 
 \begin{figure}[t]
-\[
-  \begin{array}{r c l}
+  \[
+    \begin{array}{r c l}
 
-\multicolumn{3}{c}{
-	\text{A }\grNT{symbol}\text{ is an SMT-LIB }\grNT{symbol}\text{ that is not a}}\\
-& & -\grNT{numeral}/\grNT{positive\_numeral},\\
-& & -\grNT{numeral},\text{ or} -\grNT{decimal}.\\
+      \multicolumn{3}{c}{
+      \text{A }\grNT{symbol}\text{ is an SMT-LIB }\grNT{symbol}\text{ that is not a}}                                                          \\
+                                  &         & -\grNT{numeral}/\grNT{positive\_numeral},                                                        \\
+                                  &         & -\grNT{numeral},\text{ or} -\grNT{decimal}.                                                      \\
 
- \grNT{proof}           &\grRule & \grNT{proof\_command}^{*} \\
- \grNT{proof\_command}  &\grRule & \textAlethe{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
-                        &\grOr   & \textAlethe{(step}\; \grNT{symbol}\; \grNT{clause}
-                                        \; \textAlethe{:rule}\; \grNT{symbol} \\
-                        &        & \quad \grNT{premises\_annotation}^{?} \\
-                        &        & \quad \grNT{args\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
-                        & \grOr  & \textAlethe{(anchor :step}\; \grNT{symbol}\;
-                                            \\
-                        &        & \quad \grNT{context\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
-                        & \grOr  & \textAlethe{(define-fun}\; \grNT{function\_def}\,\textAlethe{)} \\
- \grNT{clause}          &\grRule & \textAlethe{(cl}\; \grNT{proof\_term}^{*}\,\textAlethe{)} \\
- \grNT{proof\_term}     &\grRule & \grNT{term}\text{ extended with } \\
-                        &        & \textAlethe{(choice (}\, \grNT{sorted\_var}\,\textAlethe{)}\; \grNT{proof\_term}\,\textAlethe{)}  \\
-                        & \grOr  & \grNT{rational} \\
-                        & \grOr  & \grNT{nonpositive\_numeral} \\
-                        & \grOr  & \grNT{nonpositive\_decimal} \\
- \grNT{premises\_annotation} &\grRule & \textAlethe{:premises (}\; \grNT{symbol}^{+}\textAlethe{)} \\
- \grNT{args\_annotation}     &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{step\_arg}^{+}\,\textAlethe{)}  \\
- \grNT{step\_arg}            &\grRule & \grNT{symbol}\;\grOr\;
-                                          \textAlethe{(}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)} \\
- \grNT{context\_annotation}  &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}  \\
- \grNT{context\_assignment}  &\grRule & \grNT{sorted\_var} \\
-                             & \grOr  & \textAlethe{(:=}\, \grNT{sorted\_var}\;\grNT{proof\_term}\,\textAlethe{)} \\
- \grNT{positive\_numeral}    &\grRule & \text{any }\grNT{numeral}\text{ except } 0\\
- \grNT{rational}              &\grRule & -^{?}\grNT{numeral}/\grNT{positive\_numeral} \\
- \grNT{nonpositive\_numeral}  &\grRule & -\grNT{numeral} \\
- \grNT{nonpositive\_decimal}  &\grRule & -\grNT{decimal} \\
-  \end{array}
+      \grNT{proof}                & \grRule & \grNT{proof\_command}^{*}                                                                        \\
+      \grNT{proof\_command}       & \grRule & \textAlethe{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\;\grNT{attribute}^{*}\,\textAlethe{)}  \\
+                                  & \grOr   & \textAlethe{(step}\; \grNT{symbol}\; \grNT{clause}
+      \; \textAlethe{:rule}\; \grNT{symbol}                                                                                                    \\
+                                  &         & \quad \grNT{premises\_annotation}^{?}                                                            \\
+                                  &         & \quad \grNT{args\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)}                          \\
+                                  & \grOr   & \textAlethe{(anchor :step}\; \grNT{symbol}\;
+      \\
+                                  &         & \quad \grNT{context\_annotation}^{?}\;\grNT{attribute}^{*}\,\textAlethe{)}                       \\
+                                  & \grOr   & \textAlethe{(define-fun}\; \grNT{function\_def}\,\textAlethe{)}                                  \\
+      \grNT{clause}               & \grRule & \textAlethe{(cl}\; \grNT{proof\_term}^{*}\,\textAlethe{)}                                        \\
+      \grNT{proof\_term}          & \grRule & \grNT{term}\text{ extended with }                                                                \\
+                                  &         & \textAlethe{(choice (}\, \grNT{sorted\_var}\,\textAlethe{)}\; \grNT{proof\_term}\,\textAlethe{)} \\
+                                  & \grOr   & \grNT{rational}                                                                                  \\
+                                  & \grOr   & \grNT{nonpositive\_numeral}                                                                      \\
+                                  & \grOr   & \grNT{nonpositive\_decimal}                                                                      \\
+      \grNT{premises\_annotation} & \grRule & \textAlethe{:premises (}\; \grNT{symbol}^{+}\textAlethe{)}                                       \\
+      \grNT{args\_annotation}     & \grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{step\_arg}^{+}\,\textAlethe{)}                         \\
+      \grNT{step\_arg}            & \grRule & \grNT{symbol}\;\grOr\;
+      \textAlethe{(}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)}                                                                      \\
+      \grNT{context\_annotation}  & \grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}               \\
+      \grNT{context\_assignment}  & \grRule & \grNT{sorted\_var}                                                                               \\
+                                  & \grOr   & \textAlethe{(:=}\, \grNT{sorted\_var}\;\grNT{proof\_term}\,\textAlethe{)}                        \\
+      \grNT{positive\_numeral}    & \grRule & \text{any }\grNT{numeral}\text{ except } 0                                                       \\
+      \grNT{rational}             & \grRule & -^{?}\grNT{numeral}/\grNT{positive\_numeral}                                                     \\
+      \grNT{nonpositive\_numeral} & \grRule & -\grNT{numeral}                                                                                  \\
+      \grNT{nonpositive\_decimal} & \grRule & -\grNT{decimal}                                                                                  \\
+    \end{array}
   \]
   \caption{The proof grammar.}
   \label{fig:grammar}
@@ -800,7 +800,7 @@ is a unit clause.
 The \inlineAlethe{anchor} and \inlineAlethe{define-fun} commands are used for
 subproofs and sharing, respectively. The \inlineAlethe{define-fun} command
 corresponds exactly to the \inlineAlethe{define-fun} command of the
-{\smtlib} language.
+  {\smtlib} language.
 
 Furthermore, the syntax uses annotations as used by {\smtlib}.  The
 original {\smtlib} syntax uses the non-terminal $\grNT{attribute}$.
@@ -876,8 +876,8 @@ To indicate these changes to the context, every anchor is associated with a list
 of fixed variables and mappings.  The list is provided by the \inlineAlethe{:args}
 annotation.  If the list is empty, the \inlineAlethe{:args} annotation is
 omitted\footnote{The only rule that allows an empty list is the
-\proofRule{subproof} rule.  Since this rule corresponds to implication introduction,
-it does not interact with binders.}.
+  \proofRule{subproof} rule.  Since this rule corresponds to implication introduction,
+  it does not interact with binders.}.
 %
 Note that, when an \inlineAlethe{anchor} command extends a context $\Gamma$ with
 some mappings $x_1 \mapsto t_1, \dots,  x_n \mapsto t_n$,
@@ -907,33 +907,33 @@ as a premise outside the subproof. Hence, a proof checking tool can
 remove the steps of the subproof from memory after checking it.
 
 \begin{example}
-\label{ex:ti:ctx-concrete}
-This example shows the proof from Example~\ref{ex:ti:ctx-abstract}
-expressed as a concrete proof.
+  \label{ex:ti:ctx-concrete}
+  This example shows the proof from Example~\ref{ex:ti:ctx-abstract}
+  expressed as a concrete proof.
 
-\begin{AletheVerb}
-(assume h1 (forall ((x S)) (P x)))
-(assume h2 (not (forall ((y S)) (P y))))
-(anchor :step t5 :args ((y S) (:= (x S) y)))
-(step t3 (cl (= x y)) :rule refl)
-(step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
-(step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
-                              :rule bind)
-(step t6 (cl (not (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
-             (not (forall ((x S)) (P x)))
-             (forall ((y S)) (P y))) :rule equiv_pos2)
-(step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
-\end{AletheVerb}
+  \begin{AletheVerb}
+    (assume h1 (forall ((x S)) (P x)))
+    (assume h2 (not (forall ((y S)) (P y))))
+    (anchor :step t5 :args ((y S) (:= (x S) y)))
+    (step t3 (cl (= x y)) :rule refl)
+    (step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
+    (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
+    :rule bind)
+    (step t6 (cl (not (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
+    (not (forall ((x S)) (P x)))
+    (forall ((y S)) (P y))) :rule equiv_pos2)
+    (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
+  \end{AletheVerb}
 \end{example}
 
 \tikzset{
-     solver/.style={draw, thin},
-     system/.style={draw, thin, rounded corners},
+  solver/.style={draw, thin},
+  system/.style={draw, thin, rounded corners},
 }
 
 \begin{figure}[h]
-\center
-\begin{tikzpicture}[node distance=2cm, auto,>=latex', thick,scale=0.8]
+  \center
+  \begin{tikzpicture}[node distance=2cm, auto,>=latex', thick,scale=0.8]
     \node[solver] (unsat) {\textsf{Unsat mode}};
     \node[system, right=of unsat] (assume) {\textsf{Assumptions}};
     \path[->] (unsat) edge[bend left] node[font=\scriptsize] {\texttt{get-proof}} (assume);
@@ -943,15 +943,15 @@ expressed as a concrete proof.
     \path[->] (step) edge[loop above] node[align=center,font=\scriptsize] {\inlineAlethe{step},\\ \inlineAlethe{define-fun}} (step);
     \path[->] (step) edge[above, bend left] node[font=\scriptsize] {\inlineAlethe{anchor}} (assume);
     \path[->] (step) edge[above, bend left] node[font=\scriptsize] {\textsf{Last step}} (unsat);
-\end{tikzpicture}
-\label{fig:proof-states}\caption{Abstract view of the transitions in an Alethe proof.}
+  \end{tikzpicture}
+  \label{fig:proof-states}\caption{Abstract view of the transitions in an Alethe proof.}
 \end{figure}
 
 
 \paragraph{Alethe Proof Printing States}
 Figure~\ref{fig:proof-states} shows the states of an Alethe proof
 abstractly.  To generate a proof, the SMT solver must be in the
-{\em Unsat mode}, i.e., the solver determined that the problem
+  {\em Unsat mode}, i.e., the solver determined that the problem
 is unsatisfiable.  The {\smtlib} problem script then requests the proof by
 invoking the \inlineAlethe{get-proof} command.  It is possible that this command
 fails. For example, if proof production was not activated up front.
@@ -979,7 +979,7 @@ precisely once. When printing the proof, this compact storage is unfolded.
 This leads to a blowup of the proof size.
 
 Alethe can optionally use sharing\footnote{For {\verit} this can be activated
-by the command-line option \Verb{--proof-with-sharing}.} to print common
+  by the command-line option \Verb{--proof-with-sharing}.} to print common
 subterms only once.  This is realized using the standard naming mechanism
 of {\smtlib}. A term $t$ is annotated with a name $n$ by writing
 \inlineAlethe{(!}\,$t$\,\inlineAlethe{:named}\;$n$\,\inlineAlethe{)}
@@ -1008,7 +1008,7 @@ sharing representation, testing if a term is marked takes constant time
 and the overall traversal takes linear time in the proof size.
 
 To simplify reconstruction, Alethe can optionally\footnote{For {\verit} by
-using the command-line option \Verb{--proof-define-skolems}.} define
+  using the command-line option \Verb{--proof-define-skolems}.} define
 Skolem constants as functions. In this case, the proof contains a list
 of \inlineAlethe{define-fun} commands that define shorthand 0-ary functions for
 the \inlineAlethe{(choice }\dots\inlineAlethe{)} terms needed. Without this option,
@@ -1021,15 +1021,15 @@ Overall, the following aspects are treated implicitly by Alethe.
         non-empty context.
   \item The order of literals in the clauses.
   \item The unfolding of names introduced by
-     \inlineAlethe{(!}\,$t$\,\inlineAlethe{:named }\;$s$\,\inlineAlethe{)} in the
-     original {\smtlib} problem or in the proof.
+        \inlineAlethe{(!}\,$t$\,\inlineAlethe{:named }\;$s$\,\inlineAlethe{)} in the
+        original {\smtlib} problem or in the proof.
   \item The removal of other {\smtlib} annotations of the form
-     \inlineAlethe{(!}\,$t$\,\dots\,\inlineAlethe{)}.
+        \inlineAlethe{(!}\,$t$\,\dots\,\inlineAlethe{)}.
   \item The unfolding of function symbols introduced by
-  \inlineAlethe{define-fun}.\footnote{For {\verit} this is only used when the user
-  introduces {\verit} to print Skolem terms as defined functions. User defined
-  functions in the input problem are not supported by {\verit} in proof production
-  mode.}
+        \inlineAlethe{define-fun}.\footnote{For {\verit} this is only used when the user
+          introduces {\verit} to print Skolem terms as defined functions. User defined
+          functions in the input problem are not supported by {\verit} in proof production
+          mode.}
   \item If the input problem is in a logic without integers, then constants from
         $\grNT{numeral}$ in the input problem will be printed using
         $\grNT{decimal}$ or $\grNT{rational}$ in the proof.
@@ -1074,28 +1074,28 @@ the calculation of the context of the steps in the subproof.
 
 \begin{definition}[First-Innermost Subproof]
   Let $P$\, be the proof $[C_1, \dots, C_n]$ and $1 \leq \mathit{start}
-  < \mathit{end} \leq n$ be two indices such that
+    < \mathit{end} \leq n$ be two indices such that
   \begin{itemize}
     \item $C_{\mathit{start}}$ is an anchor,
     \item $C_{\mathit{end}}$ is a step that uses a concluding rule,
     \item no $C_k$ with $k < \mathit{start}$ uses a concluding rule,
     \item no $C_k$ with $\mathit{start} < k < \mathit{end}$ is an anchor or
-     a step that uses a concluding rule.
+          a step that uses a concluding rule.
   \end{itemize}
   Then $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$ is the
   \index{subproof!first-innermost}first-innermost subproof of $P$.
 \end{definition}
 
 \begin{example}
-The proof in Example~\ref{ex:ti:ctx-concrete} has only one subproof
-and this subproof is also a first-innermost subproof.  It is the subproof
-\begin{AletheVerb}
-(anchor :step t5 :args ((y S) (:= (x S) y)))
-(step t3 (cl (= x y)) :rule refl)
-(step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
-(step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
-                              :rule bind)
-\end{AletheVerb}
+  The proof in Example~\ref{ex:ti:ctx-concrete} has only one subproof
+  and this subproof is also a first-innermost subproof.  It is the subproof
+  \begin{AletheVerb}
+    (anchor :step t5 :args ((y S) (:= (x S) y)))
+    (step t3 (cl (= x y)) :rule refl)
+    (step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
+    (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
+    :rule bind)
+  \end{AletheVerb}
 \end{example}
 
 \noindent
@@ -1108,7 +1108,7 @@ It is easy to calculate the context of the first-innermost subproof.
 
   The \index{context!calculated}calculated context of $C_i$ is the context
   \[
-  c_{1,1}, \dots, c_{1, n_1}, \dots, c_{m,1}, \dots, c_{m, n_m}
+    c_{1,1}, \dots, c_{1, n_1}, \dots, c_{m,1}, \dots, c_{m, n_m}
   \]
   where $c_{k,1}, \dots, c_{k, n_k}$ is the list of fixed variables
   and mappings associated with $A_k$.
@@ -1125,9 +1125,9 @@ Hence, the context of $C_{\mathit{end}}$ is the calculated
 context of $C_{\mathit{start}}$.
 
 \begin{example}
-The calculated context of the steps \texttt{\color{SmtStepId}t3} and \texttt{\color{SmtStepId}t5} in
-Example~\ref{ex:ti:ctx-concrete} is the context $x \mapsto y$.
-The calculated context of the concluding step \texttt{\color{SmtStepId}t5} and the anchor is empty.
+  The calculated context of the steps \texttt{\color{SmtStepId}t3} and \texttt{\color{SmtStepId}t5} in
+  Example~\ref{ex:ti:ctx-concrete} is the context $x \mapsto y$.
+  The calculated context of the concluding step \texttt{\color{SmtStepId}t5} and the anchor is empty.
 \end{example}
 
 \noindent
@@ -1142,13 +1142,13 @@ Section~\ref{apx:rules}.
   The subproof is \index{subproof!valid}{\em valid} if
   \begin{itemize}
     \item all steps $C_i$ with $\mathit{start} < i <
-    \mathit{end}$ only use premises $C_j$ with $\mathit{start} <
-    j < i$,
+            \mathit{end}$ only use premises $C_j$ with $\mathit{start} <
+            j < i$,
     \item all $C_i$ that are steps adhere to the conditions of their
-    rule under the calculated context of $C_i$,
+          rule under the calculated context of $C_i$,
     \item the step $C_{\mathit{end}}$
-    adheres to the conditions of its
-    rule under the calculated context of $C_{\mathit{start}}$.
+          adheres to the conditions of its
+          rule under the calculated context of $C_{\mathit{start}}$.
   \end{itemize}
 \end{definition}
 
@@ -1162,15 +1162,15 @@ at its conclusion the conclusion of the subproof.  This is safe as long
 as the subproof that is eliminated is valid (see Section~\ref{sec:alethe:soundness-eh}).
 
 \begin{definition}
-The function $E$ eliminates the first-innermost subproof from a proof
-if there is one.
-Let $P$ be a proof $[C_1, \dots C_n]$.
-Then $E(P) = P$ if $P$ has no first-innermost subproof.
-Otherwise, $P$ has the first-innermost subproof
-$[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$, and
-$E(P) = [C_1, \dots, C_{\mathit{start}-1}, C', C_{\mathit{end}+1},
-\dots, C_n]$ where $C'$ is a new step that uses the \proofRule{hole} rule
-and has the index, conclusion, and premises of $C_{\mathit{end}}$.
+  The function $E$ eliminates the first-innermost subproof from a proof
+  if there is one.
+  Let $P$ be a proof $[C_1, \dots C_n]$.
+  Then $E(P) = P$ if $P$ has no first-innermost subproof.
+  Otherwise, $P$ has the first-innermost subproof
+  $[C_{\mathit{start}}, \dots, C_{\mathit{end}}]$, and
+  $E(P) = [C_1, \dots, C_{\mathit{start}-1}, C', C_{\mathit{end}+1},
+    \dots, C_n]$ where $C'$ is a new step that uses the \proofRule{hole} rule
+  and has the index, conclusion, and premises of $C_{\mathit{end}}$.
 \end{definition}
 
 It is important to add the premises of $C_{\mathit{end}}$
@@ -1182,21 +1182,21 @@ The result is a list $[P_0, P_1, P_2, \dots, P_{\mathit{last}}]$ where $P_0 = P$
 $P_1 = E(P)$, $P_2 = E(E(P))$ and $P_{\mathit{last}} = E(P_{\mathit{last}})$.
 
 \begin{example}
-Applying $E$\, to the proof in
-Example~\ref{ex:ti:ctx-concrete} gives us the proof
+  Applying $E$\, to the proof in
+  Example~\ref{ex:ti:ctx-concrete} gives us the proof
 
-\begin{AletheVerb}
-(assume h1 (forall ((x S)) (P x)))
-(assume h2 (not (forall ((y S)) (P y))))
-(step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
-                                      :rule hole)
-(step t6 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y)))
-             (not (forall ((x S)) (P x)))
-             (forall ((y S)) (P y)))) :rule equiv_pos2)
-(step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
-\end{AletheVerb}
+  \begin{AletheVerb}
+    (assume h1 (forall ((x S)) (P x)))
+    (assume h2 (not (forall ((y S)) (P y))))
+    (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
+    :rule hole)
+    (step t6 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y)))
+    (not (forall ((x S)) (P x)))
+    (forall ((y S)) (P y)))) :rule equiv_pos2)
+    (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
+  \end{AletheVerb}
 
-Since this proof contains no subproof, it is also $P_{\mathit{last}}$.
+  Since this proof contains no subproof, it is also $P_{\mathit{last}}$.
 \end{example}
 
 
@@ -1217,7 +1217,7 @@ Since this proof contains no subproof, it is also $P_{\mathit{last}}$.
     \item all steps $C_i$ in $P_{\mathit{last}}$ only use premises
           $C_j$ in $P_{\mathit{last}}$ with $1 \leq j < i$,
     \item all steps $C_i$ in $P_{\mathit{last}}$ adhere to the conditions of their
-    rule under the empty context.
+          rule under the empty context.
   \end{itemize}
 \end{definition}
 
@@ -1226,14 +1226,14 @@ proof is complete and holes are only introduced by eliminating valid
 subproofs.
 
 \begin{example}
-The proof in Example~\ref{ex:ti:ctx-concrete} is valid.  The only
-subproof is valid, the proof contains no hole, and $P_{\mathit{last}}$
-contains the step \textsf{\color{SmtStepId} t7} that concludes with the empty clause.
+  The proof in Example~\ref{ex:ti:ctx-concrete} is valid.  The only
+  subproof is valid, the proof contains no hole, and $P_{\mathit{last}}$
+  contains the step \textsf{\color{SmtStepId} t7} that concludes with the empty clause.
 \end{example}
 
 It is sometimes useful to speak about the steps that are not within a
 subproof.  We call such a step an \index{step!outermost}{\em outermost
-step}.  In a well-formed proof those are the steps
+  step}.  In a well-formed proof those are the steps
 of $P_{\mathit{last}}$.
 
 \subsection{Contexts and Metaterms}
@@ -1262,8 +1262,8 @@ These λ-terms\index{term!lambda} are called \index{term!meta}\index{metaterms}{
     M \,::=\, \groundbox{$t$}\,\mid\, \lambda x.\,M\,\mid\,(\lambda \bar{x}_n.\,
     M)\,\bar{t}_n
   \]
-where $t$ is an ordinary term and $t_i$ and $x_i$ have matching sorts for
-all $0 \leq i \leq 1$.
+  where $t$ is an ordinary term and $t_i$ and $x_i$ have matching sorts for
+  all $0 \leq i \leq 1$.
 \end{definition}
 
 According to this definition, a metaterm is either a boxed term, a
@@ -1281,23 +1281,23 @@ Proof steps with contexts can be encoded into proof steps with empty
 contexts, but with metaterms.  A proof step
 
 \begin{AletheS}
-i. & $\Gamma$ & \ctxsep & $t ≈ u$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
+  i. & $\Gamma$ & \ctxsep & $t ≈ u$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
 \end{AletheS}
 
 \noindent
 is encoded into
 
 \begin{AletheS}
-i. &  & \ctxsep & $L(\Gamma)[t] ≈ R(\Gamma)[u]$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
+  i. &  & \ctxsep & $L(\Gamma)[t] ≈ R(\Gamma)[u]$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
 \end{AletheS}
 
 \noindent
 where
 \begin{align*}
- L(\emptyset)[t]    &= \groundbox{t}             &    R(\emptyset)[u] &= \groundbox{u} \\
- L(x, \bar{c}_m)[t] &= \lambda x.\,L(\bar{c}_m)[t] & R(x, \bar{c}_m)[u] &= \lambda x.\,R(\bar{c}_m)[u] \\
- L(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[t] &= (\lambda \bar{x}_n.\,L(\bar{c}_m)[t]) \bar{s}_n
-     & R(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[u] &= R(\bar{c}_m)[u] \\
+  L(\emptyset)[t]                            & = \groundbox{t}                                   & R(\emptyset)[u]    & = \groundbox{u}               \\
+  L(x, \bar{c}_m)[t]                         & = \lambda x.\,L(\bar{c}_m)[t]                     & R(x, \bar{c}_m)[u] & = \lambda x.\,R(\bar{c}_m)[u] \\
+  L(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[t] & = (\lambda \bar{x}_n.\,L(\bar{c}_m)[t]) \bar{s}_n
+                                             & R(\bar{x}_n\mapsto\bar{s}_n, \bar{c}_m)[u]        & = R(\bar{c}_m)[u]                                  \\
 \end{align*}
 
 To achieve the same effect as using the $\subst()$ function described above, we
@@ -1305,13 +1305,13 @@ can translate the terms into metaterms, perform β-reduction, and rename
 bound variables if necessary~\cite[Lemma~11]{barbosa-2019}.
 
 \begin{example}
-The example on page~\pageref{ex:alethe:substctx} becomes
-\begin{flalign*}
-\quad & L(x\mapsto 7, x \mapsto g(x))[x] = (\lambda x.\,(\lambda x.\,\groundbox{x})\,(g(x)))\, 7
-=_{\alpha\beta} \groundbox{g(7)} &\\
-& L(x\mapsto 7, x, x \mapsto g(x))[x] = (\lambda x.\,\lambda x.\,(\lambda x.\,\groundbox{x})\,(g(x)))\, 7
-=_{\alpha\beta} \lambda x.\,\groundbox{g(x)}
-\end{flalign*}
+  The example on page~\pageref{ex:alethe:substctx} becomes
+  \begin{flalign*}
+    \quad                            & L(x\mapsto 7, x \mapsto g(x))[x] = (\lambda x.\,(\lambda x.\,\groundbox{x})\,(g(x)))\, 7
+    =_{\alpha\beta} \groundbox{g(7)} &                                                                                                         \\
+                                     & L(x\mapsto 7, x, x \mapsto g(x))[x] = (\lambda x.\,\lambda x.\,(\lambda x.\,\groundbox{x})\,(g(x)))\, 7
+      =_{\alpha\beta} \lambda x.\,\groundbox{g(x)}
+  \end{flalign*}
 \end{example}
 
 Most proof rules that operate with contexts can easily be translated into
@@ -1321,13 +1321,13 @@ such as \proofRule{refl} and the $\cdots{}${\ruleType{_simplify}} rules.
 Steps that use such rules always encode a judgment
 $\vDash \Gamma\,\vartriangleright\,t ≈ u$.  With the encoding described above
 we get $L(\Gamma)[t] ≈ R(\Gamma)[u]
-=_{\alpha\beta} \lambda \bar{x}_n.\,\groundbox{t'} ≈
-\lambda \bar{x}_n.\,\groundbox{u'}$ with some terms $t'$, $u'$.
+  =_{\alpha\beta} \lambda \bar{x}_n.\,\groundbox{t'} ≈
+  \lambda \bar{x}_n.\,\groundbox{u'}$ with some terms $t'$, $u'$.
 To handle those terms, we use the $\reify()$ function.
 This function is defined as
 \[
-\reify(\lambda \bar{x}_n.\,\groundbox{t} ≈
-\lambda \bar{x}_n.\,\groundbox{u}) = \forall \bar{x}_n.\,(t ≈ u).
+  \reify(\lambda \bar{x}_n.\,\groundbox{t} ≈
+  \lambda \bar{x}_n.\,\groundbox{u}) = \forall \bar{x}_n.\,(t ≈ u).
 \]
 Therefore,
 all tautological rules with contexts represent a judgment\\
@@ -1337,39 +1337,39 @@ where $T =_{\alpha\beta} L(\Gamma)[t]$ and $U =_{\alpha\beta} R(\Gamma)[u]$.
 \begin{example}
   Consider the step
 
-\begin{AletheS}
-i. & $y, x \mapsto y$ & \ctxsep
-& $x + 0 ≈ y$ & $\proofRule{sum_simplify}$ \\
-\end{AletheS}
+  \begin{AletheS}
+    i. & $y, x \mapsto y$ & \ctxsep
+    & $x + 0 ≈ y$ & $\proofRule{sum_simplify}$ \\
+  \end{AletheS}
 
-\noindent
-Translating the context into metaterms leads to
+  \noindent
+  Translating the context into metaterms leads to
 
-\begin{AletheS}
-i. & \phantom{$y, x \mapsto y$} & \ctxsep
-& $(\lambda y.\,(\lambda x.\,\groundbox{$x + 0$})\, y) ≈
-        (\lambda y.\,\groundbox{$y$})$ & $\proofRule{sum_simplify}$ \\
-\end{AletheS}
+  \begin{AletheS}
+    i. & \phantom{$y, x \mapsto y$} & \ctxsep
+    & $(\lambda y.\,(\lambda x.\,\groundbox{$x + 0$})\, y) ≈
+      (\lambda y.\,\groundbox{$y$})$ & $\proofRule{sum_simplify}$ \\
+  \end{AletheS}
 
-\noindent
-Applying β-reduction leads to
+  \noindent
+  Applying β-reduction leads to
 
-\begin{AletheS}
-i. & \phantom{$y, x \mapsto y$} & \ctxsep
-& $(\lambda y.\,\groundbox{$y + 0$}) ≈
-        (\lambda y.\,\groundbox{$y$}) $ & $\proofRule{sum_simplify}$ \\
-\end{AletheS}
+  \begin{AletheS}
+    i. & \phantom{$y, x \mapsto y$} & \ctxsep
+    & $(\lambda y.\,\groundbox{$y + 0$}) ≈
+      (\lambda y.\,\groundbox{$y$}) $ & $\proofRule{sum_simplify}$ \\
+  \end{AletheS}
 
-\noindent
-Finally, using $\reify()$ leads to
+  \noindent
+  Finally, using $\reify()$ leads to
 
-\begin{AletheS}
-i. & \phantom{$y, x \mapsto y$} & \ctxsep
-& $\forall y.\,(y + 0 ≈  y)$ & $\proofRule{sum_simplify}$ \\
-\end{AletheS}
+  \begin{AletheS}
+    i. & \phantom{$y, x \mapsto y$} & \ctxsep
+    & $\forall y.\,(y + 0 ≈  y)$ & $\proofRule{sum_simplify}$ \\
+  \end{AletheS}
 
-\noindent
-This obviously holds in the theory of linear arithmetic.
+  \noindent
+  This obviously holds in the theory of linear arithmetic.
 \end{example}
 
 \subsection{Soundness}
@@ -1383,8 +1383,8 @@ sound~\cite{barbosa-2019}.
 Alethe does not use any rules that are merely satisfiability preserving.
 The skolemization rules replace the bound variables with choice terms
 instead of fresh symbols.\footnote{The \inlineAlethe{define-fun} function
-can introduce fresh symbols, but we will assume here that those
-commands have been eliminated by unfolding the definition.}
+  can introduce fresh symbols, but we will assume here that those
+  commands have been eliminated by unfolding the definition.}
 All Alethe rules express semantic implications.
 Overall, we assume in this document that the proof rules and proofs
 written in the abstract notation are sound.
@@ -1400,7 +1400,7 @@ proofs.
   $\varphi_1, \dots, \varphi_m$ as the conclusions of the outermost \proofRule{assume}
   steps, then
   \[
-  \varphi_1, \dots, \varphi_m \vDash \bot.
+    \varphi_1, \dots, \varphi_m \vDash \bot.
   \]
 \end{theorem}
 
@@ -1431,7 +1431,7 @@ nested subproofs.
   $C_{\mathit{start}}$.  Let $\psi_n$ be the conclusion
   of $C_{\mathit{start}+n}$ and $V_n$ the conclusions of
   the \proofRule{assume} steps in $[C_{\mathit{start}}, \dots,
-  C_{\mathit{start}+n}]$.
+        C_{\mathit{start}+n}]$.
   Assumptions always introduce unit clauses.  We will identify
   unit clauses with their single literal.
   We will
@@ -1464,11 +1464,11 @@ nested subproofs.
   all assumptions in the subproof.
   By the deduction theorem we get
   \[
-  \vDash \varphi_1 \land \cdots \land \varphi_m → \psi_{\mathit{end}-1}.
+    \vDash \varphi_1 \land \cdots \land \varphi_m → \psi_{\mathit{end}-1}.
   \]
   This can be transformed into the clause
   \[
-  \vDash \neg\varphi_1, \cdots, \neg\varphi_m, l_1, \dots, l_o.
+    \vDash \neg\varphi_1, \cdots, \neg\varphi_m, l_1, \dots, l_o.
   \]
   where $l_1, \dots, l_o$ are the literals of $\psi_{\mathit{end}-1}$.
   This clause is exactly the conclusion of the
@@ -1494,7 +1494,7 @@ subproofs with contexts.  This is slightly complicated by the
   does not use the \proofRule{let} rule.  Otherwise, it contains all
   conclusions of the
   \proofRule{assume} steps among $[C_{δ}, \dots,
-  C_{\mathit{start}}]$ where $δ$ is either the largest index
+        C_{\mathit{start}}]$ where $δ$ is either the largest index
   $δ < {\mathit{start}}$ such
   that $s_{δ}$ is an anchor, or $1$ if no such index exist.
   Hence, there is no anchor between $C_{δ}$ and $C_{\mathit{start}}$.
@@ -1511,12 +1511,12 @@ subproofs with contexts.  This is slightly complicated by the
 
   The step $C_{\mathit{end}}$ is a step
 
-\begin{AletheS}
-                  & \spctx{}          &         & $\cdots$    &           \\
-$\mathit{end}-1$. & \spctx{$\Gamma'$} & \ctxsep & $\,\psi'$ & $(\dots)$ \\
-\spsep
-$\mathit{end}$.   & $\Gamma$          & \ctxsep & $\psi$    & $(\ruleType{rule}\;i_1, \dots, i_n)$ \\
-\end{AletheS}
+  \begin{AletheS}
+    & \spctx{}          &         & $\cdots$    &           \\
+    $\mathit{end}-1$. & \spctx{$\Gamma'$} & \ctxsep & $\,\psi'$ & $(\dots)$ \\
+    \spsep
+    $\mathit{end}$.   & $\Gamma$          & \ctxsep & $\psi$    & $(\ruleType{rule}\;i_1, \dots, i_n)$ \\
+  \end{AletheS}
 
   Since we assume the step $C_{\mathit{end}}$ is correctly employed,
   $\vDash \Gamma \vartriangleright \psi$ holds, as long as
@@ -1538,7 +1538,7 @@ $\mathit{end}$.   & $\Gamma$          & \ctxsep & $\psi$    & $(\ruleType{rule}\
   cannot depend on any step outside the subproof and $V$\, is empty.
   % TODO: this is ugly, let is ugly
   Due to the definition of first-innermost subproof, all steps $C_{i_1},
-  \dots, C_{i_n}$ are in the same subproof that starts at $C_{δ}$.
+    \dots, C_{i_n}$ are in the same subproof that starts at $C_{δ}$.
 
   The steps $C_{i_1}, \dots, C_{i_n}$ might
   depend on some \proofRule{assume} steps that appear before them
@@ -1616,7 +1616,7 @@ general concepts related to the rules.
 \paragraph{Tautologous Rules and Simple Deduction}
 Most rules introduce tautologies. One example is
 the \proofRule{and_pos} rule: $\neg (\varphi_1 \land \varphi_2 \land
-\dots \land \varphi_n), \varphi_i$.
+  \dots \land \varphi_n), \varphi_i$.
 %
 Other rules derive their conclusion from a single premise.
 %
@@ -1656,7 +1656,7 @@ resolution steps.
 \paragraph{Quantifier Instantiation}
 To express quantifier instantiation, the rule \proofRule{forall_inst}
 is used. It produces a formula of the form $(\neg \forall \bar
-x_n.\,\varphi) \lor \varphi[\bar t_n]$, where $\varphi$ is
+  x_n.\,\varphi) \lor \varphi[\bar t_n]$, where $\varphi$ is
 a term containing the free variables $\bar x_n$, and for each $i$ the
 ground term $t_i$ is a new term with the same sort as $x_i$.\footnote{
   For historical reasons, \proofRule{forall_inst} has a unit clause with a disjunction
@@ -1664,7 +1664,7 @@ ground term $t_i$ is a new term with the same sort as $x_i$.\footnote{
 }
 
 The arguments of a \proofRule{forall_inst} step are the list $(x_1 , t_1),
-\dots, (x_n, t_n)$. While this information can be recovered from the term,
+  \dots, (x_n, t_n)$. While this information can be recovered from the term,
 providing it explicitly helps reconstruction because the implicit reordering of
 equalities obscures which terms have been used as instances.
 Existential quantifiers are handled by skolemization.
@@ -1676,7 +1676,7 @@ such as \proofRule{la_totality} ($t_1 \leq t_2 \lor t_2 \leq t_1$)\footnote{
   This rule also has a unit clause with a disjunction as its conclusion.}
 and the main rule \proofRule{la_generic}.  The conclusion of an
 \proofRule{la_generic} step is a tautology $\neg \varphi_1, \neg
-\varphi_2, \dots, \neg \varphi_n$ where the $\varphi_i$ are linear
+  \varphi_2, \dots, \neg \varphi_n$ where the $\varphi_i$ are linear
 (in)equalities. Checking the validity of this clause amounts to
 checking the unsatisfiability of the system of linear equations
 $\varphi_1, \varphi_2, \dots, \varphi_n$.  The annotation of an
@@ -1685,20 +1685,20 @@ The result of forming the linear combination of the literals with
 the coefficients is a trivial inequality between constants.
 
 \begin{example}
-The following example is the proof for the unsatisfiability
-of $(x+y<1) \lor$ $(3<x)$, $x≈ 2$, and $0≈ y$.
+  The following example is the proof for the unsatisfiability
+  of $(x+y<1) \lor$ $(3<x)$, $x≈ 2$, and $0≈ y$.
 
-\begin{Alethe}
-1.& \ctxsep & $(3 < x) \lor (x + y < 1) $ & $ \proofRule{assume}$ \\
-2.& \ctxsep & $x≈ 2                     $ & $ \proofRule{assume}$ \\
-3.& \ctxsep & $0≈ y                     $ & $ \proofRule{assume}$ \\
-4.& \ctxsep & $(3 < x), (x + y < 1)     $ & $ (\proofRule{or}\,1)$ \\
-5.& \ctxsep & $\neg (3<x), \neg (x≈ 2)  $ & $ \proofRule{la_generic}\, [1.0, 1.0]$ \\
-6.& \ctxsep & $\neg (3<x)               $ & $ (\proofRule{resolution}\, 2, 5)$ \\
-7.& \ctxsep & $x + y < 1                $ & $ (\proofRule{resolution}\, 4, 6)$ \\
-8.& \ctxsep & $\neg (x + y < 1), \neg (x≈ 2) \lor \neg (0 ≈ y)$ & $\proofRule{la_generic}\,[1.0, -1.0, 1.0]$ \\
-9.& \ctxsep & $\bot $ & $ (\proofRule{resolution}\, 8, 7, 2, 3)$ \\
-\end{Alethe}
+  \begin{Alethe}
+    1.& \ctxsep & $(3 < x) \lor (x + y < 1) $ & $ \proofRule{assume}$ \\
+    2.& \ctxsep & $x≈ 2                     $ & $ \proofRule{assume}$ \\
+    3.& \ctxsep & $0≈ y                     $ & $ \proofRule{assume}$ \\
+    4.& \ctxsep & $(3 < x), (x + y < 1)     $ & $ (\proofRule{or}\,1)$ \\
+    5.& \ctxsep & $\neg (3<x), \neg (x≈ 2)  $ & $ \proofRule{la_generic}\, [1.0, 1.0]$ \\
+    6.& \ctxsep & $\neg (3<x)               $ & $ (\proofRule{resolution}\, 2, 5)$ \\
+    7.& \ctxsep & $x + y < 1                $ & $ (\proofRule{resolution}\, 4, 6)$ \\
+    8.& \ctxsep & $\neg (x + y < 1), \neg (x≈ 2) \lor \neg (0 ≈ y)$ & $\proofRule{la_generic}\,[1.0, -1.0, 1.0]$ \\
+    9.& \ctxsep & $\bot $ & $ (\proofRule{resolution}\, 8, 7, 2, 3)$ \\
+  \end{Alethe}
 \end{example}
 
 \paragraph{Skolemization and Other Preprocessing Steps}
@@ -1717,30 +1717,30 @@ has a context that maps the existentially quantified variable
 to the appropriate Skolem term.
 
 \begin{AletheS}
-i. & \spctx{$\Gamma, x\mapsto (\varepsilon x.\,\varphi)$} & \ctxsep
-& $\varphi ≈ \psi$ & $(\dots)$ \\
-\spsep
-j. & $\Gamma$ & \ctxsep & $(\exists x.\,\varphi) ≈ \psi$ & $(\proofRule{sko_ex})$ \\
+  i. & \spctx{$\Gamma, x\mapsto (\varepsilon x.\,\varphi)$} & \ctxsep
+  & $\varphi ≈ \psi$ & $(\dots)$ \\
+  \spsep
+  j. & $\Gamma$ & \ctxsep & $(\exists x.\,\varphi) ≈ \psi$ & $(\proofRule{sko_ex})$ \\
 \end{AletheS}
 
 \begin{example}
-To illustrate how such a rule is applied, consider the following example
-taken from~\cite{barbosa-2019}. Here the term $\neg p(\varepsilon x.\neg
-p(x))$ is skolemized. The \proofRule{refl} rule expresses
-a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
-is functional congruence, and \proofRule{sko_forall} works like
-\proofRule{sko_ex}, except that the choice term is $\varepsilon x.\neg\varphi$.
+  To illustrate how such a rule is applied, consider the following example
+  taken from~\cite{barbosa-2019}. Here the term $\neg p(\varepsilon x.\neg
+    p(x))$ is skolemized. The \proofRule{refl} rule expresses
+  a simple tautology on the equality (reflexivity in this case), \proofRule{cong}
+  is functional congruence, and \proofRule{sko_forall} works like
+  \proofRule{sko_ex}, except that the choice term is $\varepsilon x.\neg\varphi$.
 
-\begin{AletheS}
-1. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$}
-     & \ctxsep
-     &  $x  ≈   \varepsilon x.\,\neg (p\,x) $ &
-     $\proofRule{refl}$ \\
-2. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$} & \ctxsep &  $ (p\,x) ≈ p(\varepsilon x.\,\neg (p\,x))$ &  $(\proofRule{cong}\, 1)$ \\
- \spsep
-3. &  & \ctxsep &  $(    \forall x.\,(p\,x))≈      (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{sko_forall}\, 2)$ \\
-4. &  & \ctxsep &  $(\neg\forall x.\,(p\,x))≈ \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{cong}\, 3)$ \\
-\end{AletheS}
+  \begin{AletheS}
+    1. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$}
+    & \ctxsep
+    &  $x  ≈   \varepsilon x.\,\neg (p\,x) $ &
+    $\proofRule{refl}$ \\
+    2. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$} & \ctxsep &  $ (p\,x) ≈ p(\varepsilon x.\,\neg (p\,x))$ &  $(\proofRule{cong}\, 1)$ \\
+    \spsep
+    3. &  & \ctxsep &  $(    \forall x.\,(p\,x))≈      (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{sko_forall}\, 2)$ \\
+    4. &  & \ctxsep &  $(\neg\forall x.\,(p\,x))≈ \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{cong}\, 3)$ \\
+  \end{AletheS}
 \end{example}
 
 \subsection{Bitvector Reasoning with Bitblasting}
@@ -1765,7 +1765,7 @@ solver generated functions.
 The family $\lsymb{bbT}$ consists of one function for each bitvector sort
 $(\lsymb{BitVec}\;n)$.
 \[
-\lsymb{bbT}\,:\,\underbrace{\lsymb{Bool}\,\dots\,\lsymb{Bool}}_n\;(\lsymb{BitVec}\;n).
+  \lsymb{bbT}\,:\,\underbrace{\lsymb{Bool}\,\dots\,\lsymb{Bool}}_n\;(\lsymb{BitVec}\;n).
 \]
 
 \noindent
@@ -1776,18 +1776,18 @@ where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise
 The bit $u_n$ is the least significant bit.  Then
 
 \[
-\lsymb{bbT}\; v_1 \dots v_n = \langle v_1, \dots, v_n\rangle .
+  \lsymb{bbT}\; v_1 \dots v_n = \langle v_1, \dots, v_n\rangle .
 \]
 
 \noindent
 The $\lsymb{bbT}$ functions could be defined in terms of standard SMT-LIB functions.
 \begin{align*}
-\lsymb{bbT}\;v_1 \dots v_n :=\;
- &\lsymb{concat}\,(\lsymb{concat}\,(\dots \\
- &(\lsymb{concat}\,(\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle)\,(\lsymb{ite}\,v_2\,\langle\top\rangle\,\langle\bot\rangle))\\
- & \dots \\
- & (\lsymb{ite}\,v_{n-1}\,\langle\top\rangle\,\langle\bot\rangle)) \\
- & (\lsymb{ite}\,v_n\,\langle\top\rangle\,\langle\bot\rangle)) \\
+  \lsymb{bbT}\;v_1 \dots v_n :=\;
+   & \lsymb{concat}\,(\lsymb{concat}\,(\dots                                                                                                  \\
+   & (\lsymb{concat}\,(\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle)\,(\lsymb{ite}\,v_2\,\langle\top\rangle\,\langle\bot\rangle)) \\
+   & \dots                                                                                                                                    \\
+   & (\lsymb{ite}\,v_{n-1}\,\langle\top\rangle\,\langle\bot\rangle))                                                                          \\
+   & (\lsymb{ite}\,v_n\,\langle\top\rangle\,\langle\bot\rangle))                                                                              \\
 \end{align*}
 
 \noindent
@@ -1796,11 +1796,11 @@ a bit of a bitvector as a boolean.  Just as the built in $\lsymb{extract}$
 symbol, $\lsymb{bitOf}_m$ is used as an indexed symbol.  Hence, for $m \leq n$, we
 write \inlineAlethe{(_ @bitOf} $m$ \inlineAlethe{)}, to denote functions
 \[
-\lsymb{bitOf}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
+  \lsymb{bitOf}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
 \]
-These functions are defined as 
+These functions are defined as
 \[
-\lsymb{bitOf}_m \langle u_1, \dots, u_n \rangle := u_m.
+  \lsymb{bitOf}_m \langle u_1, \dots, u_n \rangle := u_m.
 \]
 
 
@@ -1810,8 +1810,8 @@ is one $\lsymb{bvsize}$ for for each bitvector sort $(\lsymb{BitVec}\;n)$.  Each
 $\lsymb{bvsize}$ is a constant function that returns $n$.  Using notation:
 
 \begin{align*}
-\lsymb{bvsize}& : (\lsymb{BitVec}\;n) \to \mathbb{N}\\
-\lsymb{bvsize}&\;b := n
+  \lsymb{bvsize} & : (\lsymb{BitVec}\;n) \to \mathbb{N} \\
+  \lsymb{bvsize} & \;b := n
 \end{align*}
 
 \noindent

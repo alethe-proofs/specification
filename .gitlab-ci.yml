@@ -8,6 +8,7 @@ build:
     stage: build
     before_script:
     - apk add py3-pygments
+    - cp .latexminted_config.global $HOME/.latexminted_config
     script:
     - cd spec
     - lualatex -shell-escape -recorder '\def\nocomments{}\input{doc.tex}'
