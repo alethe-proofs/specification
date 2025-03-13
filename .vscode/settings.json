@@ -7,7 +7,7 @@
             "args": [
                 "-shell-escape",
                 "-recorder",
-                "\\def\\nocomments{}\\input{spec/doc.tex}"
+                "\\def\\nocomments{}\\input{doc.tex}"
             ],
             "env": {},
         },
@@ -15,7 +15,7 @@
             "name": "bibtex",
             "command": "bibtex",
             "args": [
-                "spec/doc"
+                "doc"
             ],
             "env": {},
         }
