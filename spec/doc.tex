@@ -10,9 +10,18 @@
 
 \usepackage{minted}
 \usemintedstyle{trac}
-% 2023+ minted for custom lexers
-\newminted[AletheVerb]{./highlight.py:SMTLibLexer}{}
-\newmintinline[inlineAlethe]{./highlight.py:SMTLibLexer}{}
+\makeatletter
+\@ifundefined{MintedPygmentize}{
+    % minted >= 3.0.0
+    \newminted[AletheVerb]{./highlight.py:SMTLibLexer}{}
+    \newmintinline[inlineAlethe]{./highlight.py:SMTLibLexer}{}
+}{
+    % minted < 3.0.0
+    \renewcommand{\MintedPygmentize}{./highlight.py}
+    \newminted[AletheVerb]{smt-lib}{}
+    \newmintinline[inlineAlethe]{smt-lib}{}
+}
+\makeatother
 
 \usepackage{cite}
 \usepackage{url}
@@ -166,6 +175,8 @@ break
   {\normalfont\normalsize\bfseries}%
 }
 \makeatother
+
+\listfiles
 
 \NewEnviron{RuleDescription}[1]{%
 \renewcommand\currule{\proofRule{#1}}
