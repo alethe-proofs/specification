@@ -483,8 +483,8 @@ to quickly find the definition of rules.
     A simple \proofRule{la_generic} step in the logic \textsf{LRA} might look like this:
 
     \begin{AletheVerb}
-        (step t10 (cl (not (> (f a) (f b))) (not (= (f a) (f b))))
-        :rule la_generic :args (1.0 -1.0))
+(step t10 (cl (not (> (f a) (f b))) (not (= (f a) (f b))))
+    :rule la_generic :args (1.0 -1.0))
     \end{AletheVerb}
 
     To verify this we have to check the unsatisfiability of $(f\,a) > (f\,b) \land
@@ -497,8 +497,8 @@ to quickly find the definition of rules.
 \begin{RuleExample}
     The following \proofRule{la_generic} step is from a \textsf{QF\_UFLIA} problem:
     \begin{AletheVerb}
-        (step t11 (cl (not (<= f3 0)) (<= (+ 1 (* 4 f3)) 1))
-        :rule la_generic :args (1.0 1/4))
+(step t11 (cl (not (<= f3 0)) (<= (+ 1 (* 4 f3)) 1))
+    :rule la_generic :args (1.0 1/4))
     \end{AletheVerb}
     After normalization we get $-f_3 \geq 0 \land 4\times f_3 > 0$.
     This time step~4 applies and we can strengthen this to
@@ -692,9 +692,9 @@ to quickly find the definition of rules.
 \begin{RuleExample}
     An application of the \proofRule{forall_inst} rule.
     \begin{AletheVerb}
-        (step t16 (cl (or (not (forall ((x S) (y T)) (P y x    )))
-        (P b (f a))
-        :rule forall_inst :args ((f a) b)
+(step t16 (cl (or (not (forall ((x S) (y T)) (P y x    )))
+                                             (P b (f a))
+      :rule forall_inst :args ((f a) b)
     \end{AletheVerb}
 \end{RuleExample}
 
@@ -840,10 +840,10 @@ to quickly find the definition of rules.
 \begin{RuleExample}
     An application of the \proofRule{or} rule.
     \begin{AletheVerb}
-        (step t15 (cl (or (= a b) (not (<= a b)) (not (<= b a))))
-        :rule la_disequality)
-        (step t16 (cl     (= a b) (not (<= a b)) (not (<= b a)))
-        :rule or :premises (t15))
+(step t15 (cl (or (= a b) (not (<= a b)) (not (<= b a))))
+    :rule la_disequality)
+(step t16 (cl     (= a b) (not (<= a b)) (not (<= b a)))
+     :rule or :premises (t15))
     \end{AletheVerb}
 \end{RuleExample}
 
@@ -1370,22 +1370,22 @@ to quickly find the definition of rules.
         \rightarrow (f\,x)\land (f\,y))$ look like this:
 
     \begin{AletheVerb}
-        (anchor :step t3 :args ((x S) (:= (y S) x)))
-        (step t3.t1 (cl (= x y)) :rule refl)
-        (step t3.t2 (cl (= (= x y) (= x x)))
-        :rule cong :premises (t3.t1))
-        (step t3.t3 (cl (= x y)) :rule refl)
-        (step t3.t4 (cl (= (f y) (f x)))
-        :rule cong :premises (t3.t3))
-        (step t3.t5 (cl (= (and (f x) (f y)) (and (f x) (f x))))
-        :rule cong :premises (t3.t4))
-        (step t3.t6 (cl (= (=> (= x y) (and (f x) (f y)))
-                (=> (= x x) (and (f x) (f x)))))
-        :rule cong :premises (t3.t2 t3.t5))
-        (step t3 (cl (=
+(anchor :step t3 :args ((x S) (:= (y S) x)))
+(step t3.t1 (cl (= x y)) :rule refl)
+(step t3.t2 (cl (= (= x y) (= x x)))
+    :rule cong :premises (t3.t1))
+(step t3.t3 (cl (= x y)) :rule refl)
+(step t3.t4 (cl (= (f y) (f x)))
+    :rule cong :premises (t3.t3))
+(step t3.t5 (cl (= (and (f x) (f y)) (and (f x) (f x))))
+    :rule cong :premises (t3.t4))
+(step t3.t6 (cl (= (=> (= x y) (and (f x) (f y)))
+                   (=> (= x x) (and (f x) (f x)))))
+    :rule cong :premises (t3.t2 t3.t5))
+(step t3 (cl (=
         (forall ((x S) (y S)) (=> (= x y) (and (f x) (f y))))
         (forall ((x S))       (=> (= x x) (and (f x) (f x))))))
-        :rule onepoint)
+    :rule onepoint)
     \end{AletheVerb}
 \end{RuleExample}
 
@@ -1713,12 +1713,12 @@ to quickly find the definition of rules.
     by Carcara's elaborator.  It elaborates an implicit application of
     symmetry of equality.
     \begin{AletheVerb}
-        (step t1 (cl (= (= 0 1) (= 1 0))) :rule eq_symmetric)
-        (anchor :step t2 :args ((p Bool) (:= (p Bool) p)))
-        (step t2.t1 (cl (= (= p false) (= false p))) :rule eq_symmetric)
-        (step t2 (cl (= (let ((p (= 0 1))) (= p false))
-        (let ((p (= 1 0))) (= false p))))
-        :rule bind_let :premises (t1))
+(step t1 (cl (= (= 0 1) (= 1 0))) :rule eq_symmetric)
+(anchor :step t2 :args ((p Bool) (:= (p Bool) p)))
+(step t2.t1 (cl (= (= p false) (= false p))) :rule eq_symmetric)
+(step t2 (cl (= (let ((p (= 0 1))) (= p false))
+                (let ((p (= 1 0))) (= false p))))
+         :rule bind_let :premises (t1))
     \end{AletheVerb}
 
 \end{RuleExample}

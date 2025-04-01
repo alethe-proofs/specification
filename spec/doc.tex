@@ -670,25 +670,25 @@ An Alethe proof is a list of commands.
 
 \begin{figure}[t]
     \begin{AletheVerb}
-        (assume h1 (not (p a)))
-        (assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
-        ...
-        (anchor :step t9 :args ((vr4 U) (:= (z2 U) vr4)))
-        (step t9.t1 (cl (= z2 vr4)) :rule refl)
-        (step t9.t2 (cl (= (p z2) (p vr4)))
-        :rule cong :premises (t9.t1))
-        (step t9 (cl (= (forall ((z2 U)) (p z2))
-        (forall ((vr4 U)) (p vr4))))
-        :rule bind)
-        ...
-        (step t14 (cl (forall ((vr5 U)) (p vr5)))
-        :rule th_resolution :premises (t11 t12 t13))
-        (step t15 (cl (or (not (forall ((vr5 U)) (p vr5)))
-        (p a)))
-        :rule forall_inst :args ((:= vr5 a)))
-        (step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
-        :rule or :premises (t15))
-        (step t17 (cl) :rule resolution :premises (t16 h1 t14))
+(assume h1 (not (p a)))
+(assume h2 (forall ((z1 U)) (forall ((z2 U)) (p z2))))
+...
+(anchor :step t9 :args ((vr4 U) (:= (z2 U) vr4)))
+(step t9.t1 (cl (= z2 vr4)) :rule refl)
+(step t9.t2 (cl (= (p z2) (p vr4)))
+         :rule cong :premises (t9.t1))
+(step t9 (cl (= (forall ((z2 U)) (p z2))
+                (forall ((vr4 U)) (p vr4))))
+         :rule bind)
+...
+(step t14 (cl (forall ((vr5 U)) (p vr5)))
+          :rule th_resolution :premises (t11 t12 t13))
+(step t15 (cl (or (not (forall ((vr5 U)) (p vr5)))
+                  (p a)))
+          :rule forall_inst :args ((:= vr5 a)))
+(step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
+          :rule or :premises (t15))
+(step t17 (cl) :rule resolution :premises (t16 h1 t14))
     \end{AletheVerb}
     \caption{Example proof output. Assumptions are
         introduced;   a subproof renames bound variables; the proof finishes with
@@ -921,17 +921,18 @@ remove the steps of the subproof from memory after checking it.
     expressed as a concrete proof.
 
     \begin{AletheVerb}
-        (assume h1 (forall ((x S)) (P x)))
-        (assume h2 (not (forall ((y S)) (P y))))
-        (anchor :step t5 :args ((y S) (:= (x S) y)))
-        (step t3 (cl (= x y)) :rule refl)
-        (step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
-        (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
-        :rule bind)
-        (step t6 (cl (not (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
-        (not (forall ((x S)) (P x)))
-        (forall ((y S)) (P y))) :rule equiv_pos2)
-        (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
+(assume h1 (forall ((x S)) (P x)))
+(assume h2 (not (forall ((y S)) (P y))))
+(anchor :step t5 :args ((y S) (:= (x S) y)))
+(step t3 (cl (= x y)) :rule refl)
+(step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
+(step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
+                              :rule bind)
+(step t6 (cl (not (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
+             (not (forall ((x S)) (P x)))
+             (forall ((y S)) (P y))) :rule equiv_pos2)
+(step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
+
     \end{AletheVerb}
 \end{example}
 
@@ -1099,11 +1100,11 @@ the calculation of the context of the steps in the subproof.
     The proof in Example~\ref{ex:ti:ctx-concrete} has only one subproof
     and this subproof is also a first-innermost subproof.  It is the subproof
     \begin{AletheVerb}
-        (anchor :step t5 :args ((y S) (:= (x S) y)))
-        (step t3 (cl (= x y)) :rule refl)
-        (step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
-        (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
-        :rule bind)
+(anchor :step t5 :args ((y S) (:= (x S) y)))
+(step t3 (cl (= x y)) :rule refl)
+(step t4 (cl (= (P x) (P y))) :rule cong :premises (t3))
+(step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
+                              :rule bind)
     \end{AletheVerb}
 \end{example}
 
@@ -1195,14 +1196,14 @@ $P_1 = E(P)$, $P_2 = E(E(P))$ and $P_{\mathit{last}} = E(P_{\mathit{last}})$.
     Example~\ref{ex:ti:ctx-concrete} gives us the proof
 
     \begin{AletheVerb}
-        (assume h1 (forall ((x S)) (P x)))
-        (assume h2 (not (forall ((y S)) (P y))))
-        (step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
-        :rule hole)
-        (step t6 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y)))
-        (not (forall ((x S)) (P x)))
-        (forall ((y S)) (P y)))) :rule equiv_pos2)
-        (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
+(assume h1 (forall ((x S)) (P x)))
+(assume h2 (not (forall ((y S)) (P y))))
+(step t5 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y))))
+                                      :rule hole)
+(step t6 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y)))
+             (not (forall ((x S)) (P x)))
+             (forall ((y S)) (P y)))) :rule equiv_pos2)
+(step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
     \end{AletheVerb}
 
     Since this proof contains no subproof, it is also $P_{\mathit{last}}$.
