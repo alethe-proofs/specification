@@ -1380,7 +1380,7 @@ to quickly find the definition of rules.
         (step t3.t5 (cl (= (and (f x) (f y)) (and (f x) (f x))))
         :rule cong :premises (t3.t4))
         (step t3.t6 (cl (= (=> (= x y) (and (f x) (f y)))
-        (=> (= x x) (and (f x) (f x)))))
+                (=> (= x x) (and (f x) (f x)))))
         :rule cong :premises (t3.t2 t3.t5))
         (step t3 (cl (=
         (forall ((x S) (y S)) (=> (= x y) (and (f x) (f y))))
@@ -1939,7 +1939,7 @@ to quickly find the definition of rules.
     \]
 
 \end{RuleDescription}
-
+% Page 52
 \begin{RuleDescription}{pbblast_bveq}
     Consider bitvectors \textbf{x} and \textbf{y} of length $n$.
     The pseudo-boolean bitblasting of their equality is expressed by:
@@ -1951,9 +1951,30 @@ to quickly find the definition of rules.
 
     \[ \sum_{i=0}^{n-1}{2^i x_{i}} - \sum_{i=0}^{n-1}{2^i y_{i}} = 0\]
 
-    % TODO: Add example
-
 \end{RuleDescription}
+
+\begin{RuleExample}
+    The following example shows how this rule is used with a bitvector of width $2$.
+    \begin{AletheVerb}
+
+        (declare-const x2 (_ BitVec 2))
+        (declare-const y2 (_ BitVec 2))
+        (assume (= x #b01))
+        (assume (= (bvand x y) #b10))
+        (step t1 (cl (=
+            (= x2 y2)
+            (= (- (+
+                    (* 1 ((_ int_of 0) x2))
+                    (* 2 ((_ int_of 1) x2)) 0)
+                  (+
+                    (* 1 ((_ int_of 0) y2))
+                    (* 2 ((_ int_of 1) y2)) 0)
+            ) 0))) :rule pbblast_bveq)
+
+    \end{AletheVerb}
+
+\end{RuleExample}
+
 
 \begin{RuleDescription}{pbblast_bvult}
     The `unsigned-less-than' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
