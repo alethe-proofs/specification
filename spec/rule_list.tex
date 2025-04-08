@@ -729,10 +729,12 @@ $j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_{n+1}$ & (\currule\; $i_1$, $\dots$, $i
 $i_1$. & \ctxsep  & $\Gamma$  & $t_1 ≈ u_1$ & ($\dots$) \\
 $i_2$. & \ctxsep  & $\Gamma$  & $t_2 ≈ u_2 $ & ($\dots$) \\
 \aletheLineS
-$i_n$. & \ctxsep  & $\Gamma$  & $t_n ≈ u_n $ & ($\dots$) \\
-$j$. & \ctxsep  & $\Gamma$  & $(f\,t_1\,\cdots\,t_n) ≈ (f\,u_1\,\cdots\,u_n)$  & (\currule\; $i_1$, $\dots$, $i_n$) \\
+$i_m$. & \ctxsep  & $\Gamma$  & $t_m ≈ u_m $ & ($\dots$) \\
+$j$. & \ctxsep  & $\Gamma$  & $(f\,s_1\,\cdots\,s_n\, t_1\,\cdots\,t_m) ≈
+                               (f\,s_1\,\cdots\,s_n\, u_1\,\cdots\,u_m)$
+    & (\currule\; $i_1$, $\dots$, $i_m$) \\
 \end{AletheXS}
-where $f$ is any function symbol of appropriate sort.
+where $f$ is any $n+m$-ary function symbol of appropriate sort.
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_reflexive}
