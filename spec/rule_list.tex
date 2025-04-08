@@ -1622,15 +1622,10 @@ symmetry of equality.
 \end{RuleExample}
 
 \begin{RuleDescription}{distinct_elim}
-This rule eliminates the $\lsymb{distinct}$ predicate. If called with one
-argument this predicate always holds:
+This rule eliminates the $\lsymb{distinct}$ predicate.
 
-\begin{AletheXS}
-$i$. & $\Gamma$ & \ctxsep & $(\lsymb{distinct}\, t) ≈ \top$ & \currule \\
-\end{AletheXS}
-
-If applied to terms of type $\lsymb{Bool}$ more than two terms can never be
-distinct, hence only two cases are possible:
+This rule behaves differently when the arguments are terms of type $\lsymb{Bool}$.
+Then there are two cases:
 
 \begin{AletheXS}
 $i$. & $\Gamma$ & \ctxsep &
@@ -1643,13 +1638,24 @@ $i$. & $\Gamma$ & \ctxsep &
 $(\lsymb{distinct}\,\varphi_1\,\varphi_2\,\varphi_3\,\dots) ≈ \bot$ & \currule \\
 \end{AletheXS}
 
-The general case is
+For all other sorts the rule is
 
 \begin{AletheXS}
 $i$. & $\Gamma$ & \ctxsep &
 $(\lsymb{distinct}\,t_1\,\dots\, t_n) ≈
 \bigwedge_{i=1}^{n}\bigwedge_{j=i+1}^{n} t_i\;{\not≈}\;t_j$ & \currule \\
 \end{AletheXS}
+
+\ruleparagraph{Remark.}
+SMT-LIB does not allow $\lsymb{distinct}$ to be used with only one argument.
+However, multiple solvers support this as a non-standard extension.
+While Alethe does not prescribe a behavior for this case, most solvers
+produce the following step:
+
+\begin{AletheXS}
+$i$. & $\Gamma$ & \ctxsep & $(\lsymb{distinct}\, t) ≈ \top$ & \currule \\
+\end{AletheXS}
+
 \end{RuleDescription}
 
 \begin{RuleDescription}{la_rw_eq}
