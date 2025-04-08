@@ -1626,27 +1626,27 @@ This rule eliminates the $\lsymb{distinct}$ predicate. If called with one
 argument this predicate always holds:
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(\lsymb{distinct}\, t) ≈ \top$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(\lsymb{distinct}\, t) ≈ \top$ & \currule \\
 \end{AletheXS}
 
 If applied to terms of type $\lsymb{Bool}$ more than two terms can never be
 distinct, hence only two cases are possible:
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ &
+$i$. & $\Gamma$ & \ctxsep &
 $(\lsymb{distinct}\,\varphi\,\psi) ≈ \neg (\varphi ≈ \psi)$ & \currule \\
 \end{AletheXS}
 and
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ &
+$i$. & $\Gamma$ & \ctxsep &
 $(\lsymb{distinct}\,\varphi_1\,\varphi_2\,\varphi_3\,\dots) ≈ \bot$ & \currule \\
 \end{AletheXS}
 
 The general case is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ &
+$i$. & $\Gamma$ & \ctxsep &
 $(\lsymb{distinct}\,t_1\,\dots\, t_n) ≈
 \bigwedge_{i=1}^{n}\bigwedge_{j=i+1}^{n} t_i\;{\not≈}\;t_j$ & \currule \\
 \end{AletheXS}
@@ -1665,24 +1665,25 @@ application of the binary operator. It is never applied to $\land$ or $\lor$.
 Three cases are possible.
 If the operator $\circ$ is left associative, then the rule has the form
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\bigcirc_{i=1}^{n} t_i ≈ (\dots( t_1\circ  t_2) \circ  t_3)\circ \cdots  t_n)$
+$i$. & $\Gamma$ & \ctxsep & $\bigcirc_{i=1}^{n} t_i ≈ (\dots(( t_1\circ  t_2) \circ  t_3)\circ \cdots  t_n)$
  & \currule \\
 \end{AletheXS}
 
 If the operator $\circ$ is right associative, then the rule has the form
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$ & $\bigcirc_{i=1}^{n} t_i ≈
-( t_1 \circ \cdots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n)\dots)$ & \currule \\
+$i$. & $\Gamma$  & \ctxsep & $\bigcirc_{i=1}^{n} t_i ≈
+( t_1 \circ \cdots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n))\dots)$ & \currule \\
 \end{AletheXS}
 
 If the operator is {\em chainable}, then it has the form
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\bigcirc_{i=1}^{n} t_i ≈
-( t_1\circ t_2) \land ( t_2 \circ  t_3) \land \cdots
-\land ( t_{n-1}\circ t_n)$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\bigcirc_{i=1}^{n} t_i ≈
+( t_1\circ t_2) \oplus ( t_2 \circ  t_3) \oplus \cdots
+\oplus ( t_{n-1}\circ t_n)$ & \currule \\
 \end{AletheXS}
+where $\oplus$ is the binary operator indicated to perform the chaining.
 \end{RuleDescription}
 
 \begin{RuleDescription}{bfun_elim}
