@@ -245,6 +245,27 @@ to quickly find the definition of rules.
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
+    \caption{PseudoBoolean BitBlasting rules.}
+    \label{rule-tab:pbbitblasting}\\
+    Rule & Description \\
+    \hline
+    \ruleref{pbblast_bveq} & Pseudo-Boolean Bitblasting of $\lsymb{=}$. \\
+    \ruleref{pbblast_bvult} & Pseudo-Boolean Bitblasting of $\lsymb{bvult}$. \\
+    \ruleref{pbblast_bvugt} & Pseudo-Boolean Bitblasting of $\lsymb{bvugt}$. \\
+    \ruleref{pbblast_bvule} & Pseudo-Boolean Bitblasting of $\lsymb{bvule}$. \\
+    \ruleref{pbblast_bvuge} & Pseudo-Boolean Bitblasting of $\lsymb{bvuge}$. \\
+    \ruleref{pbblast_bvslt} & Pseudo-Boolean Bitblasting of $\lsymb{bvslt}$. \\
+    \ruleref{pbblast_bvsgt} & Pseudo-Boolean Bitblasting of $\lsymb{bvsgt}$. \\
+    \ruleref{pbblast_bvsle} & Pseudo-Boolean Bitblasting of $\lsymb{bvsle}$. \\
+    \ruleref{pbblast_bvsge} & Pseudo-Boolean Bitblasting of $\lsymb{bvsge}$. \\
+    \ruleref{pbblast_pbbvar} & Pseudo-Boolean Bitblasting of a BitVector variable. \\
+    \ruleref{pbblast_pbbconst} & Pseudo-Boolean Bitblasting of BitVector constant. \\
+    \ruleref{pbblast_bvxor} & Pseudo-Boolean Bitblasting of $\lsymb{bvxor}$. \\
+    \ruleref{pbblast_bvand} & Pseudo-Boolean Bitblasting of $\lsymb{bvand}$. \\
+\end{xltabular}
+
+
+\begin{xltabular}{\linewidth}{l X}
     \caption{Rules used by cvc5, but not by veriT.}
     \label{rule-tab:cvc5}\\
     Rule & Description \\
@@ -2029,24 +2050,6 @@ to quickly find the definition of rules.
 
 \end{RuleDescription}
 
-
-% https://github.com/cvc5/cvc5/blob/96a35d7cc97ee375e263ab43a2ed9ba03cc32858/src/rewriter/node.py#L44
-\begin{RuleDescription}{pbblast_bvuge}
-    The `unsigned-greater-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
-
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvuge}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
-
-    \[
-        \sum_{i=0}^{n-1} 2^i\mathbf{x}_{i} - \sum_{i=0}^{n-1} 2^i\mathbf{y}_{i} \ge 0.
-    \]
-
-    % TODO: Add example
-
-\end{RuleDescription}
-
 \begin{RuleDescription}{pbblast_bvule}
     The `unsigned-less-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
 
@@ -2069,6 +2072,25 @@ to quickly find the definition of rules.
     % TODO: Add example
 
 \end{RuleDescription}
+
+% https://github.com/cvc5/cvc5/blob/96a35d7cc97ee375e263ab43a2ed9ba03cc32858/src/rewriter/node.py#L44
+\begin{RuleDescription}{pbblast_bvuge}
+    The `unsigned-greater-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+
+    \begin{AletheX}
+        $i$. & \ctxsep & $(\lsymb{bvuge}\ x\ y) \approx A$ & (\currule)
+    \end{AletheX}
+    The term ``$A$'' is `true' iff:
+
+    \[
+        \sum_{i=0}^{n-1} 2^i\mathbf{x}_{i} - \sum_{i=0}^{n-1} 2^i\mathbf{y}_{i} \ge 0.
+    \]
+
+    % TODO: Add example
+
+\end{RuleDescription}
+
+
 
 \begin{RuleDescription}{pbblast_bvslt}
     The `signed-less-than' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
@@ -2109,22 +2131,6 @@ to quickly find the definition of rules.
 
 \end{RuleDescription}
 
-\begin{RuleDescription}{pbblast_bvsge}
-    The `signed-greater-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
-
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvsge}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
-
-    \[
-        -(2^{n-1})\mathbf{x}_{n-1} + \sum_{i=0}^{n-2} 2^i\mathbf{x}_{i} + 2^{n-1}\mathbf{y}_{n-1} - \sum_{i=0}^{n-2} 2^i\mathbf{y}_{i} \geq 0
-    \]
-
-    % TODO: Add example
-
-\end{RuleDescription}
-
 \begin{RuleDescription}{pbblast_bvsle}
     The `signed-less-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
 
@@ -2147,6 +2153,24 @@ to quickly find the definition of rules.
     % TODO: Add example
 
 \end{RuleDescription}
+
+\begin{RuleDescription}{pbblast_bvsge}
+    The `signed-greater-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+
+    \begin{AletheX}
+        $i$. & \ctxsep & $(\lsymb{bvsge}\ x\ y) \approx A$ & (\currule)
+    \end{AletheX}
+    The term ``$A$'' is `true' iff:
+
+    \[
+        -(2^{n-1})\mathbf{x}_{n-1} + \sum_{i=0}^{n-2} 2^i\mathbf{x}_{i} + 2^{n-1}\mathbf{y}_{n-1} - \sum_{i=0}^{n-2} 2^i\mathbf{y}_{i} \geq 0
+    \]
+
+    % TODO: Add example
+
+\end{RuleDescription}
+
+
 
 \begin{RuleDescription}{pbblast_pbbvar}
     Conversion from a BitVector of $n$ bits to $n$ PseudoBoolean variables passed to pbbT:
