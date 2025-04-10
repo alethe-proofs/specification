@@ -1648,7 +1648,7 @@ to quickly find the definition of rules.
         (step t2.t1 (cl (= (= p false) (= false p))) :rule eq_symmetric)
         (step t2 (cl (= (let ((p (= 0 1))) (= p false))
         (let ((p (= 1 0))) (= false p))))
-        :rule bind_let :premises (t1))
+            :rule bind_let :premises (t1))
     \end{AletheVerb}
 
 \end{RuleExample}
@@ -2207,22 +2207,22 @@ to quickly find the definition of rules.
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_pbbconst}
-    Constraints on each bit of the constant BitVector b:
+    Blasts the bits of the constant BitVector b:
 
     \begin{AletheX}
-        $i$. & \ctxsep & $\left(b \approx \lsymb{pbbT}\ r\right) \land \bigwedge_{i=0}^{n-1}{\left(r_i = \lsymb{PB\_ZERO\_OR\_ONE}(b_{n-i-1})\right)}$ & (\currule) \\
+        $i$. & \ctxsep & $\left(b \approx \lsymb{pbbT}\; \textbf{match}(b_0) \dots \textbf{match}(b_{n-1}) \right)$ & (\currule) \\
     \end{AletheX}
-    % TODO: Explain PB_ZERO_OR_ONE := if b_i is 1 then b_i = 1 else b_i = 0
     \noindent
-    In which we expand \textbf{PB\_ZERO\_OR\_ONE($b_i$)} into:
-    \begin{itemize}
-        \item $\left(b_i = 0\right)$ if $b_i$ is $0$
-        \item $\left(b_i = 1\right)$ if $b_i$ is $1$
-    \end{itemize}
-
-    % TODO: Add example
-
+    In which we expand \textbf{match($b_i$)} into the constant value of ``$(\lsymb{bitOf}_{i}\ b)$''
 \end{RuleDescription}
+
+\begin{RuleExample}
+    If we consider the bitvector constant ``$\lsymb{\#b10}$'':
+    \begin{AletheVerb}
+        (step t1 (cl (= #b10 (pbbterm 0 1)))
+            :rule pbblast_pbbconst)
+    \end{AletheVerb}
+\end{RuleExample}
 
 \begin{RuleDescription}{pbblast_bvxor}
     The `bvxor' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
@@ -2237,8 +2237,6 @@ to quickly find the definition of rules.
     \[ -\textbf{r}_i-\textbf{x}_i-\textbf{y}_i\ge -2 \]
     \[  \textbf{r}_i+\textbf{x}_i-\textbf{y}_i\ge  0 \]
     \[  \textbf{r}_i-\textbf{x}_i+\textbf{y}_i\ge  0 \]
-
-    % TODO: Add example
 
 \end{RuleDescription}
 
