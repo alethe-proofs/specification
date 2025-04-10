@@ -1892,10 +1892,10 @@ to quickly find the definition of rules.
     A simple \proofRule{cp_addition} step might look like this:
 
     \begin{AletheVerb}
-        (assume c1 (>= (+ (* 1 x1) 0) 1))
-        (assume c2 (>= (+ (* 1 x2) 0) 1))
-        (step t1 (cl (>= (+ (* 1 x1) (* 1 x2) 0) 2))
-        :rule cp_addition :premises (c1 c2))
+        (assume c1 (>= (* 1 x1) 1))
+        (assume c2 (>= (* 1 x2) 1))
+        (step t1 (cl (>= (+ (* 1 x1) (* 1 x2)) 2))
+            :rule cp_addition :premises (c1 c2))
     \end{AletheVerb}
 
     In this example, we are adding two constraints.
@@ -1913,10 +1913,10 @@ to quickly find the definition of rules.
     This \proofRule{cp_addition} example has negated literals that cancel each other:
 
     \begin{AletheVerb}
-        (assume c1 (>= (+ (* 2 x1) (* 3 x2) 0) 2))
-        (assume c2 (>= (+ (* 1 (- 1 x1)) (* 3 (- 1 x2)) 0) 4))
-        (step t1 (cl (>= (+ (* 1 x1) 0) 2))
-        :rule cp_addition :premises (c1 c2))
+        (assume c1 (>= (+ (* 2 x1) (* 3 x2)) 2))
+        (assume c2 (>= (+ (* 1 (- 1 x1)) (* 3 (- 1 x2))) 4))
+        (step t1 (cl (>= (* 1 x1) 2))
+            :rule cp_addition :premises (c1 c2))
     \end{AletheVerb}
 
     In this example, we are adding two constraints.
