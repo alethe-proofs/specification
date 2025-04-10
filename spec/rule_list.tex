@@ -2007,19 +2007,31 @@ to quickly find the definition of rules.
     \begin{AletheVerb}
         (declare-const x (_ BitVec 2))
         (declare-const y (_ BitVec 2))
-        (assume (= x #b01))
-        (assume (= (bvand x y) #b10))
         (step t1 (cl (= (= x y)
-                        (= (- (+ (* 1 ((_ int_of 0) x2))
-                                 (* 2 ((_ int_of 1) x2)))
-                              (+ (* 1 ((_ int_of 0) y2))
-                                 (* 2 ((_ int_of 1) y2))))
-                           0
-                    ))) :rule pbblast_bveq)
-
+                        (= (- (+ (* 1 ((_ int_of 0) x)) (* 2 ((_ int_of 1) x)) 0)
+                              (+ (* 1 ((_ int_of 0) y)) (* 2 ((_ int_of 1) y)) 0))
+                        0)
+            )) :rule pbblast_bveq)
     \end{AletheVerb}
 
 \end{RuleExample}
+
+\begin{RuleExample}
+    This example is similar to the last one, but it showcases the short-circuiting.
+    \begin{AletheVerb}
+        (declare-const x0 Int)
+        (declare-const x1 Int)
+        (declare-const y0 Int)
+        (declare-const y1 Int)
+        (step t1 (cl (= (= (pbbterm x0 x1) (pbbterm y0 y1))
+                        (= (- (+ (* 1 x0) (* 2 x1) 0)
+                              (+ (* 1 y0) (* 2 y1) 0))
+                        0)
+            )) :rule pbblast_bveq)
+    \end{AletheVerb}
+
+\end{RuleExample}
+
 
 
 \begin{RuleDescription}{pbblast_bvult}
