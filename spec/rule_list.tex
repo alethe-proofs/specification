@@ -245,6 +245,17 @@ to quickly find the definition of rules.
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
+    \caption{Cutting Planes Reasoning rules.}
+    \label{rule-tab:cutting-planes}\\
+    Rule & Description \\
+    \hline
+    \ruleref{cp_addition} & Addition of PseudoBoolean inequalities. \\
+    \ruleref{cp_multiplication} & Multiplication of a PseudoBoolean inequality by a scalar. \\
+    \ruleref{cp_division} & Division of a PseudoBoolean inequality by a scalar. \\
+    \ruleref{cp_saturation} & Saturation of a PseudoBoolean inequality. \\
+\end{xltabular}
+
+\begin{xltabular}{\linewidth}{l X}
     \caption{PseudoBoolean BitBlasting rules.}
     \label{rule-tab:pbbitblasting}\\
     Rule & Description \\
@@ -1574,108 +1585,6 @@ to quickly find the definition of rules.
     \end{itemize}
 \end{RuleDescription}
 
-\begin{RuleDescription}{cp_addition}
-    A step of the \currule{} rule represents the addition of two pseudo-Boolean
-    constraints using cutting planes reasoning, combining their coefficients and constants.
-    Negated and plain literals over the same variable cancel each other.
-    A {\currule} step in the proof has the form:
-
-    \begin{AletheS}
-        $i_1$. & \ctxsep & \, & ${\sum_i{a_i l_i} \ge A}$  \\
-        $i_2$. & \ctxsep  & \, & ${\sum_i{b_i l_i} \ge B}$ \\
-        $j$. & \ctxsep  & \, & ${\sum_i{(a_i + b_i) l_i} \ge (A+B)}$  & (\currule\; $i_1$, $i_2$)
-    \end{AletheS}
-
-    To verify a \currule{} step, one must check that the two given
-    pseudo-Boolean constraints are valid and that their combination satisfies
-    the addition rule.
-
-\end{RuleDescription}
-
-\begin{RuleExample}
-    A simple \proofRule{cp_addition} step might look like this:
-
-    \begin{AletheVerb}
-        (assume c1 (>= (+ (* 1 x1) 0) 1))
-        (assume c2 (>= (+ (* 1 x2) 0) 1))
-        (step t1 (cl (>= (+ (* 1 x1) (* 1 x2) 0) 2))
-        :rule cp_addition :premises (c1 c2))
-    \end{AletheVerb}
-
-    In this example, we are adding two constraints.
-    \[
-        x_1 \geq 1 \quad \text{and} \quad x_2 \geq 1.
-    \]
-    After applying the \proofRule{cp_addition} rule,
-    the combined constraint is:
-    \[
-        x_1 + x_2 \geq 1
-    \]
-\end{RuleExample}
-
-\begin{RuleExample}
-    This \proofRule{cp_addition} example has negated literals that cancel each other:
-
-    \begin{AletheVerb}
-        (assume c1 (>= (+ (* 2 x1) (* 3 x2) 0) 2))
-        (assume c2 (>= (+ (* 1 (- 1 x1)) (* 3 (- 1 x2)) 0) 4))
-        (step t1 (cl (>= (+ (* 1 x1) 0) 2))
-        :rule cp_addition :premises (c1 c2))
-    \end{AletheVerb}
-
-    In this example, we are adding two constraints.
-    \[
-        2 x_1 + 3 x_2 \geq 2 \quad \text{and} \quad \overline{x_1} + 3 \overline{x_2} \geq 4.
-    \]
-    After applying the \proofRule{cp_addition} rule,
-    the combined constraint is:
-    \[
-        x_1 \geq 2
-    \]
-    After simplification, this results in a contradiction.
-\end{RuleExample}
-
-
-
-\begin{RuleDescription}{cp_multiplication}
-    A constraint can be multiplied by any $c \in \mathbb{N}^+$:
-
-    \begin{AletheS}
-        $i$. & \ctxsep & \, & ${\sum_i{a_i l_i} \ge A}$  \\
-        $j$. & \ctxsep  & \, & ${\sum_i{c a_i l_i} \ge c A}$  & (\currule\; $i$)\,[$c$]
-    \end{AletheS}
-
-\end{RuleDescription}
-
-
-\begin{RuleDescription}{cp_divison}
-    A constraint can be divided by any $c \in \mathbb{N}^+$,
-    and the the ceiling of this division in applied:
-
-    \begin{AletheS}
-        $i$. & \ctxsep & \, & ${\sum_i{a_i l_i} \ge A}$  \\
-        $j$. & \ctxsep  & \, & ${\sum_i{ \lceil \frac{a_i}{c} \rceil l_i} \ge \lceil \frac{A}{c} \rceil}$  & (\currule\; $i$)\,[$c$]
-    \end{AletheS}
-
-    \ruleparagraph{Remark.} This rule needs constraints in \textbf{normalized form}
-    i.e. no negative coefficients, no negative constant.
-
-\end{RuleDescription}
-
-
-\begin{RuleDescription}{cp_saturation}
-    A constraint can replace its coefficients by the minimum between them and the constant:
-
-    \begin{AletheS}
-        $i$. & \ctxsep & \, & ${\sum_i{a_i l_i} \ge A}$  \\
-        $j$. & \ctxsep  & \, & ${\sum_i{ \min(a_i,A)\cdot l_i} \ge A}$  & (\currule\; $i$)
-    \end{AletheS}
-
-    \ruleparagraph{Remark.} This rule needs constraints in \textbf{normalized form}
-    i.e. no negative coefficients, no negative constant.
-
-\end{RuleDescription}
-
 \begin{RuleDescription}{let}
     This rule eliminates $\lsymb{let}$. It has the form
 
@@ -1960,7 +1869,109 @@ to quickly find the definition of rules.
     \]
 
 \end{RuleDescription}
-% Page 52
+
+\begin{RuleDescription}{cp_addition}
+    A step of the \currule{} rule represents the addition of two pseudo-Boolean
+    constraints using cutting planes reasoning, combining their coefficients and constants.
+    Negated and plain literals over the same variable cancel each other.
+    A {\currule} step in the proof has the form:
+
+    \begin{AletheS}
+        $i_1$. & \ctxsep & \, & ${\sum_i{a_i l_i} \ge A}$  \\
+        $i_2$. & \ctxsep  & \, & ${\sum_i{b_i l_i} \ge B}$ \\
+        $j$. & \ctxsep  & \, & ${\sum_i{(a_i + b_i) l_i} \ge (A+B)}$  & (\currule\; $i_1$, $i_2$)
+    \end{AletheS}
+
+    To verify a \currule{} step, one must check that the two given
+    pseudo-Boolean constraints are valid and that their combination satisfies
+    the addition rule.
+
+\end{RuleDescription}
+
+\begin{RuleExample}
+    A simple \proofRule{cp_addition} step might look like this:
+
+    \begin{AletheVerb}
+        (assume c1 (>= (+ (* 1 x1) 0) 1))
+        (assume c2 (>= (+ (* 1 x2) 0) 1))
+        (step t1 (cl (>= (+ (* 1 x1) (* 1 x2) 0) 2))
+        :rule cp_addition :premises (c1 c2))
+    \end{AletheVerb}
+
+    In this example, we are adding two constraints.
+    \[
+        x_1 \geq 1 \quad \text{and} \quad x_2 \geq 1.
+    \]
+    After applying the \proofRule{cp_addition} rule,
+    the combined constraint is:
+    \[
+        x_1 + x_2 \geq 1
+    \]
+\end{RuleExample}
+
+\begin{RuleExample}
+    This \proofRule{cp_addition} example has negated literals that cancel each other:
+
+    \begin{AletheVerb}
+        (assume c1 (>= (+ (* 2 x1) (* 3 x2) 0) 2))
+        (assume c2 (>= (+ (* 1 (- 1 x1)) (* 3 (- 1 x2)) 0) 4))
+        (step t1 (cl (>= (+ (* 1 x1) 0) 2))
+        :rule cp_addition :premises (c1 c2))
+    \end{AletheVerb}
+
+    In this example, we are adding two constraints.
+    \[
+        2 x_1 + 3 x_2 \geq 2 \quad \text{and} \quad \overline{x_1} + 3 \overline{x_2} \geq 4.
+    \]
+    After applying the \proofRule{cp_addition} rule,
+    the combined constraint is:
+    \[
+        x_1 \geq 2
+    \]
+    After simplification, this results in a contradiction.
+\end{RuleExample}
+
+
+
+\begin{RuleDescription}{cp_multiplication}
+    A constraint can be multiplied by any $c \in \mathbb{N}^+$:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & ${\sum_i{a_i l_i} \ge A}$  \\
+        $j$. & \ctxsep  & \, & ${\sum_i{c a_i l_i} \ge c A}$  & (\currule\; $i$)\,[$c$]
+    \end{AletheS}
+
+\end{RuleDescription}
+
+
+\begin{RuleDescription}{cp_division}
+    A constraint can be divided by any $c \in \mathbb{N}^+$,
+    and the the ceiling of this division in applied:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & ${\sum_i{a_i l_i} \ge A}$  \\
+        $j$. & \ctxsep  & \, & ${\sum_i{ \lceil \frac{a_i}{c} \rceil l_i} \ge \lceil \frac{A}{c} \rceil}$  & (\currule\; $i$)\,[$c$]
+    \end{AletheS}
+
+    \ruleparagraph{Remark.} This rule needs constraints in \textbf{normalized form}
+    i.e. no negative coefficients, no negative constant.
+
+\end{RuleDescription}
+
+
+\begin{RuleDescription}{cp_saturation}
+    A constraint can replace its coefficients by the minimum between them and the constant:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & ${\sum_i{a_i l_i} \ge A}$  \\
+        $j$. & \ctxsep  & \, & ${\sum_i{ \min(a_i,A)\cdot l_i} \ge A}$  & (\currule\; $i$)
+    \end{AletheS}
+
+    \ruleparagraph{Remark.} This rule needs constraints in \textbf{normalized form}
+    i.e. no negative coefficients, no negative constant.
+
+\end{RuleDescription}
+
 \begin{RuleDescription}{pbblast_bveq}
     Consider bitvectors \textbf{x} and \textbf{y} of length $n$.
     The pseudo-boolean bitblasting of their equality is expressed by:
