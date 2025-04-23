@@ -121,7 +121,7 @@
 }
 
 % These avoid the xltabular environment. While xltabular can break on pages
-% it seems to interact badly with the RuleDescription enviornment.
+% it seems to interact badly with the RuleDescription environment.
 \NewEnviron{AletheX}{%
 \renewcommand\spsep{\cline{2-4}}%
 \setlength{\arrayrulewidth}{0.8pt}%
@@ -214,7 +214,7 @@ break
   \textsuperscript{1} Universidade Federal de Minas Gerais, Brazil\\
   \textsuperscript{2} Albert-Ludwig-Universität Freiburg, Germany\\
   \textsuperscript{3} Université de Liège, Belgium\\
-  \textsuperscript{4} University of Iowa, Iowa City, USA\\
+  \textsuperscript{4} The University of Iowa, Iowa City, USA\\
 }
 
 
@@ -555,7 +555,8 @@ Every context $\Gamma$ induces a capture-avoiding substitution
 $\subst(\Gamma)$. If $\Gamma$ is the empty list,
 $\subst(\Gamma)$ is the empty substitution, i.e, the
 identity function.
-The first case fixes $x_n$ and allows the context to shadow a previously defined
+Otherwise, if $\Gamma$ ends with variable $x_n$, this fixes the variable 
+and allows the context to shadow a previously defined
 substitution for $x_n$:
 \[
 \subst([c_1,\dots, c_{n-1}, x_n])
@@ -647,7 +648,7 @@ The concrete text representation of the Alethe proofs
 is based on the {\smtlib} standard. Figure~\ref{fig:proof_ex} shows an
 example proof as printed by {\verit} with light edits for readability.
 %
-The format follows the {\smtlib} standard when possible.
+The format broadly follows the {\smtlib} standard.
 %
 Input problems in the {\smtlib} format are scripts.  An {\smtlib} script
 is a list of commands that manipulate the SMT solver.  For example,
@@ -691,6 +692,12 @@ An Alethe proof is a list of commands.
 \begin{figure}[t]
 \[
   \begin{array}{r c l}
+
+\multicolumn{3}{c}{
+	\text{A }\grNT{symbol}\text{ is an SMT-LIB }\grNT{symbol}\text{ that is not a}}\\
+& & -\grNT{numeral}/\grNT{positive\_numeral},\\
+& & -\grNT{numeral},\text{ or} -\grNT{decimal}.\\
+
  \grNT{proof}           &\grRule & \grNT{proof\_command}^{*} \\
  \grNT{proof\_command}  &\grRule & \textAlethe{(assume}\; \grNT{symbol}\; \grNT{proof\_term}\;\grNT{attribute}^{*}\,\textAlethe{)} \\
                         &\grOr   & \textAlethe{(step}\; \grNT{symbol}\; \grNT{clause}
@@ -704,6 +711,9 @@ An Alethe proof is a list of commands.
  \grNT{clause}          &\grRule & \textAlethe{(cl}\; \grNT{proof\_term}^{*}\,\textAlethe{)} \\
  \grNT{proof\_term}     &\grRule & \grNT{term}\text{ extended with } \\
                         &        & \textAlethe{(choice (}\, \grNT{sorted\_var}\,\textAlethe{)}\; \grNT{proof\_term}\,\textAlethe{)}  \\
+                        & \grOr  & \grNT{rational} \\
+                        & \grOr  & \grNT{nonpositive\_numeral} \\
+                        & \grOr  & \grNT{nonpositive\_decimal} \\
  \grNT{premises\_annotation} &\grRule & \textAlethe{:premises (}\; \grNT{symbol}^{+}\textAlethe{)} \\
  \grNT{args\_annotation}     &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{step\_arg}^{+}\,\textAlethe{)}  \\
  \grNT{step\_arg}            &\grRule & \grNT{symbol}\;\grOr\;
@@ -711,13 +721,17 @@ An Alethe proof is a list of commands.
  \grNT{context\_annotation}  &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}  \\
  \grNT{context\_assignment}  &\grRule & \grNT{sorted\_var} \\
                              & \grOr  & \textAlethe{(:=}\, \grNT{sorted\_var}\;\grNT{proof\_term}\,\textAlethe{)} \\
+ \grNT{positive\_numeral}    &\grRule & \text{any }\grNT{numeral}\text{ except } 0\\
+ \grNT{rational}              &\grRule & -^{?}\grNT{numeral}/\grNT{positive\_numeral} \\
+ \grNT{nonpositive\_numeral}  &\grRule & -\grNT{numeral} \\
+ \grNT{nonpositive\_decimal}  &\grRule & -\grNT{decimal} \\
   \end{array}
   \]
   \caption{The proof grammar.}
   \label{fig:grammar}
 \end{figure}
 
-Every Alethe proof is associated with an  {\smtlib} problem
+Every Alethe proof is associated with an {\smtlib} problem
 that is proved by the Alethe proof.  This can either be a concrete
 problem file or, if the incremental solving commands of {\smtlib}
 are used, the implicit problem constructed at the invocation of a
@@ -740,12 +754,17 @@ is based on the {\smtlib} grammar, as defined in the {\smtlib}
 standard~\cite[Appendix~B]{SMTLIB}.  The non-terminals
 $\grNT{attribute}$,
 $\grNT{function\_def}$,
-$\grNT{sorted\_var}$,
-$\grNT{symbol}$, and
+$\grNT{sorted\_var}$, and
 $\grNT{term}$
-are as defined in the standard. The non-terminal $\grNT{proof\_term}$
-corresponds to the $\grNT{term}$ non-terminal of {\smtlib}, but is
-extended with the additional production for the \inlineAlethe{choice}\index{choice} binder.
+are as defined in the standard.
+A special restriction applies to the $\grNT{symbol}$ non-terminal.
+Alethe has an extended set of number literals.  Since these can start
+with a negation sign, they overlap SMT-LIB's $\grNT{symbol}$ non-terminal.
+For example, \inlineAlethe{-1} is a valid $\grNT{symbol}$ in SMT-LIB.
+These sequences cannot be used as symbols when using Alethe.
+Note that symbols are also used to name user defined constants and functions
+in the input problem.  Hence, Alethe cannot express proofs about problems
+that use such symbols.
 
 Alethe proofs are a list of commands.
 The \inlineAlethe{assume} command introduces a new assumption. While this
@@ -799,6 +818,35 @@ After those pre-defined annotations, the solver can use additional
 annotations.  This can be used for debugging, or other purposes.
 A consumer of Alethe proofs {\em must} be able to parse proofs
 that contain such annotations.
+
+\paragraph{Terms}
+The non-terminal $\grNT{proof\_term}$ is an extended version of the {\smtlib}
+non-terminal $\grNT{term}$.
+First, it has an additional production for the
+\inlineAlethe{choice}\index{choice} binder.
+%
+Second, it has productions to express rationals and negative integers
+concisely.
+%
+A difficulty when parsing {\smtlib} terms is that numerical constants
+are not easy to distinguish from general terms.
+For example, $-\frac{1}{2}$ is written as
+\inlineAlethe{(/ (- 1) 2)}.
+The $\grNT{rational}$ non-terminal makes it possible to write this constant
+as a single literal: \inlineAlethe{-1/2}.
+Furthermore, the non-terminals $\grNT{nonpositive\_numeral}$ and $\grNT{nonpositive\_decimal}$
+achieve the same for unary negation.
+
+The sorting rules for $\grNT{proof\_term}$ are as for {\smtlib} terms with
+one key difference.
+The sort of terms produced by $\grNT{rational}$, $\grNT{decimal}$, and
+$\grNT{nonpositive\_decimal}$ is always \inlineAlethe{Real}.
+The sort of terms produced by $\grNT{integer}$ and $\grNT{nonpositive\_numeral}$
+is always \inlineAlethe{Int}.
+For example, in standard {\smtlib}, the term \inlineAlethe{(+ 5 3)}
+has the sort \inlineAlethe{Int} in the logic \texttt{QF\_LIA}, but
+has the sort \inlineAlethe{Real} in \texttt{QF\_LRA}.
+In Alethe, this term always has the sort \inlineAlethe{Int}.
 
 \paragraph{Subproofs}
 The abstract notation denotes subproofs by marking them with a vertical
@@ -983,8 +1031,12 @@ Overall, the following aspects are treated implicitly by Alethe.
   introduces {\verit} to print Skolem terms as defined functions. User defined
   functions in the input problem are not supported by {\verit} in proof production
   mode.}
+  \item If the input problem is in a logic without integers, then constants from
+        $\grNT{numeral}$ in the input problem will be printed using
+        $\grNT{decimal}$ or $\grNT{rational}$ in the proof.
 \end{itemize}
 
+\noindent
 Alethe proofs contain steps for other aspects that are commonly left implicit, such
 as renaming of bound variables, and the application of substitutions.
 

@@ -256,13 +256,16 @@ simplifications.}
 \ruleref{la_mult_neg} & Multiplication with a negative factor.\\
 \ruleref{symm}     & Symmetry of equality. \\
 \ruleref{not_symm} & Symmetry of not-equal.\\
+\ruleref{reordering} & Permutation of the literals in a clause.\\
+\ruleref{shuffle} & Permutation of the arguments of a commutative operator.\\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
 \caption{Rules used by the Carcara elaborator.}
-\label{rule-tab:cvc5}\\
+\label{rule-tab:carcara}\\
   Rule & Description \\
   \hline
+\ruleref{weakening} & Weakening of a clause. \\
 \ruleref{eq_symmetric} & Symmetry of equality as equivalence. \\
 \end{xltabular}
 \subsection{Rule List}
@@ -284,7 +287,7 @@ $i$. & \ctxsep & $\varphi$ & \currule \\
 \begin{RuleDescription}{hole}
 
 \begin{AletheX}
-$i$. & \ctxsep & $\varphi$  & $(\currule\; p_1, \dots, p_n)\, [a_1, \dots, a_n]$ \\
+$i$. & \ctxsep & $\varphi$  & $(\currule\; p_2, \dots, p_n)\, [a_1, \dots, a_m]$ \\
 \end{AletheX}
 where $\varphi$ is any well-formed formula.
 
@@ -427,9 +430,9 @@ $i$. & \ctxsep & $\varphi_1$, \dots , $\varphi_o$  & \currule\, [$a_1$, \dots, $
 where $\varphi_i$ is either $\neg l_i$ or $l_i$, but never $s_1
 ≈ s_2$.
 
-If the current theory does not have rational numbers, then the $a_i$ are
-printed using integer division. They should, nevertheless, be interpreted
-as rational numbers. If $d_1$ or $d_2$ are $0$, they might not be printed.
+The constants $a_i$ are of sort \inlineAlethe{Real} and must be printed
+using one of the productions $\grNT{rational}$
+$\grNT{decimal}$, $\grNT{nonpositive\_decimal}$.
 
 To check the unsatisfiability of the negation of $\varphi_1\lor \dots
 \lor \varphi_o$ one performs the following steps for each literal. For
@@ -481,10 +484,10 @@ A simple \proofRule{la_generic} step in the logic \textsf{LRA} might look like t
 
 \begin{AletheVerb}
 (step t10 (cl (not (> (f a) (f b))) (not (= (f a) (f b))))
-    :rule la_generic :args (1.0 (- 1.0)))
+    :rule la_generic :args (1.0 -1.0))
 \end{AletheVerb}
 
-To verify this we have to check the insatisfiability of $(f\,a) > (f\,b) \land
+To verify this we have to check the unsatisfiability of $(f\,a) > (f\,b) \land
 (f\,a) ≈ (f\,b)$ (step 2). After step~3 we get $(f\,a) - (f\,b) > 0 \land
 (f\,a) - (f\,b) ≈ 0$. Since we don't have an integer sort in this logic step~4 does
 not apply. Finally, after step~5 the conjunction is $(f\,a) - (f\,b) > 0 \land
@@ -495,7 +498,7 @@ not apply. Finally, after step~5 the conjunction is $(f\,a) - (f\,b) > 0 \land
 The following \proofRule{la_generic} step is from a \textsf{QF\_UFLIA} problem:
 \begin{AletheVerb}
 (step t11 (cl (not (<= f3 0)) (<= (+ 1 (* 4 f3)) 1))
-    :rule la_generic :args (1 (div 1 4)))
+    :rule la_generic :args (1.0 1/4))
 \end{AletheVerb}
 After normalization we get $-f_3 \geq 0 \land 4\times f_3 > 0$.
 This time step~4 applies and we can strengthen this to
@@ -809,18 +812,18 @@ done during clausification.
 
 \begin{RuleDescription}{and}
 \begin{AletheX}
-$i$. & \ctxsep & $\varphi_1 \land \cdots \land \varphi_n$ & ($\dots$) \\
-$j$. & \ctxsep & $\varphi_k$ & (\currule\;$i$) \\
+$i$. & \ctxsep & $\varphi_0 \land \cdots \land \varphi_n$ & ($\dots$) \\
+$j$. & \ctxsep & $\varphi_k$ & (\currule\;$i$)\, k\\
 \end{AletheX}
-and $1 \leq k \leq n$.
+and $0 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{not_or}
 \begin{AletheX}
-$i$. & \ctxsep & $\neg (\varphi_1 \lor \cdots \lor \varphi_n)$ & ($\dots$) \\
-$j$. & \ctxsep & $\neg \varphi_k$  & (\currule\;$i$) \\
+$i$. & \ctxsep & $\neg (\varphi_0 \lor \cdots \lor \varphi_n)$ & ($\dots$) \\
+$j$. & \ctxsep & $\neg \varphi_k$  & (\currule\;$i$)\, k\\
 \end{AletheX}
-and $1 \leq k \leq n$.
+and $0 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{or}
@@ -843,6 +846,45 @@ An application of the \proofRule{or} rule.
      :rule or :premises (t15))
 \end{AletheVerb}
 \end{RuleExample}
+
+\begin{RuleDescription}{weakening}
+\begin{AletheX}
+$i$. & \ctxsep &
+$\varphi_1, \cdots, \varphi_n$ & ($\dots$) \\
+$j$. & \ctxsep & $\varphi_1, \cdots, \varphi_n, \psi_1, \dots, \psi_m$ & (\currule\;$i$) \\
+\end{AletheX}
+where $m \geq 1$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{reordering}
+\begin{AletheX}
+$i$. & \ctxsep & $\varphi_1, \cdots, \varphi_n$ & ($\dots$) \\
+$j$. & \ctxsep & $\psi_1, \cdots, \psi_n$ & (\currule\;$i$) \\
+\end{AletheX}
+where the multisets $\{\varphi_1, \cdots, \varphi_n\}$ and $\{\psi_1, \cdots, \psi_n\}$
+are the same.  That is, the conclusion of the rule is a reordering of the
+literals in the premise.
+\end{RuleDescription}
+
+\begin{RuleDescription}{shuffle}
+
+\begin{AletheXS}
+$i$. & \ctxsep  & $\Gamma$  &
+      $\circ\ t_1 \dots t_n ≈ \circ\ u_1 \dots u_n $ & \currule \\
+\end{AletheXS}
+
+where $\circ$ is a commutative operator, and
+the multisets $\{t_1, \cdots, t_n\}$ and $\{u_1, \cdots, u_n\}$
+are the same.
+
+In the logics currently supported
+by Alethe $\circ \in\{+, *, \land, \lor\}$.
+
+\ruleparagraph{Remark.} To permute the literals in a clause the
+\proofRule{reordering} rule can be used.
+
+\end{RuleDescription}
+
 
 \begin{RuleDescription}{not_and}
 \begin{AletheX}
@@ -931,9 +973,10 @@ $j$. & \ctxsep & $\neg\varphi_1, \neg\varphi_2$ & (\currule\;$i$) \\
 
 \begin{RuleDescription}{and_pos}
 \begin{AletheX}
-$i$. & \ctxsep & $\neg (\varphi_1 \land \cdots \land \varphi_n) , \varphi_k$ & \currule \\
+$i$. & \ctxsep & $\neg (\varphi_0 \land \cdots \land \varphi_n) , \varphi_k$ &
+  \currule\, k\\
 \end{AletheX}
-with $1 \leq k \leq n$.
+with $0 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{and_neg}
@@ -950,9 +993,10 @@ $i$. & \ctxsep & $\neg (\varphi_1 \lor \cdots \lor \varphi_n) , \varphi_1 , \dot
 
 \begin{RuleDescription}{or_neg}
 \begin{AletheX}
-$i$. & \ctxsep & $(\varphi_1 \lor \cdots \lor \varphi_n), \neg \varphi_k$ & \currule \\
+$i$. & \ctxsep & $(\varphi_0 \lor \cdots \lor \varphi_n), \neg \varphi_k$ &
+  \currule\, k\\
 \end{AletheX}
-with $1 \leq k \leq n$.
+with $0 \leq k \leq n$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{xor_pos1}
@@ -1103,7 +1147,7 @@ $i$. & \ctxsep  & $\Gamma$  &
 
 \begin{RuleDescription}{and_simplify}
 This rule simplifies an $\land$ term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$  & $\varphi_1\land \cdots\land\varphi_n ≈ \psi$ & \currule \\
@@ -1132,7 +1176,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{or_simplify}
 This rule simplifies an $\lor$ term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$  & $(\varphi_1\lor \cdots\lor\varphi_n) ≈ \psi$ & \currule \\
@@ -1161,7 +1205,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{not_simplify}
 This rule simplifies an $\neg$ term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$ & $\neg\varphi ≈ \psi$ & \currule \\
@@ -1178,7 +1222,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{implies_simplify}
 This rule simplifies an $\rightarrow$ term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$ & $\varphi_1\rightarrow \varphi_2 ≈ \psi$ & \currule \\
@@ -1201,7 +1245,7 @@ The possible transformations are:
 \begin{RuleDescription}{equiv_simplify}
 This rule simplifies a formula with the head symbol $≈\,: \lsymb{Bool}\,\lsymb{Bool}\,\lsymb{Bool}$
 by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep  & $\Gamma$ & $(\varphi_1≈ \varphi_2) ≈ \psi$ & \currule \\
@@ -1223,7 +1267,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{bool_simplify}
 This rule simplifies a boolean term by applying equivalence-preserving
-transformations as long as possible. Hence, the general form is
+transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep & $\Gamma$ & $\varphi≈ \psi$ & \currule \\
@@ -1362,12 +1406,12 @@ $i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,\varphi ≈ Q x_{k_1}, \dots, x
 \end{AletheXS}
   where $m \leq n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_m$ is
   a monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
-  n\} \land j\in\not \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
+  n\} \land j\notin \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_simplify}
   This rule simplifies an $≈$ term by applying equivalence-preserving
-  transformations as long as possible. Hence, the general form is
+  transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep & $\Gamma$ & $(t_1≈ t_2) ≈ \varphi$ & \currule \\
@@ -1387,7 +1431,7 @@ This rule simplifies a division by applying equivalence-preserving
 transformations. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(t_1\, /\,  t_2) ⇒ t_3$ & \currule \\
+$i$. & \ctxsep & $\Gamma$ & $(t_1\, /\,  t_2) ≈ t_3$ & \currule \\
 \end{AletheXS}
 The possible transformations are:
 \begin{itemize}
@@ -1401,7 +1445,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{prod_simplify}
 This rule simplifies a product by applying equivalence-preserving
-transformations as long as possible. The general form is
+transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep & $\Gamma$ & $t_1\times\cdots\times t_n ≈ u$ & \currule \\
@@ -1458,7 +1502,7 @@ The possible transformations are:
 
 \begin{RuleDescription}{sum_simplify}
 This rule simplifies a sum by applying equivalence-preserving
-transformations as long as possible. The general form is
+transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
 $i$. & \ctxsep & $\Gamma$ & $t_1+\cdots+t_n ≈ u$ & \currule \\
@@ -1482,27 +1526,30 @@ The possible transformations are:
 
 \begin{RuleDescription}{comp_simplify}
 This rule simplifies a comparison by applying equivalence-preserving
-transformations as long as possible. The general form is
+transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1 \bowtie t_n ≈ \psi$ & \currule \\
+$i$. & \ctxsep & $\Gamma$ & $t_1 \bowtie t_2 ≈ \psi$ & \currule \\
 \end{AletheXS}
-where $\bowtie$ is as for the proof rule \proofRule{la_generic}, but never
-$≈$.
+where $\bowtie \in \{<, >, \leq, \geq\}$.
 
-The possible transformations are:
+The following transformation rules are used to simplify $t_1 \bowtie t_2$:
 \begin{itemize}
-    \item $t_1 < t_2 ⇒ \varphi$ where $t_1$ and
-    $t_2$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
-    strictly greater than $t_2$ and $\bot$ otherwise.
-    \item $t < t ⇒ \bot$
-    \item $t_1 \leq t_2 ⇒ \varphi$ where $t_1$ and
-    $t_2$ are numerical constants and $\varphi$ is $\top$ if $t_1$ is
-    greater than $t_2$ or equal and $\bot$ otherwise.
-    \item $t \leq t ⇒ \top$
-    \item $t_1 \geq t_2 ⇒ t_2 \leq t_1$
-    \item $t_1 < t_2 ⇒ \neg (t_2 \leq t_1)$
-    \item $t_1 > t_2 ⇒ \neg (t_1 \leq t_2)$
+    \item $s_1 < s_2 ⇒ \top$ if $s_1, s_2$ are numerical constants and
+      $s_1$ is strictly less than $s_2$
+    \item $s_1 < s_2 ⇒ \bot$ if $s_1, s_2$ are numerical constants and
+      $s_1$ is greater or equal than $s_2$
+
+    \item $s_1 \leq s_2 ⇒ \top$ if $s_1, s_2$ are numerical constants and
+      $s_1$ is less or equal than $s_2$
+    \item $s_1 \leq s_2 ⇒ \bot$ if $s_1, s_2$ are numerical constants and
+      $s_1$ is strictly greater than $s_2$
+
+    \item $s < s ⇒ \bot$
+    \item $s \leq s ⇒ \top$
+    \item $s_1 \geq s_2 ⇒ s_2 \leq s_1$
+    \item $s_1 < s_2 ⇒ \neg (s_2 \leq s_1)$
+    \item $s_1 > s_2 ⇒ \neg (s_1 \leq s_2)$
 \end{itemize}
 \end{RuleDescription}
 
@@ -1525,38 +1572,90 @@ $k$. & $\Gamma$ & \ctxsep &
   The premise $i_1, \dots, i_n$ must be in the same subproof as
   the \currule{} step.  If for $t_i≈ s_i$ the $t_i$ and $s_i$
   are syntactically equal, the premise
-  is skipped.
+  is omitted.
 \end{RuleDescription}
 
-\begin{RuleDescription}{distinct_elim}
-This rule eliminates the $\lsymb{distinct}$ predicate. If called with one
-argument this predicate always holds:
+\begin{RuleDescription}{bind_let}
+  This rule corresponds to the \proofRule{bind} rule for \inlineAlethe{let}.
+  It allows the renaming of the variables bound by the \inlineAlethe{let} step,
+  the rewriting of the substituted terms, and the rewriting of the body of the
+  \inlineAlethe{let}, resulting in a new \inlineAlethe{let} term.
+  It has the form
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(\lsymb{distinct}\, t) ≈ \top$ & \currule \\
+$i_1$. & $\Gamma$ & \ctxsep & $t_{1} ≈ s_{1}$ & ($\dots$) \\
+\aletheLineS
+$i_n$. & $\Gamma$ & \ctxsep & $t_{n} ≈ s_{n}$ & ($\dots$) \\
+\aletheLineS
+$j$. & \spctx{$\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$}
+   & \ctxsep &  $u ≈ u'$ & ($\dots$) \\
+\spsep
+$k$. & $\Gamma$ & \kern-5.5em\ctxsep & % The kern hacking here is to make the rule readable
+     $ \kern-3em (\lsymb{let}\,x_1~=~t_1,\, \dots,\, x_n~=~t_n \lsymb{in}\, u) ≈
+                 (\lsymb{let}\,y_1~=~s_1,\, \dots,\, y_n~=~s_n\,\lsymb{in}\, u')$
+     & (\currule{}\;$i_1$, \dots, $i_n$) \\
 \end{AletheXS}
 
-If applied to terms of type $\lsymb{Bool}$ more than two terms can never be
-distinct, hence only two cases are possible:
+  The variables $y_1, \dots, y_n$ are neither free in
+  $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u)$ nor, for each
+  $y_i$ different from $x_i$, occur in $\Gamma$.
+
+  The premise $i_1, \dots, i_n$ must be in the same subproof as
+  the \currule{} step.  If for $t_i≈ s_i$ the $t_i$ and $s_i$
+  are syntactically equal, the premise
+  is omitted.
+\end{RuleDescription}
+
+\begin{RuleExample}
+The following example shows how this rule is used in a proof generated
+by Carcara's elaborator.  It elaborates an implicit application of
+symmetry of equality.
+\begin{AletheVerb}
+(step t1 (cl (= (= 0 1) (= 1 0))) :rule eq_symmetric)
+(anchor :step t2 :args ((p Bool) (:= (p Bool) p)))
+(step t2.t1 (cl (= (= p false) (= false p))) :rule eq_symmetric)
+(step t2 (cl (= (let ((p (= 0 1))) (= p false))
+                (let ((p (= 1 0))) (= false p))))
+         :rule bind_let :premises (t1))
+\end{AletheVerb}
+
+\end{RuleExample}
+
+\begin{RuleDescription}{distinct_elim}
+This rule eliminates the $\lsymb{distinct}$ predicate.
+
+This rule behaves differently when the arguments are terms of type $\lsymb{Bool}$.
+Then there are two cases:
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ &
+$i$. & $\Gamma$ & \ctxsep &
 $(\lsymb{distinct}\,\varphi\,\psi) ≈ \neg (\varphi ≈ \psi)$ & \currule \\
 \end{AletheXS}
 and
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ &
+$i$. & $\Gamma$ & \ctxsep &
 $(\lsymb{distinct}\,\varphi_1\,\varphi_2\,\varphi_3\,\dots) ≈ \bot$ & \currule \\
 \end{AletheXS}
 
-The general case is
+For all other sorts the rule is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ &
+$i$. & $\Gamma$ & \ctxsep &
 $(\lsymb{distinct}\,t_1\,\dots\, t_n) ≈
 \bigwedge_{i=1}^{n}\bigwedge_{j=i+1}^{n} t_i\;{\not≈}\;t_j$ & \currule \\
 \end{AletheXS}
+
+\ruleparagraph{Remark.}
+SMT-LIB does not allow $\lsymb{distinct}$ to be used with only one argument.
+However, multiple solvers support this as a non-standard extension.
+While Alethe does not prescribe a behavior for this case, most solvers
+produce the following step:
+
+\begin{AletheXS}
+$i$. & $\Gamma$ & \ctxsep & $(\lsymb{distinct}\, t) ≈ \top$ & \currule \\
+\end{AletheXS}
+
 \end{RuleDescription}
 
 \begin{RuleDescription}{la_rw_eq}
@@ -1572,24 +1671,25 @@ application of the binary operator. It is never applied to $\land$ or $\lor$.
 Three cases are possible.
 If the operator $\circ$ is left associative, then the rule has the form
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\bigcirc_{i=1}^{n} t_i ≈ (\dots( t_1\circ  t_2) \circ  t_3)\circ \cdots  t_n)$
+$i$. & $\Gamma$ & \ctxsep & $\bigcirc_{i=1}^{n} t_i ≈ (\dots(( t_1\circ  t_2) \circ  t_3)\circ \cdots  t_n)$
  & \currule \\
 \end{AletheXS}
 
 If the operator $\circ$ is right associative, then the rule has the form
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$ & $\bigcirc_{i=1}^{n} t_i ≈
-( t_1 \circ \cdots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n)\dots)$ & \currule \\
+$i$. & $\Gamma$  & \ctxsep & $\bigcirc_{i=1}^{n} t_i ≈
+( t_1 \circ \cdots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n))\dots)$ & \currule \\
 \end{AletheXS}
 
 If the operator is {\em chainable}, then it has the form
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\bigcirc_{i=1}^{n} t_i ≈
-( t_1\circ t_2) \land ( t_2 \circ  t_3) \land \cdots
-\land ( t_{n-1}\circ t_n)$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\bigcirc_{i=1}^{n} t_i ≈
+( t_1\circ t_2) \oplus ( t_2 \circ  t_3) \oplus \cdots
+\oplus ( t_{n-1}\circ t_n)$ & \currule \\
 \end{AletheXS}
+where $\oplus$ is the binary operator indicated to perform the chaining.
 \end{RuleDescription}
 
 \begin{RuleDescription}{bfun_elim}
