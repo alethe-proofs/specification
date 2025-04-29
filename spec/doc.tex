@@ -8,7 +8,15 @@
 \usepackage{unicode-math}
 \usepackage{fontsetup}
 
-\usepackage{minted}
+% minted 3 changed how pygmentize is called to no longer --shell-escape.
+% However, since minted 3 is not widely avaialable, we fall back to minted 2
+% as the default.
+\IfFileExists{minted2.sty}{
+  \usepackage{minted2}
+}{
+  \usepackage{minted}
+}
+
 \usemintedstyle{trac}
 \renewcommand{\MintedPygmentize}{./highlight.py}
 \newminted[AletheVerb]{smt-lib}{}

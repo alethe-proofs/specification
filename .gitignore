@@ -1,4 +1,7 @@
-_minted-*/
+.vscode/
+
+_minted*/
+
 *.aux
 *.bbl
 *.blg
