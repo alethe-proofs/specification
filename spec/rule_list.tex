@@ -539,36 +539,37 @@ $i$. & \ctxsep & $t_1 \leq t_2 \lor t_2 \leq t_1$ & (\currule) \\
 \end{RuleDescription}
 
 \begin{RuleDescription}{la_tautology}
-This rule is a linear arithmetic tautology which can be checked without
-sophisticated reasoning. It has either the form
+This rule introduces a tautology of linear arithmetic.
+The conclusion is always a unit clause.
 
 \begin{AletheX}
 $i$. & \ctxsep & $\varphi$  & (\currule) \\
 \end{AletheX}
-where $\varphi$ is either a linear inequality $s_1 \bowtie s_2$
-or $\neg(s_1 \bowtie s_2)$. After performing step 1 to 3 of the process for
-checking the \proofRule{la_generic} the result is trivially unsatisfiable.
 
-The second form handles bounds on linear combinations. It is binary clause:
+If the literal $\varphi$ is either a linear inequality $s_1 \bowtie s_2$
+or $\neg(s_1 \bowtie s_2)$, it is enough to perform steps 1 to 3 of the process for
+checking the \proofRule{la_generic}. The result is trivially unsatisfiable.
+For example, if $\varphi$ is $\neg (n \leq n - 1)$ we get
+$0 \leq -1$ after step 3.
+
+If the literal is not a linear inequality, it is a binary clause
+$\varphi_1 \lor \varphi_2$.  In this case the step is equivalent to
 
 \begin{AletheX}
-$i$. & \ctxsep &
-$\varphi_1 \lor \varphi_2$ % Checked: this is a proper disjunction not a cl
- & (\currule) \\
+$i$. & \ctxsep & $\varphi_1$, $\varphi_2$ & \proofRule{la_tautology}\, [$1.0$, $1.0$] \\
 \end{AletheX}
 
-It can be checked by using the procedure for \proofRule{la_generic}
-while setting the arguments to $1$. Informally, the rule follows one of several
-cases:
+\ruleparagraph{Remark.}
+The second form is inteded to express bounds on linear combinations. 
+In the case of veriT, the conclusion has one of the following forms,
+where $d_1$ and $d_2$ are decimals or integers, and $s$ is a constant.
 \begin{itemize}
-    \item $\neg (s_1 \leq d_1) \lor s_1 \leq d_2$ where $d_1 \leq d_2$
-    \item $s_1 \leq d_1 \lor \neg (s_1 \leq d_2)$ where $d_1 = d_2$
-    \item $\neg (s_1 \geq d_1) \lor s_1 \geq d_2$ where $d_1 \geq d_2$
-    \item $s_1 \geq d_1 \lor \neg (s_1 \geq d_2)$ where $d_1 = d_2$
-    \item $\neg (s_1 \leq d_1) \lor \neg(s_1 \geq d_2)$ where $d_1 < d_2$
+    \item $\neg (s \leq d_1) \lor s \leq d_2$ where $d_1 \leq d_2$
+    \item $s \leq d_1 \lor \neg (s \leq d_2)$ where $d_1 = d_2$
+    \item $\neg (s \geq d_1) \lor s \geq d_2$ where $d_1 \geq d_2$
+    \item $s \geq d_1 \lor \neg (s \geq d_2)$ where $d_1 = d_2$
+    \item $\neg (s \leq d_1) \lor \neg(s \geq d_2)$ where $d_1 < d_2$
 \end{itemize}
-The inequalities $s_1 \bowtie d$ are the result of applying normalization
-as for the rule \proofRule{la_generic}.
 \end{RuleDescription}
 
 \begin{RuleDescription}{la_mult_pos}
