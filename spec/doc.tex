@@ -366,6 +366,8 @@ we write $=$ for the former, and $≈$ for the latter.
 We will write pre-defined SMT-LIB symbols, such as sorts and functions,
 in bold (e.g., $\lsymb{Bool}$, $\lsymb{ite}$).
 
+% Should we add that x_₁, …, x_n are pairwise distinct, for the notation
+% $[x₁ ↦ t₁, …, x_n ↦ t_n]$ to make sense?
 We will use $θ$ to denote a substitution\index{substitution}.
 The notation $[x₁ ↦ t₁, …, x_n ↦ t_n]$ denotes the substitution
 that maps $x_i$ to $t_i$ for $1 ≤ i ≤ n$ and corresponds to the
@@ -375,7 +377,10 @@ If $θ$ and $η$ are two
 substitutions, then $θη$ denotes the result of first applying $θ$
 and then $η$ (i.e., $η(θ(.))$).  A substitution can naturally be extended
 to a function that maps terms to terms by replacing the occurrences of
-free variables.
+free variables. 
+% Maybe "A substitution naturally induces a function that..."? I have
+% difficulties considering the terms to terms map to be an "extension"
+% of the corresponding substitution.
 %
 The application of a substitution $θ$ to a term $t$ (i.e., $θ(t)$)
 is capture-avoiding; bound variables in $t$ are renamed as necessary.
@@ -386,7 +391,7 @@ new term.
 %
 We also use this notation with multiple terms.
 %
-The notation $t[u_1, \dots, u_n]$ stands for a term may contain the
+The notation $t[u_1, \dots, u_n]$ stands for a term that may contain the
 pairwise distinct terms $u_1, \dots, u_n$.
 %
 Then, $t[s_1,\dots, s_n]$ is the respective term where the
