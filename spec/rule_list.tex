@@ -2305,18 +2305,61 @@ to quickly find the definition of rules.
     The `bvand' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
 
     \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvand}\ x\ y) \approx [r_0,\dots,r_{n-1}] \land A$ & (\currule) \\
+        $i$. & \ctxsep & $(\lsymb{bvand}\ x\ y) \approx \lsymb{pbbT}\; c_0 \dots c_{n-1}$ & (\currule) \\
     \end{AletheX}
-    The term ``$A$'' is the conjunction of these PseudoBoolean inequalities and the term \textbf{r} stands
-    for the result of the `bvand' operation between \textbf{x} and \textbf{y}, for $0 \le i < n$:
 
-    \[ \textbf{x}_i-\textbf{r}_i\ge 0 \]
-    \[ \textbf{y}_i-\textbf{r}_i\ge 0 \]
-    \[ \textbf{r}_i-\textbf{x}_i-\textbf{y}_1\ge -1 \]
+    \noindent
+    Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
+    applied to the conjunction of these constraints on the $i$th bit:
 
-    % TODO: Add example
+    \[ \textbf{x}_i\ge z \]
+    \[ \textbf{y}_i\ge z \]
+    \[ z + 1 \ge\textbf{x}_i + \textbf{y}_i \]
 
 \end{RuleDescription}
+
+\begin{RuleExample}
+    This example yields two choice applications, one for each pair of bits
+    \begin{AletheVerb}
+        (step t1 (cl (=
+            (bvand (@pbbterm x0 x1) (@pbbterm y0 y1))
+            (@pbbterm
+                (choice ((z Int)) (and (>= x0 z) (>= y0 z)
+                                       (>= (+ z 1) (+ x0 y0))))
+                (choice ((z Int)) (and (>= x1 z) (>= y1 z)
+                                       (>= (+ z 1) (+ x1 y1))))
+        ))) :rule pbblast_bvand)
+    \end{AletheVerb}
+\end{RuleExample}
+
+
+\begin{RuleDescription}{pbblast_bvand_ith_bit}
+    This rule extracts assertions of the $i$th bit of an application of \proofRule{pbblast_bvand}, given
+    its arguments were $x_i$ and $y_i$:
+    \begin{AletheX}
+        $i$. & \ctxsep & $(\textbf{x}_i\ge r_i) \land (\textbf{y}_i\ge r_i) \land (r_i + 1 \ge\textbf{x}_i + \textbf{y}_i)$ & (\currule) \\
+    \end{AletheX}
+
+    \noindent
+    In which $r_i$ is the element from the pseudo boolean bit blasting of the \textbf{bvand} rule of form:
+
+    \[\varepsilon z.\, (\textbf{x}_i\ge z) \land (\textbf{y}_i\ge z) \land (z + 1 \ge\textbf{x}_i + \textbf{y}_i)\]
+
+\end{RuleDescription}
+
+\begin{RuleExample}
+    Considering the bit index at 1 of a 2 bit bitvector:
+    \begin{AletheVerb}
+        (assume r1 (choice ((z Int)) (and (>= x1 z) (>= y1 z)
+                                          (>= (+ z 1) (+ x1 y1)))))
+        (step t1 (cl (and
+                (>= x1 r1)
+                (>= y1 r1)
+                (>= (+ r1 1) (+ x1 y1)))
+          ) :rule pbblast_bvand_ith_bit :args (x1 y1))
+   \end{AletheVerb}
+\end{RuleExample}
+
 
 \begin{RuleDescription}{symm}
     \begin{AletheX}
