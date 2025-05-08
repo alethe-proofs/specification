@@ -2274,7 +2274,7 @@ to quickly find the definition of rules.
         $i$. & \ctxsep & $\left(b \approx \lsymb{pbbT}\; \textbf{match}(b_0) \dots \textbf{match}(b_{n-1}) \right)$ & (\currule) \\
     \end{AletheX}
     \noindent
-    In which we expand \textbf{match($b_i$)} into the constant value of ``$(\lsymb{bitOf}_{i}\ b)$''
+    In which we expand \textbf{match($b_i$)} into the constant value of ``$(\lsymb{intOf}_{i}\ b)$''
 \end{RuleDescription}
 
 \begin{RuleExample}
@@ -2289,15 +2289,17 @@ to quickly find the definition of rules.
     The `bvxor' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
 
     \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvxor}\ x\ y) \approx [r_0,\dots,r_{n-1}] \land A$ & (\currule) \\
+        $i$. & \ctxsep & $(\lsymb{bvxor}\ x\ y) \approx \lsymb{pbbT}\; c_0 \dots c_{n-1}$ & (\currule) \\
     \end{AletheX}
-    The term ``$A$'' is the conjunction of these PseudoBoolean inequalities and the term \textbf{r} stands
-    for the result of the `bvxor' operation between \textbf{x} and \textbf{y}, for $0 \le i < n$:
 
-    \[ -\textbf{r}_i+\textbf{x}_i+\textbf{y}_i\ge  0 \]
-    \[ -\textbf{r}_i-\textbf{x}_i-\textbf{y}_i\ge -2 \]
-    \[  \textbf{r}_i+\textbf{x}_i-\textbf{y}_i\ge  0 \]
-    \[  \textbf{r}_i-\textbf{x}_i+\textbf{y}_i\ge  0 \]
+    \noindent
+    Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
+    applied to the conjunction of these constraints on the $i$th bit:
+
+    \[ \textbf{x}_i+\textbf{y}_i \ge z \]
+    \[ 2 \ge z + \textbf{x}_i + \textbf{y}_i \]
+    \[ z + \textbf{x}_i \ge \textbf{y}_i \]
+    \[ z + \textbf{y}_i \ge \textbf{x}_i \]
 
 \end{RuleDescription}
 
