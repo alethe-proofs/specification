@@ -2037,29 +2037,28 @@ to quickly find the definition of rules.
     Consider bitvectors \textbf{x} and \textbf{y} of length $n$.
     The pseudo-boolean bitblasting of their equality is expressed by:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{=}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is the PseudoBoolean constraint:
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{=}\ \textbf{x}\ \textbf{y}) \approx
+            \sum_{i=0}^{n-1}{2^i x_{i}} - \sum_{i=0}^{n-1}{2^i y_{i}} = 0$ & (\currule)
+    \end{AletheS}
 
-    \[ \sum_{i=0}^{n-1}{2^i x_{i}} - \sum_{i=0}^{n-1}{2^i y_{i}} = 0\]
-
-    in which in general:
+    \noindent
+    in which, in general:
     \[
         \begin{array}{lcl}
-            \mathrm{x}_i & = & (\lsymb{bitOf}_{i}\ x) \\
-            \mathrm{y}_i & = & (\lsymb{bitOf}_{i}\ y)
+            x_i & = & (\lsymb{intOf}_{i}\ \textbf{x}) \\
+            y_i & = & (\lsymb{intOf}_{i}\ \textbf{y})
         \end{array}
     \]
     Alternatively, the rule may also be phrased as a ``short-circuiting''
-    of the above when \textbf{x} and \textbf{y} are ``$\lsymb{bbT}$'' applications. So given that
+    of the above when \textbf{x} and \textbf{y} are ``$\lsymb{pbbT}$'' applications. So given that
     \[
         \begin{array}{lcl}
-            x & = & (\lsymb{bbT}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n) \\
-            y & = & (\lsymb{bbT}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n) \\
+            \textbf{x} & = & (\lsymb{pbbT}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n) \\
+            \textbf{y} & = & (\lsymb{pbbT}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n) \\
         \end{array}
     \]
-    then ``$x_{i}$'' and ``$y_{i}$'' can be the arguments of ``$\lsymb{bbT}$'' directly.
+    then ``$x_{i}$'' and ``$y_{i}$'' can be the arguments of ``$\lsymb{pbbT}$'' directly.
 
 \end{RuleDescription}
 
@@ -2096,103 +2095,149 @@ to quickly find the definition of rules.
 
 
 \begin{RuleDescription}{pbblast_bvult}
-    The `unsigned-less-than' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+    The `unsigned-less-than' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvult}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvult}\ \textbf{x}\ \textbf{y}) \approx
+            \sum_{i=0}^{n-1}{2^i y_{i}} - \sum_{i=0}^{n-1}{2^i x_{i}} \ge 1$ & (\currule)
+    \end{AletheS}
 
-    \[
-        \sum_{i=0}^{n-1} 2^i\mathbf{y}_{i} - \sum_{i=0}^{n-1} 2^i\mathbf{x}_{i} \ge 1.
-    \]
-
-    % TODO: Add example
+    \noindent
+    Where the \textit{short-circuiting} described in \proofRule{pbblast_bveq} is also accepted.
 
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvugt}
-    The `unsigned-greater-than' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+    The `unsigned-greater-than' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvugt}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
-
-    \[
-        \sum_{i=0}^{n-1} 2^i\mathbf{x}_{i} - \sum_{i=0}^{n-1} 2^i\mathbf{y}_{i} \ge 1.
-    \]
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvugt}\ \textbf{x}\ \textbf{y}) \approx
+            \sum_{i=0}^{n-1}{2^i x_{i}} - \sum_{i=0}^{n-1}{2^i y_{i}} \ge 1$ & (\currule)
+    \end{AletheS}
 
     \noindent
+    Where the \textit{short-circuiting} described in \proofRule{pbblast_bveq} is also accepted.
     Or in terms of \proofRule{pbblast_bvult}:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvugt}\ x\ y) \approx (\lsymb{bvult}\ y\ x)$ & (\currule)
-    \end{AletheX}
-
-    % TODO: Add example
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvugt}\ \textbf{x}\ \textbf{y}) \approx
+            (\lsymb{bvult}\ \textbf{y}\ \textbf{x})$ & (\currule)
+    \end{AletheS}
 
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvule}
-    The `unsigned-less-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+    The `unsigned-less-or-equal' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvule}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
-
-    \[
-        \sum_{i=0}^{n-1} 2^i\mathbf{y}_{i} - \sum_{i=0}^{n-1} 2^i\mathbf{x}_{i} \ge 0.
-    \]
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvule}\ \textbf{x}\ \textbf{y}) \approx
+            \sum_{i=0}^{n-1}{2^i y_{i}} - \sum_{i=0}^{n-1}{2^i x_{i}} \ge 0$ & (\currule)
+    \end{AletheS}
 
     \noindent
+    Where the \textit{short-circuiting} described in \proofRule{pbblast_bveq} is also accepted.
     Or in terms of \proofRule{pbblast_bvuge}:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvule}\ x\ y) \approx (\lsymb{bvuge}\ y\ x)$ & (\currule)
-    \end{AletheX}
-
-    % TODO: Add example
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvule}\ \textbf{x}\ \textbf{y}) \approx
+            (\lsymb{bvuge}\ \textbf{y}\ \textbf{x})$ & (\currule)
+    \end{AletheS}
 
 \end{RuleDescription}
 
-% https://github.com/cvc5/cvc5/blob/96a35d7cc97ee375e263ab43a2ed9ba03cc32858/src/rewriter/node.py#L44
 \begin{RuleDescription}{pbblast_bvuge}
-    The `unsigned-greater-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+    The `unsigned-greater-or-equal' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvuge}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvuge}\ \textbf{x}\ \textbf{y}) \approx
+            \sum_{i=0}^{n-1}{2^i x_{i}} - \sum_{i=0}^{n-1}{2^i y_{i}} \ge 0$ & (\currule)
+    \end{AletheS}
 
-    \[
-        \sum_{i=0}^{n-1} 2^i\mathbf{x}_{i} - \sum_{i=0}^{n-1} 2^i\mathbf{y}_{i} \ge 0.
-    \]
-
-    % TODO: Add example
+    \noindent
+    Where the \textit{short-circuiting} described in \proofRule{pbblast_bveq} is also accepted.
 
 \end{RuleDescription}
 
 
 
 \begin{RuleDescription}{pbblast_bvslt}
-    The `signed-less-than' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+    The `signed-less-than' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvslt}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvslt}\ \textbf{x}\ \textbf{y}) \approx
+            sy + sx \geq 1$ & (\currule)
+    \end{AletheS}
 
+    \noindent
+    in which:
     \[
-        -(2^{n-1})\mathbf{y}_{n-1} + \sum_{i=0}^{n-2} 2^i\mathbf{y}_{i} + 2^{n-1} \mathbf{x}_{n-1} - \sum_{i=0}^{n-2} 2^i\mathbf{x}_{i} \geq 1
+        \begin{array}{lcl}
+            sy & = & \sum_{i=0}^{n-2} 2^i y_{i} - 2^{n-1} y_{n-1} \\
+            sx & = & 2^{n-1} x_{n-1} - \sum_{i=0}^{n-2} 2^i x_{i}
+        \end{array}
     \]
 
-    % TODO: Add example
-
+    \noindent
+    Where the \textit{short-circuiting} described in \proofRule{pbblast_bveq} is also accepted.
 \end{RuleDescription}
 
+\begin{RuleExample}
+    This example is the pseudo-boolean bit blasting over bitvectors of $4$ bits
+    \begin{AletheVerb}
+        (declare-const x4 (_ BitVec 4))
+        (declare-const y4 (_ BitVec 4))
+        (step t1 (cl (= (bvslt x4 y4)
+                        (>= (+ (- (+ (* 1 ((_ @int_of 0) y4))
+                                     (* 2 ((_ @int_of 1) y4))
+                                     (* 4 ((_ @int_of 2) y4)))
+                                  (* 8 ((_ @int_of 3) y4)))
+                               (- (* 8 ((_ @int_of 3) x4))
+                                  (+ (* 1 ((_ @int_of 0) x4))
+                                     (* 2 ((_ @int_of 1) x4))
+                                     (* 4 ((_ @int_of 2) x4))))
+            ) 1))) :rule pbblast_bvslt)
+    \end{AletheVerb}
+\end{RuleExample}
+
+\begin{RuleExample}
+    This is similar to the one above, but uses \textit{short-circuiting}:
+    \begin{AletheVerb}
+        (declare-const @x0 Int)
+        (declare-const @x1 Int)
+        (declare-const @x2 Int)
+        (declare-const @x3 Int)
+        (declare-const @y0 Int)
+        (declare-const @y1 Int)
+        (declare-const @y2 Int)
+        (declare-const @y3 Int)
+        (step t1 (cl (= (bvslt (@pbbterm @x0 @x1 @x2 @x3)
+                               (@pbbterm @y0 @y1 @y2 @y3))
+                        (>= (+ (- (+ (* 1 @y0) (* 2 @y1) (* 4 @y2))
+                                  (* 8 @y3))
+                               (- (* 8 @x3)
+                                  (+ (* 1 @x0) (* 2 @x1) (* 4 @x2)))
+            ) 1))) :rule pbblast_bvslt)
+    \end{AletheVerb}
+\end{RuleExample}
+
 \begin{RuleDescription}{pbblast_bvsgt}
+    The `signed-greater-or-equal' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvsgt}\ \textbf{x}\ \textbf{y}) \approx
+            \sum_{i=0}^{n-1}{2^i x_{i}} - \sum_{i=0}^{n-1}{2^i y_{i}} \ge 0$ & (\currule)
+    \end{AletheS}
+
+    \noindent
+    Where the \textit{short-circuiting} described in \proofRule{pbblast_bveq} is also accepted.
+
+
     The `signed-greater-than' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
 
     \begin{AletheX}
@@ -2291,6 +2336,13 @@ to quickly find the definition of rules.
     \begin{AletheX}
         $i$. & \ctxsep & $(\lsymb{bvxor}\ x\ y) \approx \lsymb{pbbT}\; c_0 \dots c_{n-1}$ & (\currule) \\
     \end{AletheX}
+
+
+    % // c1 : (>= (+ xi yi) z)
+    % // c2 : (>= (+ z xi) yi)
+    % // c3 : (>= (+ z yi) xi)
+    % // c4 : (>= 2 (+ z xi yi)
+
 
     \noindent
     Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
