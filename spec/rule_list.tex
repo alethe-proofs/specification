@@ -2231,93 +2231,80 @@ to quickly find the definition of rules.
 
     \begin{AletheS}
         $i$. & \ctxsep & \, & $(\lsymb{bvsgt}\ \textbf{x}\ \textbf{y}) \approx
-            \sum_{i=0}^{n-1}{2^i x_{i}} - \sum_{i=0}^{n-1}{2^i y_{i}} \ge 0$ & (\currule)
+            sx + sy \geq 1$ & (\currule)
     \end{AletheS}
 
     \noindent
-    Where the \textit{short-circuiting} described in \proofRule{pbblast_bveq} is also accepted.
-
-
-    The `signed-greater-than' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
-
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvsgt}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
-
-    \[
-        -(2^{n-1})\mathbf{x}_{n-1} + \sum_{i=0}^{n-2} 2^i\mathbf{x}_{i} + 2^{n-1} \mathbf{y}_{n-1} - \sum_{i=0}^{n-2} 2^i\mathbf{y}_{i} \geq 1
-    \]
-
-    \noindent
-    Or in terms of \proofRule{pbblast_bvslt}:
-
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvsgt}\ x\ y) \approx (\lsymb{bvslt}\ y\ x)$ & (\currule)
-    \end{AletheX}
-
-    % TODO: Add example
+    Where $sx$ and $sy$ are the same as described in \proofRule{pbblast_bveq}.
 
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvsle}
-    The `signed-less-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+    The `signed-less-or-equal' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvsle}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
-
-    \[
-        -(2^{n-1})\mathbf{y}_{n-1} + \sum_{i=0}^{n-2} 2^i\mathbf{y}_{i} + 2^{n-1}\mathbf{x}_{n-1} - \sum_{i=0}^{n-2} 2^i\mathbf{x}_{i} \geq 0
-    \]
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvsle}\ \textbf{x}\ \textbf{y}) \approx
+            sy + sx \geq 0$ & (\currule)
+    \end{AletheS}
 
     \noindent
-    Or in terms of \proofRule{pbblast_bvsge}:
-
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvsle}\ x\ y) \approx (\lsymb{bvsge}\ y\ x)$ & (\currule)
-    \end{AletheX}
-
-    % TODO: Add example
+    Where $sx$ and $sy$ are the same as described in \proofRule{pbblast_bveq}.
 
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvsge}
-    The `signed-greater-or-equal' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+    The `signed-greater-or-equal' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvsge}\ x\ y) \approx A$ & (\currule)
-    \end{AletheX}
-    The term ``$A$'' is `true' iff:
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvsgt}\ \textbf{x}\ \textbf{y}) \approx
+            sx + sy \geq 0$ & (\currule)
+    \end{AletheS}
 
-    \[
-        -(2^{n-1})\mathbf{x}_{n-1} + \sum_{i=0}^{n-2} 2^i\mathbf{x}_{i} + 2^{n-1}\mathbf{y}_{n-1} - \sum_{i=0}^{n-2} 2^i\mathbf{y}_{i} \geq 0
-    \]
-
-    % TODO: Add example
+    \noindent
+    Where $sx$ and $sy$ are the same as described in \proofRule{pbblast_bveq}.
 
 \end{RuleDescription}
-
-
 
 \begin{RuleDescription}{pbblast_pbbvar}
-    Conversion from a BitVector of $n$ bits to $n$ PseudoBoolean variables passed to pbbT:
+    Conversion from a BitVector \textbf{x} of $n$ bits to $n$
+    PseudoBoolean variables passed to pbbT:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $x \approx \lsymb{pbbT}\; x_1 \dots x_{n+1}$ & (\currule)
-    \end{AletheX}
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $\textbf{x} \approx
+            \lsymb{pbbT}\; x_0 \dots x_{n-1}$ & (\currule)
+    \end{AletheS}
 
-    % TODO: Add example
+    \noindent
+    in which, for every $i$ such that $0\le i <n$:
+    \[
+        \begin{array}{lcl}
+            x_i & = & (\lsymb{intOf}_{i}\ \textbf{x})
+        \end{array}
+    \]
 
 \end{RuleDescription}
+
+\begin{RuleExample}
+    This example is the pseudo-boolean bit blasting over bitvectors of $2$ bits
+    \begin{AletheVerb}
+        (declare-const x2 (_ BitVec 2))
+        (step t1 (cl (= x2 (@pbbterm ((_ @int_of 0) x2)
+                                     ((_ @int_of 1) x2))
+            )) :rule pbblast_pbbvar)
+    \end{AletheVerb}
+\end{RuleExample}
+
 
 \begin{RuleDescription}{pbblast_pbbconst}
     Blasts the bits of the constant BitVector b:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $\left(b \approx \lsymb{pbbT}\; \textbf{match}(b_0) \dots \textbf{match}(b_{n-1}) \right)$ & (\currule) \\
-    \end{AletheX}
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $b \approx
+            \lsymb{pbbT}\; \textbf{match}(b_0) \dots \textbf{match}(b_{n-1}) $ & (\currule)
+    \end{AletheS}
+
     \noindent
     In which we expand \textbf{match($b_i$)} into the constant value of ``$(\lsymb{intOf}_{i}\ b)$''
 \end{RuleDescription}
@@ -2331,36 +2318,57 @@ to quickly find the definition of rules.
 \end{RuleExample}
 
 \begin{RuleDescription}{pbblast_bvxor}
-    The `bvxor' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+    The `bvxor' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvxor}\ x\ y) \approx \lsymb{pbbT}\; c_0 \dots c_{n-1}$ & (\currule) \\
-    \end{AletheX}
-
-
-    % // c1 : (>= (+ xi yi) z)
-    % // c2 : (>= (+ z xi) yi)
-    % // c3 : (>= (+ z yi) xi)
-    % // c4 : (>= 2 (+ z xi yi)
-
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvxor}\ \textbf{x}\ \textbf{y}) \approx
+            \lsymb{pbbT}\; c_0 \dots c_{n-1} $ & (\currule)
+    \end{AletheS}
 
     \noindent
     Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
     applied to the conjunction of these constraints on the $i$th bit:
 
     \[ \textbf{x}_i+\textbf{y}_i \ge z \]
-    \[ 2 \ge z + \textbf{x}_i + \textbf{y}_i \]
     \[ z + \textbf{x}_i \ge \textbf{y}_i \]
     \[ z + \textbf{y}_i \ge \textbf{x}_i \]
+    \[ 2 \ge z + \textbf{x}_i + \textbf{y}_i \]
 
 \end{RuleDescription}
 
-\begin{RuleDescription}{pbblast_bvand}
-    The `bvand' operation over BitVectors with $n$ bits is expressed using PseudoBoolean inequalities by:
+\begin{RuleExample}
+    The exclusive or operation on bitvector of $2$ bits:
+    \begin{AletheVerb}
+        (declare-const @x0 Int)
+        (declare-const @x1 Int)
+        (declare-const @y0 Int)
+        (declare-const @y1 Int)
+        (step t1 (cl (= (bvxor (@pbbterm @x0 @x1) (@pbbterm @y0 @y1))
+                        (@pbbterm
+                            (choice ((z Int)) (and
+                                    (>= (+ @x0 @y0) z)   
+                                    (>= (+ z @x0) @y0)   
+                                    (>= (+ z @y0) @x0)   
+                                    (>= 2 (+ z @x0 @y0))))
+                            (choice ((z Int)) (and
+                                    (>= (+ @x1 @y1) z)   
+                                    (>= (+ z @x1) @y1)   
+                                    (>= (+ z @y1) @x1)   
+                                    (>= 2 (+ z @x1 @y1)))))
+            )) :rule pbblast_bvxor)
+    \end{AletheVerb}
+\end{RuleExample}
 
-    \begin{AletheX}
-        $i$. & \ctxsep & $(\lsymb{bvand}\ x\ y) \approx \lsymb{pbbT}\; c_0 \dots c_{n-1}$ & (\currule) \\
-    \end{AletheX}
+
+\begin{RuleDescription}{pbblast_bvand}
+    The `bvand' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvand}\ \textbf{x}\ \textbf{y}) \approx
+            \lsymb{pbbT}\; c_0 \dots c_{n-1} $ & (\currule)
+    \end{AletheS}
 
     \noindent
     Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
