@@ -1132,31 +1132,31 @@ $j$. & \ctxsep & $\neg\varphi_1 , \neg\varphi_2$ & (\currule\;$i$) \\
   This rule is used to replace connectives by their definition. It can be one
   of the following:
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. & $\Gamma$  & \ctxsep  &
     $(\lsymb{xor}\,\varphi_1\,\varphi_2) ≈
     ((\neg\varphi_1 \land \varphi_2) \lor (\varphi_1 \land \neg\varphi_2))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. & $\Gamma$  & \ctxsep  &
       $(\varphi_1 ≈ \varphi_2) ≈
       ((\varphi_1 \rightarrow \varphi_2) \land (\varphi_2 \rightarrow \varphi_1))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. & $\Gamma$   & \ctxsep &
       $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) ≈
       ((\varphi_1 \rightarrow \varphi_2) \land (\neg\varphi_1 \rightarrow \varphi_3))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. &  $\Gamma$   & \ctxsep&
       $(\forall x_1, \dots, x_n.\,\varphi) ≈ \neg(\exists x_1, \dots, x_n.\,
       \neg\varphi)$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. & $\Gamma$ & \ctxsep   &
       $(\exists x_1, \dots, x_n.\,\varphi) ≈ \neg(\forall x_1, \dots, x_n.\,\neg\varphi)$ & \currule \\
 \end{AletheXS}
 \end{RuleDescription}
