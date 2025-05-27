@@ -254,6 +254,7 @@ to quickly find the definition of rules.
     \ruleref{cp_division} & Division of a PseudoBoolean inequality by a scalar. \\
     \ruleref{cp_saturation} & Saturation of a PseudoBoolean inequality. \\
     \ruleref{cp_normalize} & Steps for transforming an expressions to the normalized format. \\
+    \ruleref{cp_literal} & Introduction of pseudo-boolean literal greater-equal to zero. \\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
@@ -2039,51 +2040,79 @@ to quickly find the definition of rules.
     This rule simplifies a \textit{linear relation} term by applying equivalence-preserving
     transformations until a fixed point called \textbf{normalized form} is reached.
 
-    % STEP 1
-    \noindent
-    \textbf{Pre Conditions}
-    The initial term is a relation of form:
-    \[\varphi_1 \bowtie \varphi_2\]
-    \noindent
-    Where $\varphi_1$ and $\varphi_2$ are sums of constants $k$ or linear terms $c*l$
-    and $\bowtie \in \{=,>,<,\ge,\le\}$.
+    % % STEP 1
+    % \noindent
+    % \textbf{Pre Conditions}
+    % The initial term is a relation of form:
+    % \[\varphi_1 \bowtie \varphi_2\]
+    % \noindent
+    % Where $\varphi_1$ and $\varphi_2$ are sums of constants $k$ or linear terms $c\cdot l$
+    % and $\bowtie \in \{=,>,<,\ge,\le\}$.
 
+    % \noindent
+    % Move variables to the left
+    % \begin{itemize}
+    %     \item $\varphi_1 \bowtie \varphi_2 \Rightarrow \varphi_1 - \varphi_2 \bowtie 0$
+    % \end{itemize}
+
+    % \noindent
+    % Move constants to the right
+    % \begin{itemize}
+    %     \item $\varphi_1 + k_1 \bowtie k_2 \Rightarrow \varphi_1 \bowtie k_2 - k_1$
+    % \end{itemize}
+
+    % \noindent
+    % Eliminate other relations
+    % \begin{itemize}
+    %     \item $\varphi = k \Rightarrow (\varphi \ge k) \land (\overline{\varphi} \ge -k)$
+    %     \item $\varphi > k \Rightarrow \varphi \ge k +1$
+    %     \item $\varphi < k \Rightarrow \overline\varphi \ge -k +1$
+    %     \item $\varphi \le k \Rightarrow \overline\varphi \ge -k$
+    % \end{itemize}
+
+    % % TODO
+    % \noindent
+    % Push negations
+    % \begin{itemize}
+    %     \item $\overline\sum_i{c_i l_i} \ge k \Rightarrow \sum_i{-c_i l_i} \ge k$
+    %     \item $\dots + -c_i l_i + \dots \ge k \Rightarrow \dots + c_i (1 - l_i) + \dots \ge k + c_i$
+    % \end{itemize}
+    % Using the fact that $a + (1 - a) = 1$ to get every variable with a negative
+    % coefficient to the negated version
+
+    % \noindent
+    % Hence, the general form is
+
+    % This rule transformas a linear relation term by applying equivalence-preserving
+    % transformations until fixed point
     \noindent
-    Move variables to the left
+    It has the form
+
+    \begin{AletheXS}
+        $i$. & \ctxsep  & $\Gamma$  & $(a \bowtie b) \approx (\sum_i{c_i l_i} \ge k) $ & \currule \\
+    \end{AletheXS}
+
+    where the right hand side is the normalized term and $\bowtie \in \{=,>,<,\ge,\le\}$.
+
+    The possible transformations are:
     \begin{itemize}
+        % Rethink this pattern matching
+        % Move variables to the left
         \item $\varphi_1 \bowtie \varphi_2 \Rightarrow \varphi_1 - \varphi_2 \bowtie 0$
-    \end{itemize}
-
-    \noindent
-    Move constants to the right
-    \begin{itemize}
-        \item $\varphi_1 + k_1 \bowtie k_2 \Rightarrow \varphi_1 \bowtie k_2 - k_1$
-    \end{itemize}
-
-    \noindent
-    Eliminate other relations
-    \begin{itemize}
+              % Move constants to the right
+        \item $\varphi_1 \bowtie \varphi_2 \Rightarrow \varphi_1 - \varphi_2 \bowtie 0$
+              % Eliminate other relations
         \item $\varphi = k \Rightarrow (\varphi \ge k) \land (\overline{\varphi} \ge -k)$
         \item $\varphi > k \Rightarrow \varphi \ge k +1$
         \item $\varphi < k \Rightarrow \overline\varphi \ge -k +1$
         \item $\varphi \le k \Rightarrow \overline\varphi \ge -k$
-    \end{itemize}
-
-    % TODO
-    \noindent
-    Push negations
-    \begin{itemize}
-        \item $\overline\sum_i{c_i l_i} \ge k \Rightarrow \sum_i{-c_i l_i} \ge k$
+              % Push negations
+        \item $\overline{\sum_i{c_i l_i}} \ge k \Rightarrow \sum_i{-c_i l_i} \ge k$
         \item $\dots + -c_i l_i + \dots \ge k \Rightarrow \dots + c_i (1 - l_i) + \dots \ge k + c_i$
+              % Using the fact that $a + (1 - a) = 1$ to get every variable with a negative
+              % coefficient to the negated version
+
     \end{itemize}
-
-    Hence, the general form is
-
-    \begin{AletheXS}
-        $i$. & \ctxsep  & $\Gamma$  & $TODO$ & \currule \\
-    \end{AletheXS}
-    where $\psi$ is the transformed term.
-
 \end{RuleDescription}
 
 \begin{RuleDescription}{cp_literal}
