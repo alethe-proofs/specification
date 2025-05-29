@@ -2139,19 +2139,19 @@ to quickly find the definition of rules.
     in which, in general:
     \[
         \begin{array}{lcl}
-            x_i & = & (\lsymb{intOf}_{i}\ \textbf{x}) \\
-            y_i & = & (\lsymb{intOf}_{i}\ \textbf{y})
+            x_i & = & (\lsymb{int\_of}_{i}\ \textbf{x}) \\
+            y_i & = & (\lsymb{int\_of}_{i}\ \textbf{y})
         \end{array}
     \]
     Alternatively, the rule may also be phrased as a ``short-circuiting''
-    of the above when \textbf{x} and \textbf{y} are ``$\lsymb{pbbT}$'' applications. So given that
+    of the above when \textbf{x} and \textbf{y} are ``$\lsymb{pbbterm}$'' applications. So given that
     \[
         \begin{array}{lcl}
-            \textbf{x} & = & (\lsymb{pbbT}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n) \\
-            \textbf{y} & = & (\lsymb{pbbT}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n) \\
+            \textbf{x} & = & (\lsymb{pbbterm}\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n) \\
+            \textbf{y} & = & (\lsymb{pbbterm}\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n) \\
         \end{array}
     \]
-    then ``$x_{i}$'' and ``$y_{i}$'' can be the arguments of ``$\lsymb{pbbT}$'' directly.
+    then ``$x_{i}$'' and ``$y_{i}$'' can be the arguments of ``$\lsymb{pbbterm}$'' directly.
 
 \end{RuleDescription}
 
@@ -2362,18 +2362,18 @@ to quickly find the definition of rules.
 
 \begin{RuleDescription}{pbblast_pbbvar}
     Conversion from a BitVector \textbf{x} of $n$ bits to $n$
-    PseudoBoolean variables passed to pbbT:
+    PseudoBoolean variables passed to pbbterm:
 
     \begin{AletheS}
         $i$. & \ctxsep & \, & $\textbf{x} \approx
-            \lsymb{pbbT}\; x_0 \dots x_{n-1}$ & (\currule)
+            \lsymb{pbbterm}\; x_0 \dots x_{n-1}$ & (\currule)
     \end{AletheS}
 
     \noindent
     in which, for every $i$ such that $0\le i <n$:
     \[
         \begin{array}{lcl}
-            x_i & = & (\lsymb{intOf}_{i}\ \textbf{x})
+            x_i & = & (\lsymb{int\_of}_{i}\ \textbf{x})
         \end{array}
     \]
 
@@ -2395,11 +2395,11 @@ to quickly find the definition of rules.
 
     \begin{AletheS}
         $i$. & \ctxsep & \, & $b \approx
-            \lsymb{pbbT}\; \textbf{match}(b_0) \dots \textbf{match}(b_{n-1}) $ & (\currule)
+            \lsymb{pbbterm}\; \textbf{match}(b_0) \dots \textbf{match}(b_{n-1}) $ & (\currule)
     \end{AletheS}
 
     \noindent
-    In which we expand \textbf{match($b_i$)} into the constant value of ``$(\lsymb{intOf}_{i}\ b)$''
+    In which we expand \textbf{match($b_i$)} into the constant value of ``$(\lsymb{int\_of}_{i}\ b)$''
 \end{RuleDescription}
 
 \begin{RuleExample}
@@ -2416,7 +2416,7 @@ to quickly find the definition of rules.
 
     \begin{AletheS}
         $i$. & \ctxsep & \, & $(\lsymb{bvxor}\ \textbf{x}\ \textbf{y}) \approx
-            \lsymb{pbbT}\; c_0 \dots c_{n-1} $ & (\currule)
+            \lsymb{pbbterm}\; c_0 \dots c_{n-1} $ & (\currule)
     \end{AletheS}
 
     \noindent
@@ -2460,7 +2460,7 @@ to quickly find the definition of rules.
 
     \begin{AletheS}
         $i$. & \ctxsep & \, & $(\lsymb{bvand}\ \textbf{x}\ \textbf{y}) \approx
-            \lsymb{pbbT}\; c_0 \dots c_{n-1} $ & (\currule)
+            \lsymb{pbbterm}\; c_0 \dots c_{n-1} $ & (\currule)
     \end{AletheS}
 
     \noindent
