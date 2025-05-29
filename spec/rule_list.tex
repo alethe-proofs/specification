@@ -2048,7 +2048,7 @@ to quickly find the definition of rules.
     \end{AletheXS}
 
     where the right hand side $u$ is the normalized term of form \\
-    $$\sum_i{c_i l_i} \ge k \text{or} \left(\sum_i{c_i l_i} \ge k\right) \land \left(\sum_i{c_i l_i} \ge k\right)$$ and $\bowtie \in \{=,>,<,\ge,\le\}$.
+    $$\sum_i{c_i l_i} \ge k \qquad \text{or} \qquad \left(\sum_i{c_i l_i} \ge k\right) \land \left(\sum_i{c_i l_i} \ge k\right)$$ and $\bowtie \in \{=,>,<,\ge,\le\}$.
 
     \noindent
     The possible transformations are:
@@ -2058,17 +2058,18 @@ to quickly find the definition of rules.
               % Move constants to the right
         \item $\varphi_1 + k \bowtie \varphi_2 \Rightarrow \varphi_1 \bowtie \varphi_2 -k$ if $k$ is a constant
               % Eliminate other relations
-        \item $\varphi = k \Rightarrow (\varphi \ge k) \land (\overline{\varphi} \ge -k)$
+        \item $\varphi = k \Rightarrow (\varphi \ge k) \land (\overbrace{\varphi} \ge -k)$
         \item $\varphi > k \Rightarrow \varphi \ge k +1$
-        \item $\varphi < k \Rightarrow \overline\varphi \ge -k +1$
-        \item $\varphi \le k \Rightarrow \overline\varphi \ge -k$
+        \item $\varphi < k \Rightarrow \overbrace\varphi \ge -k +1$
+        \item $\varphi \le k \Rightarrow \overbrace\varphi \ge -k$
               % Push negations
-        \item $\overline{\sum_i{c_i l_i}} \ge k \Rightarrow \sum_i{-c_i l_i} \ge k$
-        \item $-c_i l_i + \psi \ge k \Rightarrow c_i (1 - l_i) + \psi \ge k + c_i$
-              % Using the fact that $a + (1 - a) = 1$ to get every variable with a negative
-              % coefficient to the negated version
+        \item $\overbrace{\sum_i{c_i l_i}} \ge k \Rightarrow \sum_i{-c_i l_i} \ge k$
+        \item $-c_i l_i + \psi \ge k \Rightarrow c_i \overline{l_i} + \psi \ge k + c_i$
+              %   Using the fact that $a + (1 - a) = 1$ to get every variable with a negative
+              %   coefficient to the negated version
 
     \end{itemize}
+
 \end{RuleDescription}
 
 \begin{RuleDescription}{cp_literal}
