@@ -274,6 +274,7 @@ to quickly find the definition of rules.
     \ruleref{pbblast_pbbvar} & Pseudo-Boolean Bitblasting of a BitVector variable. \\
     \ruleref{pbblast_pbbconst} & Pseudo-Boolean Bitblasting of BitVector constant. \\
     \ruleref{pbblast_bvxor} & Pseudo-Boolean Bitblasting of $\lsymb{bvxor}$. \\
+    \ruleref{pbblast_bvxor_ith_bit} & Extraction of choice properties from $\lsymb{pbblast\_bvxor}$. \\
     \ruleref{pbblast_bvand} & Pseudo-Boolean Bitblasting of $\lsymb{bvand}$. \\
     \ruleref{pbblast_bvand_ith_bit} & Extraction of choice properties from $\lsymb{pbblast\_bvand}$. \\
 \end{xltabular}
@@ -2409,6 +2410,23 @@ to quickly find the definition of rules.
             )) :rule pbblast_bvxor)
     \end{AletheVerb}
 \end{RuleExample}
+
+\begin{RuleDescription}{pbblast_bvxor_ith_bit}
+    This rule extracts assertions of the $i$th bit of an application of
+    \proofRule{pbblast_bvxor}, given its arguments were $x_i$ and $y_i$:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(x_i + y_i \ge r_i) \land (r_i + x_i\ge y_i) \land
+            \newline (r_i + y_i \ge x_i) \land (2 \ge r_i + x_i + y_i)$ & (\currule)
+    \end{AletheS}
+
+    \noindent
+    In which $r_i$ is the element from the pseudo boolean bit blasting of the \textbf{bvxor} rule of form:
+
+    \[\varepsilon z.\, (x_i + y_i \ge z) \land (z + x_i\ge y_i) \land
+        (z + y_i \ge x_i) \land (2 \ge z + x_i + y_i)\]
+
+\end{RuleDescription}
 
 
 \begin{RuleDescription}{pbblast_bvand}
