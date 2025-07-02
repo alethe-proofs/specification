@@ -219,6 +219,7 @@ simplifications.}
 \ruleref{equiv_simplify} & Simplification of an equivalence. \\
 \ruleref{bool_simplify} & Simplification of combined Boolean connectives. \\
 \ruleref{ac_simp} & Flattening and removal of duplicates for $\lor$ or $\land$. \\
+\ruleref{aci_simp} & Simplification of terms through ACI reasoning. \\
 \ruleref{ite_simplify} & Simplification of if-then-else. \\
 \ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
 \ruleref{onepoint} & The one-point rule. \\
@@ -1904,6 +1905,59 @@ $i$. & \ctxsep & $ (t_1 ≈ t_2) ≈ (t_2 ≈ t_1)$ & (\currule) \\
 Note that since Alethe allows the implicit reordering of equalities, this
 rule is technically superfluous.  However, the rule is useful to state
 an explicit usage of symmetry of equality reasoning to aid proof reconstruction.
+\end{RuleDescription}
+
+\begin{RuleDescription}{aci_simp}
+\begin{AletheX}
+$i$. & \ctxsep & $ t_1 ≈ t_2 $ & (\currule) \\
+\end{AletheX}
+
+\noindent
+where $t_1$ and $t_2$ are equivalent modulo associativity, commutativity, 
+identity elements and idempotency. Checking this rule involves a normalization 
+step of $t_1$ and $t_2$, that exploits the previous properties of the operations involved 
+in both terms. The rule applies to ACI operators (that is, those that satisfy
+associativity, commutativity, idempotency and that have an identity element), 
+AC operators (associativity, commutativity and identity elements), as well to
+operators that satisfy only associativity and that have an identity element. 
+
+Every operator with the previous properties can trigger the normalization step.
+In particular:
+\begin{itemize}
+  \item Logical operations: $\vee$, $\wedge$.
+  \item Bit vectors: bvor, bvand, bvadd, bvmul, concat.
+  \item Arithmetic: - (binary substraction), +, *.
+  \end{itemize}
+
+The normalization process itself can be described with these simple rewriting rules:
+\begin{itemize}
+\item For an operator $op$ with identity element $id$, and operands $x_i$:
+\begin{itemize}
+\item $op \; x_1 \; id ⇒ x_1$
+\item $op \; id \; x_2 ⇒ x_2$
+\end{itemize}
+\item For an idempotent operators $op$, and operand $x$:
+\begin{itemize}
+\item $op \; x \; x ⇒ x$
+\end{itemize}
+
+\item Optionally, commutativity might be taken into consideration, rewriting
+          terms as in:
+          \begin{itemize}
+          \item $op \; x_1 \; x_2 ⇒ op \; x_{1'} \; x_{2'}$, 
+            where 
+            \begin{itemize}
+            \item $x_{1'}, \; x_{2'} \in \{ x_1, x_2\}$
+              
+            \item $x_{1'} \neq x_{2'}$
+              
+              % \item $x_{1'} \ge x_{2'}$, with $\ge$ being a total order among terms
+              %   \textbf{TODO: is there something that we should ask for this order?}
+            \end{itemize}
+          \end{itemize}
+          Note that we do not impose some particular order among terms.
+\end{itemize}
+
 \end{RuleDescription}
 
 \clearpage
