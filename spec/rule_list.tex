@@ -2493,6 +2493,99 @@ to quickly find the definition of rules.
    \end{AletheVerb}
 \end{RuleExample}
 
+\begin{RuleDescription}{pbblast_bvnot}
+    Unary `not` operator over BitVector \textbf{a} with $n$ bits is
+    expressed using PseudoBoolean inequalities by:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvnot}\ \textbf{a}) \approx
+            \lsymb{pbbterm}\; c_0 \dots c_{n-1} $ & (\currule)
+    \end{AletheS}
+
+
+    \noindent
+    Each term ``$c_i$'' is a \textbf{choice} application of form
+    $\varepsilon z.\, \varphi[z]$ applied to the conjunction of these
+    constraints on the $i$th bit:
+
+    \[ \textbf{a}_i + z = 1 \]
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{pbblast_bvxnor}
+    The `bvxnor' operation over BitVectors \textbf{x} and \textbf{y}
+    with $n$ bits is expressed using PseudoBoolean inequalities by the negation
+    of the `bvxor` operator, so
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvxnor}\ \textbf{x}\ \textbf{y}) \approx \lsymb{bvnot} (\lsymb{bvxor}\ \textbf{x}\ \textbf{y})$ & (\currule)
+    \end{AletheS}
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{pbblast_bvor}
+    The `bvor' operation over $N$ BitVectors $\textbf{a}^j$ for $j = 1, \dots, N$
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvor}\ \textbf{a}^1\ \dots\ \textbf{a}^N) \approx
+            \lsymb{pbbterm}\; c_0 \dots c_{n-1} $ & (\currule)
+    \end{AletheS}
+
+    \noindent
+    Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
+    applied to the conjunction of these constraints on the $i$th bit:
+
+    \[ \sum_{j=1}^{N}{a_i^j} \ge z \]
+
+    \noindent
+    Also for each BitVector $\textbf{a}^j$ for $j = 1, \dots, N$:
+    \[ z \ge a_i^j \]
+
+\end{RuleDescription}
+
+\begin{RuleExample}
+    Operating on $N=3$ BitVectors of width $n=2$:
+    \begin{AletheVerb}
+        (step t1 (cl (=
+            (bvor (@pbbterm x0 x1) (@pbbterm y0 y1) (@pbbterm w0 w1))
+            (@pbbterm
+                (choice ((z Int)) (and 
+                                    (>= (+ x0 y0 w0) z)
+                                    (>= z x0)
+                                    (>= z y0)
+                                    (>= z w0)))
+                (choice ((z Int)) (and 
+                                    (>= (+ x1 y1 w1) z)
+                                    (>= z x1)
+                                    (>= z y1)
+                                    (>= z w1)))
+        ))) :rule pbblast_bvor)
+    \end{AletheVerb}
+
+\end{RuleExample}
+
+
+% \begin{RuleDescription}{pbblast_bvadd}
+%     WIP
+% \end{RuleDescription}
+
+% \begin{RuleDescription}{pbblast_bvsub}
+%     WIP
+% \end{RuleDescription}
+
+% \begin{RuleDescription}{pbblast_bvmult}
+%     WIP
+% \end{RuleDescription}
+
+% \begin{RuleDescription}{pbblast_bvconcat}
+%     WIP
+% \end{RuleDescription}
+
+% \begin{RuleDescription}{pbblast_bvneg}
+%     WIP
+% \end{RuleDescription}
+
 
 \begin{RuleDescription}{symm}
     \begin{AletheX}
