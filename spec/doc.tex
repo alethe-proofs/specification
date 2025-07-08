@@ -686,7 +686,7 @@ An Alethe proof is a list of commands.
           :rule th_resolution :premises (t11 t12 t13))
 (step t15 (cl (or (not (forall ((vr5 U)) (p vr5)))
                   (p a)))
-          :rule forall_inst :args ((:= vr5 a)))
+          :rule forall_inst :args (a))
 (step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
           :rule or :premises (t15))
 (step t17 (cl) :rule resolution :premises (t16 h1 t14))
@@ -1673,8 +1673,7 @@ ground term $t_i$ is a new term with the same sort as $x_i$.\footnote{
   as its conclusion and not the clause $(\neg \forall \bar x_n.\,\varphi), \varphi[\bar t_n]$.
 }
 
-The arguments of a \proofRule{forall_inst} step are the list $(x_1 , t_1),
-\dots, (x_n, t_n)$. While this information can be recovered from the term,
+The argument of a \proofRule{forall_inst} step, for a quantification of the form $\forall x_1,\dots,x_n. \varphi$,  is the list $t_1,\dots, t_n$, where $t_i$ denotes the substitute of variable $x_i$. While this information can be recovered from the term,
 providing it explicitly helps reconstruction because the implicit reordering of
 equalities obscures which terms have been used as instances.
 Existential quantifiers are handled by skolemization.
