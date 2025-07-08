@@ -683,12 +683,14 @@ $k$. & $\Gamma$ & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \curru
 \begin{RuleDescription}{forall_inst}
 \begin{AletheX}
 $i$. & \ctxsep &
-$\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1]\dots[x_n\mapsto t_n]$
+$\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1, \dots, x_n\mapsto t_n]$
  & \currule\, [$t_1$, $\dots$, $t_n$] \\
 \end{AletheX}
 
 \noindent
-where $x_i$ and $t_i$ have the same sort.
+where $x_i$ and $t_i$ have the same sort, and $x_1, \dots, x_n$ are pairwise
+distinct.
+
 \end{RuleDescription}
 
 \begin{RuleExample}
