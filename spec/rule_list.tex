@@ -282,7 +282,7 @@ to quickly find the definition of rules.
     \ruleref{pbblast_bvor} & Pseudo-Boolean Bitblasting of $\lsymb{bvor}$. \\
     \ruleref{pbblast_bvadd} & Pseudo-Boolean Bitblasting of $\lsymb{bvadd}$. \\
     \ruleref{pbblast_bvmult} & Pseudo-Boolean Bitblasting of $\lsymb{bvmult}$. \\
-    \ruleref{pbblast_bvconcat} & Pseudo-Boolean Bitblasting of $\lsymb{bvconcat}$. \\
+    \ruleref{pbblast_bvconcat} & Pseudo-Boolean Bitblasting of $\lsymb{concat}$. \\
     \ruleref{pbblast_bvneg} & Pseudo-Boolean Bitblasting of $\lsymb{bvneg}$. \\
     \ruleref{pbblast_bvequality} & Pseudo-Boolean Bitblasting of $\lsymb{bvequality}$. \\
     \ruleref{pbblast_bvcomp} & Pseudo-Boolean Bitblasting of $\lsymb{bvcomp}$. \\
@@ -2529,6 +2529,7 @@ to quickly find the definition of rules.
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvxnor}
+    % TODO: Reframe the rule, not in function of bvnot and bvxor
     The `bvxnor' operation over BitVectors \textbf{x} and \textbf{y}
     with $n$ bits is expressed using PseudoBoolean inequalities by the negation
     of the `bvxor` operator, so
@@ -2593,8 +2594,31 @@ to quickly find the definition of rules.
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvconcat}
-    % TODO
-    WIP
+
+    %   From  https://smt-lib.org/theories-FixedSizeBitVectors.shtml
+    %    - Function symbols for concatenation
+    %    [[(concat s t)]] := λx:[0, n+m). if (x < m) then [[t]](x) else [[s]](x - m)
+    %    where
+    %    s and t are terms of sort (_ BitVec n) and (_ BitVec m), respectively,
+    %    0 < n, 0 < m.
+
+    The `concat' operation over two BitVectors $\textbf{s}$ with $n$ bits and
+    $\textbf{t}$ with $m$ bits, that returns a BitVector with $n+m$ bits
+    is expressed using PseudoBoolean inequalities by:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{concat}\ \textbf{s}\ \textbf{t}) \approx
+            \lsymb{pbbterm}\; c_0 \dots c_{n+m-1} $ & (\currule)
+    \end{AletheS}
+
+    \noindent
+    Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
+    applied to the conjunction of these constraints on the $i$th bit:
+
+    \[
+        \lsymb{ite}\,(i < m)\,(t_i)\,(s_{i-m}) = z
+    \]
+
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvneg}
