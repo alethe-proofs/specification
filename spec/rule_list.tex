@@ -2602,38 +2602,64 @@ to quickly find the definition of rules.
     %    s and t are terms of sort (_ BitVec n) and (_ BitVec m), respectively,
     %    0 < n, 0 < m.
 
-    The `concat' operation over two BitVectors $\textbf{s}$ with $n$ bits and
-    $\textbf{t}$ with $m$ bits, that returns a BitVector with $n+m$ bits
+    The `concat' operation over $N$ BitVectors $\textbf{a}^j$ with $w[j]$ bits
+    each, that returns a BitVector with $\sum_{j=1}^{N}{w[j]}$ bits
     is expressed using PseudoBoolean inequalities by:
 
     \begin{AletheS}
-        $i$. & \ctxsep & \, & $(\lsymb{concat}\ \textbf{s}\ \textbf{t}) \approx
-            \lsymb{pbbterm}\; c_0 \dots c_{n+m-1} $ & (\currule)
+        $i$. & \ctxsep & \, & $(\lsymb{concat}\ \textbf{a}^1\ \dots\ \textbf{a}^N) \approx
+            \lsymb{pbbterm}\; c_0 \dots c_{(\sum_{j=1}^{N}{w[j]})-1} $ & (\currule)
     \end{AletheS}
 
     \noindent
-    Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
-    applied to the conjunction of these constraints on the $i$th bit:
+    Each term ``$c_k$'' is a pseudo boolean equality on the ranging over the arguments
+    for $j = 1, \dots, N$ and $i = 0, \dots, w[j] - 1$
 
     \[
-        \lsymb{ite}\,(i < m)\,(t_i)\,(s_{i-m}) = z
+        \textbf{a}_{i}^{j} = c_{j\cdot N + i}
     \]
 
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvneg}
-    % TODO
-    WIP
-\end{RuleDescription}
+    The `neg' operation over a BitVector $\textbf{x}$ with $n$ bits is
+    expressed using PseudoBoolean inequalities by:
 
-\begin{RuleDescription}{pbblast_bvequality}
-    % TODO
-    WIP
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{neg}\ \textbf{x}) \approx
+            \lsymb{pbbterm}\; c_0 \dots c_{n-1} $ & (\currule)
+    \end{AletheS}
+
+    \noindent
+    Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
+    that constraints the bits the be the result of negation:
+
+    \[
+        \sum_{i=0}^{n-1}{2^i \textbf{x}_i} + \sum_{i=0}^{n-1}{2^{i} c_i} = 2^{n}
+    \]
+
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvcomp}
-    % TODO
-    WIP
+    The `bvcomp' operation over $2$ BitVectors $\textbf{x}$ and $\textbf{y}$
+    with $n$ bits, that returns a BitVector with $1$ bit is expressed using
+    PseudoBoolean inequalities by:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvcomp}\ \textbf{x}\ \textbf{y}) \approx
+            \lsymb{pbbterm}\; c$ & (\currule)
+    \end{AletheS}
+
+    \noindent
+    The term ``$c$'' represents the comparison between \textbf{x} and \textbf{y},
+    it's $1$ when they are equal and $0$ otherwise, being represented with
+    pseudo boolean blasted values as:
+
+    \[
+        1 - \left( \sum_{i=0}^{n-1}{2^i \textbf{x}_i}
+        - \sum_{i=0}^{n-1}{2^i \textbf{y}_i} \right)
+    \]
+
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvextract}
