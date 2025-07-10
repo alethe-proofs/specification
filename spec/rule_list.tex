@@ -2585,7 +2585,23 @@ to quickly find the definition of rules.
 
 \begin{RuleDescription}{pbblast_bvadd}
     % TODO
-    WIP
+    The `bvadd' operation over $N$ BitVectors $\textbf{a}^j$ for $j = 1, \dots, N$
+    with $n$ bits that returns a BitVector of $n+\left\lceil{\log_2 N}\right\rceil$ bits is expressed
+    using PseudoBoolean inequalities by:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvadd}\ \textbf{a}^1\ \dots\ \textbf{a}^N) \approx
+            \lsymb{pbbterm}\; c_0 \dots c_{n+\left\lceil{\log_2 N}\right\rceil-1} $ & (\currule)
+    \end{AletheS}
+
+    \noindent
+    Ensuring that such $c_k$ elements are picked to satisfy
+
+    \[
+        \sum_{i=0}^{n+\left\lceil{\log_2 N}\right\rceil - 1} {2^i r_i}
+        = \sum_{j=1}^{N}{\sum_{i=0}^{n-1}{2^i \textbf{a}_{i}^{j}}}
+    \]
+
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvmult}
