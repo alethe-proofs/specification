@@ -1918,7 +1918,7 @@ $i$. & \ctxsep & $ t_1 ≈ t_2 $ & (\currule) \\
 where $t_1$ and $t_2$ are equivalent modulo associativity, commutativity, 
 identity elements and idempotency. Checking this rule involves a normalization 
 step of $t_1$ and $t_2$, that exploits the previous properties of the operations involved 
-in both terms. The rule applies to ACI operators (that is, those that satisfy
+in both terms. The rule applies to SMT-LIB ACI operators (that is, those that satisfy
 associativity, commutativity, idempotency and that have an identity element), 
 AC operators (associativity, commutativity and identity elements), as well to
 operators that satisfy only associativity and that have an identity element. 
@@ -1926,9 +1926,10 @@ operators that satisfy only associativity and that have an identity element.
 Every operator with the previous properties can trigger the normalization step.
 In particular:
 \begin{itemize}
-  \item Logical operations: $\vee$, $\wedge$.
-  \item Bit vectors: bvor, bvand, bvadd, bvmul, concat.
-  \item Arithmetic: - (binary substraction), +, *.
+  \item Logical operations: \inlineAlethe{or}, \inlineAlethe{and}.
+  \item Bit vectors: \inlineAlethe{bvor}, \inlineAlethe{bvand}, \inlineAlethe{bvadd}, 
+                                   \inlineAlethe{bvmul}, \inlineAlethe{concat}.
+  \item Arithmetic: \inlineAlethe{-} (binary substraction), \inlineAlethe{+}, \inlineAlethe{*}.
   \end{itemize}
 
 The normalization process itself can be described with these simple rewriting rules:
@@ -1951,7 +1952,7 @@ The normalization process itself can be described with these simple rewriting ru
             \begin{itemize}
             \item $x_{1'}, \; x_{2'} \in \{ x_1, x_2\}$
               
-            \item $x_{1'} \neq x_{2'}$
+            \item Multi-sets $\{x_{1'}, x_{2'}\}$ and $\{x_1, x_2\}$ are equal.
               
               % \item $x_{1'} \ge x_{2'}$, with $\ge$ being a total order among terms
               %   \textbf{TODO: is there something that we should ask for this order?}
