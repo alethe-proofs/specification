@@ -418,7 +418,7 @@ understand the proof step by step.
 \begin{Alethe}
 1.& \ctxsep & $\forall x.\, (P\,x)$ & $ \proofRule{assume}$ \\
 2.& \ctxsep & $\neg (P\,a)        $ & $ \proofRule{assume}$ \\
-3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[(x, a)]$ \\
+3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[a]$ \\
 4.& \ctxsep & $\neg (\forall x.\, (P\,x)), (P\,a)$ & $ (\proofRule{or}\:3)$ \\
 5.& \ctxsep & $\bot             $ & $ (\proofRule{resolution}\: 1, 2, 4)$ \\
 \end{Alethe}
