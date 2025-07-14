@@ -2592,7 +2592,6 @@ to quickly find the definition of rules.
 
 
 \begin{RuleDescription}{pbblast_bvadd}
-    % TODO
     The `bvadd' operation over $N$ BitVectors $\textbf{a}^j$ for $j = 1, \dots, N$
     with $n$ bits that returns a BitVector of $n+\left\lceil{\log_2 N}\right\rceil$ bits is expressed
     using PseudoBoolean inequalities by:
@@ -2603,19 +2602,44 @@ to quickly find the definition of rules.
     \end{AletheS}
 
     \noindent
-    Ensuring that such $c_k$ elements are picked to satisfy
+    Ensuring that each $c_i$ element  for $i = 0, \dots, n+\left\lceil{\log_2 N}\right\rceil-1$ satisfies:
 
     \[
-        \sum_{i=0}^{n+\left\lceil{\log_2 N}\right\rceil - 1} {2^i r_i}
+        \sum_{i=0}^{n+\left\lceil{\log_2 N}\right\rceil - 1} {2^i c_i}
         = \sum_{j=1}^{N}{\sum_{i=0}^{n-1}{2^i \textbf{a}_{i}^{j}}}
     \]
-
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvmult}
-    % TODO
+    The `bvmul' operation over $N$ BitVectors $\textbf{a}^j$ for $j = 1, \dots, N$
+    with $n$ bits that returns a BitVector of $n\cdot N$ bits is expressed
+    using PseudoBoolean inequalities by:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $(\lsymb{bvmul}\ \textbf{a}^1\ \dots\ \textbf{a}^N) \approx
+            \lsymb{pbbterm}\; c_0 \dots\ c_{n\cdot N} $ & (\currule)
+    \end{AletheS}
+
+    \noindent
+    Ensuring that each $c_i$ element  for $i = 0, \dots, n\cdot N$ satisfies:
+
     \[
-        \sum_{k_1} \cdots \sum_{k_n} f(k_1, \ldots, k_n)
+        \sum_{k_1} \cdots \sum_{k_n} {
+        2^{\sum_{l=1}^{N}{k_l}}
+        \bigwedge_{l=1}^{N}{\textbf{a}_{k_l}^{l}}
+        }
+        = \sum_{i=0}^{n\cdot N}{2^i c_i}
+    \]
+
+    \noindent
+    In which the $\land$ operator between pseudo-boolean values actually means
+    the constraints:
+
+    \[
+        A + B \ge 2 (A \land B)
+    \]
+    \[
+        (A \land B) + 1 \ge A + B
     \]
 \end{RuleDescription}
 
