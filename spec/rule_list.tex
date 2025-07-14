@@ -2529,14 +2529,22 @@ to quickly find the definition of rules.
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvxnor}
-    % TODO: Reframe the rule, not in function of bvnot and bvxor
     The `bvxnor' operation over BitVectors \textbf{x} and \textbf{y}
-    with $n$ bits is expressed using PseudoBoolean inequalities by the negation
-    of the `bvxor` operator, so
+    with $n$ bits is expressed using PseudoBoolean inequalities by:
 
     \begin{AletheS}
-        $i$. & \ctxsep & \, & $(\lsymb{bvxnor}\ \textbf{x}\ \textbf{y}) \approx \lsymb{bvnot} (\lsymb{bvxor}\ \textbf{x}\ \textbf{y})$ & (\currule)
+        $i$. & \ctxsep & \, & $(\lsymb{bvxnor}\ \textbf{x}\ \textbf{y}) \approx
+            \lsymb{pbbterm}\; c_0 \dots c_{n-1} $ & (\currule)
     \end{AletheS}
+
+    \noindent
+    Each term ``$c_i$'' is a \textbf{choice} application of form $\varepsilon z.\, \varphi[z]$
+    applied to the conjunction of these constraints on the $i$th bit:
+
+    \[ \textbf{x}_i + 1 \ge z + \textbf{y}_i \]
+    \[ z + \textbf{x}_i + \textbf{y}_i \ge 1 \]
+    \[ z + 1 \ge \textbf{x}_i + \textbf{y}_i \]
+    \[ 2 + \textbf{y}_i \ge z + \textbf{x}_i \]
 
 \end{RuleDescription}
 
