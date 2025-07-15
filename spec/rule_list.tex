@@ -2761,21 +2761,60 @@ to quickly find the definition of rules.
 
 \begin{RuleDescription}{pbblast_bvmod}
     % TODO
+    %  (bvsmod (_ BitVec m) (_ BitVec m) (_ BitVec m))
+    %   - 2's complement signed remainder (sign follows divisor)
+
+    % (bvsmod s t) abbreviates
+    %   (let ((?msb_s ((_ extract |m-1| |m-1|) s))
+    %         (?msb_t ((_ extract |m-1| |m-1|) t)))
+    %     (let ((abs_s (ite (= ?msb_s #b0) s (bvneg s)))
+    %           (abs_t (ite (= ?msb_t #b0) t (bvneg t))))
+    %       (let ((u (bvurem abs_s abs_t)))
+    %         (ite (= u (_ bv0 m))
+    %              u
+    %         (ite (and (= ?msb_s #b0) (= ?msb_t #b0))
+    %              u
+    %         (ite (and (= ?msb_s #b1) (= ?msb_t #b0))
+    %              (bvadd (bvneg u) t)
+    %         (ite (and (= ?msb_s #b0) (= ?msb_t #b1))
+    %              (bvadd u t)
+    %              (bvneg u))))))))
     WIP
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvrem}
     % TODO
+    %  (bvurem (_ BitVec m) (_ BitVec m) (_ BitVec m))
+    %   - unsigned remainder from truncating division
+    %  (bvsrem (_ BitVec m) (_ BitVec m) (_ BitVec m))
+    %   - 2's complement signed remainder (sign follows dividend)
+
+    %   https://smt-lib.org/theories-FixedSizeBitVectors.shtml
+    %  [[(bvurem s t)]] := if bv2nat([[t]]) = 0
+    %                    then [[s]]
+    %                    else nat2bv[m](bv2nat([[s]]) mod bv2nat([[t]]))
     WIP
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvlshift}
     % TODO
+    %  (bvlshr (_ BitVec m) (_ BitVec m) (_ BitVec m))
+    %   - logical shift right (equivalent to unsigned division by 2^x where x is
+    %     the value of the second argument)
     WIP
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvashr}
-    % TODO
+    % TODO https://smt-lib.org/logics-all.shtml#QF_BV
+    % (bvashr (_ BitVec m) (_ BitVec m) (_ BitVec m))
+    %   - Arithmetic shift right, like logical shift right except that the most
+    %     significant bits of the result always copy the most significant
+    %     bit of the first argument.
+
+    % (bvashr s t) abbreviates 
+    %   (ite (= ((_ extract |m-1| |m-1|) s) #b0)
+    %        (bvlshr s t)
+    %        (bvnot (bvlshr (bvnot s) t)))
     WIP
 \end{RuleDescription}
 
