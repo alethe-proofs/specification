@@ -1921,10 +1921,12 @@ step of $t_1$ and $t_2$, that exploits the previous properties of the operations
 in both terms. The rule applies to SMT-LIB ACI operators (that is, those that satisfy
 associativity, commutativity, idempotency and that have an identity element), 
 AC operators (associativity, commutativity and identity elements), as well to
-operators that satisfy only associativity and that have an identity element. 
+operators that satisfy only associativity and that have an identity element.
+The actual way in which the previous properties are exploited might be solver-dependent, 
+which means that there is no such thing as an ``ACI normal form'', standard among
+any solver producing Alethe certificates.
 
-Every operator with the previous properties can trigger the normalization step.
-In particular:
+The operators that can trigger the previous process include:
 \begin{itemize}
   \item Logical operations: \inlineAlethe{or}, \inlineAlethe{and}.
   \item Bit vectors: \inlineAlethe{bvor}, \inlineAlethe{bvand}, \inlineAlethe{bvadd}, 
@@ -1932,32 +1934,29 @@ In particular:
   \item Arithmetic: \inlineAlethe{-} (binary substraction), \inlineAlethe{+}, \inlineAlethe{*}.
   \end{itemize}
 
-The normalization process itself can be described with these simple rewriting rules:
+The process itself can be described with a set of rewriting rules, which capture
+a relation $\Rightarrow$ between terms representing the application of operators
+and their simplified form. In what follows, $op$ will represent an operator with the appropriate properties for the rule being applied; $id$ will represent the $op$'s identity element (if appropriate); we will indicate with $x \not{\Rightarrow}$ that term $x$ cannot be further reduced through $\Rightarrow$.
 \begin{itemize}
-\item For an operator $op$ with identity element $id$, and operands $x_i$:
-\begin{itemize}
-\item $op \; x_1 \; id ⇒ x_1$
-\item $op \; id \; x_2 ⇒ x_2$
-\end{itemize}
-\item For an idempotent operators $op$, and operand $x$:
-\begin{itemize}
-\item $op \; x \; x ⇒ x$
-\end{itemize}
+\item $op \; x \; id \Rightarrow x$, for $x \not{\Rightarrow}$.
+\item $op \; id \; x \Rightarrow x$, for $x \not{\Rightarrow}$.
+\item $op \; x \; x \Rightarrow x$, for $x \not{\Rightarrow}$.
+\item $op \; x_1 \; x_2 \Rightarrow op \; x_{1'} \; x_2$, where $x_1 \Rightarrow x_{1'}$.
+\item $op \; x \; x_2 \Rightarrow op \; x \; x_{2'}$, where $x_2 \Rightarrow x_{2'}$ and $x \not{\Rightarrow}$.
 
-\item Optionally, commutativity might be taken into consideration, rewriting
-          terms as in:
-          \begin{itemize}
-          \item $op \; x_1 \; x_2 ⇒ op \; x_{1'} \; x_{2'}$, 
+\item $op \; x_1 \; x_2 \Rightarrow op \; x_{1'} \; x_{2'}$, 
             where 
             \begin{itemize}
+            \item $x_1 \neq x_2$
             \item $x_{1'}, \; x_{2'} \in \{ x_1, x_2\}$
               
             \item Multi-sets $\{x_{1'}, x_{2'}\}$ and $\{x_1, x_2\}$ are equal.
               
+              \item $x_1 \not{\Rightarrow}$ and $x_2 \not{\Rightarrow}$.
+              
               % \item $x_{1'} \ge x_{2'}$, with $\ge$ being a total order among terms
               %   \textbf{TODO: is there something that we should ask for this order?}
             \end{itemize}
-          \end{itemize}
           Note that we do not impose some particular order among terms.
 \end{itemize}
 
