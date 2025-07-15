@@ -2733,8 +2733,30 @@ to quickly find the definition of rules.
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvsign_extend}
-    % TODO
-    WIP
+    The `sign\_extend' operation over the non-negative integer $k$ and
+    a BitVector $\textbf{x}$ with $n$ bits, will return a BitVector of $n+k$
+    bits is equal to $x$ on the lowest bits and repeats the most valuable bit
+    of $x$ $k$ times on the highest bits. This is expressed using PseudoBoolean
+    inequalities by:
+
+    \begin{AletheS}
+        $i$. & \ctxsep & \, & $((\lsymb{sign\_extend}\ k)\ \textbf{x}) \approx
+            \lsymb{pbbterm}\; c_0 \dots c_{n+k-1} $ & (\currule)
+    \end{AletheS}
+
+    \noindent
+    Each term ``$c_i$'' is a pseudo boolean equality on the ranging over
+    $0 \le i < n + k$, such that if $i < n$:
+
+    \[
+        \textbf{x}_i = c_{i}
+    \]
+
+    \noindent
+    Otherwise when $n \le i < n + k$
+    \[
+        \textbf{x}_{n-1} = c_{i}
+    \]
 \end{RuleDescription}
 
 \begin{RuleDescription}{pbblast_bvmod}
