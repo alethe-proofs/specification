@@ -1611,9 +1611,9 @@ $i_n$. & $\Gamma$ & \ctxsep & $t_{n} \ceq s_{n}$ & ($\dots$) \\
 $j$. & \spctx{$\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$}
    & \ctxsep &  $u \ceq u'$ & ($\dots$) \\
 \spsep
-$k$. & $\Gamma$ & \kern-5.5em\ctxsep & % The kern hacking here is to make the rule readable
-     $ \kern-3em (\lsymb{let}\,x_1~=~t_1,\, \dots,\, x_n~=~t_n \lsymb{in}\, u) \ceq
-                 (\lsymb{let}\,y_1~=~s_1,\, \dots,\, y_n~=~s_n\,\lsymb{in}\, u')$
+$k$. & $\Gamma$ & \kern-28em\ctxsep & % The kern hacking here is to make the rule readable
+      $\kern-14em \lsymb{let}\,x_1=t_1,\, \dots,\, x_n=t_n \lsymb{in}\, u \ceq
+                    \lsymb{let}\,y_1=s_1,\, \dots,\, y_n=s_n\,\lsymb{in}\, u'$
      & (\currule{}\;$i_1$, \dots, $i_n$) \\
 \end{AletheXS}
 
