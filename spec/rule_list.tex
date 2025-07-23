@@ -711,7 +711,7 @@ An application of the \proofRule{forall_inst} rule.
 
 \begin{RuleDescription}{refl}
 \begin{AletheXS}
-$j$. & \ctxsep  & $\Gamma$  & $t_1 \ceq t_2 $ & \currule \\
+$j$. & $\Gamma$ & \ctxsep & $t_1 \ceq t_2 $ & \currule \\
 \end{AletheXS}
 
 \noindent
@@ -726,21 +726,21 @@ the context.
 
 \begin{RuleDescription}{trans}
 \begin{AletheXS}
-$i_1$. & \ctxsep  & $\Gamma$  & $t_1 \ceq t_2 $ & ($\dots$) \\
-$i_2$. & \ctxsep  & $\Gamma$  & $t_2 \ceq t_3 $ & ($\dots$) \\
+$i_1$. & $\Gamma$ & \ctxsep & $t_1 \ceq t_2 $ & ($\dots$) \\
+$i_2$. & $\Gamma$ & \ctxsep & $t_2 \ceq t_3 $ & ($\dots$) \\
 \aletheLineS
-$i_n$. & \ctxsep  & $\Gamma$  & $t_n \ceq t_{n+1} $ & ($\dots$) \\
-$j$. & \ctxsep  & $\Gamma$    & $t_1 \ceq t_{n+1}$ & (\currule\; $i_1$, $\dots$, $i_n$) \\
+$i_n$. & $\Gamma$ & \ctxsep & $t_n \ceq t_{n+1} $ & ($\dots$) \\
+$j$.   & $\Gamma$ & \ctxsep & $t_1 \ceq t_{n+1}$ & (\currule\; $i_1$, $\dots$, $i_n$) \\
 \end{AletheXS}
 \end{RuleDescription}
 
 \begin{RuleDescription}{cong}
 \begin{AletheXS}
-$i_1$. & \ctxsep  & $\Gamma$  & $t_1 \ceq u_1$ & ($\dots$) \\
-$i_2$. & \ctxsep  & $\Gamma$  & $t_2 \ceq u_2 $ & ($\dots$) \\
+$i_1$. & $\Gamma$ & \ctxsep & $t_1 \ceq u_1$ & ($\dots$) \\
+$i_2$. & $\Gamma$ & \ctxsep & $t_2 \ceq u_2 $ & ($\dots$) \\
 \aletheLineS
-$i_m$. & \ctxsep  & $\Gamma$  & $t_m \ceq u_m $ & ($\dots$) \\
-$j$. & \ctxsep  & $\Gamma$  & $(f\,s_1\,\cdots\,s_n\, t_1\,\cdots\,t_m) \ceq
+$i_m$. & $\Gamma$ & \ctxsep & $t_m \ceq u_m $ & ($\dots$) \\
+$j$.   & $\Gamma$ & \ctxsep & $(f\,s_1\,\cdots\,s_n\, t_1\,\cdots\,t_m) \ceq
                                (f\,s_1\,\cdots\,s_n\, u_1\,\cdots\,u_m)$
     & (\currule\; $i_1$, $\dots$, $i_m$) \\
 \end{AletheXS}
@@ -885,7 +885,7 @@ literals in the premise.
 \begin{RuleDescription}{shuffle}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. & $\Gamma$ & \ctxsep & 
       $\circ\ t_1 \dots t_n \ceq \circ\ u_1 \dots u_n $ & \currule \\
 \end{AletheXS}
 
@@ -1171,7 +1171,7 @@ This rule simplifies an $\land$ term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  & $\varphi_1\land \cdots\land\varphi_n \ceq \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\varphi_1\land \cdots\land\varphi_n \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1200,7 +1200,7 @@ This rule simplifies an $\lor$ term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  & $(\varphi_1\lor \cdots\lor\varphi_n) \ceq \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(\varphi_1\lor \cdots\lor\varphi_n) \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1229,7 +1229,7 @@ This rule simplifies an $\neg$ term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$ & $\neg\varphi \ceq \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\neg\varphi \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1246,7 +1246,7 @@ This rule simplifies an $\rightarrow$ term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$ & $\varphi_1\rightarrow \varphi_2 \ceq \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\varphi_1\rightarrow \varphi_2 \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1269,7 +1269,7 @@ by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$ & $(\varphi_1≈ \varphi_2) \ceq \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep  & $(\varphi_1≈ \varphi_2) \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1291,7 +1291,7 @@ This rule simplifies a boolean term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\varphi\ceq \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\varphi\ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1311,7 +1311,7 @@ The possible transformations are:
   This rule simplifies nested occurrences of $\lor$ or $\land$:
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\psi \ceq \varphi_1 \circ\cdots\circ\varphi_n$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\psi \ceq \varphi_1 \circ\cdots\circ\varphi_n$ & \currule \\
 \end{AletheXS}
   where $\circ \in \{\lor, \land\}$ and $\psi$ is a nested application of $\circ$.
   The literals $\varphi_i$ are literals of the flattening of $\psi$ with duplicates
@@ -1329,7 +1329,7 @@ $i$. & \ctxsep & $\Gamma$ & $\psi \ceq \varphi_1 \circ\cdots\circ\varphi_n$ & \c
 It has the form
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(\lsymb{ite}\,\varphi\,t_1\,t_2) \ceq u$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(\lsymb{ite}\,\varphi\,t_1\,t_2) \ceq u$ & \currule \\
 \end{AletheXS}
 where $u$ is the transformed term.
 
@@ -1356,7 +1356,7 @@ The possible transformations are:
   This rule simplifies a $\forall$-formula with a constant predicate.
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(\forall x_1, \dots, x_n. \varphi) \ceq \varphi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(\forall x_1, \dots, x_n. \varphi) \ceq \varphi$ & \currule \\
 \end{AletheXS}
   where $\varphi$ is either $\top$ or $\bot$.
 \end{RuleDescription}
@@ -1412,7 +1412,7 @@ An application of the \proofRule{onepoint} rule on the term $(\forall x, y.\, x 
 
 \begin{RuleDescription}{qnt_join}
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,(Q x_{n+1}, \dots, x_{m}.\,\varphi)
+$i$. & $\Gamma$ & \ctxsep & $Q x_1, \dots, x_n.\,(Q x_{n+1}, \dots, x_{m}.\,\varphi)
       \ceq Q x_{k_1}, \dots, x_{k_o}.\,\varphi$ & \currule \\
 \end{AletheXS}
   where $m > n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_o$ is a monotonic
@@ -1422,7 +1422,7 @@ $i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,(Q x_{n+1}, \dots, x_{m}.\,\var
 
 \begin{RuleDescription}{qnt_rm_unused}
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,\varphi \ceq Q x_{k_1}, \dots, x_{k_m}.\,\varphi$
+$i$. & $\Gamma$ & \ctxsep & $Q x_1, \dots, x_n.\,\varphi \ceq Q x_{k_1}, \dots, x_{k_m}.\,\varphi$
  & \currule \\
 \end{AletheXS}
   where $m \leq n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_m$ is
@@ -1435,7 +1435,7 @@ $i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,\varphi \ceq Q x_{k_1}, \dots, 
   transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(t_1≈ t_2) \ceq \varphi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(t_1≈ t_2) \ceq \varphi$ & \currule \\
 \end{AletheXS}
   where $\psi$ is the transformed term.
 
@@ -1452,7 +1452,7 @@ This rule simplifies a division by applying equivalence-preserving
 transformations. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(t_1\, /\,  t_2) \ceq t_3$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(t_1\, /\,  t_2) \ceq t_3$ & \currule \\
 \end{AletheXS}
 The possible transformations are:
 \begin{itemize}
@@ -1469,7 +1469,7 @@ This rule simplifies a product by applying equivalence-preserving
 transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1\times\cdots\times t_n \ceq u$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $t_1\times\cdots\times t_n \ceq u$ & \currule \\
 \end{AletheXS}
 where $u$ is either a constant or a product.
 
@@ -1493,12 +1493,12 @@ The possible transformations are:
 This rule is either
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $- (-t) \ceq t$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $- (-t) \ceq t$ & \currule \\
 \end{AletheXS}
 or
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $-t \ceq u$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $-t \ceq u$ & \currule \\
 \end{AletheXS}
 where $u$ is the negated numerical constant $t$.
 \end{RuleDescription}
@@ -1508,7 +1508,7 @@ This rule simplifies a subtraction by applying equivalence-preserving
 transformations. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1- t_2 \ceq u$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $t_1- t_2 \ceq u$ & \currule \\
 \end{AletheXS}
 The possible transformations are:
 \begin{itemize}
@@ -1526,7 +1526,7 @@ This rule simplifies a sum by applying equivalence-preserving
 transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1+\cdots+t_n \ceq u$ & \currule \\
+$i$. $\Gamma$ & & \ctxsep & $t_1+\cdots+t_n \ceq u$ & \currule \\
 \end{AletheXS}
 where $u$ is either a constant or a product.
 
@@ -1550,9 +1550,9 @@ This rule simplifies a comparison by applying equivalence-preserving
 transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1 \bowtie t_2 \ceq \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $t_1 \bowtie t_2 \ceq \psi$ & \currule \\
 \end{AletheXS}
-where $\bowtie \in \{<, >, \leq, \geq\}$.
+where ${\bowtie} \in \{<, >, \leq, \geq\}$.
 
 The following transformation rules are used to simplify $t_1 \bowtie t_2$:
 \begin{itemize}
