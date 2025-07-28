@@ -704,7 +704,7 @@ An application of the \proofRule{forall_inst} rule.
 
 \begin{RuleDescription}{refl}
 \begin{AletheXS}
-$j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_2 $ & \currule \\
+$j$. & $\Gamma$ & \ctxsep & $t_1 ≈ t_2 $ & \currule \\
 \end{AletheXS}
 
 \noindent
@@ -719,21 +719,21 @@ the context.
 
 \begin{RuleDescription}{trans}
 \begin{AletheXS}
-$i_1$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_2 $ & ($\dots$) \\
-$i_2$. & \ctxsep  & $\Gamma$  & $t_2 ≈ t_3 $ & ($\dots$) \\
+$i_1$. & $\Gamma$ & \ctxsep & $t_1 ≈ t_2 $ & ($\dots$) \\
+$i_2$. & $\Gamma$ & \ctxsep & $t_2 ≈ t_3 $ & ($\dots$) \\
 \aletheLineS
-$i_n$. & \ctxsep  & $\Gamma$  & $t_n ≈ t_{n+1} $ & ($\dots$) \\
-$j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_{n+1}$ & (\currule\; $i_1$, $\dots$, $i_n$) \\
+$i_n$. & $\Gamma$  & \ctxsep & $t_n ≈ t_{n+1} $ & ($\dots$) \\
+$j$. & $\Gamma$  & \ctxsep & $t_1 ≈ t_{n+1}$ & (\currule\; $i_1$, $\dots$, $i_n$) \\
 \end{AletheXS}
 \end{RuleDescription}
 
 \begin{RuleDescription}{cong}
 \begin{AletheXS}
-$i_1$. & \ctxsep  & $\Gamma$  & $t_1 ≈ u_1$ & ($\dots$) \\
-$i_2$. & \ctxsep  & $\Gamma$  & $t_2 ≈ u_2 $ & ($\dots$) \\
+$i_1$. & $\Gamma$  & \ctxsep  & $t_1 ≈ u_1$ & ($\dots$) \\
+$i_2$. & $\Gamma$  & \ctxsep  & $t_2 ≈ u_2 $ & ($\dots$) \\
 \aletheLineS
-$i_m$. & \ctxsep  & $\Gamma$  & $t_m ≈ u_m $ & ($\dots$) \\
-$j$. & \ctxsep  & $\Gamma$  & $(f\,s_1\,\cdots\,s_n\, t_1\,\cdots\,t_m) ≈
+$i_m$. & $\Gamma$  & \ctxsep  &  $t_m ≈ u_m $ & ($\dots$) \\
+$j$. & $\Gamma$  & \ctxsep  & $(f\,s_1\,\cdots\,s_n\, t_1\,\cdots\,t_m) ≈
                                (f\,s_1\,\cdots\,s_n\, u_1\,\cdots\,u_m)$
     & (\currule\; $i_1$, $\dots$, $i_m$) \\
 \end{AletheXS}
