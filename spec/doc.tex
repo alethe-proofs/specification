@@ -8,7 +8,15 @@
 \usepackage{unicode-math}
 \usepackage{fontsetup}
 
-\usepackage{minted}
+% minted 3 changed how pygmentize is called to no longer --shell-escape.
+% However, since minted 3 is not widely avaialable, we fall back to minted 2
+% as the default.
+\IfFileExists{minted2.sty}{
+  \usepackage{minted2}
+}{
+  \usepackage{minted}
+}
+
 \usemintedstyle{trac}
 \renewcommand{\MintedPygmentize}{./highlight.py}
 \newminted[AletheVerb]{smt-lib}{}
@@ -358,8 +366,11 @@ we write $=$ for the former, and $≈$ for the latter.
 We will write pre-defined SMT-LIB symbols, such as sorts and functions,
 in bold (e.g., $\lsymb{Bool}$, $\lsymb{ite}$).
 
+% Should we add that x_₁, …, x_n are pairwise distinct, for the notation
+% $[x₁ ↦ t₁, …, x_n ↦ t_n]$ to make sense?
 We will use $θ$ to denote a substitution\index{substitution}.
-The notation $[x₁ ↦ t₁, …, x_n ↦ t_n]$ denotes the substitution
+The notation $[x₁ ↦ t₁, …, x_n ↦ t_n]$, provided variables
+$x₁, …, x_n$ are pairwise distinct, denotes the substitution
 that maps $x_i$ to $t_i$ for $1 ≤ i ≤ n$ and corresponds to the
 identity function for all other variables.
 %
@@ -367,9 +378,7 @@ If $θ$ and $η$ are two
 substitutions, then $θη$ denotes the result of first applying $θ$
 and then $η$ (i.e., $η(θ(.))$).  A substitution can naturally be extended
 to a function that maps terms to terms by replacing the occurrences of
-free variables.
-%
-The application of a substitution $θ$ to a term $t$ (i.e., $θ(t)$)
+free variables. The application of a substitution $θ$ to a term $t$ (i.e., $θ(t)$)
 is capture-avoiding; bound variables in $t$ are renamed as necessary.
 
 We write $t[u]$ for a term that contains the term $u$ as a subterm.  If $u$
@@ -378,7 +387,7 @@ new term.
 %
 We also use this notation with multiple terms.
 %
-The notation $t[u_1, \dots, u_n]$ stands for a term may contain the
+The notation $t[u_1, \dots, u_n]$ stands for a term that may contain the
 pairwise distinct terms $u_1, \dots, u_n$.
 %
 Then, $t[s_1,\dots, s_n]$ is the respective term where the
@@ -677,7 +686,7 @@ An Alethe proof is a list of commands.
           :rule th_resolution :premises (t11 t12 t13))
 (step t15 (cl (or (not (forall ((vr5 U)) (p vr5)))
                   (p a)))
-          :rule forall_inst :args ((:= vr5 a)))
+          :rule forall_inst :args (a))
 (step t16 (cl (not (forall ((vr5 U)) (p vr5))) (p a))
           :rule or :premises (t15))
 (step t17 (cl) :rule resolution :premises (t16 h1 t14))
@@ -1664,8 +1673,7 @@ ground term $t_i$ is a new term with the same sort as $x_i$.\footnote{
   as its conclusion and not the clause $(\neg \forall \bar x_n.\,\varphi), \varphi[\bar t_n]$.
 }
 
-The arguments of a \proofRule{forall_inst} step are the list $(x_1 , t_1),
-\dots, (x_n, t_n)$. While this information can be recovered from the term,
+The argument of a \proofRule{forall_inst} step, for a quantification of the form $\forall x_1,\dots,x_n. \varphi$,  is the list $t_1,\dots, t_n$, where $t_i$ denotes the substitute of variable $x_i$. While this information can be recovered from the term,
 providing it explicitly helps reconstruction because the implicit reordering of
 equalities obscures which terms have been used as instances.
 Existential quantifiers are handled by skolemization.
