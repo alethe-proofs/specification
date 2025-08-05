@@ -2,6 +2,9 @@
 
 Proof rules:
 \begin{itemize}
+  \item Rule \proofRule{connective_def} extended to complement the case
+            where an existential quantification is rewritten as a negated universal
+            quantification.
   \item Addition of a section describing bitvector proofs.
   \item Bitblasting rules: \proofRule{bitblast_extract},  \proofRule{bitblast_add},
       \proofRule{bitblast_ult}.
@@ -48,6 +51,10 @@ Breaking changes:
   \item Always use decimals for the constants in \proofRule{la_generic}.
   \item Restrict sorting of numbers such that the sort of a constant is
         only determined by its syntactic category.
+  \item Make \proofRule{cong} more flexible.  It is now possible to skip
+        a prefix of the arguments if they are already the same on both sides.
+        This is intended to future-proof the format for support of partial
+        application.
 \end{itemize}
 
 \noindent

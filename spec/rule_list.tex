@@ -539,36 +539,37 @@ $i$. & \ctxsep & $t_1 \leq t_2 \lor t_2 \leq t_1$ & (\currule) \\
 \end{RuleDescription}
 
 \begin{RuleDescription}{la_tautology}
-This rule is a linear arithmetic tautology which can be checked without
-sophisticated reasoning. It has either the form
+This rule introduces a tautology of linear arithmetic.
+The conclusion is always a unit clause.
 
 \begin{AletheX}
 $i$. & \ctxsep & $\varphi$  & (\currule) \\
 \end{AletheX}
-where $\varphi$ is either a linear inequality $s_1 \bowtie s_2$
-or $\neg(s_1 \bowtie s_2)$. After performing step 1 to 3 of the process for
-checking the \proofRule{la_generic} the result is trivially unsatisfiable.
 
-The second form handles bounds on linear combinations. It is binary clause:
+If the literal $\varphi$ is either a linear inequality $s_1 \bowtie s_2$
+or $\neg(s_1 \bowtie s_2)$, it is enough to perform steps 1 to 3 of the process for
+checking the \proofRule{la_generic}. The result is trivially unsatisfiable.
+For example, if $\varphi$ is $\neg (n \leq n - 1)$ we get
+$0 \leq -1$ after step 3.
+
+If the literal is not a linear inequality, it is a binary clause
+$\varphi_1 \lor \varphi_2$.  In this case the step is equivalent to
 
 \begin{AletheX}
-$i$. & \ctxsep &
-$\varphi_1 \lor \varphi_2$ % Checked: this is a proper disjunction not a cl
- & (\currule) \\
+$i$. & \ctxsep & $\varphi_1$, $\varphi_2$ & \proofRule{la_tautology}\, [$1.0$, $1.0$] \\
 \end{AletheX}
 
-It can be checked by using the procedure for \proofRule{la_generic}
-while setting the arguments to $1$. Informally, the rule follows one of several
-cases:
+\ruleparagraph{Remark.}
+The second form is inteded to express bounds on linear combinations. 
+In the case of veriT, the conclusion has one of the following forms,
+where $d_1$ and $d_2$ are decimals or integers, and $s$ is a constant.
 \begin{itemize}
-    \item $\neg (s_1 \leq d_1) \lor s_1 \leq d_2$ where $d_1 \leq d_2$
-    \item $s_1 \leq d_1 \lor \neg (s_1 \leq d_2)$ where $d_1 = d_2$
-    \item $\neg (s_1 \geq d_1) \lor s_1 \geq d_2$ where $d_1 \geq d_2$
-    \item $s_1 \geq d_1 \lor \neg (s_1 \geq d_2)$ where $d_1 = d_2$
-    \item $\neg (s_1 \leq d_1) \lor \neg(s_1 \geq d_2)$ where $d_1 < d_2$
+    \item $\neg (s \leq d_1) \lor s \leq d_2$ where $d_1 \leq d_2$
+    \item $s \leq d_1 \lor \neg (s \leq d_2)$ where $d_1 = d_2$
+    \item $\neg (s \geq d_1) \lor s \geq d_2$ where $d_1 \geq d_2$
+    \item $s \geq d_1 \lor \neg (s \geq d_2)$ where $d_1 = d_2$
+    \item $\neg (s \leq d_1) \lor \neg(s \geq d_2)$ where $d_1 < d_2$
 \end{itemize}
-The inequalities $s_1 \bowtie d$ are the result of applying normalization
-as for the rule \proofRule{la_generic}.
 \end{RuleDescription}
 
 \begin{RuleDescription}{la_mult_pos}
@@ -681,12 +682,14 @@ $k$. & $\Gamma$ & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \curru
 \begin{RuleDescription}{forall_inst}
 \begin{AletheX}
 $i$. & \ctxsep &
-$\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1]\dots[x_n\mapsto t_n]$
+$\neg (\forall x_1, \dots, x_n. P) \lor P[x_1\mapsto t_1, \dots, x_n\mapsto t_n]$
  & \currule\, [$t_1$, $\dots$, $t_n$] \\
 \end{AletheX}
 
 \noindent
-where $x_i$ and $t_i$ have the same sort.
+where $x_i$ and $t_i$ have the same sort, and $x_1, \dots, x_n$ are pairwise
+distinct.
+
 \end{RuleDescription}
 
 \begin{RuleExample}
@@ -729,10 +732,16 @@ $j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_{n+1}$ & (\currule\; $i_1$, $\dots$, $i
 $i_1$. & \ctxsep  & $\Gamma$  & $t_1 ≈ u_1$ & ($\dots$) \\
 $i_2$. & \ctxsep  & $\Gamma$  & $t_2 ≈ u_2 $ & ($\dots$) \\
 \aletheLineS
-$i_n$. & \ctxsep  & $\Gamma$  & $t_n ≈ u_n $ & ($\dots$) \\
-$j$. & \ctxsep  & $\Gamma$  & $(f\,t_1\,\cdots\,t_n) ≈ (f\,u_1\,\cdots\,u_n)$  & (\currule\; $i_1$, $\dots$, $i_n$) \\
+$i_m$. & \ctxsep  & $\Gamma$  & $t_m ≈ u_m $ & ($\dots$) \\
+$j$. & \ctxsep  & $\Gamma$  & $(f\,s_1\,\cdots\,s_n\, t_1\,\cdots\,t_m) ≈
+                               (f\,s_1\,\cdots\,s_n\, u_1\,\cdots\,u_m)$
+    & (\currule\; $i_1$, $\dots$, $i_m$) \\
 \end{AletheXS}
-where $f$ is any function symbol of appropriate sort.
+where $f$ is any $n+m$-ary function symbol of appropriate sort.
+
+\ruleparagraph{Remark.} Note that $n$ can be $0$.  If $n > 0$ the omitted
+premises correspond to simple reflexivity steps.
+
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_reflexive}
@@ -1121,27 +1130,32 @@ $j$. & \ctxsep & $\neg\varphi_1 , \neg\varphi_2$ & (\currule\;$i$) \\
   This rule is used to replace connectives by their definition. It can be one
   of the following:
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. & $\Gamma$  & \ctxsep  &
     $(\lsymb{xor}\,\varphi_1\,\varphi_2) ≈
     ((\neg\varphi_1 \land \varphi_2) \lor (\varphi_1 \land \neg\varphi_2))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. & $\Gamma$  & \ctxsep  &
       $(\varphi_1 ≈ \varphi_2) ≈
       ((\varphi_1 \rightarrow \varphi_2) \land (\varphi_2 \rightarrow \varphi_1))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. & $\Gamma$   & \ctxsep &
       $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) ≈
       ((\varphi_1 \rightarrow \varphi_2) \land (\neg\varphi_1 \rightarrow \varphi_3))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
+$i$. &  $\Gamma$   & \ctxsep&
       $(\forall x_1, \dots, x_n.\,\varphi) ≈ \neg(\exists x_1, \dots, x_n.\,
       \neg\varphi)$ & \currule \\
+\end{AletheXS}
+
+\begin{AletheXS}
+$i$. & $\Gamma$ & \ctxsep   &
+      $(\exists x_1, \dots, x_n.\,\varphi) ≈ \neg(\forall x_1, \dots, x_n.\,\neg\varphi)$ & \currule \\
 \end{AletheXS}
 \end{RuleDescription}
 
@@ -1406,7 +1420,7 @@ $i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,\varphi ≈ Q x_{k_1}, \dots, x
 \end{AletheXS}
   where $m \leq n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_m$ is
   a monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
-  n\} \land j\notin \{k_1, \dots, k_m\}\}$ then $x$ is not free in $P$.
+  n\} \land j\notin \{k_1, \dots, k_m\}\}$ then $x$ is not free in $\varphi$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_simplify}
