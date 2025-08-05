@@ -1936,7 +1936,12 @@ The operators that can trigger the previous process include:
 
 The process itself can be described with a set of rewriting rules, which capture
 a relation $\Rightarrow$ between terms representing the application of operators
-and their simplified form. In what follows, $op$ will represent an operator with the appropriate properties for the rule being applied; $id$ will represent the $op$'s identity element (if appropriate); we will indicate with $x \not{\Rightarrow}$ that term $x$ cannot be further reduced through $\Rightarrow$.
+and their simplified form. In what follows, $op$ will represent an operator with 
+the appropriate property exploited in the rewriting rule being applied; $id$ will 
+represent the $op$'s identity element (if appropriate); we will indicate with 
+$x \not{\Rightarrow}$ that term $x$ cannot be further reduced through 
+$\Rightarrow$ (which, in this case, reduces to check that $x$ is not an application 
+of some ACI operator) .
 \begin{itemize}
 \item $op \; x \; id \Rightarrow x$, for $x \not{\Rightarrow}$.
 \item $op \; id \; x \Rightarrow x$, for $x \not{\Rightarrow}$.
@@ -1959,8 +1964,12 @@ and their simplified form. In what follows, $op$ will represent an operator with
             \end{itemize}
 \end{itemize}
 
+In the last rule, note that we do not impose some particular order among sub-terms. 
+The intention of the rule is to allow for a particular implementation, of a checker for the
+rule, to take advantage of the commutativity of $op$, if desired.
 
-In the last rule, note that we do not impose some particular order among sub-terms. Also, note that no evaluation of the application of operators is performed by the rule.
+Also, note that no evaluation of the application of operators (\emph{constant folding})
+is performed by the rule.
 
 \end{RuleDescription}
 
