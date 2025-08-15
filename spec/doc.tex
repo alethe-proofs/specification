@@ -1774,7 +1774,7 @@ solver generated functions.
 The family $\lsymb{bbterm}$ contains one function for each bitvector sort
 $(\lsymb{BitVec}\;n)$.
 \[
-\lsymb{bbterm}\,:\,\underbrace{\lsymb{Bool}\,\dots\,\lsymb{Bool}}_n\;\rightarrow\;(\lsymb{BitVec}\;n).
+\lsymb{bbterm} \, : \,\underbrace{\lsymb{Bool}\, \dots\, \lsymb{Bool}}_n \; \to \; (\lsymb{BitVec} \; n).
 \]
 
 \noindent
@@ -1803,8 +1803,7 @@ SMT-LIB functions.
 \end{align*}
 
 \noindent
-The function $\lsymb{bit\_of}_m$  extracts
-a bit, from a bitvector of length $m$, as a boolean.  Just as the built in $\lsymb{extract}$
+The function $\lsymb{bit\_of}_m$ extracts bit $m$-th as a boolean. Just as the built in $\lsymb{extract}$
 symbol, $\lsymb{bit\_of}_m$ is used as an indexed symbol.  Hence, for $m \leq n$, we
 write \inlineAlethe{(_ @bit_of} $m$ \inlineAlethe{)} to denote functions:
 \[
@@ -1818,7 +1817,7 @@ These functions are defined as:
 
 \noindent
 The functions $\lsymb{bvsize}$ return the size of a bitvector. Formally, there
-is one $\lsymb{bvsize}$ for for each bitvector sort $(\lsymb{BitVec}\;n)$.  Each
+is one $\lsymb{bvsize}$ for each bitvector sort $(\lsymb{BitVec}\;n)$.  Each
 $\lsymb{bvsize}$ is a constant function that returns the size of the corresponding
 bitvector sort. Using the previously introduced notation:
 
