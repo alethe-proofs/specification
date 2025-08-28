@@ -102,6 +102,9 @@ to quickly find the definition of rules.
 \ruleref{la_rw_eq} & $(t ≈ u) ≈ (t \leq u \land u \leq t)$ \\
 \ruleref{nary_elim} & Eliminate $n$-ary application of operators via binary applications. \\
 \ruleref{eq_symmetric} & Symmetry of equality as equivalence. \\
+\ruleref{miniscope_distribute} & Distribution of quantified variables over $\lor$, $\land$. \\
+\ruleref{miniscope_split}      & Splitting of quantified variables over $\lor$, $\land$. \\
+\ruleref{miniscope_ite}        & Miniscoping of if-then-else. \\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
@@ -139,6 +142,9 @@ to quickly find the definition of rules.
 \ruleref{onepoint} & The one-point rule. \\
 \ruleref{qnt_join} & Joining of consecutive quantifiers. \\
 \ruleref{qnt_rm_unused} & Removal of unused quantified variables. \\
+\ruleref{miniscope_distribute} & Distribution of quantified variables over $\lor$, $\land$. \\
+\ruleref{miniscope_split}      & Splitting of quantified variables over $\lor$, $\land$. \\
+\ruleref{miniscope_ite}        & Miniscoping of if-then-else. \\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
@@ -1906,6 +1912,53 @@ $i$. & \ctxsep & $ (t_1 ≈ t_2) ≈ (t_2 ≈ t_1)$ & (\currule) \\
 Note that since Alethe allows the implicit reordering of equalities, this
 rule is technically superfluous.  However, the rule is useful to state
 an explicit usage of symmetry of equality reasoning to aid proof reconstruction.
+\end{RuleDescription}
+
+\begin{RuleDescription}{miniscope_distribute}
+\begin{AletheX}
+$i$. & \ctxsep & $ \forall x_1, \dots, x_n.(\varphi_1 \land \cdots \land \varphi_m) ≈
+	(\forall x_1, \dots, x_n. \varphi_1) \land \cdots \land
+  (\forall x_1, \dots, x_n. \varphi_m) $ & (\currule) \\
+\end{AletheX}
+
+or
+
+\begin{AletheX}
+$i$. & \ctxsep & $ \exists x_1, \dots, x_n.(\varphi_1 \lor \cdots \lor \varphi_m) ≈
+	(\exists x_1, \dots, x_n. \varphi_1) \lor \cdots \lor
+  (\exists x_1, \dots, x_n. \varphi_m) $ & (\currule) \\
+\end{AletheX}
+\end{RuleDescription}
+
+\begin{RuleDescription}{miniscope_split}
+\begin{AletheX}
+$i$. & \ctxsep & $ \forall x_1, \dots, x_n.(\varphi_1 \lor \cdots \lor \varphi_m) ≈
+  (\forall x_{1,1}, \dots, x_{1,n}. \varphi_1) \lor \cdots \lor
+  (\forall x_{1,m}, \dots, x_{m,n}. \varphi_m) $ & (\currule) \\
+\end{AletheX}
+
+or
+
+\begin{AletheX}
+$i$. & \ctxsep & $ \exists x_1, \dots, x_n.(\varphi_1 \land \cdots \land \varphi_m) ≈
+  (\exists x_{1,1}, \dots, x_{1,n}. \varphi_1) \land \cdots \land
+  (\exists x_{1,m}, \dots, x_{m,n}. \varphi_m) $ & (\currule) \\
+\end{AletheX}
+
+where $\{x_{1,1}, \dots, x_{m,n}\}\subseteq\{x_1, \dots, x_n\}$
+and the right side of the equality has no free variables in
+$\{x_1, \dots, x_n\}$.
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{miniscope_ite}
+\begin{AletheX}
+$i$. & \ctxsep & $
+\forall x_1, \dots, x_n.(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) ≈
+\lsymb{ite}\,\varphi_1\,(\forall x_1, \dots, x_n.\varphi_2)\,(\forall x_1, \dots, x_n.\varphi_3) $ & (\currule) \\
+\end{AletheX}
+
+where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 \end{RuleDescription}
 
 \clearpage
