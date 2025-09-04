@@ -141,3 +141,20 @@ break
 }
 \renewcommand*{\titlepagestyle}{titlestyle}
 \setkomafont{publishers}{\small}
+
+% Bitvector-related defs.
+% Abstract syntax
+% Type terms
+\newcommand\bitvec[1]{\ensuremath{\lsymb{BitVec} \; #1}}
+% Constructors, query functions, etc.
+\newcommand\bbterm[0]{\ensuremath{\lsymb{bbterm}}}
+\newcommand\bitof[1]{\ensuremath{\lsymb{bit\_of}_{#1}}}
+\newcommand\bvsize[0]{\ensuremath{\lsymb{bvsize}}}
+\newcommand\bv[2]{\ensuremath{\lsymb{bv}_{#1}^{#2}}}
+% Concrete syntax
+\newcommand\cbbterm[0]{\inlineAlethe{@bbterm}}
+% NOTE: not adding the parameters to avoid spacing problems 
+% when trying to typeset just the names of the functions.
+\newcommand\cbitof[0]{\inlineAlethe{@bit_of}}
+\newcommand\cbvsize[0]{\inlineAlethe{@bvsize}}
+\newcommand\cbv[0]{\inlineAlethe{@bv}}
