@@ -1780,36 +1780,41 @@ $(\lsymb{BitVec}\;n)$.
 \noindent
 Intuitively, the function $\lsymb{bbterm}$ takes a list of boolean arguments and
 packs them into a bitvector.
-Let $\langle u_1, \dots, u_n\rangle$ denote a bitvector of sort $(\lsymb{BitVec}\;n)$,
-where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise.
-The bit $u_n$ is the least significant bit. This notation, which allows us to describe bit-vectors
-in terms of sequences of booleans, will be useful when defining the several 
-bitvector related functions. Note that:
+Let $\langle u_0, \dots, u_{n - 1}\rangle$ denote a bitvector of sort 
+$(\lsymb{BitVec}\;n)$, where $u_i = \top$ if the bit at position $i$ is $1$, and 
+$u_i = \bot$ otherwise. The bit $u_{n - 1}$ is the least significant bit. This notation, 
+which allows us to describe bitvectors in terms of sequences of booleans, will 
+be useful when defining the several bitvector related functions. Note that:
 
 \[
-\lsymb{bbterm}\; v_1 \dots v_n = \langle v_1, \dots, v_n\rangle .
+\lsymb{bbterm}\; v_0 \dots v_{n - 1} = \langle v_0, \dots, v_{n - 1}\rangle .
 \]
 
 \noindent
 Also, note that the $\lsymb{bbterm}$ functions could be defined in terms of standard 
 SMT-LIB functions.
 \begin{align*}
-\lsymb{bbterm}\;v_1 \dots v_n :=\;
+\lsymb{bbterm}\;v_0 \dots v_{n - 1} :=\;
  &\lsymb{concat}\,(\lsymb{concat}\,(\dots \\
- &(\lsymb{concat}\,(\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle)\,(\lsymb{ite}\,v_2\,\langle\top\rangle\,\langle\bot\rangle))\\
+ &(\lsymb{concat}\,(\lsymb{ite}\,v_0\,\langle\top\rangle\,\langle\bot\rangle)\,
+                                    (\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle))\\
  & \dots \\
- & (\lsymb{ite}\,v_{n-1}\,\langle\top\rangle\,\langle\bot\rangle)) \\
- & (\lsymb{ite}\,v_n\,\langle\top\rangle\,\langle\bot\rangle)) \\
+ & (\lsymb{ite}\,v_{n - 2}\,\langle\top\rangle\,\langle\bot\rangle)) \\
+ & (\lsymb{ite}\,v_{n - 1}\,\langle\top\rangle\,\langle\bot\rangle)) \\
 \end{align*}
 
 \noindent
-The function $\lsymb{bit\_of}_m$ yields the Boolean corresponding to the $m$-th bit from a given bitvector. It is used as a symbol indexed by the desired $m$-th position, similarly to the built-in function $\lsymb{extract}$. Hence, for $m \leq n$, the concrete syntax expression  \inlineAlethe{(_ @bit_of} $m$ \inlineAlethe{)} will denote functions:
+The function $\lsymb{bit\_of}_m$ yields the Boolean corresponding to the $m$-th
+bit from a given bitvector. It is used as a symbol indexed by the desired $m$-th 
+position, similarly to the built-in function $\lsymb{extract}$. Hence, for 
+$0 \leq m < n$, the concrete syntax expression  \inlineAlethe{(_ @bit_of} $m$ 
+\inlineAlethe{)} will denote functions:
 \[
 \lsymb{bit\_of}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
 \]
 These functions are defined as:
 \[
-\lsymb{bit\_of}_m \langle u_1, \dots, u_n \rangle := u_m.
+\lsymb{bit\_of}_m \langle u_0, \dots, u_{n - 1} \rangle := u_m.
 \]
 
 
@@ -1821,7 +1826,7 @@ bitvector sort. Using the previously introduced notation:
 
 \begin{align*}
 \lsymb{bvsize}& : (\lsymb{BitVec}\;n) \to \mathbb{N}\\
-\lsymb{bvsize}&\;\langle u_1, \dots, u_n \rangle := n
+\lsymb{bvsize}&\;\langle u_0, \dots, u_{n -1} \rangle := n
 \end{align*}
 
 \noindent
