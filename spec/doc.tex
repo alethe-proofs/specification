@@ -1759,75 +1759,81 @@ is bitblasting.  Bitblasting\index{bitblasting} works by translating
 bitvector\index{bitvector} functions to propositional formulas that
 model the logical circuit of the bitvector function.
 
-To express bitblasting in Alethe proof rules, the the Alethe calculus uses
-multiple families of helper functions: $\lsymb{bbT}$, $\lsymb{bitOf}_m$,
+To express bitblasting in Alethe proof rules, the Alethe calculus uses
+multiple families of helper functions: $\lsymb{bbterm}$, $\lsymb{bit\_of}_m$,
 $\lsymb{bvsize}$, and $\lsymb{bv}_n^i$.  Functions in the families are
-distinguished either by overloading ($\lsymb{bbT}$ and $\lsymb{bvsize}$)
-or by explicit indexing ($\lsymb{bitOf}_m$ and $\lsymb{bv}_n^i$).
+distinguished either by overloading ($\lsymb{bbterm}$ and $\lsymb{bvsize}$)
+or by explicit indexing ($\lsymb{bit\_of}_m$ and $\lsymb{bv}_n^i$).
 To avoid name clashes with user defined
-functions, $\lsymb{bbT}$ is written as \inlineAlethe{@bbT}, $\lsymb{bitOf}$
-as \inlineAlethe{@bitOf}, $\lsymb{bvsize}$ as \inlineAlethe{@bvsize}, and
+functions, $\lsymb{bbterm}$ is written as \inlineAlethe{@bbterm}, $\lsymb{bit\_of}$
+as \inlineAlethe{@bit_of}, $\lsymb{bvsize}$ as \inlineAlethe{@bvsize}, and
 $\lsymb{bv}$ as \inlineAlethe{@bv}.  The SMT-LIB standard specifies
 that simple symbols starting with ``\inlineAlethe{@}'' are reserved for
 solver generated functions.
 
-The family $\lsymb{bbT}$ consists of one function for each bitvector sort
+The family $\lsymb{bbterm}$ contains one function for each bitvector sort
 $(\lsymb{BitVec}\;n)$.
 \[
-\lsymb{bbT}\,:\,\underbrace{\lsymb{Bool}\,\dots\,\lsymb{Bool}}_n\;(\lsymb{BitVec}\;n).
+\lsymb{bbterm} \, : \,\underbrace{\lsymb{Bool}\, \dots\, \lsymb{Bool}}_n \; \to \; (\lsymb{BitVec} \; n).
 \]
 
 \noindent
-Intuitively, the function $\lsymb{bbT}$ takes a list of boolean arguments and
+Intuitively, the function $\lsymb{bbterm}$ takes a list of boolean arguments and
 packs them into a bitvector.
-Let $\langle u_1, \dots, u_n\rangle$ denote a bitvector of sort $(\lsymb{BitVec}\;n)$
-where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise.
-The bit $u_n$ is the least significant bit.  Then
+Let $\langle u_0, \dots, u_{n - 1}\rangle$ denote a bitvector of sort 
+$(\lsymb{BitVec}\;n)$, where $u_i = \top$ if the bit at position $i$ is $1$, and 
+$u_i = \bot$ otherwise. The bit $u_{n - 1}$ is the least significant bit. This notation, 
+which allows us to describe bitvectors in terms of sequences of booleans, will 
+be useful when defining the several bitvector related functions. Note that:
 
 \[
-\lsymb{bbT}\; v_1 \dots v_n = \langle v_1, \dots, v_n\rangle .
+\lsymb{bbterm}\; v_0 \dots v_{n - 1} = \langle v_0, \dots, v_{n - 1}\rangle .
 \]
 
 \noindent
-The $\lsymb{bbT}$ functions could be defined in terms of standard SMT-LIB functions.
+Also, note that the $\lsymb{bbterm}$ functions could be defined in terms of standard 
+SMT-LIB functions.
 \begin{align*}
-\lsymb{bbT}\;v_1 \dots v_n :=\;
+\lsymb{bbterm}\;v_0 \dots v_{n - 1} :=\;
  &\lsymb{concat}\,(\lsymb{concat}\,(\dots \\
- &(\lsymb{concat}\,(\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle)\,(\lsymb{ite}\,v_2\,\langle\top\rangle\,\langle\bot\rangle))\\
+ &(\lsymb{concat}\,(\lsymb{ite}\,v_0\,\langle\top\rangle\,\langle\bot\rangle)\,
+                                    (\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle))\\
  & \dots \\
- & (\lsymb{ite}\,v_{n-1}\,\langle\top\rangle\,\langle\bot\rangle)) \\
- & (\lsymb{ite}\,v_n\,\langle\top\rangle\,\langle\bot\rangle)) \\
+ & (\lsymb{ite}\,v_{n - 2}\,\langle\top\rangle\,\langle\bot\rangle)) \\
+ & (\lsymb{ite}\,v_{n - 1}\,\langle\top\rangle\,\langle\bot\rangle)) \\
 \end{align*}
 
 \noindent
-The functions $\lsymb{bitOf}_m$ are the inverse of $\lsymb{bbT}$.  They extract
-a bit of a bitvector as a boolean.  Just as the built in $\lsymb{extract}$
-symbol, $\lsymb{bitOf}_m$ is used as an indexed symbol.  Hence, for $m \leq n$, we
-write \inlineAlethe{(_ @bitOf} $m$ \inlineAlethe{)}, to denote functions
+The function $\lsymb{bit\_of}_m$ yields the Boolean corresponding to the $m$-th
+bit from a given bitvector. It is used as a symbol indexed by the desired $m$-th 
+position, similarly to the built-in function $\lsymb{extract}$. Hence, for 
+$0 \leq m < n$, the concrete syntax expression  \inlineAlethe{(_ @bit_of} $m$ 
+\inlineAlethe{)} will denote functions:
 \[
-\lsymb{bitOf}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
+\lsymb{bit\_of}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
 \]
-These functions are defined as 
+These functions are defined as:
 \[
-\lsymb{bitOf}_m \langle u_1, \dots, u_n \rangle := u_m.
+\lsymb{bit\_of}_m \langle u_0, \dots, u_{n - 1} \rangle := u_m.
 \]
 
 
 \noindent
-The functions $\lsymb{bvsize}$ return the size of a bitvector.  Formally, there
-is one $\lsymb{bvsize}$ for for each bitvector sort $(\lsymb{BitVec}\;n)$.  Each
-$\lsymb{bvsize}$ is a constant function that returns $n$.  Using notation:
+The functions $\lsymb{bvsize}$ return the size of a bitvector. Formally, there
+is one $\lsymb{bvsize}$ for each bitvector sort $(\lsymb{BitVec}\;n)$.  Each
+$\lsymb{bvsize}$ is a constant function that returns the size of the corresponding
+bitvector sort. Using the previously introduced notation:
 
 \begin{align*}
 \lsymb{bvsize}& : (\lsymb{BitVec}\;n) \to \mathbb{N}\\
-\lsymb{bvsize}&\;b := n
+\lsymb{bvsize}&\;\langle u_0, \dots, u_{n -1} \rangle := n
 \end{align*}
 
 \noindent
 Finally, $\lsymb{bv}_n^i$ is a family of constants indexed by two parameters:
 a bitvector length $n$, and a natural number $i$.  We
-write \inlineAlethe{(_ @bv}$n$ $i$ \inlineAlethe{)} for $\lsymb{bv}_n^i$.
-The space before $n$ is omitted for historical reasons.
+write \inlineAlethe{(_ @bv}$n$ $i$ \inlineAlethe{)} for $\lsymb{bv}_n^i$, where
+the space before $n$ (in the concrete-syntax term) is omitted for historical reasons.
 Each $\lsymb{bv}_n^i$ is the bitvector constant that represents the bitvector
 of length $n$ that encodes the integer $i$.  Formally, it corresponds
 to \inlineAlethe{nat2bv[n](i)}, where \inlineAlethe{nat2bv} is defined
