@@ -1803,10 +1803,7 @@ SMT-LIB functions.
 \end{align*}
 
 \noindent
-The function $\lsymb{bit\_of}_m$ extracts as a boolean bit $m$-th from a given bitvector. 
-Just as the built in $\lsymb{extract}$
-symbol, $\lsymb{bit\_of}_m$ is used as an indexed symbol.  Hence, for $m \leq n$, we
-write \inlineAlethe{(_ @bit_of} $m$ \inlineAlethe{)} to denote functions:
+The function $\lsymb{bit\_of}_m$ yields the Boolean corresponding to the $m$-th bit from a given bitvector. It is used as a symbol indexed by the desired $m$-th position, similarly to the built-in function $\lsymb{extract}$. Hence, for $m \leq n$, the concrete syntax expression  \inlineAlethe{(_ @bit_of} $m$ \inlineAlethe{)} will denote functions:
 \[
 \lsymb{bit\_of}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
 \]
