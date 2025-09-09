@@ -1761,19 +1761,19 @@ form and the reordering of equalities.
 
 \begin{RuleDescription}{bitblast_extract}
 \begin{AletheX}
-$i$. & \ctxsep & $((\lsymb{extract}\ j\ i)\ x) ≈ (\bbterm\ \varphi_i\ \ldots\ \varphi_j)$ & (\currule) \\
+$i$. & \ctxsep & $(\lsymb{extract}\ j\ i)\ x ≈ \bbterm\ \varphi_i\ \ldots\ \varphi_j$ & (\currule) \\
 \end{AletheX}
 
 \noindent
-where the formulas $\varphi_k$ are $(\bitof{k}\ x)$ for $i \leq k \leq j$.
+where $\varphi_k = \bitof{k}\ x$, for $i \leq k \leq j$.
 
 Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
 above when $x$ is a \bbterm{} application:
 
 \medskip
 \begin{AletheX}
-$i$. & \ctxsep & $((\lsymb{extract}\ j\ i)\ (\bbterm\ x_0\ \ldots\
-x_i\ \ldots \ x_j\ \ldots\ x_n)) ≈ (\bbterm\ x_i\ \ldots\ x_j)$ & (\currule) \\
+$i$. & \ctxsep & $(\lsymb{extract}\ j\ i)\ (\bbterm\ x_0\ \ldots\
+x_i\ \ldots \ x_j\ \ldots\ x_n) ≈ \bbterm\ x_i\ \ldots\ x_j$ & (\currule) \\
 \end{AletheX}
 
 \noindent
