@@ -1761,7 +1761,7 @@ form and the reordering of equalities.
 
 \begin{RuleDescription}{bitblast_extract}
 \begin{AletheX}
-$i$. & \ctxsep & $(\lsymb{extract}\ j\ i)\ x ≈ \bbterm\ \varphi_i\ \ldots\ \varphi_j$ & (\currule) \\
+$i$. & \ctxsep & $(\bvextract{j}{i})\ x ≈ \bbterm\ \varphi_i\ \ldots\ \varphi_j$ & \currule \\
 \end{AletheX}
 
 \noindent
@@ -1772,8 +1772,8 @@ above when $x$ is a \bbterm{} application:
 
 \medskip
 \begin{AletheX}
-$i$. & \ctxsep & $(\lsymb{extract}\ j\ i)\ (\bbterm\ x_0\ \ldots\
-x_i\ \ldots \ x_j\ \ldots\ x_n) ≈ \bbterm\ x_i\ \ldots\ x_j$ & (\currule) \\
+$i$. & \ctxsep & $(\bvextract{j}{i})\ (\bbterm\ x_0\ \ldots\
+x_i\ \ldots \ x_j\ \ldots\ x_n) \; ≈ \; \bbterm\ x_i\ \ldots\ x_j$ & \currule \\
 \end{AletheX}
 
 \noindent
@@ -1787,15 +1787,15 @@ for any bit-vector $x$ of size $n+1$, where $0\leq k\leq n$.
 
 \begin{RuleDescription}{bitblast_ult}
 \begin{AletheX}
-$i$. & \ctxsep & $(\lsymb{bvult}\ x\ y) ≈ \mathrm{res}_{n-1}$ & (\currule) \\
+$i$. & \ctxsep & $\bvult{x}{y} ≈ \mathrm{res}_{n-1}$ & \currule \\
 \end{AletheX}
 in which both $x$ and $y$ must have the same type \bitvec{n} and, for
-$i\geq 0$
+$i\geq 0$:
 \[
   \begin{array}{lcl}
-    \mathrm{res}_0&=&\neg (\bitof{0}\ x) \wedge (\bitof{0}\ y)\\
-    \mathrm{res}_{i+1}&=&(((\bitof{i + 1}\ x) ≈ (\bitof{i + 1}\ y))\wedge \mathrm{res}_i)\vee
-                       (\neg (\bitof{i+1}\ x) \wedge (\bitof{i+1}\ y))
+    \mathrm{res}_0&=&\neg (\bitof{0}\ x) \wedge \bitof{0}\ y\\
+    \mathrm{res}_{i+1}&=&((\bitof{i + 1}\ x ≈ \bitof{i + 1}\ y)\wedge \mathrm{res}_i)\vee
+                       (\neg (\bitof{i+1}\ x) \wedge \bitof{i+1}\ y)
   \end{array}
 \]
 
@@ -1804,8 +1804,8 @@ Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
 above when $x$ and $y$ are ``\bbterm'' applications. So given that
 \[
   \begin{array}{lcl}
-    x&=&(\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)\\
-    y&=&(\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n)\\
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n\\
+    y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
   \end{array}
 \]
 then ``$\mathrm{res}$'' can be defined, for $i \geq 0$, as
@@ -1821,41 +1821,44 @@ then ``$\mathrm{res}$'' can be defined, for $i \geq 0$, as
 
 \begin{RuleDescription}{bitblast_add}
 \begin{AletheX}
-$i$. & \ctxsep & $(\lsymb{bvadd}\ x\ y) ≈ A_1$ & (\currule) \\
+$i$. & \ctxsep & $\bvadd{x}{y} ≈ A_1$ & \currule \\
 \end{AletheX}
 in which both $x$ and $y$ must have the same type \bitvec{n}.
 The term ``$A_1$'' is
 \begin{align*}
-(\bbterm\;& (((\bitof{0}\ x) \,\lsymb{xor}\,(\bitof{0}\ y))\,\lsymb{xor}\,\mathrm{carry}_0) \\
+\bbterm\;& (((\bitof{0}\ x) \,\lsymb{xor}\,(\bitof{0}\ y))\,\lsymb{xor}\,\mathrm{carry}_0) \\
               & (((\bitof{1}\ x) \,\lsymb{xor}\,(\bitof{1}\ y))\,\lsymb{xor}\,\mathrm{carry}_1) \\
               & \ldots \\
-              & (((\bitof{n - 1}\ x) \,\lsymb{xor}\, (\bitof{n - 1}\ y))\,\lsymb{xor}\,\mathrm{carry}_{n-1}))
+              & (((\bitof{n - 1}\ x) \,\lsymb{xor}\, (\bitof{n - 1}\ y))\,\lsymb{xor}\,\mathrm{carry}_{n-1})
 \end{align*}
-and for $i\geq 0$
+and, for $i\geq 0$:
 \[
   \begin{array}{lcl}
     \mathrm{carry}_0&=&\bot\\
-    \mathrm{carry}_{i+1}&=&((\bitof{i}\ x) \wedge (\bitof{i}\ y))\vee(((\bitof{i}\ x)\,\lsymb{xor}\, (\bitof{i}\ y))\wedge \mathrm{carry}_i)
+    \mathrm{carry}_{i+1}&=&((\bitof{i}\ x) \wedge \bitof{i}\ y) 
+                                                    \vee 
+                                                   (((\bitof{i}\ x)\,\lsymb{xor}\, (\bitof{i}\ y))\wedge \mathrm{carry}_i)
   \end{array}
 \]
 
 \noindent
 Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
-above when $x$ and $y$ are ``$\lsymb{bbT}$'' applications. So given that
+above when $x$ and $y$ are ``$\lsymb{bbT}$'' applications. So given that:
 \[
   \begin{array}{lcl}
-    x&=&(\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n)\\
-    y&=&(\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n)\\
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n\\
+    y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
   \end{array}
 \]
-then the rule can be alternatively phrased as
+then, the rule can be alternatively phrased as:
 
 \begin{AletheX}
-$i$. & \ctxsep & $(\mathrm{bvadd}\ x\ y) ≈ A_2$ & (\currule) \\
+$i$. & \ctxsep & $\bvadd{x}{y} ≈ A_2$ & \currule \\
 \end{AletheX}
-with $A_2 := (\bbterm\ (x_0 \,\lsymb{xor}\, y_0)\,\lsymb{xor}\,\mathrm{carry}_0\ \ldots\ (x_{n-1}
-        \,\lsymb{xor}\, y_{n-1})\,\lsymb{xor}\,\mathrm{carry}_{n-1})$ and
-``$\mathrm{carry}$'' being defined, for $i \geq 0$, as
+with $A_2 := \bbterm\ ((x_0 \,\lsymb{xor}\, y_0)\,\lsymb{xor}\,\mathrm{carry}_0)\ 
+                                          \ldots\ 
+                                          ((x_{n-1}\,\lsymb{xor}\, y_{n-1})\,\lsymb{xor}\,\mathrm{carry}_{n-1})$, 
+and ``$\mathrm{carry}_k$'' being defined, for $k \geq 0$, as:
 \[
   \begin{array}{lcl}
     \mathrm{carry}_0&=&\bot\\
