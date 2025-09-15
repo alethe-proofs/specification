@@ -1619,42 +1619,38 @@ is bitblasting.  Bitblasting\index{bitblasting} works by translating
 bitvector\index{bitvector} functions to propositional formulas that
 model the logical circuit of the bitvector function.
 
-To express bitblasting in Alethe proof rules, the Alethe calculus uses
-multiple families of helper functions: $\lsymb{bbterm}$, $\lsymb{bit\_of}_m$,
-$\lsymb{bvsize}$, and $\lsymb{bv}_n^i$.  Functions in the families are
-distinguished either by overloading ($\lsymb{bbterm}$ and $\lsymb{bvsize}$)
-or by explicit indexing ($\lsymb{bit\_of}_m$ and $\lsymb{bv}_n^i$).
-To avoid name clashes with user defined
-functions, $\lsymb{bbterm}$ is written as \inlineAlethe{@bbterm}, $\lsymb{bit\_of}$
-as \inlineAlethe{@bit_of}, $\lsymb{bvsize}$ as \inlineAlethe{@bvsize}, and
-$\lsymb{bv}$ as \inlineAlethe{@bv}.  The SMT-LIB standard specifies
-that simple symbols starting with ``\inlineAlethe{@}'' are reserved for
-solver generated functions.
+To express bitblasting in Alethe proof rules, the Alethe calculus uses multiple 
+families of helper functions: \bbterm, \bitof{m}, \bvsize, and \bv{n}{i}.  
+Functions in the families are distinguished either by overloading (\bbterm{} and
+\bvsize) or by explicit indexing (\bitof{m} and \bv{n}{i}). In concrete syntax,
+to avoid name clashes with user defined functions, \bbterm{} is written as 
+\cbbterm, \bitof{} as \cbitof{}, \bvsize{} as \cbvsize, and \bv{}{} as \cbv. The 
+SMT-LIB standard specifies that simple symbols starting with ``\inlineAlethe{@}''
+are reserved for solver generated functions.
 
-The family $\lsymb{bbterm}$ contains one function for each bitvector sort
-$(\lsymb{BitVec}\;n)$.
+The family \bbterm{} contains one function for each bitvector sort \bitvec{n}.
 \[
-\lsymb{bbterm} \, : \,\underbrace{\lsymb{Bool}\, \dots\, \lsymb{Bool}}_n \; \to \; (\lsymb{BitVec} \; n).
+\bbterm \, : \,\underbrace{\lsymb{Bool}\, \dots\, \lsymb{Bool}}_n \; \to \; \bitvec{n}.
 \]
 
 \noindent
-Intuitively, the function $\lsymb{bbterm}$ takes a list of boolean arguments and
-packs them into a bitvector.
-Let $\langle u_0, \dots, u_{n - 1}\rangle$ denote a bitvector of sort 
-$(\lsymb{BitVec}\;n)$, where $u_i = \top$ if the bit at position $i$ is $1$, and 
-$u_i = \bot$ otherwise. The bit $u_{n - 1}$ is the least significant bit. This notation, 
-which allows us to describe bitvectors in terms of sequences of booleans, will 
+Intuitively, the function \bbterm{} takes a list of boolean arguments and packs 
+them into a bitvector.
+Let $\langle u_0, \dots, u_{n - 1}\rangle$ denote a bitvector of sort \bitvec{n}, 
+where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise. 
+The bit $u_{n - 1}$ is the least significant bit. This notation, which allows us to 
+describe bitvectors in terms of sequences of booleans, will 
 be useful when defining the several bitvector related functions. Note that:
 
 \[
-\lsymb{bbterm}\; v_0 \dots v_{n - 1} = \langle v_0, \dots, v_{n - 1}\rangle .
+\bbterm\; v_0 \dots v_{n - 1} = \langle v_0, \dots, v_{n - 1}\rangle .
 \]
 
 \noindent
-Also, note that the $\lsymb{bbterm}$ functions could be defined in terms of standard 
+Also, note that the \bbterm{} functions could be defined in terms of standard 
 SMT-LIB functions.
 \begin{align*}
-\lsymb{bbterm}\;v_0 \dots v_{n - 1} :=\;
+\bbterm\;v_0 \dots v_{n - 1} :=\;
  &\lsymb{concat}\,(\lsymb{concat}\,(\dots \\
  &(\lsymb{concat}\,(\lsymb{ite}\,v_0\,\langle\top\rangle\,\langle\bot\rangle)\,
                                     (\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle))\\
@@ -1664,37 +1660,37 @@ SMT-LIB functions.
 \end{align*}
 
 \noindent
-The function $\lsymb{bit\_of}_m$ yields the Boolean corresponding to the $m$-th
+The function \bitof{m} yields the Boolean corresponding to the $m$-th
 bit from a given bitvector. It is used as a symbol indexed by the desired $m$-th 
 position, similarly to the built-in function $\lsymb{extract}$. Hence, for 
-$0 \leq m < n$, the concrete syntax expression  \inlineAlethe{(_ @bit_of} $m$ 
-\inlineAlethe{)} will denote functions:
+$0 \leq m < n$, the concrete syntax expression 
+\inlineAlethe{(_ } \cbitof{} $m$\inlineAlethe{)} will denote functions:
 \[
-\lsymb{bit\_of}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
+\bitof{m}: \bitvec{n} \to \lsymb{Bool}.
 \]
 These functions are defined as:
 \[
-\lsymb{bit\_of}_m \langle u_0, \dots, u_{n - 1} \rangle := u_m.
+\bitof{m} \langle u_0, \dots, u_{n - 1} \rangle := u_m.
 \]
 
 
 \noindent
-The functions $\lsymb{bvsize}$ return the size of a bitvector. Formally, there
-is one $\lsymb{bvsize}$ for each bitvector sort $(\lsymb{BitVec}\;n)$.  Each
-$\lsymb{bvsize}$ is a constant function that returns the size of the corresponding
-bitvector sort. Using the previously introduced notation:
+The functions \bvsize{} return the size of a bitvector. Formally, there is one 
+\bvsize{} for each bitvector sort \bitvec{n}.  Each \bvsize{}is a constant 
+function that returns the size of the corresponding bitvector sort. Using the 
+previously introduced notation:
 
 \begin{align*}
-\lsymb{bvsize}& : (\lsymb{BitVec}\;n) \to \mathbb{N}\\
-\lsymb{bvsize}&\;\langle u_0, \dots, u_{n -1} \rangle := n
+\bvsize{}& : \bitvec{n} \to \mathbb{N}\\
+\bvsize{}&\;\langle u_0, \dots, u_{n -1} \rangle := n
 \end{align*}
 
 \noindent
-Finally, $\lsymb{bv}_n^i$ is a family of constants indexed by two parameters:
+Finally, \bv{n}{i} is a family of constants indexed by two parameters:
 a bitvector length $n$, and a natural number $i$.  We
-write \inlineAlethe{(_ @bv}$n$ $i$ \inlineAlethe{)} for $\lsymb{bv}_n^i$, where
+write \inlineAlethe{(_} \cbv$n$ $i$ \inlineAlethe{)} for \bv{n}{i}, where
 the space before $n$ (in the concrete-syntax term) is omitted for historical reasons.
-Each $\lsymb{bv}_n^i$ is the bitvector constant that represents the bitvector
+Each \bv{n}{i} is the bitvector constant that represents the bitvector
 of length $n$ that encodes the integer $i$.  Formally, it corresponds
 to \inlineAlethe{nat2bv[n](i)}, where \inlineAlethe{nat2bv} is defined
 as in the SMT-LIB
