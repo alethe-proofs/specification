@@ -1936,19 +1936,19 @@ $i$. & \ctxsep & $ \exists x_1, \dots, x_n.(\varphi_1 \lor \cdots \lor \varphi_m
 \begin{RuleDescription}{miniscope_split}
 \begin{AletheX}
 $i$. & \ctxsep & $ \forall x_1, \dots, x_n.(\varphi_1 \lor \cdots \lor \varphi_m) ≈
-  (\forall x_{1,1}, \dots, x_{1,n}. \varphi_1) \lor \cdots \lor
-  (\forall x_{1,m}, \dots, x_{m,n}. \varphi_m) $ & (\currule) \\
+  (\forall x_{1,1}, \dots, x_{1,n_1}. \varphi_1) \lor \cdots \lor
+  (\forall x_{1,m}, \dots, x_{m,n_m}. \varphi_m) $ & (\currule) \\
 \end{AletheX}
 
 or
 
 \begin{AletheX}
 $i$. & \ctxsep & $ \exists x_1, \dots, x_n.(\varphi_1 \land \cdots \land \varphi_m) ≈
-  (\exists x_{1,1}, \dots, x_{1,n}. \varphi_1) \land \cdots \land
-  (\exists x_{1,m}, \dots, x_{m,n}. \varphi_m) $ & (\currule) \\
+  (\exists x_{1,1}, \dots, x_{1,n_1}. \varphi_1) \land \cdots \land
+  (\exists x_{m,1}, \dots, x_{m,n_m}. \varphi_m) $ & (\currule) \\
 \end{AletheX}
 
-where $\{x_{1,1}, \dots, x_{m,n}\}\subseteq\{x_1, \dots, x_n\}$
+where $\{x_{1,1}, \dots, x_{m,n_m}\}\subseteq\{x_1, \dots, x_n\}$
 and the right side of the equality has no free variables in
 $\{x_1, \dots, x_n\}$.
 
