@@ -331,7 +331,7 @@ clause by resolving a clause with the double negation on $\varphi$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{th_resolution}
-This rule is the resolution of two or more clauses.
+This rule is the chain resolution of two or more clauses.
 
 \begin{AletheX}
 $i_1$. & \ctxsep & $l^1_1$, $\dots$, $l^1_{k^1}$  & ($\ruleType{...}$) \\
@@ -339,9 +339,10 @@ $i_1$. & \ctxsep & $l^1_1$, $\dots$, $l^1_{k^1}$  & ($\ruleType{...}$) \\
 $i_n$. & \ctxsep & $l^n_1$, $\dots$, $l^n_{k^n}$  & ($\ruleType{...}$) \\
   $j$. & \ctxsep & $l^{r_1}_{s_1}$, $\dots$, $l^{r_m}_{s_m}$  & ($\currule\;i_1,\dots, i_n$) \\
 \end{AletheX}
-where $l^{r_1}_{s_1} , \dots , l^{r_m}_{s_m}$ are from $l^{i}_{j}$ and
-are the result of a chain of predicate resolution steps on the clauses of
-$i_1$ to $i_n$. It is possible that $m = 0$, i.e. that
+where $l^{r_1}_{s_1} , \dots , l^{r_m}_{s_m}$ are disjuncts $l^{i}_{j}$ (for 
+$1 \leq i \leq n$, $1 \leq j \leq max \{k^1, ..., k^n \}$) from the clauses in 
+premises $i_1,\dots, i_n$, which result from a chain of binary resolution 
+steps on the clauses of these premises. It is possible that $m = 0$, i.e. that
 the result is the empty clause.  When performing resolution steps, the
 rule implicitly merges repeated negations at the start of the formulas
 $l^{i}_{j}$.  For example, the formulas $\neg\neg\neg P$ and $\neg\neg P$
@@ -359,7 +360,7 @@ by the existing proof generation code in veriT.  It will be restricted after
 a full review of the code.  As a consequence of this checking this rule is
 theoretically NP-complete.  In practice, however, the \currule-steps
 produced by {\verit} are simple. Experience with reconstructing the step in
-{\isabelle} shows that checking can done by naive decision procedures. The
+{\isabelle} shows that checking can be done by naive decision procedures. The
 vast majority of \currule-steps are binary resolution steps.
 \end{RuleDescription}
 
