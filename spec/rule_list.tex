@@ -1965,6 +1965,20 @@ $i$. & \ctxsep & $
 where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 \end{RuleDescription}
 
+\begin{RuleDescription}{rare_rewrite}
+\begin{AletheX}
+$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rule\_name, x_1, \dots, x_n$) \\
+\end{AletheX}
+
+This rule refers to the application of the rewrite rule $rule\_name$, wich should
+justify the conclusion $t ≈ s$. The instantiation of the rewrite rule could
+require arbitrary parameters, with rule-dependent semantics, which are mentioned
+after $rule\_name$ when invoking \currule{} (that is, $x_1, \dots, x_n$).
+
+
+\end{RuleDescription}
+
+
 \clearpage
 \subsection{Index of Rules}
 \label{sec:alethe:rules-index}
