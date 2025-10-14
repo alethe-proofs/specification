@@ -1696,6 +1696,67 @@ to \inlineAlethe{nat2bv[n](i)}, where \inlineAlethe{nat2bv} is defined
 as in the SMT-LIB
 standard.\footnote{See \url{https://smt-lib.github.io/theories-FixedSizeBitVectors.shtml}.}
 
+\subsection{RARE rules}
+The standard allows for proof certificates to refer to rewrite rules specified
+using the \emph{RARE 2.0} language. In turn, this language is defined as a subset 
+of features of the \emph{Eunoia} 
+language.\footnote{See \url{https://github.com/cvc5/ethos/blob/main/user_manual.md}.}
+In this section we will briefly describe Eunoia, its purpose, some of its features,
+and we will specify the subset of Eunoia's features that constitute what we
+call here RARE 2.0.
+
+\paragraph{Eunoia}
+Eunoia is the name of the logical framework and language that is supported 
+natively by the \emph{Ethos} checker. Although Eunoia is a general logical
+framework, it is geared towards defining proof systems used by SMT solvers, and
+writing proofs in those systems.
+
+Ethos is an efficient and extensible tool for checking proofs of SMT solver
+s. It can be programmed to check proof certificates that refer to a
+formal system that is defined using Eunoia.
+
+The core features of Eunoia include:
+\begin{itemize}
+\item A syntax and type system for defining theory signatures that follows those
+of SMT-LIB version 3.0.
+\item Constructs for associating syntactic categories (as specified by SMT-LIB
+e.g. <numeral>) with types.
+\item A command, \inlineAlethe{declare-rule}, for defining proof rules.
+\item A set of commands for specifying proofs (\inlineAlethe{step},
+\inlineAlethe{assume}, and so on), whose syntax closely follows that of the
+Alethe proof format (for details, see here).
+\item A set of built-in basic types and a library of operations
+(\inlineAlethe{eo::add}, \inlineAlethe{eo::mul}, \inlineAlethe{eo::concat},
+\inlineAlethe{eo::extract}) for performing computations over values.
+\item A command, \inlineAlethe{program}, for defining side conditions as an
+ordered list of rewrite rules.
+\end{itemize}
+
+From the previous set of features, we will focus on the 
+\inlineAlethe{declare-rule} mechanism for rule definition. The generic syntax for
+a \inlineAlethe{declare-rule} command accepted by ethos is shown in \ref{fig:declare-rule}.
+
+\begin{figure}[t]
+\[
+  \begin{array}{r c l}
+
+(\textAlethe{declare-rule} & \grNT{symbol} & (\grNT{typed-param}^*)\\
+     \grNT{assumption}? && \\
+     \grNT{premises}? &&\\
+    \grNT{arguments}? &&\\
+   & \textAlethe{:conclusion} \; \grNT{term}) &\\
+
+where &&\\
+ \grNT{assumption}         &  \grRule & \textAlethe{:assumption} \; \grNT{term} \\
+ \grNT{premises}           &\grRule & \textAlethe{:premises (}\grNT{term}^+ \textAlethe{)} \\
+ \grNT{arguments}           &\grRule & \textAlethe{:args (}\grNT{term}^+ \textAlethe{)}\\
+ \grNT{conclusion}           &\grRule & \textAlethe{:conclusion} \; \grNT{term}\\
+  \end{array}
+  \]
+  \caption{\textAlethe{declare-rule} syntax.}
+  \label{fig:declare-rule}
+\end{figure}
+
 \section{The Alethe Rules}
 \label{apx:rules}
 \input{rule_list}
