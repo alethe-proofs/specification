@@ -1970,10 +1970,16 @@ where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 $i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rule\_name, x_1, \dots, x_n$) \\
 \end{AletheX}
 
-This rule refers to the application of the rewrite rule $rule\_name$, wich should
+This rule refers to the application of the RARE rewrite rule $rule\_name$, wich should
 justify the conclusion $t ≈ s$. The instantiation of the rewrite rule could
 require arbitrary parameters, with rule-dependent semantics, which are mentioned
 after $rule\_name$ when invoking \currule{} (that is, $x_1, \dots, x_n$).
+
+Recall that a RARE rewrite rule is defined using a domain-specific language, 
+called RARE, which is introduced in section \ref{sec:alethe:rare_rules}.
+We assume that the producer of the Alethe proof certificate has at its disposal 
+an arbitrary set of rules, written in RARE, for elaboration purposes of 
+(some of) the equational reasoning steps in the proof.
 
 
 \end{RuleDescription}
