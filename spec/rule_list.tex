@@ -251,6 +251,19 @@ simplifications.}
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
+\caption{Regular Constraint Propagation rules.}
+\label{rule-tab:rcp}\\
+  Rule & Description \\
+  \hline
+  \ruleref{re_convert} & Automaton–term equivalence. \\
+  \ruleref{re_empty_intersection} & Empty intersection of regular languages. \\
+  \ruleref{re_intersection} & Non-empty intersection of regular languages. \\
+  % TODO: rcp
+  \ruleref{re_forward_propagation} & . \\
+  \ruleref{re_backward_propagation} & . \\
+\end{xltabular}
+
+\begin{xltabular}{\linewidth}{l X}
 \caption{Rules used by cvc5, but not by veriT.}
 \label{rule-tab:cvc5}\\
   Rule & Description \\
@@ -1867,6 +1880,78 @@ and ``$\mathrm{carry}_k$'' being defined, for $k \geq 0$, as:
   \end{array}
 \]
 
+\end{RuleDescription}
+
+% TODO: rcp
+\begin{RuleDescription}{re_convert}
+\begin{AletheX}
+$i$. & \ctxsep & $\neg (w \in R) \lor (w \in A_R)$ & \currule \\
+\end{AletheX}
+where $A_R$ is an automaton accepting the same regular language as $R$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{re_empty_intersection}
+\begin{AletheX}
+$i$. & \ctxsep & $\neg (w \in A_{R_{1}}) \lor \neg (w \in A_{R_{2}}) \lor \cdots \lor \neg (w \in A_{R_{n}})$ & \currule \\
+\end{AletheX}
+where $A_{R_{i}}$ is an automaton accepting the same regular language as $R_i$.
+
+Let $L(R_i)$ denote the regular language accepted by the regular expression $R_i$. This rule applies only when 
+\[
+L(R_1) \cap L(R_2) \cap \cdots \cap L(R_n) = \emptyset.
+\]
+Therefore, if a string $w$ belongs to one of these languages, we can conclude that it belongs to exactly one of them and to none of the others.
+\end{RuleDescription}
+
+\begin{RuleDescription}{re_intersection}
+\begin{AletheX}
+$i$. & \ctxsep & $(w \in A_{R_{1}}) \land (w \in A_{R_{2}}) \land \cdots \land (w \in A_{R_{n}})$ & \currule \\
+\end{AletheX}
+where $A_{R_{i}}$ is an automaton accepting the same regular language as $R_i$.
+
+Let $L(R_i)$ denote the regular language accepted by the regular expression $R_i$. This rule applies only when 
+\[
+L(R) = \bigcap_{i=1}^n L(R_i) \quad \text{and} \quad w \in L(R).
+\]
+Therefore, if a string $w$ belongs to the intersection of these languages, we can conclude that it belongs to all of them simultaneously.
+\end{RuleDescription}
+
+\begin{RuleDescription}{re_forward_propagation}
+\begin{AletheX}
+$i$. & \ctxsep & $x \in A_R$ & \currule \\
+\end{AletheX}
+where $A_R$ is an automaton accepting the same regular language as $R$.
+
+Let $L(R_i)$ denote the regular language accepted by the regular expression $R_i$. This rule applies only when 
+\[
+x = f(x_1, x_2, \dots, x_n) \quad \text{and} \quad L(R) = f(L(R_1), L(R_2), \dots, L(R_n)),
+\] 
+where $f$ is a string function of $n$ parameters and each $x_i$ belongs to $R_i$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{re_backward_propagation}
+\begin{AletheX}
+$i$. & \ctxsep & $\bigvee_{i=1}^k (x_1 \in L(R^k_1) \land (x_2 \in L(R^k_2) \land \cdots \land (x_n \in L(R^k_n))$ & \currule \\
+\end{AletheX}
+
+Let $L(R_i)$ denote the regular language accepted by the regular expression $R_i$. This rule applies only when 
+\[
+x = f(x_1, x_2, \dots, x_n) \quad \text{and} \quad x \in R,
+\] 
+where $f$ is a string function of $n$ parameters and 
+\[
+f^{-1}(L(R)) = \bigcup_{i=1}^k (L(R^i_1) \times L(R^i_2) \times \cdots \times L(R^i_n)).
+\]
+In other words, the preimage of $f$ can be computed as the cross-product of the elements in the regular languages corresponding to each parameter $L(R_i)$. Therefore, the regular language of the parameters of $f$ can be inferred as the disjunction of all possible combinations of elements from these languages.
+
+\ruleparagraph{Example.}
+Let $y = xx$ and suppose that $y \in ba$. 
+In this case, we want to determine the possible values of $x$ such that the concatenation of $x$ with itself results in a string belonging to the regular language $ba$. 
+Applying the rule, we obtain:
+\[
+(x \in b \land x \in a) \lor (x \in \epsilon \land x \in ba).
+\]
+Therefore, this conclusion expresses all possible decompositions of the string $ba$ into two consecutive occurrences of $x$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{symm}
