@@ -1966,25 +1966,98 @@ where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{rare_rewrite}
+\label{rule:rare_rewrite}
 \begin{AletheX}
-$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rule\_name, x_1, \dots, x_n$) \\
+$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rewrite\_rule$) \\
 \end{AletheX}
 
-This rule refers to the application of the RARE rewrite rule $rule\_name$, wich should
-justify the conclusion $t ≈ s$. The instantiation of the rewrite rule could
-require arbitrary parameters, with rule-dependent semantics, which are mentioned
-after $rule\_name$ when invoking \currule{} (that is, $x_1, \dots, x_n$).
+This rule refers to the application of the RARE rewrite rule 
+$rewrite\_rule$, which should justify the conclusion $t ≈ s$. Recall that 
+a RARE rewrite rule is defined using a domain-specific language, called RARE, 
+which is introduced in section \ref{sec:alethe:rare_rules}. We assume that the 
+producer of the Alethe proof certificate has at its disposal an arbitrary set of 
+rules, written in RARE, for elaboration purposes of (some of) the equational 
+reasoning steps in the proof. The rule name $rewrite\_rule$ 
+invoked in the previous rule must match with the name of some RARE rewrite rule 
+in this set of rules. Also, the conclusion of the RARE rule invoked must
+match with that of the application of rule \currule{} (that is, 
+$ t ≈ s $).
 
-Recall that a RARE rewrite rule is defined using a domain-specific language, 
-called RARE, which is introduced in section \ref{sec:alethe:rare_rules}.
-We assume that the producer of the Alethe proof certificate has at its disposal 
-an arbitrary set of rules, written in RARE, for elaboration purposes of 
-(some of) the equational reasoning steps in the proof.
+The instantiation of the rewrite rule could require arbitrary arguments, with 
+rule-dependent semantics. These arguments can be passed after the name of the 
+invoked rewrite rule. For the purpose of providing these arguments, they must be 
+wrapped into a list, built with $\lsymb{@list}$. In this
+case, the rule invocation would be as follows:
 
+\begin{AletheX}
+$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rewrite\_rule,
+                                           (\lsymb{@list} \; x_1, \dots, x_n)$)
+\end{AletheX}
+
+Where $x_1, \dots, x_n$, with $ n \geq 1$, are arbitrary arguments required by 
+rule $rewrite\_rule$. Note that the arguments are not required to have the same
+type.
+
+Finally, RARE rewrite rules can have premises, which can be also invoked when
+applying a \currule{} step, as follows:
+
+\begin{AletheXS}
+$i_1$. & \ctxsep & $ t_1 ≈ s_1 $ & ($\dots$) \\
+\aletheLineS
+$i_n$. & \ctxsep & $ t_n ≈ s_n $ & ($\dots$) \\
+$j$. & \ctxsep & $ t ≈ s $ & (\currule \; $i_1\; \dots i_n$)\; 
+                             $rewrite\_rule \; \dots$ \\
+\end{AletheXS}
+
+In this case, for the application of \currule{} to be valid, each premise must 
+match with those of the rewrite rule referred, in the same order as invoked.
+Also, the conclusion $ t ≈ s $ must match with that of the rewrite rule invoked.
+It is possible to provide arbitrary arguments, as indicated in the previous 
+case of \currule.
 
 \end{RuleDescription}
 
+\begin{RuleDescription}{multi_rare_rewrite}
+\begin{AletheX}
+$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rule_1 \, \dots \, rule_n$) \\
+\end{AletheX}
+This rule refers to the repeated application of the RARE rewrite rules
+$rule_1 \, \dots \, rule_n$ over the left-hand side of the conclusion, term
+$t$, until it can be successfully rewritten as the right-hand side term $s$.
+That is, among rules $rule_1 \, \dots \, rule_n$ there should be one rule
+whose conclusion's left-hand side matches against term $t$. By applying
+it, we should be able to rewrite term $t$ as some other term $t'$, such that it 
+matches against the conclusion's left-hand side of some rule in
+$rule_1 \, \dots \, rule_n$. This process should be repeated until some
+intermediate term can be rewritten as term $s$ (that is, by applying a rewrite
+rule whose conclusion's right-hand side matches $s$).
 
+
+The instantiation of some of the referred rewrite rules could require arbitrary 
+arguments, with rule-dependent semantics. These arguments can be passed after 
+the name of the each invoked rewrite rule, using the list constructor
+$\lsymb{@list}$, as in the case of rule \textsf{rare\_rewrite}
+(rule \ref{rule:rare_rewrite}). In this
+case, the rule invocation would be as follows:\\
+
+\begin{AletheX}
+$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rule_1, 
+                                           (\lsymb{@list} \; x_1, \dots, x_n),
+                                           \dots,
+                                           rule_n$)
+\end{AletheX}
+
+Where, after each rewrite rule that requires arguments, a list 
+$\lsymb{@list}$ with the corresponding arguments is indicated. In the previous 
+invocation of the \currule{} rule, we are assuming that $rule_1$ requires 
+arguments, which are referred through the list 
+$(\lsymb{@list} \; x_1, \dots, x_n)$. It is possible
+to interleave with invocations of rules that do not require arguments.
+In that case, only the rule name is mentioned. That would be the case of rule
+$rule_n$ in our previous example.
+
+
+\end{RuleDescription}
 \clearpage
 \subsection{Index of Rules}
 \label{sec:alethe:rules-index}
