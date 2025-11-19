@@ -418,28 +418,29 @@ the negated disequalities is unsatisfiable. After the application of
 some strengthening rules, the resulting conjunction is unsatisfiable,
 even if integer variables are assumed to be real variables.
 
-A linear inequality is of term of the form
+A linear inequality is a term of the form:
 \[
 \sum_{i=0}^{n}c_i\times{}t_i +
 d_1\bowtie \sum_{i=n+1}^{m} c_i\times{}t_i + d_2
 \]
 where $\bowtie\;\in \{≈, <,
 >, \leq, \geq\}$, where $m\geq n$, $c_i, d_1, d_2$ are either integer or real
-constants, and for each $i$ $c_i$ and $t_i$ have the same sort. We will write
+constants, and for each $i$, $c_i$ and $t_i$ have the same sort. We will write
 $s_1 \bowtie s_2$.
 
 Let $l_1,\dots, l_n$ be linear inequalities and $a_1, \dots, a_n$
 rational numbers, then a {\currule} step has the form
 
 \begin{AletheX}
-$i$. & \ctxsep & $\varphi_1$, \dots , $\varphi_o$  & \currule\, [$a_1$, \dots, $a_o$] \\
+$i$. & \ctxsep & $\varphi_1$, \dots , $\varphi_n$  & \currule\, [$a_1$, \dots, $a_n$] \\
 \end{AletheX}
 where $\varphi_i$ is either $\neg l_i$ or $l_i$, but never $s_1
 ≈ s_2$.
 
-The constants $a_i$ are of sort \inlineAlethe{Real} and must be printed
-using one of the productions $\grNT{rational}$
-$\grNT{decimal}$, $\grNT{nonpositive\_decimal}$.
+The constants $a_i$ are of sort \inlineAlethe{Real} and must be written
+following the rules described by productions of the non-terminals
+$\grNT{rational}$, $\grNT{decimal}$ or $\grNT{nonpositive\_decimal}$
+(see figure \ref{fig:grammar} in section \ref{sec:alethe:syntax}).
 
 To check the unsatisfiability of the negation of $\varphi_1\lor \dots
 \lor \varphi_o$ one performs the following steps for each literal. For
@@ -455,7 +456,7 @@ each $i$, let $\varphi := \varphi_i$ and $a := a_i$.
     \item Replace $\varphi$ by $\sum_{i=0}^{n}c_i\times{}t_i - \sum_{i=n+1}^{m} c_i\times{}t_i
     \bowtie d$ where $d := d_2 - d_1$.
     \item \label{la_generic:str}Now $\varphi$ has the form $s_1 \bowtie d$. If all
-    variables in $s_1$ are integer sorted: replace $\bowtie d$ according to
+    variables in $s_1$ are integer sorted: replace $\bowtie$ and $d$ according to
     the table below.
     \item If $\bowtie$ is $≈$ replace $l$ by
     $\sum_{i=0}^{m}a\times{}c_i\times{}t_i ≈ a\times{}d$, otherwise replace it by
