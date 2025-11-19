@@ -827,12 +827,32 @@ expressed as a concrete proof.
 Figure~\ref{fig:proof-states} shows the states of an Alethe proof
 abstractly.  To generate a proof, the SMT solver must be in the
 {\em Unsat mode}, i.e., the solver determined that the problem
-is unsatisfiable.  The {\smtlib} problem script then requests the proof by
-invoking the \inlineAlethe{get-proof} command.  It is possible that this command
-fails. For example, if proof production was not activated up front.
-If there is no error, the proof is printed and printing starts with
-the assumptions.  The solver prints the proof as a list of commands
-according to the state.  The states ensure one constraint is maintained:
+is unsatisfiable.
+%
+The {\smtlib} problem script then requests the proof by
+invoking the \inlineAlethe{get-proof} command.
+%
+It is possible that this command fails.
+%
+For example, if proof production was not activated.
+%
+If there is no error, the proof is printed.
+Since SMT-LIB requires all response to be S-expressions, the solver first
+prints an opening parenthesis '\inlineAlethe{(}'.
+%
+The solver then follows the state machine to print the proof
+as a list of Alethe commands.
+%
+After printing is done, the solver prints an additional
+closing parenthesis '\inlineAlethe{)}'.
+%
+Note that these extra parentheses are printed to ensure that the solver is SMT-LIB
+compliant.  They are not part of the proof, and should only be printed when
+interacting with the solver through the SMT-LIB interface.
+For example, if a solver can write proofs directly into a file, it should not
+write these extra parentheses.
+
+The printing state machines ensure a constraint is maintained:
 assumptions can only appear at either the beginning of a proof or right
 after a subproof is started by the \inlineAlethe{anchor} command.  They cannot
 be mixed with ordinary proof steps.  This simplifies
