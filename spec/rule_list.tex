@@ -1968,16 +1968,16 @@ where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 \begin{RuleDescription}{rare_rewrite}
 \label{rule:rare_rewrite}
 \begin{AletheX}
-$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rewrite\_rule$) \\
+$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $\lsymb{rewrite\_rule}$) \\
 \end{AletheX}
 
 This rule refers to the application of the RARE rewrite rule 
-$rewrite\_rule$, which should justify the conclusion $t ≈ s$. Recall that 
+$\lsymb{rewrite\_rule}$, which should justify the conclusion $t ≈ s$. Recall that 
 a RARE rewrite rule is defined using a domain-specific language, called RARE, 
 which is introduced in section \ref{sec:alethe:rare_rules}. We assume that the 
 producer of the Alethe proof certificate has at its disposal an arbitrary set of 
 rules, written in RARE, for elaboration purposes of (some of) the equational 
-reasoning steps in the proof. The rule name $rewrite\_rule$ 
+reasoning steps in the proof. The rule name $\lsymb{rewrite\_rule}$
 invoked in the previous rule must match with the name of some RARE rewrite rule 
 in this set of rules. Also, the conclusion of the RARE rule invoked must
 match with that of the application of rule \currule{} (that is, 
@@ -1990,12 +1990,12 @@ wrapped into a list, built with $\lsymb{@list}$. In this
 case, the rule invocation would be as follows:
 
 \begin{AletheX}
-$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rewrite\_rule,
-                                           (\lsymb{@list} \; x_1, \dots, x_n)$)
+$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $\lsymb{rewrite\_rule}$, 
+                                           ($\lsymb{@list} \; x_1, \dots, x_n)$)
 \end{AletheX}
 
 Where $x_1, \dots, x_n$, with $ n \geq 1$, are arbitrary arguments required by 
-rule $rewrite\_rule$. Note that the arguments are not required to have the same
+rule $\lsymb{rewrite\_rule}$. Note that the arguments are not required to have the same
 type.
 
 Finally, RARE rewrite rules can have premises, which can be also invoked when
@@ -2006,7 +2006,7 @@ $i_1$. & \ctxsep & $ t_1 ≈ s_1 $ & ($\dots$) \\
 \aletheLineS
 $i_n$. & \ctxsep & $ t_n ≈ s_n $ & ($\dots$) \\
 $j$. & \ctxsep & $ t ≈ s $ & (\currule \; $i_1\; \dots i_n$)\; 
-                             $rewrite\_rule \; \dots$ \\
+                             $\lsymb{rewrite\_rule} \; \dots$ \\
 \end{AletheXS}
 
 In this case, for the application of \currule{} to be valid, each premise must 
