@@ -1917,14 +1917,14 @@ $i$. & \ctxsep & $ t_1 ≈ t_2 $ & (\currule) \\
 \noindent
 where $t_1$ and $t_2$ are equivalent modulo associativity, commutativity, 
 identity elements and idempotency. Checking this rule involves a normalization 
-step of $t_1$ and $t_2$, that exploits the previous properties of the operations involved 
-in both terms. The rule applies to SMT-LIB ACI operators (that is, those that satisfy
-associativity, commutativity, idempotency and that have an identity element), 
-AC operators (associativity, commutativity and identity elements), as well to
-operators that satisfy only associativity and that have an identity element.
-The actual way in which the previous properties are exploited might be solver-dependent, 
-which means that there is no such thing as an ``ACI normal form'', standard among
-any solver producing Alethe certificates.
+step of $t_1$ and $t_2$, that exploits the previous properties of the operations 
+involved in both terms. The rule applies to SMT-LIB ACI operators (that is, 
+those that satisfy associativity, commutativity, idempotency and that have an 
+identity element), AC operators (associativity, commutativity and identity 
+elements), as well to operators that satisfy only associativity and that have an 
+identity element. The actual way in which the previous properties are exploited 
+might be solver-dependent, which means that there is no such thing as an 
+``ACI normal form'', standard among any solver producing Alethe certificates.
 
 The operators that can trigger the previous process include:
 \begin{itemize}
@@ -1947,7 +1947,9 @@ of some ACI operator) .
 \item $op \; id \; x \Rightarrow x$, for $x \not{\Rightarrow}$.
 \item $op \; x \; x \Rightarrow x$, for $x \not{\Rightarrow}$.
 \item $op \; x_1 \; x_2 \Rightarrow op \; x_{1'} \; x_2$, where $x_1 \Rightarrow x_{1'}$.
-\item $op \; x \; x_2 \Rightarrow op \; x \; x_{2'}$, where $x_2 \Rightarrow x_{2'}$ and $x \not{\Rightarrow}$.
+\item $op \; x \; x_2 \Rightarrow op \; x \; x_{2'}$, where $x_2 \Rightarrow x_{2'}$ 
+                                                           and 
+                                                           $x \not{\Rightarrow}$.
 
 \item $op \; x_1 \; x_2 \Rightarrow op \; x_{1'} \; x_{2'}$, 
             where 
@@ -1964,9 +1966,10 @@ of some ACI operator) .
             \end{itemize}
 \end{itemize}
 
-In the last rule, note that we do not impose some particular order among sub-terms. 
-The intention of the rule is to allow for a particular implementation, of a checker for the
-rule, to take advantage of the commutativity of $op$, if desired.
+In the last rule, note that we do not impose some particular order among 
+sub-terms. The intention of the rule is to allow for a particular implementation 
+of a checker for the rule, to take advantage of the commutativity of $op$, if 
+desired.
 
 Also, note that no evaluation of the application of operators (\emph{constant folding})
 is performed by the rule.
