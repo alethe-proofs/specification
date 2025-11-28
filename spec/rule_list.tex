@@ -475,11 +475,18 @@ $\geq$     & $\geq d$      & $\geq \lfloor d\rfloor + 1$  \\
 Finally, the sum of the resulting literals is trivially contradictory.
 The sum
 \[
-    \sum_{k=1}^{o}\sum_{i=1}^{m^o}c_i^k*t_i^k \bowtie \sum_{k=1}^{o}d^k
+    \sum_{k=1}^{o}\sum_{i=1}^{m^o}c_i^k*t_i^k \bowtie' \sum_{k=1}^{o}d^k
 \]
 where $c_i^k$ is the constant $c_i$ of literal $l_k$, $t_i^k$ is the term
-$t_i$ of $l_k$, and $d^k$ is the constant $d$ of $l_k$. The operator
-$\bowtie$ is $≈$ if all operators are $≈$, $>$ if all are
+$t_i$ of $l_k$, and $d^k$ is the constant $d$ of $l_k$. The relation $\bowtie'$
+is the ``weakest'' relation among the ones that appear in the involved 
+inequalities. That is:
+\begin{itemize}
+\item $\bowtie'$ is some relation $\bowtie$, if all the relations involved are 
+exactly $\bowtie$.
+\item $\bowtie'$ is $>$ if all the relations either $≈$ or $>$
+\end{itemize}
+, $>$ if all are
 either $≈$ or $>$, and $\geq$ otherwise. The $a_i$ must be such
 that the sum on the left-hand side is $0$ and the right-hand side is $>0$ (or
 $\geq 0$ if $\bowtie$ is $>$).
@@ -512,7 +519,7 @@ After normalization we get $-f_3 \geq 0 \land 4\times f_3 > 0$.
 This time step~4 applies and we can strengthen this to
 $-f_3 \geq 0 \land 4\times f_3 \geq 1$ and after multiplication we get
 $-f_3 \geq 0 \land f_3 \geq ¼$. Which sums to the contradiction
-$¼ \geq 0$.
+$0 \geq ¼$.
 \end{RuleExample}
 
 \begin{RuleDescription}{lia_generic}
