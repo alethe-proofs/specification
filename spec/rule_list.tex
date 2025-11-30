@@ -489,26 +489,21 @@ $\varphi_j$ and corresponding constant $a_j$:
 
     \item Multiply both sides of the inequality by its corresponding coefficient 
       $a_j$, if $\bowtie'$ is $≈$, or by $|a_j|$, otherwise. We obtain:
-      \[
-        \sum_{i=0}^{m}a_j\times{}c_i\times{}t_i ≈ a_j\times{}d'
-        \]
-        or
-        \[
-          \sum_{i=0}^{m}|a_j|\times{}c_i\times{}t_i \bowtie' |a_j|\times{}d'
-
-        \]
-    respectively.
+      \[\sum_{i=0}^{m}a_j\times{}c_i\times{}t_i ≈ a_j\times{}d'\]
+      or
+      \[\sum_{i=0}^{m}|a_j|\times{}c_i\times{}t_i \bowtie' |a_j|\times{}d'\]
+      respectively.
 \end{enumerate}
 
-Finally, the sum of the obtained inequalities should result in a trivial 
-contradiction. The sum:
+Finally, the sum of the obtained $n$ inequalities should result in a trivial 
+contradiction. The sum results in an inequality of the form:
 \[
-    \sum_{k=1}^{o}\sum_{i=1}^{m^o}c_i^k*t_i^k \bowtie' \sum_{k=1}^{o}d^k
+    \sum_{k=1}^{n}(\sum_{i=0}^{m^k}a'_k*c_i^k*t_i^k) \bowtie_{sum} \sum_{k=1}^{n}d'^k
 \]
-where $c_i^k$ is the constant $c_i$ of literal $l_k$, $t_i^k$ is the term
-$t_i$ of $l_k$, and $d^k$ is the constant $d$ of $l_k$. The relation $\bowtie'$
+where $\sum_{i=0}^{m^k}a'_k*c_i^k*t_i^k$ is the left-hand side of the k-th inequality
+added, and $d'^k$ is its right-hand side. The relation $\bowtie_{sum}$
 is the ``weakest'' relation among the ones that appear in the involved 
-inequalities. That is:
+inequalities added. That is:
 \begin{itemize}
 \item $\bowtie'$ is some relation $\bowtie$, if all the relations involved are 
 exactly $\bowtie$.
