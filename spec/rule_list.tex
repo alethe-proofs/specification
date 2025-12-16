@@ -460,7 +460,9 @@ $\varphi_j$ and corresponding constant $a_j$:
       description of the following steps.
 
  \item If $\varphi_j = \neg (s_1 \bowtie s_2)$, then replace it by
-   $s_1 \bowtie s_2$.
+   $s_1 \bowtie s_2$. If $\bowtie$ is $<$ or $\leq$, redefine the inequality
+   $s_1 \bowtie s_2$ in terms of the relations
+   $>$ or $\geq$, accordingly, as is done in the previous step.
 
  \item The resulting inequality has the form:
    \[
@@ -487,6 +489,9 @@ $\varphi_j$ and corresponding constant $a_j$:
       $\geq$     & $\bowtie' \; = \; \geq, d' = d$      & 
                    $\bowtie' \; = \; \geq, d' = \lfloor d\rfloor + 1$  \\
     \end{tabular}
+
+    If some variable is not integer sorted, consider $\bowtie' = \bowtie$ and 
+    $d' = d$ in the following steps.
 
     \item \label{la_generic:final_sum}
       Multiply both sides of the inequality by its corresponding coefficient 
