@@ -2033,6 +2033,16 @@ is performed by the rule.
 
 \end{RuleDescription}
 
+\begin{RuleExample}
+The following simple \proofRule{aci_simp} step is from a \textsf{QF\_UF} problem:
+\begin{AletheVerb}
+(step t1 (cl (= (and d d) d)) :rule aci_simp)
+\end{AletheVerb}
+In this case, the application of the rule exploits the idempotency property of
+the \inlineAlethe{and} operator, to conclude that \inlineAlethe{(= (and d d) d)}
+holds.
+\end{RuleExample}
+
 \clearpage
 \subsection{Index of Rules}
 \label{sec:alethe:rules-index}
