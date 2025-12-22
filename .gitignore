@@ -23,3 +23,4 @@ _minted*/
 *.ind
 *.synctex.gz
 *.bak
+*.latexminted_config

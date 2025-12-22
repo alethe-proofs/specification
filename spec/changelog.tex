@@ -23,10 +23,11 @@ Proof rules:
   \item Addition of the \proofRule{bind_let} rule.  This rule can be used to
         preprocess \inlineAlethe{let} expressions similar to the \proofRule{bind}
         rule used with ordinary quantifiers.
-  \item Additon of the \proofRule{shuffle} to permute the arguments of a
+  \item Addition of miniscoping rules: \proofRule{miniscope_split}, \proofRule{miniscope_distribute}, \proofRule{miniscope_ite}
+  \item Addition of the \proofRule{shuffle} to permute the arguments of a
         commutative operator.
   \item Clarify that \proofRule{distinct_elim} cannot be applied to only one
-        argument due to SMT-LIB restrictions..
+        argument due to SMT-LIB restrictions.
 \end{itemize}
 
 \noindent
@@ -71,6 +72,7 @@ Clarifications and corrected errors:
   \item Fix the example of \proofRule{onepoint}.
   \item Add the missing context to the conclusion of \proofRule{bind},
         \proofRule{sko_ex}, \proofRule{sko_forall}, \proofRule{onepoint}.
+  \item Highlight the equality used with context by using the $\ceq$ symbol.
 \end{itemize}
 
 \subsection*{0.3 --- \DTMdisplaydate{2023}{02}{10}{-1}}

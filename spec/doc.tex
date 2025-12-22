@@ -68,148 +68,8 @@
 
 \hyphenation{Isa-belle Nieuw-en-huis meta-logic multi-set multi-sets non-unit Mini-Sat}
 
-\newcommand\smtlib{SMT-LIB}
-\newcommand\cdclt{CDCL(T)}
-
-\newcommand\tool[1]{\textsf{#1}}
-\newcommand\tactic[1]{\texttt{#1}}
-\newcommand\verit{\tool{veriT}}
-\newcommand\cvcfive{\tool{cvc5}}
-\newcommand\cvcfour{\tool{CVC4}}
-\newcommand\isabelle{\tool{Isabelle/HOL}}
-
-\newcommand\lsymb[1]{\mathbf{#1}}
-\DeclareMathOperator*{\subst}{subst}
-\DeclareMathOperator*{\reify}{reify}
-\DeclareMathOperator*{\bvexplode}{bvexplode}
-\newcommand\groundbox[1]{\boxed{#1}}
-
-% Proofs
-\newcommand\textAlethe[1]{\texttt{#1}}
-\newcommand\ctxsep{$\vartriangleright$}
-\newcommand\spctxsep{\multicolumn{1}{|c}{\ctxsep}}
-\newcommand\spctx[1]{\multicolumn{1}{|c}{#1}}
-\newcommand\spsep{\cline{2-4}}
-
-% Empty lines with dots
-\newcommand\aletheLine{ &                       & $\vdots$ & \\}
-\newcommand\aletheLineB{& \multicolumn{1}{|c}{} & $\vdots$ & \\}
-% with subproof line to the left
-\newcommand\aletheLineS {&                       & & $\vdots$ & \\}
-\newcommand\aletheLineSB{& \multicolumn{1}{|c}{} & & $\vdots$ & \\}
-
-% Tables for proofs
-\newcolumntype{Y}{>{\centering\arraybackslash}X}
-
-\newcommand{\ruleTypeImpl}[1]{%
-  \microtypesetup{tracking=false}\textsf{#1}\microtypesetup{tracking=true}%
-}
-\def\ruleType#1{\ruleTypeImpl{\detokenize{#1}}} % non linked rule (for examples)
-\def\proofRule#1{\hyperref[rule:\detokenize{#1}]{\ruleTypeImpl{\detokenize{#1}}}} % linked rule
-%\newcommand{\ruleref}[1]{\ruleType{\nameref{rule:#1}}~(\ref{rule:#1})}
-\def\ruleref#1{\hyperref[rule:\detokenize{#1}]{\ruleTypeImpl{\detokenize{#1}}}~(\ref{rule:\detokenize{#1}})} % for the rule tables
-
-\NewEnviron{Alethe}{%
-\renewcommand\spsep{\cline{2-4}}
-\setlength{\arrayrulewidth}{0.8pt}
-\addtolength{\tabcolsep}{-4pt}
-\begin{xltabular}{\linewidth}{l c Y r}
-  \BODY
-\end{xltabular}
-\addtolength{\tabcolsep}{+4pt}
-}
-\NewEnviron{AletheS}{%
-\renewcommand\spsep{\cline{2-5}}
-\setlength{\arrayrulewidth}{0.8pt}
-\addtolength{\tabcolsep}{-4pt}
-\begin{xltabular}{\linewidth}{l l c Y r}
-  \BODY
-\end{xltabular}
-\addtolength{\tabcolsep}{+4pt}
-}
-
-% These avoid the xltabular environment. While xltabular can break on pages
-% it seems to interact badly with the RuleDescription environment.
-\NewEnviron{AletheX}{%
-\renewcommand\spsep{\cline{2-4}}%
-\setlength{\arrayrulewidth}{0.8pt}%
-\addtolength{\tabcolsep}{-4pt}%
-\noindent
-\begin{tabularx}{\linewidth}{l c Y r}
-  \BODY
-\end{tabularx}
-\addtolength{\tabcolsep}{+4pt}
-}
-\NewEnviron{AletheXS}{%
-\renewcommand\spsep{\cline{2-5}}%
-\setlength{\arrayrulewidth}{0.8pt}%
-\addtolength{\tabcolsep}{-4pt}%
-\noindent
-\begin{tabularx}{\linewidth}{l l c Y r}
-  \BODY
-\end{tabularx}
-\addtolength{\tabcolsep}{+4pt}
-}
-
-% Environment for proof-rules
-\newcounter{ProofRuleCounter}
-\newcommand\currule{\textbf{ERROR}}
-
-\declaretheoremstyle[
-headfont=\sffamily\bfseries,%
-notefont=\sffamily\bfseries,%
-notebraces={}{},%
-bodyfont=\normalfont,%
-headpunct={},%
-headformat={\NAME~\NUMBER:\NOTE},%
-break
-]{proof-rule-style}
-
-\declaretheorem[name=Rule,style=proof-rule-style,sibling=ProofRuleCounter]{inner-rule}
-
-\makeatletter
-\newcommand{\ruleparagraph}{%
-  \@startsection{paragraph}{4}%
-  {\z@}{1ex \@plus 0.5ex \@minus .2ex}{-1em}%
-  {\normalfont\normalsize\bfseries}%
-}
-\makeatother
-
-\NewEnviron{RuleDescription}[1]{%
-\renewcommand\currule{\proofRule{#1}}
-\index[rules]{#1}
-
-\begin{inner-rule}[\detokenize{#1}]\label{rule:#1}
-
-\BODY
-\end{inner-rule}
-}
-
-\theoremstyle{definition}
-\newtheorem{RuleExample}{Example}[inner-rule]
-
-% TODO: synchronize colors!
-\definecolor{SmtBlue}{HTML}{00007f}
-\definecolor{SmtGreen}{HTML}{3b7f31}
-\definecolor{SmtStepId}{HTML}{3b7f31}
-
-\newcommand{\grNT}[1]{\textcolor{SmtGreen}{\langle\texttt{#1}\rangle}}
-\newcommand{\grT}[1]{\textcolor{SmtBlue}{\texttt{#1}}}
-\newcommand{\grRule}{≔}
-\newcommand{\grOr}{|}
-
-\newtheorem{example}{Example}
-\newtheorem{theorem}{Theorem}[example]
-\newtheorem{lemma}{Lemma}[example]
-\newtheorem{definition}{Definition}[example]
-\newtheorem{seppara}{}
-
-\newpairofpagestyles{titlestyle}{
-\ofoot{Version \input{|"./version.sh"}\unskip . Typeset on {\today}.}%
-\ifoot{\ccby}%
-}
-\renewcommand*{\titlepagestyle}{titlestyle}
-\setkomafont{publishers}{\small}
+% Custom commands, environments and related definitions.
+\input{custom_commands}
 
 \title{The Alethe Proof Format}
 \subtitle{An Evolving Specification and Reference}
@@ -418,7 +278,7 @@ understand the proof step by step.
 \begin{Alethe}
 1.& \ctxsep & $\forall x.\, (P\,x)$ & $ \proofRule{assume}$ \\
 2.& \ctxsep & $\neg (P\,a)        $ & $ \proofRule{assume}$ \\
-3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[(x, a)]$ \\
+3.& \ctxsep & $\neg (\forall x.\, (P\,x)) \lor (P\,a)$ & $\proofRule{forall_inst}\,[a]$ \\
 4.& \ctxsep & $\neg (\forall x.\, (P\,x)), (P\,a)$ & $ (\proofRule{or}\:3)$ \\
 5.& \ctxsep & $\bot             $ & $ (\proofRule{resolution}\: 1, 2, 4)$ \\
 \end{Alethe}
@@ -533,7 +393,7 @@ formula $(2 + 2) ≈ 5$. The proof uses a subproof to prove the
 lemma $((2 + 2) ≈ 5) \Rightarrow 4 ≈ 5$.
 
 \begin{Alethe}
-1.&  \ctxsep &  $(2 + 2) ≈ 5$ &  $\proofRule{assume}$ \\
+1.&  \ctxsep   &  $(2 + 2) ≈ 5 $ &  $\proofRule{assume}$ \\
 2.&  \spctxsep &  $(2 + 2) ≈ 5 $ &  $\proofRule{assume}$ \\
 3.&  \spctxsep &  $(2 + 2) ≈ 4 $ &  $\proofRule{sum_simplify}$ \\
 4.&  \spctxsep &  $4 ≈ 5       $ &  $(\proofRule{trans}\ 2, 3)$ \\
@@ -588,11 +448,16 @@ with this mapping\label{page:ctxdef}:
 Contexts are used to express proofs about the preprocessing of terms.  The
 conclusions of proof rules that use contexts always have the form
 \begin{AletheS}
-i. & $\Gamma$ & \ctxsep & $t ≈ u$ & ($\ruleType{rule}$, …) \\
+i. & $\Gamma$ & \ctxsep & $t \ceq u$ & ($\ruleType{rule}$, …) \\
 \end{AletheS}
 
 where the term $t$\, is the original term, and $u$ is the term after
-preprocessing.  Tautologies with contexts correspond to judgments
+preprocessing.
+%
+The symbol $\ceq$ is the ordinary SMT-LIB equality (usually denoted $≈$), but
+we highlight because of its special role in rules that operate modulo a context.
+%
+Tautologies with contexts correspond to judgments
 $\vDash_T \subst(\Gamma)(t) ≈ u$.   Note that, some proof rules require
 an empty context.  In the list of proof rules
 in Section~\ref{apx:rules}
@@ -617,8 +482,8 @@ variable.
 \begin{AletheS}
 1.& & \ctxsep & $\forall x.\,(P\,x)$ &        $\proofRule{assume}$ \\
 2.& & \ctxsep & $\neg (\forall y.\,(P\,y))$ & $\proofRule{assume}$ \\
-3.& \spctx{$y, x \mapsto y$} & \ctxsep & $x ≈ y$  & $\proofRule{refl}$\\
-4.& \spctx{$y, x \mapsto y$} & \ctxsep & $(P\,x) ≈ (P\,y)$
+3.& \spctx{$y, x \mapsto y$} & \ctxsep & $x \ceq y$  & $\proofRule{refl}$\\
+4.& \spctx{$y, x \mapsto y$} & \ctxsep & $(P\,x) \ceq (P\,y)$
      & $(\proofRule{cong}\,3) $\\
 \spsep
 5.& & \ctxsep & $\forall x.\,(P\,x) ≈ \forall y.\,(P\,y)$ & $\proofRule{bind}$ \\
@@ -1291,7 +1156,7 @@ Proof steps with contexts can be encoded into proof steps with empty
 contexts, but with metaterms.  A proof step
 
 \begin{AletheS}
-i. & $\Gamma$ & \ctxsep & $t ≈ u$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
+i. & $\Gamma$ & \ctxsep & $t \ceq u$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
 \end{AletheS}
 
 \noindent
@@ -1329,7 +1194,7 @@ proof rules using metaterms.  The exception are the tautologous rules,
 such as \proofRule{refl} and the $\cdots{}${\ruleType{_simplify}} rules.
 
 Steps that use such rules always encode a judgment
-$\vDash \Gamma\,\vartriangleright\,t ≈ u$.  With the encoding described above
+$\vDash \Gamma\,\vartriangleright\,t \ceq u$.  With the encoding described above
 we get $L(\Gamma)[t] ≈ R(\Gamma)[u]
 =_{\alpha\beta} \lambda \bar{x}_n.\,\groundbox{t'} ≈
 \lambda \bar{x}_n.\,\groundbox{u'}$ with some terms $t'$, $u'$.
@@ -1349,7 +1214,7 @@ where $T =_{\alpha\beta} L(\Gamma)[t]$ and $U =_{\alpha\beta} R(\Gamma)[u]$.
 
 \begin{AletheS}
 i. & $y, x \mapsto y$ & \ctxsep
-& $x + 0 ≈ y$ & $\proofRule{sum_simplify}$ \\
+& $x + 0 \ceq y$ & $\proofRule{sum_simplify}$ \\
 \end{AletheS}
 
 \noindent
@@ -1664,8 +1529,8 @@ is a clause that has been derived from the premises by some binary
 resolution steps.
 
 \paragraph{Quantifier Instantiation}
-To express quantifier instantiation, the rule \proofRule{forall_inst}
-is used. It produces a formula of the form $(\neg \forall \bar
+The rule \proofRule{forall_inst} expresses quantifier instantiation.
+It produces a formula of the form $(\neg \forall \bar
 x_n.\,\varphi) \lor \varphi[\bar t_n]$, where $\varphi$ is
 a term containing the free variables $\bar x_n$, and for each $i$ the
 ground term $t_i$ is a new term with the same sort as $x_i$.\footnote{
@@ -1727,9 +1592,9 @@ to the appropriate Skolem term.
 
 \begin{AletheS}
 i. & \spctx{$\Gamma, x\mapsto (\varepsilon x.\,\varphi)$} & \ctxsep
-& $\varphi ≈ \psi$ & $(\dots)$ \\
+& $\varphi \ceq \psi$ & $(\dots)$ \\
 \spsep
-j. & $\Gamma$ & \ctxsep & $(\exists x.\,\varphi) ≈ \psi$ & $(\proofRule{sko_ex})$ \\
+j. & $\Gamma$ & \ctxsep & $(\exists x.\,\varphi) \ceq \psi$ & $(\proofRule{sko_ex})$ \\
 \end{AletheS}
 
 \begin{example}
@@ -1743,12 +1608,12 @@ is functional congruence, and \proofRule{sko_forall} works like
 \begin{AletheS}
 1. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$}
      & \ctxsep
-     &  $x  ≈   \varepsilon x.\,\neg (p\,x) $ &
+     &  $x  \ceq   \varepsilon x.\,\neg (p\,x) $ &
      $\proofRule{refl}$ \\
-2. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$} & \ctxsep &  $ (p\,x) ≈ p(\varepsilon x.\,\neg (p\,x))$ &  $(\proofRule{cong}\, 1)$ \\
+2. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$} & \ctxsep &  $ (p\,x) \ceq p(\varepsilon x.\,\neg (p\,x))$ &  $(\proofRule{cong}\, 1)$ \\
  \spsep
-3. &  & \ctxsep &  $(    \forall x.\,(p\,x))≈      (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{sko_forall}\, 2)$ \\
-4. &  & \ctxsep &  $(\neg\forall x.\,(p\,x))≈ \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{cong}\, 3)$ \\
+3. &  & \ctxsep &  $(    \forall x.\,(p\,x))\ceq      (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{sko_forall}\, 2)$ \\
+4. &  & \ctxsep &  $(\neg\forall x.\,(p\,x))\ceq \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{cong}\, 3)$ \\
 \end{AletheS}
 \end{example}
 
@@ -1759,76 +1624,78 @@ is bitblasting.  Bitblasting\index{bitblasting} works by translating
 bitvector\index{bitvector} functions to propositional formulas that
 model the logical circuit of the bitvector function.
 
-To express bitblasting in Alethe proof rules, the the Alethe calculus uses
-multiple families of helper functions: $\lsymb{bbT}$, $\lsymb{bitOf}_m$,
-$\lsymb{bvsize}$, and $\lsymb{bv}_n^i$.  Functions in the families are
-distinguished either by overloading ($\lsymb{bbT}$ and $\lsymb{bvsize}$)
-or by explicit indexing ($\lsymb{bitOf}_m$ and $\lsymb{bv}_n^i$).
-To avoid name clashes with user defined
-functions, $\lsymb{bbT}$ is written as \inlineAlethe{@bbT}, $\lsymb{bitOf}$
-as \inlineAlethe{@bitOf}, $\lsymb{bvsize}$ as \inlineAlethe{@bvsize}, and
-$\lsymb{bv}$ as \inlineAlethe{@bv}.  The SMT-LIB standard specifies
-that simple symbols starting with ``\inlineAlethe{@}'' are reserved for
-solver generated functions.
+To express bitblasting in Alethe proof rules, the Alethe calculus uses multiple 
+families of helper functions: \bbterm, \bitof{m}, \bvsize, and \bv{n}{i}.  
+Functions in the families are distinguished either by overloading (\bbterm{} and
+\bvsize) or by explicit indexing (\bitof{m} and \bv{n}{i}). In concrete syntax,
+to avoid name clashes with user defined functions, \bbterm{} is written as 
+\cbbterm, \bitof{} as \cbitof{}, \bvsize{} as \cbvsize, and \bv{}{} as \cbv. The 
+SMT-LIB standard specifies that simple symbols starting with ``\inlineAlethe{@}''
+are reserved for solver generated functions.
 
-The family $\lsymb{bbT}$ consists of one function for each bitvector sort
-$(\lsymb{BitVec}\;n)$.
+The family \bbterm{} contains one function for each bitvector sort \bitvec{n}.
 \[
-\lsymb{bbT}\,:\,\underbrace{\lsymb{Bool}\,\dots\,\lsymb{Bool}}_n\;(\lsymb{BitVec}\;n).
+\bbterm \, : \,\underbrace{\lsymb{Bool}\, \dots\, \lsymb{Bool}}_n \; \to \; \bitvec{n}.
 \]
 
 \noindent
-Intuitively, the function $\lsymb{bbT}$ takes a list of boolean arguments and
-packs them into a bitvector.
-Let $\langle u_1, \dots, u_n\rangle$ denote a bitvector of sort $(\lsymb{BitVec}\;n)$
-where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise.
-The bit $u_n$ is the least significant bit.  Then
+Intuitively, the function \bbterm{} takes a list of boolean arguments and packs 
+them into a bitvector.
+Let $\langle u_0, \dots, u_{n - 1}\rangle$ denote a bitvector of sort \bitvec{n}, 
+where $u_i = \top$ if the bit at position $i$ is $1$, and $u_i = \bot$ otherwise. 
+The bit $u_{n - 1}$ is the least significant bit. This notation, which allows us to 
+describe bitvectors in terms of sequences of booleans, will 
+be useful when defining the several bitvector related functions. Note that:
 
 \[
-\lsymb{bbT}\; v_1 \dots v_n = \langle v_1, \dots, v_n\rangle .
+\bbterm\; v_0 \dots v_{n - 1} = \langle v_0, \dots, v_{n - 1}\rangle .
 \]
 
 \noindent
-The $\lsymb{bbT}$ functions could be defined in terms of standard SMT-LIB functions.
+Also, note that the \bbterm{} functions could be defined in terms of standard 
+SMT-LIB functions.
 \begin{align*}
-\lsymb{bbT}\;v_1 \dots v_n :=\;
+\bbterm\;v_0 \dots v_{n - 1} :=\;
  &\lsymb{concat}\,(\lsymb{concat}\,(\dots \\
- &(\lsymb{concat}\,(\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle)\,(\lsymb{ite}\,v_2\,\langle\top\rangle\,\langle\bot\rangle))\\
+ &(\lsymb{concat}\,(\lsymb{ite}\,v_0\,\langle\top\rangle\,\langle\bot\rangle)\,
+                                    (\lsymb{ite}\,v_1\,\langle\top\rangle\,\langle\bot\rangle))\\
  & \dots \\
- & (\lsymb{ite}\,v_{n-1}\,\langle\top\rangle\,\langle\bot\rangle)) \\
- & (\lsymb{ite}\,v_n\,\langle\top\rangle\,\langle\bot\rangle)) \\
+ & (\lsymb{ite}\,v_{n - 2}\,\langle\top\rangle\,\langle\bot\rangle)) \\
+ & (\lsymb{ite}\,v_{n - 1}\,\langle\top\rangle\,\langle\bot\rangle)) \\
 \end{align*}
 
 \noindent
-The functions $\lsymb{bitOf}_m$ are the inverse of $\lsymb{bbT}$.  They extract
-a bit of a bitvector as a boolean.  Just as the built in $\lsymb{extract}$
-symbol, $\lsymb{bitOf}_m$ is used as an indexed symbol.  Hence, for $m \leq n$, we
-write \inlineAlethe{(_ @bitOf} $m$ \inlineAlethe{)}, to denote functions
+The function \bitof{m} yields the Boolean corresponding to the $m$-th
+bit from a given bitvector. It is used as a symbol indexed by the desired $m$-th 
+position, similarly to the built-in function $\lsymb{extract}$. Hence, for 
+$0 \leq m < n$, the concrete syntax expression 
+\inlineAlethe{(_ } \cbitof{} $m$\inlineAlethe{)} will denote functions:
 \[
-\lsymb{bitOf}_m : (\lsymb{BitVec}\;n) \to \lsymb{Bool}.
+\bitof{m}: \bitvec{n} \to \lsymb{Bool}.
 \]
-These functions are defined as 
+These functions are defined as:
 \[
-\lsymb{bitOf}_m \langle u_1, \dots, u_n \rangle := u_m.
+\bitof{m} \langle u_0, \dots, u_{n - 1} \rangle := u_m.
 \]
 
 
 \noindent
-The functions $\lsymb{bvsize}$ return the size of a bitvector.  Formally, there
-is one $\lsymb{bvsize}$ for for each bitvector sort $(\lsymb{BitVec}\;n)$.  Each
-$\lsymb{bvsize}$ is a constant function that returns $n$.  Using notation:
+The functions \bvsize{} return the size of a bitvector. Formally, there is one 
+\bvsize{} for each bitvector sort \bitvec{n}.  Each \bvsize{}is a constant 
+function that returns the size of the corresponding bitvector sort. Using the 
+previously introduced notation:
 
 \begin{align*}
-\lsymb{bvsize}& : (\lsymb{BitVec}\;n) \to \mathbb{N}\\
-\lsymb{bvsize}&\;b := n
+\bvsize{}& : \bitvec{n} \to \mathbb{N}\\
+\bvsize{}&\;\langle u_0, \dots, u_{n -1} \rangle := n
 \end{align*}
 
 \noindent
-Finally, $\lsymb{bv}_n^i$ is a family of constants indexed by two parameters:
+Finally, \bv{n}{i} is a family of constants indexed by two parameters:
 a bitvector length $n$, and a natural number $i$.  We
-write \inlineAlethe{(_ @bv}$n$ $i$ \inlineAlethe{)} for $\lsymb{bv}_n^i$.
-The space before $n$ is omitted for historical reasons.
-Each $\lsymb{bv}_n^i$ is the bitvector constant that represents the bitvector
+write \inlineAlethe{(_} \cbv$n$ $i$ \inlineAlethe{)} for \bv{n}{i}, where
+the space before $n$ (in the concrete-syntax term) is omitted for historical reasons.
+Each \bv{n}{i} is the bitvector constant that represents the bitvector
 of length $n$ that encodes the integer $i$.  Formally, it corresponds
 to \inlineAlethe{nat2bv[n](i)}, where \inlineAlethe{nat2bv} is defined
 as in the SMT-LIB
