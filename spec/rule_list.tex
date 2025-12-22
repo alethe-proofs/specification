@@ -477,7 +477,7 @@ $\varphi_j$ and corresponding constant $a_j$:
 
   \item \label{la_generic:str}
     If all variables in $s$ are integer sorted, replace $\bowtie$ and $d$ 
-    by $\bowtie'$ and $d'$, respectively, according to the following
+    by $\bowtie'$ and $d'$ as defined in the following
     table:
     % The replacements that can be performed by step~\ref{la_generic:str} above
     % are
@@ -488,9 +488,11 @@ $\varphi_j$ and corresponding constant $a_j$:
                    $\bowtie' \; = \; \geq, d' =  \lfloor d\rfloor + 1$  \\
       $\geq$     & $\bowtie' \; = \; \geq, d' = d$      & 
                    $\bowtie' \; = \; \geq, d' = \lfloor d\rfloor + 1$  \\
+      $=$         & $\bowtie' \; = \; =, d' = d$      & 
+                   $\bowtie' \; = \; =, d' = d$        \\
     \end{tabular}
 
-    If some variable is not integer sorted, consider $\bowtie' = \; \bowtie$ and 
+    If some variable in $s$ is not integer sorted, consider $\bowtie' = \; \bowtie$ and 
     $d' = \; d$ in the following steps.
 
     \item \label{la_generic:final_sum}
