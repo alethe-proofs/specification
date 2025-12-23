@@ -1698,129 +1698,19 @@ standard.\footnote{See \url{https://smt-lib.github.io/theories-FixedSizeBitVecto
 
 \subsection{RARE rules}
 \label{sec:alethe:rare_rules}
-\emph{RARE} is a domain-specific language (DSL) that allows for the definition 
-of rewrite rules. In turn, RARE is defined as a subset of the features 
-of the so-called \emph{Eunoia} 
-language.\footnote{See \url{https://github.com/cvc5/ethos/blob/main/user_manual.md}.} 
-The Alethe standard allows for proof certificates to refer to rewrite rules 
-specified in terms of RARE definitions (see rule \ref{rule:rare_rewrite}).
-
-In this, section we will briefly introduce Eunoia, its purpose, some of its 
-main features, and we will specify the subset of Eunoia's features that 
-constitute what we call here the RARE DSL.
-
-\paragraph{Ethos and Eunoia}
-Ethos is an efficient and extensible tool for checking proofs of SMT solvers. 
-It can be programmed to check proof certificates that refer to a
-formal system that is defined using Eunoia. Although Eunoia is a general logical
-framework, it is geared towards defining proof systems used by SMT solvers, and
-writing proofs in those systems.
-
-The core features of Eunoia include:
-\begin{itemize}
-\item A syntax and type system for defining theory signatures that follows those
-of SMT-LIB version 3.0.
-\item Constructs for associating syntactic categories (as specified by SMT-LIB
-e.g. <numeral>) with types.
-\item A command, \textAlethe{declare-rule}, for defining proof rules.
-\item A set of commands for specifying proofs (\textAlethe{step},
-\inlineAlethe{assume}, and so on), whose syntax closely follows that of the
-Alethe proof format (for details, see here).
-\item A set of built-in basic types and a library of operations
-(\textAlethe{eo::add}, \textAlethe{eo::mul}, \textAlethe{eo::concat},
-\textAlethe{eo::extract}) for performing computations over values.
-\item A command, \textAlethe{program}, for defining side conditions as an
-ordered list of rewrite rules.
-\end{itemize}
-
-From the previous set of features, we will focus on the 
-\textAlethe{declare-rule} mechanism, for rule definition. Note that this 
-mechanism belongs to a full-fledged logical framework, Eunoia, that allows for 
-the definition of arbitrary formal systems, and not just equational theories
-(that is, the kind of theories that we can define using only the Eunoia's fragment
-that we call RARE). As such, we will only introduce the features from the
-\textAlethe{declare-rule} construction that are useful for the definition of,
-and with the intention to define just, rewriting rules. The 
-\textAlethe{declare-rule} construction, as presented here, will completely 
-define what we call the RARE DSL, for the definition of rewriting rules.
-
-\paragraph{The Eunoia language}
-
-In Eunoia, as in SMT-LIB version 3.0, a common BNF is used to specify terms 
-(expressions denoting values), types (expressions denoting sets of values) and 
-kinds (expressions denoting sets of types). In this section, unless specified 
-otherwise, we will use term more generally to refer to a value term, a type, or 
-a kind. Terms are composed of applications, built-in operators of the language 
-(e.g., for performing computations), literals, and three kinds of atomic terms 
-(constants, variables, and parameters) which we describe below. A function 
-(symbol) is an atomic term having a function type, that is, a type of the form 
-$\textAlethe{(-> ... ...)}$. The builtin \textAlethe{eo::define} binder can 
-be used for specifying terms that contain common subterms analogously to let 
-binders in other languages.
-
-
-The Eunoia language has the following builtin constants:
-\begin{itemize}
-\item \textAlethe{Type}, denoting the kind of all types,
-\item $\textAlethe{->}$, denoting the function type,
-\item \textAlethe{\_}, denoting (higher-order) function application,
-\item \textAlethe{Bool}, denoting the Boolean type,
-\item \textAlethe{true} and \textAlethe{false}, denoting the two values of type 
-      \textAlethe{Bool}.
-\end{itemize}
-
-In the following, we informally use the syntactic categories $\grNT{symbol}$ to 
-denote an SMT-LIB 3.0 symbol, $\grNT{term}$ to denote an SMT-LIB term and 
-$\grNT{type}$ to denote a term whose type is \textAlethe{Type}. The syntactic 
-category $\grNT{typed-param}$ captures 2 possible constructions: either 
-$(\grNT{symbol} \; \grNT{type})$ or
-$(\grNT{symbol} \; \grNT{type} \; \textAlethe{:list}^*)$. In both cases,
-$\grNT{symbol}$ is bound as a fresh parameter of the given type. In the second
-form, the optional attribute \textAlethe{:list} indicates that the parameter 
-should be treated as a list when appearing as a child of an application of a 
-right (left) associative operator.
-
-\begin{figure}[t]
-\begin{align*}
-&\textAlethe{(declare-rule} \; \grNT{symbol} \; 
-                                \textAlethe{(} \; \grNT{typed-param}^* \textAlethe{)}\\
-&\grNT{premises}? \\
-&\grNT{arguments}? \\
-&\textAlethe{:conclusion} \; \grNT{term}\textAlethe{)}\\
-& \\
-&\textAlethe{where:}\\
-&\grNT{conditions} \grRule \textAlethe{:premises (}(= \grNT{term} \grNT{term})^+ \textAlethe{)} \\
-&\grNT{arguments}  \grRule \textAlethe{:args (}\grNT{term}^+ \textAlethe{)}\\
-&\grNT{conclusion} \grRule \textAlethe{:conclusion} \; (= \grNT{term} \grNT{term})\\
-\end{align*}
-  \caption{\textAlethe{declare-rule} syntax.}
-  \label{fig:declare-rule}
-\end{figure}
-
-The generic syntax for the \textAlethe{declare-rule} command is shown in figure
-\ref{fig:declare-rule}. A proof rule begins by defining a list of free parameters, 
-followed by 2 optional fields and a conclusion term. These fields include:
-\begin{itemize}
-\item $\grNT{premises}$, denoting the premises patterns of the proof rule, in 
-the form of a list of formulas. In the context of the RARE language, and since
-we are using it to define equational theories, these premises will be judgments
-of the form $(= \grNT{term} \grNT{term})$, as the conclusion judgment.
-\item $\grNT{arguments}$, denoting argument patterns provided to a proof rule.
-\end{itemize}
-
-At a high level, an application of a proof rule is given a concrete list of 
-(premise) proofs, and a concrete list of (argument) terms. A proof rule checks 
-if a substitution $S$ can be found such that:
-\begin{itemize}
-\item The formulas proved by the premise proofs match the provided premise 
-      patterns under substitution $S$,
-\item The argument terms match the provided argument patterns under substitution 
-      S,
-\end{itemize}
-
-A proof rule is only well defined if the free parameters of the requirements and
-conclusion term are also contained in the arguments and premises.
-
+\emph{RARE} is a domain-specific language that allows for the definition 
+of rewrite rules. There are 2 versions of the language, RARE 1.0
+and RARE 2.0. The Alethe standard allows for steps in proof certificates to refer 
+to rewrite rules specified in terms of the RARE 2.0 language (see
+\inlineAlethe{rare_rewrite}, rule \ref{rule:rare_rewrite}, and 
+\inlineAlethe{multi_rare_rewrite}, rule \ref{rule:multi_rare_rewrite}). In turn, 
+RARE 2.0 is defined as a subset of the features of the so-called 
+\emph{Eunoia} language: a language used to meta-program the \emph{Ethos}
+proofs checker. For details about the RARE 2.0 rewriting rules specification
+language, see \url{https://github.com/alethe-proofs/rare2-rules/}.
+Rules \ref{rule:rare_rewrite} and \ref{rule:multi_rare_rewrite}, in
+section \ref{apx:rules}, introduce generic interfaces to be able to refer to 
+arbitrary rewriting rules specified with RARE 2.0.
 
 \section{The Alethe Rules}
 \label{apx:rules}

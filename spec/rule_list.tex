@@ -1971,11 +1971,11 @@ where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 $i$. & \ctxsep & $ t ≈ s $ & (\currule \; $\lsymb{rewrite\_rule}$) \\
 \end{AletheX}
 
-This rule refers to the application of the RARE rewrite rule 
-$\lsymb{rewrite\_rule}$, which should justify the conclusion $t ≈ s$. Recall that 
-a RARE rewrite rule is defined using a domain-specific language, called RARE, 
-which is introduced in section \ref{sec:alethe:rare_rules}. We assume that the 
-producer of the Alethe proof certificate has at its disposal an arbitrary set of 
+This rule refers to the application of the RARE 2.0 rewrite rule 
+$\lsymb{rewrite\_rule}$, which should justify the conclusion $t ≈ s$. As described
+in section \ref{sec:alethe:rare_rules}, a RARE rewrite rule is defined using a 
+domain-specific language, called RARE. We assume that 
+the producer of the Alethe proof certificate has at its disposal an arbitrary set of 
 rules, written in RARE, for elaboration purposes of (some of) the equational 
 reasoning steps in the proof. The rule name $\lsymb{rewrite\_rule}$
 invoked in the previous rule must match with the name of some RARE rewrite rule 
@@ -1986,7 +1986,7 @@ $ t ≈ s $).
 The instantiation of the rewrite rule could require arbitrary arguments, with 
 rule-dependent semantics. These arguments can be passed after the name of the 
 invoked rewrite rule. For the purpose of providing these arguments, they must be 
-wrapped into a list, built with $\lsymb{@list}$. In this
+wrapped into a list, marked with the $\lsymb{@list}$ terminal symbol. In this
 case, the rule invocation would be as follows:
 
 \begin{AletheX}
@@ -2018,6 +2018,7 @@ case of \currule.
 \end{RuleDescription}
 
 \begin{RuleDescription}{multi_rare_rewrite}
+\label{rule:multi_rare_rewrite}
 \begin{AletheX}
 $i$. & \ctxsep & $ t ≈ s $ & (\currule \; $rule_1 \, \dots \, rule_n$) \\
 \end{AletheX}
