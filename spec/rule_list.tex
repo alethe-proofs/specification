@@ -2034,13 +2034,38 @@ is performed by the rule.
 \end{RuleDescription}
 
 \begin{RuleExample}
-The following simple \proofRule{aci_simp} step is from a \textsf{QF\_UF} problem:
+The following simple \proofRule{aci_simp} step, taken from a \textsf{QF\_UF} 
+problem, serves to illustrate the application of a single reduction rule from 
+$\Rightarrow$:
 \begin{AletheVerb}
 (step t1 (cl (= (and d d) d)) :rule aci_simp)
 \end{AletheVerb}
-In this case, the application of the rule exploits the idempotency property of
-the \inlineAlethe{and} operator, to conclude that \inlineAlethe{(= (and d d) d)}
-holds.
+The application of the rule exploits the idempotency property of
+the \inlineAlethe{and} operator (third reduction rule from $\Rightarrow$), to 
+conclude that \inlineAlethe{(= (and d d) d)} holds.
+\end{RuleExample}
+
+\begin{RuleExample}
+The following example application of the \proofRule{aci_simp} rule illustrates 
+a situation where the reduction of expressions, using $\Rightarrow$, also involves
+\emph{aci-reduction} of sub-expressions:
+\begin{AletheVerb}
+(step t1 (cl (= (or false (or true true)) (or true false))) :rule aci_simp)
+\end{AletheVerb}
+As in the previous example, the application of the rule exploits an idempotency 
+property, in this case of the \inlineAlethe{or} operator, but over the
+sub-expression \inlineAlethe{(or true true)}. That is, the reduction also 
+employs the fifth reduction rule defining $\Rightarrow$, that allows for the 
+reduction of sub-expressions. Finally, in order to be able to conclude
+that both terms are \emph{aci-compatible}, the reasoning employed exploits
+the last reduction rule of $\Rightarrow$, that allows for an arbitrary order
+of operands of applications of commutative operators. This allows us to conclude that
+\inlineAlethe{(or false true)} (the result of the previous reduction step) is
+aci-compatible with \inlineAlethe{(or true false)}. Note that, as explained
+in the specification of $\Rightarrow$, there is no concrete order of
+operands specified, leaving some degree of freedom for the implementation of
+checkers of the rule. This, as long as the resulting $\Rightarrow$ relation ends up 
+relating expressions that are equivalent modulo commutativity.
 \end{RuleExample}
 
 \clearpage
