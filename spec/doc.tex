@@ -585,8 +585,10 @@ An Alethe proof is a list of commands.
                         & \grOr  & \grNT{nonpositive\_decimal} \\
  \grNT{premises\_annotation} &\grRule & \textAlethe{:premises (}\; \grNT{symbol}^{+}\textAlethe{)} \\
  \grNT{args\_annotation}     &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{step\_arg}^{+}\,\textAlethe{)}  \\
- \grNT{step\_arg}            &\grRule & \grNT{symbol}\;\grOr\;
-                                          \textAlethe{(}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)} \\
+ \grNT{step\_arg}            &\grRule & \grNT{symbol}\;\grOr\;\\
+                                     && \textAlethe{(}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)}\;\grOr\; \\
+                                     && \textAlethe{(@list} \; \grNT{proof\_term}^{+} \textAlethe{)}\\
+    
  \grNT{context\_annotation}  &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}  \\
  \grNT{context\_assignment}  &\grRule & \grNT{sorted\_var} \\
                              & \grOr  & \textAlethe{(:=}\, \grNT{sorted\_var}\;\grNT{proof\_term}\,\textAlethe{)} \\
@@ -1707,7 +1709,7 @@ to rewrite rules specified in terms of the RARE 2.0 language (see
 RARE 2.0 is defined as a subset of the features of the so-called 
 \emph{Eunoia} language: a language used to meta-program the \emph{Ethos}
 proofs checker. For details about the RARE 2.0 rewriting rules specification
-language, see \url{https://github.com/alethe-proofs/rare2-rules/}.
+language, Eunoia and Ethos, see \url{https://github.com/alethe-proofs/rare2-rules/}.
 Rules \ref{rule:rare_rewrite} and \ref{rule:multi_rare_rewrite}, in
 section \ref{apx:rules}, introduce generic interfaces to be able to refer to 
 arbitrary rewriting rules specified with RARE 2.0.
