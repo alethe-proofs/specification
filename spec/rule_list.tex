@@ -225,6 +225,7 @@ simplifications.}
 \ruleref{equiv_simplify} & Simplification of an equivalence. \\
 \ruleref{bool_simplify} & Simplification of combined Boolean connectives. \\
 \ruleref{ac_simp} & Flattening and removal of duplicates for $\lor$ or $\land$. \\
+\ruleref{aci_simp} & Simplification of terms through ACI reasoning. \\
 \ruleref{ite_simplify} & Simplification of if-then-else. \\
 \ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
 \ruleref{onepoint} & The one-point rule. \\
@@ -1964,6 +1965,108 @@ $i$. & \ctxsep & $
 
 where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 \end{RuleDescription}
+
+\begin{RuleDescription}{aci_simp}
+\begin{AletheX}
+$i$. & \ctxsep & $ t_1 ≈ t_2 $ & (\currule) \\
+\end{AletheX}
+
+\noindent
+where $t_1$ and $t_2$ are equivalent modulo associativity, commutativity, 
+identity elements and idempotency. Checking this rule involves a normalization 
+step of $t_1$ and $t_2$, that exploits the previous properties of the operations 
+involved in both terms. The rule applies to SMT-LIB ACI operators (that is, 
+those that satisfy associativity, commutativity, idempotency and that have an 
+identity element), AC operators (associativity, commutativity and identity 
+elements), as well to operators that satisfy only associativity and that have an 
+identity element. The actual way in which the previous properties are exploited 
+might be solver-dependent, which means that there is no such thing as an 
+``ACI normal form'', standard among any solver producing Alethe certificates.
+
+The operators that can trigger the previous process include:
+\begin{itemize}
+  \item Logical operations: \inlineAlethe{or}, \inlineAlethe{and}.
+  \item Bit vectors: \inlineAlethe{bvor}, \inlineAlethe{bvand}, \inlineAlethe{bvadd}, 
+                                   \inlineAlethe{bvmul}, \inlineAlethe{concat}.
+  \item Arithmetic: \inlineAlethe{-} (binary substraction), \inlineAlethe{+}, \inlineAlethe{*}.
+  \end{itemize}
+
+The process itself can be described with a set of rewriting rules, which capture
+a relation $\Rightarrow$ between terms representing the application of operators
+and their simplified form. In what follows, $op$ will represent an operator with 
+the appropriate property exploited in the rewriting rule being applied; $id$ will 
+represent the $op$'s identity element (if appropriate); we will indicate with 
+$x \not{\Rightarrow}$ that term $x$ cannot be further reduced through 
+$\Rightarrow$ (which, in this case, reduces to check that $x$ is not an application 
+of some ACI operator).
+\begin{itemize}
+\item $op \; x \; id \Rightarrow x$, for $x \not{\Rightarrow}$.
+\item $op \; id \; x \Rightarrow x$, for $x \not{\Rightarrow}$.
+\item $op \; x \; x \Rightarrow x$, for $x \not{\Rightarrow}$.
+\item $op \; x_1 \; x_2 \Rightarrow op \; x_{1'} \; x_2$, where $x_1 \Rightarrow x_{1'}$.
+\item $op \; x \; x_2 \Rightarrow op \; x \; x_{2'}$, where $x_2 \Rightarrow x_{2'}$ 
+                                                           and 
+                                                           $x \not{\Rightarrow}$.
+
+\item $op \; x_1 \; x_2 \Rightarrow op \; x_{1'} \; x_{2'}$, 
+            where 
+            \begin{itemize}
+            \item $x_1 \neq x_2$
+            \item $x_{1'}, \; x_{2'} \in \{ x_1, x_2\}$
+              
+            \item Multi-sets $\{x_{1'}, x_{2'}\}$ and $\{x_1, x_2\}$ are equal.
+              
+              \item $x_1 \not{\Rightarrow}$ and $x_2 \not{\Rightarrow}$.
+              
+              % \item $x_{1'} \ge x_{2'}$, with $\ge$ being a total order among terms
+              %   \textbf{TODO: is there something that we should ask for this order?}
+            \end{itemize}
+\end{itemize}
+
+In the last rule, note that we do not impose some particular order among 
+sub-terms. The intention of the rule is to allow for a particular implementation 
+of a checker for the rule, to take advantage of the commutativity of $op$, if 
+desired.
+
+Also, note that no evaluation of the application of operators (\emph{constant folding})
+is performed by the rule.
+
+\end{RuleDescription}
+
+\begin{RuleExample}
+The following simple \proofRule{aci_simp} step, taken from a \textsf{QF\_UF} 
+problem, serves to illustrate the application of a single reduction rule from 
+$\Rightarrow$:
+\begin{AletheVerb}
+(step t1 (cl (= (and d d) d)) :rule aci_simp)
+\end{AletheVerb}
+The application of the rule exploits the idempotency property of
+the \inlineAlethe{and} operator (third reduction rule from $\Rightarrow$), to 
+conclude that \inlineAlethe{(= (and d d) d)} holds.
+\end{RuleExample}
+
+\begin{RuleExample}
+The following example application of the \proofRule{aci_simp} rule illustrates 
+a situation where the reduction of expressions, using $\Rightarrow$, also involves
+\emph{aci-reduction} of sub-expressions:
+\begin{AletheVerb}
+(step t1 (cl (= (or false (or true true)) (or true false))) :rule aci_simp)
+\end{AletheVerb}
+As in the previous example, the application of the rule exploits an idempotency 
+property, in this case of the \inlineAlethe{or} operator, but over the
+sub-expression \inlineAlethe{(or true true)}. That is, the reduction also 
+employs the fifth reduction rule defining $\Rightarrow$, that allows for the 
+reduction of sub-expressions. Finally, in order to be able to conclude
+that both terms are \emph{aci-compatible}, the reasoning employed exploits
+the last reduction rule of $\Rightarrow$, that allows for an arbitrary order
+of operands of applications of commutative operators. This allows us to conclude that
+\inlineAlethe{(or false true)} (the result of the previous reduction step) is
+aci-compatible with \inlineAlethe{(or true false)}. Note that, as explained
+in the specification of $\Rightarrow$, there is no concrete order of
+operands specified, leaving some degree of freedom for the implementation of
+checkers of the rule. This, as long as the resulting $\Rightarrow$ relation ends up 
+relating expressions that are equivalent modulo commutativity.
+\end{RuleExample}
 
 \clearpage
 \subsection{Index of Rules}
