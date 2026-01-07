@@ -447,7 +447,7 @@ To check the unsatisfiability of the negation of $\varphi_1\lor \dots
 $\varphi_j$ and corresponding constant $a_j$:
 
 \begin{enumerate}
-\item
+\item \label{la_generic:first_step}
   \begin{itemize}
   \item If $\varphi_j = s_1 > s_2$, then replace it by $s_2 \geq s_1$.
   \item If $\varphi_j = s_1 \geq s_2$, then replace it by $s_2 > s_1$.
@@ -461,8 +461,12 @@ $\varphi_j$ and corresponding constant $a_j$:
 
  \item If $\varphi_j = \neg (s_1 \bowtie s_2)$, then replace it by
    $s_1 \bowtie s_2$. If $\bowtie$ is $<$ or $\leq$, redefine the inequality
-   $s_1 \bowtie s_2$ in terms of the relations
-   $>$ or $\geq$, accordingly, as is done in the previous step.
+   $s_1 \bowtie s_2$ in terms of the relations $>$ or $\geq$, accordingly:
+
+   \begin{itemize}
+   \item If $s_1 \bowtie s_2 = s_1 < s_2$, then replace it by $s_2 > s_1$.
+   \item If $s_1 \bowtie s_2 = s_1 \leq s_2$, then replace it by $s_2 \geq s_1$.
+   \end{itemize}
 
  \item The resulting inequality has the form:
    \[
