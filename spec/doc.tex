@@ -393,7 +393,7 @@ formula $(2 + 2) ≈ 5$. The proof uses a subproof to prove the
 lemma $((2 + 2) ≈ 5) \Rightarrow 4 ≈ 5$.
 
 \begin{Alethe}
-1.&  \ctxsep &  $(2 + 2) ≈ 5$ &  $\proofRule{assume}$ \\
+1.&  \ctxsep   &  $(2 + 2) ≈ 5 $ &  $\proofRule{assume}$ \\
 2.&  \spctxsep &  $(2 + 2) ≈ 5 $ &  $\proofRule{assume}$ \\
 3.&  \spctxsep &  $(2 + 2) ≈ 4 $ &  $\proofRule{sum_simplify}$ \\
 4.&  \spctxsep &  $4 ≈ 5       $ &  $(\proofRule{trans}\ 2, 3)$ \\
@@ -448,11 +448,16 @@ with this mapping\label{page:ctxdef}:
 Contexts are used to express proofs about the preprocessing of terms.  The
 conclusions of proof rules that use contexts always have the form
 \begin{AletheS}
-i. & $\Gamma$ & \ctxsep & $t ≈ u$ & ($\ruleType{rule}$, …) \\
+i. & $\Gamma$ & \ctxsep & $t \ceq u$ & ($\ruleType{rule}$, …) \\
 \end{AletheS}
 
 where the term $t$\, is the original term, and $u$ is the term after
-preprocessing.  Tautologies with contexts correspond to judgments
+preprocessing.
+%
+The symbol $\ceq$ is the ordinary SMT-LIB equality (usually denoted $≈$), but
+we highlight because of its special role in rules that operate modulo a context.
+%
+Tautologies with contexts correspond to judgments
 $\vDash_T \subst(\Gamma)(t) ≈ u$.   Note that, some proof rules require
 an empty context.  In the list of proof rules
 in Section~\ref{apx:rules}
@@ -477,8 +482,8 @@ variable.
 \begin{AletheS}
 1.& & \ctxsep & $\forall x.\,(P\,x)$ &        $\proofRule{assume}$ \\
 2.& & \ctxsep & $\neg (\forall y.\,(P\,y))$ & $\proofRule{assume}$ \\
-3.& \spctx{$y, x \mapsto y$} & \ctxsep & $x ≈ y$  & $\proofRule{refl}$\\
-4.& \spctx{$y, x \mapsto y$} & \ctxsep & $(P\,x) ≈ (P\,y)$
+3.& \spctx{$y, x \mapsto y$} & \ctxsep & $x \ceq y$  & $\proofRule{refl}$\\
+4.& \spctx{$y, x \mapsto y$} & \ctxsep & $(P\,x) \ceq (P\,y)$
      & $(\proofRule{cong}\,3) $\\
 \spsep
 5.& & \ctxsep & $\forall x.\,(P\,x) ≈ \forall y.\,(P\,y)$ & $\proofRule{bind}$ \\
@@ -1153,7 +1158,7 @@ Proof steps with contexts can be encoded into proof steps with empty
 contexts, but with metaterms.  A proof step
 
 \begin{AletheS}
-i. & $\Gamma$ & \ctxsep & $t ≈ u$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
+i. & $\Gamma$ & \ctxsep & $t \ceq u$ & $(\ruleType{rule}\; \bar{p}_n)\;[\bar{a}_m]$ \\
 \end{AletheS}
 
 \noindent
@@ -1191,7 +1196,7 @@ proof rules using metaterms.  The exception are the tautologous rules,
 such as \proofRule{refl} and the $\cdots{}${\ruleType{_simplify}} rules.
 
 Steps that use such rules always encode a judgment
-$\vDash \Gamma\,\vartriangleright\,t ≈ u$.  With the encoding described above
+$\vDash \Gamma\,\vartriangleright\,t \ceq u$.  With the encoding described above
 we get $L(\Gamma)[t] ≈ R(\Gamma)[u]
 =_{\alpha\beta} \lambda \bar{x}_n.\,\groundbox{t'} ≈
 \lambda \bar{x}_n.\,\groundbox{u'}$ with some terms $t'$, $u'$.
@@ -1211,7 +1216,7 @@ where $T =_{\alpha\beta} L(\Gamma)[t]$ and $U =_{\alpha\beta} R(\Gamma)[u]$.
 
 \begin{AletheS}
 i. & $y, x \mapsto y$ & \ctxsep
-& $x + 0 ≈ y$ & $\proofRule{sum_simplify}$ \\
+& $x + 0 \ceq y$ & $\proofRule{sum_simplify}$ \\
 \end{AletheS}
 
 \noindent
@@ -1526,8 +1531,8 @@ is a clause that has been derived from the premises by some binary
 resolution steps.
 
 \paragraph{Quantifier Instantiation}
-To express quantifier instantiation, the rule \proofRule{forall_inst}
-is used. It produces a formula of the form $(\neg \forall \bar
+The rule \proofRule{forall_inst} expresses quantifier instantiation.
+It produces a formula of the form $(\neg \forall \bar
 x_n.\,\varphi) \lor \varphi[\bar t_n]$, where $\varphi$ is
 a term containing the free variables $\bar x_n$, and for each $i$ the
 ground term $t_i$ is a new term with the same sort as $x_i$.\footnote{
@@ -1589,9 +1594,9 @@ to the appropriate Skolem term.
 
 \begin{AletheS}
 i. & \spctx{$\Gamma, x\mapsto (\varepsilon x.\,\varphi)$} & \ctxsep
-& $\varphi ≈ \psi$ & $(\dots)$ \\
+& $\varphi \ceq \psi$ & $(\dots)$ \\
 \spsep
-j. & $\Gamma$ & \ctxsep & $(\exists x.\,\varphi) ≈ \psi$ & $(\proofRule{sko_ex})$ \\
+j. & $\Gamma$ & \ctxsep & $(\exists x.\,\varphi) \ceq \psi$ & $(\proofRule{sko_ex})$ \\
 \end{AletheS}
 
 \begin{example}
@@ -1605,12 +1610,12 @@ is functional congruence, and \proofRule{sko_forall} works like
 \begin{AletheS}
 1. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$}
      & \ctxsep
-     &  $x  ≈   \varepsilon x.\,\neg (p\,x) $ &
+     &  $x  \ceq   \varepsilon x.\,\neg (p\,x) $ &
      $\proofRule{refl}$ \\
-2. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$} & \ctxsep &  $ (p\,x) ≈ p(\varepsilon x.\,\neg (p\,x))$ &  $(\proofRule{cong}\, 1)$ \\
+2. & \spctx{$x\mapsto (\varepsilon x.\,\neg (p\,x))$} & \ctxsep &  $ (p\,x) \ceq p(\varepsilon x.\,\neg (p\,x))$ &  $(\proofRule{cong}\, 1)$ \\
  \spsep
-3. &  & \ctxsep &  $(    \forall x.\,(p\,x))≈      (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{sko_forall}\, 2)$ \\
-4. &  & \ctxsep &  $(\neg\forall x.\,(p\,x))≈ \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{cong}\, 3)$ \\
+3. &  & \ctxsep &  $(    \forall x.\,(p\,x))\ceq      (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{sko_forall}\, 2)$ \\
+4. &  & \ctxsep &  $(\neg\forall x.\,(p\,x))\ceq \neg (p\,(\varepsilon x.\,\neg (p\,x)))$ &  $(\proofRule{cong}\, 3)$ \\
 \end{AletheS}
 \end{example}
 
