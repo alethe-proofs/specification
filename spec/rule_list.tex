@@ -434,13 +434,13 @@ rational numbers, then a {\currule} step has the form
 $i$. & \ctxsep & $\varphi_1$, \dots , $\varphi_n$  & \currule\, [$a_1$, \dots, $a_n$] \\
 \end{AletheX}
 where $\varphi_i$ is either $\neg l_i$ or $l_i$, but it never is an equality of 
-the form $s_1 ≈ s_2$, for corresponding left-hand and right-hand side terms 
-$s_1$ and $s_2$. However, the rules allow negated equalities: $\neg (s_1 ≈ s_2)$.
+the form $s_1 ≈ s_2$, for terms $s_1$ and $s_2$. However, the rules allow negated 
+equalities: $\neg (s_1 ≈ s_2)$.
 
 The constants $a_i$ are of sort \inlineAlethe{Real} and must be written
-following the rules described by productions of the non-terminals
+following the production rules for the non-terminals
 $\grNT{rational}$, $\grNT{decimal}$ or $\grNT{nonpositive\_decimal}$
-(see figure \ref{fig:grammar} in section \ref{sec:alethe:syntax}).
+(see Figure \ref{fig:grammar} in Section \ref{sec:alethe:syntax}).
 
 To check the unsatisfiability of the negation of $\varphi_1\lor \dots
 \lor \varphi_o$ one performs the following steps for each literal
@@ -479,9 +479,6 @@ $\varphi_j$ and corresponding constant $a_j$:
     If all variables in $s$ are integer sorted, replace $\bowtie$ and $d$ 
     by $\bowtie'$ and $d'$ as defined in the following
     table:
-    % The replacements that can be performed by step~\ref{la_generic:str} above
-    % are
-
     \begin{tabular}{r l l}
       $\bowtie$  & If $d$ is an integer  & Otherwise \\
       $>$        & $\bowtie' \; = \; \geq, d' = d + 1$  & 
@@ -492,8 +489,8 @@ $\varphi_j$ and corresponding constant $a_j$:
                    $\bowtie' \; = \; =, d' = d$        \\
     \end{tabular}
 
-    If some variable in $s$ is not integer sorted, consider $\bowtie' = \; \bowtie$ and 
-    $d' = \; d$ in the following steps.
+    If some variable in $s$ is not integer sorted, consider 
+    $\bowtie' = \; \bowtie$ and $d' = \; d$ in the following steps.
 
     \item \label{la_generic:final_sum}
       Multiply both sides of the inequality by its corresponding coefficient 
@@ -509,7 +506,7 @@ contradiction. The sum results in an inequality of the form:
 \[
     \sum_{k=1}^{n}(\sum_{i=0}^{m^k}a'_k*c_i^k*t_i^k) \bowtie_{sum} \sum_{k=1}^{n}d'^k
 \]
-where $\sum_{i=0}^{m^k}a'_k*c_i^k*t_i^k$ is the left-hand side of the k-th inequality
+where $\sum_{i=0}^{m^k}a'_k*c_i^k*t_i^k$ is the left-hand side of the $k$-th inequality
 added (being ${a'_k}$, either, $a_k$ or $|a_k|$, according to step 
 \ref{la_generic:final_sum}), and $d'^k$ is its right-hand side. Also,
 $\bowtie_{sum}$ is the ``most strict'' order among the relations that appear in the
