@@ -484,14 +484,15 @@ $\varphi_j$ and corresponding constant $a_j$:
     If all variables in $s$ are integer sorted, replace $\bowtie$ and $d$ 
     by $\bowtie'$ and $d'$ as defined in the following
     table:
+
     \begin{tabular}{r l l}
       $\bowtie$  & If $d$ is an integer  & Otherwise \\
       $>$        & $\bowtie' \; = \; \geq, d' = d + 1$  & 
                    $\bowtie' \; = \; \geq, d' =  \lfloor d\rfloor + 1$  \\
       $\geq$     & $\bowtie' \; = \; \geq, d' = d$      & 
                    $\bowtie' \; = \; \geq, d' = \lfloor d\rfloor + 1$  \\
-      $=$         & $\bowtie' \; = \; =, d' = d$      & 
-                   $\bowtie' \; = \; =, d' = d$        \\
+      $≈$         & $\bowtie' \; = \; ≈, d' = d$      & 
+                   $\bowtie' \; = \; ≈, d' = d$        \\
     \end{tabular}
 
     If some variable in $s$ is not integer sorted, consider 
