@@ -3,6 +3,8 @@
 Proof rules:
 \begin{itemize}
   \item General rewriting of rule \proofRule{la_generic}, mainly focused on presentation. The algorithm stays the same.
+  \item Added rule \proofRule{aci_simp}, that describe ACI reasoning performed 
+            to simplify terms using SMT-LIB ACI operators.
   \item Rule \proofRule{connective_def} extended to complement the case
             where an existential quantification is rewritten as a negated universal
             quantification.
@@ -71,6 +73,7 @@ Clarifications and corrected errors:
   \item Fix the example of \proofRule{onepoint}.
   \item Add the missing context to the conclusion of \proofRule{bind},
         \proofRule{sko_ex}, \proofRule{sko_forall}, \proofRule{onepoint}.
+  \item Highlight the equality used with context by using the $\ceq$ symbol.
 \end{itemize}
 
 \subsection*{0.3 --- \DTMdisplaydate{2023}{02}{10}{-1}}

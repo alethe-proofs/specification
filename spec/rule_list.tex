@@ -225,6 +225,7 @@ simplifications.}
 \ruleref{equiv_simplify} & Simplification of an equivalence. \\
 \ruleref{bool_simplify} & Simplification of combined Boolean connectives. \\
 \ruleref{ac_simp} & Flattening and removal of duplicates for $\lor$ or $\land$. \\
+\ruleref{aci_simp} & Simplification of terms through ACI reasoning. \\
 \ruleref{ite_simplify} & Simplification of if-then-else. \\
 \ruleref{qnt_simplify} & Simplification of constant quantified formulas. \\
 \ruleref{onepoint} & The one-point rule. \\
@@ -685,10 +686,10 @@ Either of the form:
 \begin{AletheXS}
 \aletheLineSB
 $j$. & \spctx{ $\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$}
-   & \ctxsep & $\varphi ≈ \varphi'$ & ($\dots$) \\
+   & \ctxsep & $\varphi \ceq \varphi'$ & ($\dots$) \\
    \spsep
 $k$. & $\Gamma$ & \ctxsep &
-    $Q x_1, \dots, x_n.\varphi ≈ Q y_1, \dots, y_n. \varphi'$
+    $Q x_1, \dots, x_n.\varphi \ceq Q y_1, \dots, y_n. \varphi'$
      & \currule{} \\
 \end{AletheXS}
 
@@ -705,9 +706,9 @@ The \currule{} rule skolemizes existential quantifiers.
 \aletheLineS
 $j$. &
 \spctx{$\Gamma, x_1 \mapsto \varepsilon_1, \dots ,  x_n \mapsto \varepsilon_n$}
-   & \ctxsep &  $\varphi ≈ \psi$ & ($\dots$) \\
+   & \ctxsep &  $\varphi \ceq \psi$ & ($\dots$) \\
    \spsep
-$k$. & $\Gamma$ & \ctxsep & $\exists x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
+$k$. & $\Gamma$ & \ctxsep & $\exists x_1, \dots, x_n.\varphi \ceq \psi$ & \currule{} \\
 \end{AletheXS}
 
 \noindent
@@ -722,9 +723,9 @@ The \currule{} rule skolemizes universal quantifiers.
 \aletheLineS
 $j$. &
 \spctx{$\Gamma, x_1 \mapsto (\varepsilon x_1.\neg\varphi), \dots,  x_n \mapsto (\varepsilon x_n.\neg\varphi)$}
-   & \ctxsep & $\varphi ≈ \psi$ & ($\dots$) \\
+   & \ctxsep & $\varphi \ceq \psi$ & ($\dots$) \\
  \spsep
-$k$. & $\Gamma$ & \ctxsep  & $\forall x_1, \dots, x_n.\varphi ≈ \psi$ & \currule{} \\
+$k$. & $\Gamma$ & \ctxsep  & $\forall x_1, \dots, x_n.\varphi \ceq \psi$ & \currule{} \\
 \end{AletheXS}
 
 \end{RuleDescription}
@@ -754,7 +755,7 @@ An application of the \proofRule{forall_inst} rule.
 
 \begin{RuleDescription}{refl}
 \begin{AletheXS}
-$j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_2 $ & \currule \\
+$j$. & $\Gamma$ & \ctxsep & $t_1 \ceq t_2 $ & \currule \\
 \end{AletheXS}
 
 \noindent
@@ -769,21 +770,21 @@ the context.
 
 \begin{RuleDescription}{trans}
 \begin{AletheXS}
-$i_1$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_2 $ & ($\dots$) \\
-$i_2$. & \ctxsep  & $\Gamma$  & $t_2 ≈ t_3 $ & ($\dots$) \\
+$i_1$. & $\Gamma$ & \ctxsep & $t_1 \ceq t_2 $ & ($\dots$) \\
+$i_2$. & $\Gamma$ & \ctxsep & $t_2 \ceq t_3 $ & ($\dots$) \\
 \aletheLineS
-$i_n$. & \ctxsep  & $\Gamma$  & $t_n ≈ t_{n+1} $ & ($\dots$) \\
-$j$. & \ctxsep  & $\Gamma$  & $t_1 ≈ t_{n+1}$ & (\currule\; $i_1$, $\dots$, $i_n$) \\
+$i_n$. & $\Gamma$ & \ctxsep & $t_n \ceq t_{n+1} $ & ($\dots$) \\
+$j$.   & $\Gamma$ & \ctxsep & $t_1 \ceq t_{n+1}$ & (\currule\; $i_1$, $\dots$, $i_n$) \\
 \end{AletheXS}
 \end{RuleDescription}
 
 \begin{RuleDescription}{cong}
 \begin{AletheXS}
-$i_1$. & \ctxsep  & $\Gamma$  & $t_1 ≈ u_1$ & ($\dots$) \\
-$i_2$. & \ctxsep  & $\Gamma$  & $t_2 ≈ u_2 $ & ($\dots$) \\
+$i_1$. & $\Gamma$ & \ctxsep & $t_1 \ceq u_1$ & ($\dots$) \\
+$i_2$. & $\Gamma$ & \ctxsep & $t_2 \ceq u_2 $ & ($\dots$) \\
 \aletheLineS
-$i_m$. & \ctxsep  & $\Gamma$  & $t_m ≈ u_m $ & ($\dots$) \\
-$j$. & \ctxsep  & $\Gamma$  & $(f\,s_1\,\cdots\,s_n\, t_1\,\cdots\,t_m) ≈
+$i_m$. & $\Gamma$ & \ctxsep & $t_m \ceq u_m $ & ($\dots$) \\
+$j$.   & $\Gamma$ & \ctxsep & $(f\,s_1\,\cdots\,s_n\, t_1\,\cdots\,t_m) \ceq
                                (f\,s_1\,\cdots\,s_n\, u_1\,\cdots\,u_m)$
     & (\currule\; $i_1$, $\dots$, $i_m$) \\
 \end{AletheXS}
@@ -928,8 +929,8 @@ literals in the premise.
 \begin{RuleDescription}{shuffle}
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  &
-      $\circ\ t_1 \dots t_n ≈ \circ\ u_1 \dots u_n $ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & 
+      $\circ\ t_1 \dots t_n \ceq \circ\ u_1 \dots u_n $ & \currule \\
 \end{AletheXS}
 
 where $\circ$ is a commutative operator, and
@@ -1181,31 +1182,31 @@ $j$. & \ctxsep & $\neg\varphi_1 , \neg\varphi_2$ & (\currule\;$i$) \\
   of the following:
 \begin{AletheXS}
 $i$. & $\Gamma$  & \ctxsep  &
-    $(\lsymb{xor}\,\varphi_1\,\varphi_2) ≈
+    $(\lsymb{xor}\,\varphi_1\,\varphi_2) \ceq
     ((\neg\varphi_1 \land \varphi_2) \lor (\varphi_1 \land \neg\varphi_2))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
 $i$. & $\Gamma$  & \ctxsep  &
-      $(\varphi_1 ≈ \varphi_2) ≈
+      $(\varphi_1 ≈ \varphi_2) \ceq
       ((\varphi_1 \rightarrow \varphi_2) \land (\varphi_2 \rightarrow \varphi_1))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
 $i$. & $\Gamma$   & \ctxsep &
-      $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) ≈
+      $(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) \ceq
       ((\varphi_1 \rightarrow \varphi_2) \land (\neg\varphi_1 \rightarrow \varphi_3))$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
 $i$. &  $\Gamma$   & \ctxsep&
-      $(\forall x_1, \dots, x_n.\,\varphi) ≈ \neg(\exists x_1, \dots, x_n.\,
+      $(\forall x_1, \dots, x_n.\,\varphi) \ceq \neg(\exists x_1, \dots, x_n.\,
       \neg\varphi)$ & \currule \\
 \end{AletheXS}
 
 \begin{AletheXS}
 $i$. & $\Gamma$ & \ctxsep   &
-      $(\exists x_1, \dots, x_n.\,\varphi) ≈ \neg(\forall x_1, \dots, x_n.\,\neg\varphi)$ & \currule \\
+      $(\exists x_1, \dots, x_n.\,\varphi) \ceq \neg(\forall x_1, \dots, x_n.\,\neg\varphi)$ & \currule \\
 \end{AletheXS}
 \end{RuleDescription}
 
@@ -1214,7 +1215,7 @@ This rule simplifies an $\land$ term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  & $\varphi_1\land \cdots\land\varphi_n ≈ \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\varphi_1\land \cdots\land\varphi_n \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1243,7 +1244,7 @@ This rule simplifies an $\lor$ term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$  & $(\varphi_1\lor \cdots\lor\varphi_n) ≈ \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(\varphi_1\lor \cdots\lor\varphi_n) \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1272,7 +1273,7 @@ This rule simplifies an $\neg$ term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$ & $\neg\varphi ≈ \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\neg\varphi \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1289,7 +1290,7 @@ This rule simplifies an $\rightarrow$ term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$ & $\varphi_1\rightarrow \varphi_2 ≈ \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\varphi_1\rightarrow \varphi_2 \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1312,7 +1313,7 @@ by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep  & $\Gamma$ & $(\varphi_1≈ \varphi_2) ≈ \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep  & $(\varphi_1≈ \varphi_2) \ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1334,7 +1335,7 @@ This rule simplifies a boolean term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\varphi≈ \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\varphi\ceq \psi$ & \currule \\
 \end{AletheXS}
 where $\psi$ is the transformed term.
 
@@ -1354,7 +1355,7 @@ The possible transformations are:
   This rule simplifies nested occurrences of $\lor$ or $\land$:
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $\psi ≈ \varphi_1 \circ\cdots\circ\varphi_n$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $\psi \ceq \varphi_1 \circ\cdots\circ\varphi_n$ & \currule \\
 \end{AletheXS}
   where $\circ \in \{\lor, \land\}$ and $\psi$ is a nested application of $\circ$.
   The literals $\varphi_i$ are literals of the flattening of $\psi$ with duplicates
@@ -1372,7 +1373,7 @@ $i$. & \ctxsep & $\Gamma$ & $\psi ≈ \varphi_1 \circ\cdots\circ\varphi_n$ & \cu
 It has the form
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(\lsymb{ite}\,\varphi\,t_1\,t_2) ≈ u$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(\lsymb{ite}\,\varphi\,t_1\,t_2) \ceq u$ & \currule \\
 \end{AletheXS}
 where $u$ is the transformed term.
 
@@ -1399,7 +1400,7 @@ The possible transformations are:
   This rule simplifies a $\forall$-formula with a constant predicate.
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(\forall x_1, \dots, x_n. \varphi) ≈ \varphi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(\forall x_1, \dots, x_n. \varphi) \ceq \varphi$ & \currule \\
 \end{AletheXS}
   where $\varphi$ is either $\top$ or $\bot$.
 \end{RuleDescription}
@@ -1411,9 +1412,9 @@ variables that can only have one value.
 \begin{AletheXS}
 \aletheLineS
 $j$. & \spctx{$\Gamma, x_{k_1},\dots, x_{k_m},  x_{j_1} \mapsto t_{j_1}, \dots ,  x_{j_o} \mapsto t_{j_o}$}
-   & \ctxsep & $\varphi ≈ \varphi'$ & ($\dots$) \\
+   & \ctxsep & $\varphi \ceq \varphi'$ & ($\dots$) \\
  \spsep
-$k$. & $\Gamma$ & \ctxsep  & $Q x_1, \dots, x_n.\varphi ≈ Q x_{k_1}, \dots, x_{k_m}. \varphi'$ & \currule{} \\
+$k$. & $\Gamma$ & \ctxsep  & $Q x_1, \dots, x_n.\varphi \ceq Q x_{k_1}, \dots, x_{k_m}. \varphi'$ & \currule{} \\
 \end{AletheXS}
 where $Q\in\{\forall, \exists\}$,  $n = m + o$,  $k_1, \dots, k_m$ and
 $j_1, \dots, j_o$ are monotone
@@ -1455,8 +1456,8 @@ An application of the \proofRule{onepoint} rule on the term $(\forall x, y.\, x 
 
 \begin{RuleDescription}{qnt_join}
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,(Q x_{n+1}, \dots, x_{m}.\,\varphi)
-      ≈ Q x_{k_1}, \dots, x_{k_o}.\,\varphi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $Q x_1, \dots, x_n.\,(Q x_{n+1}, \dots, x_{m}.\,\varphi)
+      \ceq Q x_{k_1}, \dots, x_{k_o}.\,\varphi$ & \currule \\
 \end{AletheXS}
   where $m > n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_o$ is a monotonic
   map to $1, \dots, m$ such that $x_{k_1}, \dots, x_{k_o}$ are pairwise
@@ -1465,12 +1466,13 @@ $i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,(Q x_{n+1}, \dots, x_{m}.\,\var
 
 \begin{RuleDescription}{qnt_rm_unused}
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,\varphi ≈ Q x_{k_1}, \dots, x_{k_m}.\,\varphi$
+$i$. & $\Gamma$ & \ctxsep & $Q x_1, \dots, x_n.\,\varphi \ceq Q x_{k_1}, \dots, x_{k_m}.\,\varphi$
  & \currule \\
 \end{AletheXS}
   where $m \leq n$ and $Q\in\{\forall, \exists\}$. Furthermore, $k_1, \dots, k_m$ is
   a monotonic map to $1, \dots, n$ and if $x\in \{x_j\; |\; j \in \{1, \dots,
-  n\} \land j\notin \{k_1, \dots, k_m\}\}$ then $x$ is not free in $\varphi$.
+  n\} \land j\notin \{k_1, \dots, k_m\}\}$ then either $x$ is not free in $\varphi$ or
+  $x\in \{x_j\; |\; j \in \{k_1,\dots,k_m\}\}$ (i.e., duplicates can be removed).
 \end{RuleDescription}
 
 \begin{RuleDescription}{eq_simplify}
@@ -1478,7 +1480,7 @@ $i$. & \ctxsep & $\Gamma$ & $Q x_1, \dots, x_n.\,\varphi ≈ Q x_{k_1}, \dots, x
   transformations until a fixed point is reached. Hence, the general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(t_1≈ t_2) ≈ \varphi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(t_1≈ t_2) \ceq \varphi$ & \currule \\
 \end{AletheXS}
   where $\psi$ is the transformed term.
 
@@ -1495,7 +1497,7 @@ This rule simplifies a division by applying equivalence-preserving
 transformations. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $(t_1\, /\,  t_2) ≈ t_3$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(t_1\, /\,  t_2) \ceq t_3$ & \currule \\
 \end{AletheXS}
 The possible transformations are:
 \begin{itemize}
@@ -1512,7 +1514,7 @@ This rule simplifies a product by applying equivalence-preserving
 transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1\times\cdots\times t_n ≈ u$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $t_1\times\cdots\times t_n \ceq u$ & \currule \\
 \end{AletheXS}
 where $u$ is either a constant or a product.
 
@@ -1536,12 +1538,12 @@ The possible transformations are:
 This rule is either
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $- (-t) ≈ t$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $- (-t) \ceq t$ & \currule \\
 \end{AletheXS}
 or
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $-t ≈ u$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $-t \ceq u$ & \currule \\
 \end{AletheXS}
 where $u$ is the negated numerical constant $t$.
 \end{RuleDescription}
@@ -1551,7 +1553,7 @@ This rule simplifies a subtraction by applying equivalence-preserving
 transformations. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1- t_2 ≈ u$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $t_1- t_2 \ceq u$ & \currule \\
 \end{AletheXS}
 The possible transformations are:
 \begin{itemize}
@@ -1569,7 +1571,7 @@ This rule simplifies a sum by applying equivalence-preserving
 transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1+\cdots+t_n ≈ u$ & \currule \\
+$i$. $\Gamma$ & & \ctxsep & $t_1+\cdots+t_n \ceq u$ & \currule \\
 \end{AletheXS}
 where $u$ is either a constant or a product.
 
@@ -1593,9 +1595,9 @@ This rule simplifies a comparison by applying equivalence-preserving
 transformations until a fixed point is reached. The general form is
 
 \begin{AletheXS}
-$i$. & \ctxsep & $\Gamma$ & $t_1 \bowtie t_2 ≈ \psi$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $t_1 \bowtie t_2 \ceq \psi$ & \currule \\
 \end{AletheXS}
-where $\bowtie \in \{<, >, \leq, \geq\}$.
+where ${\bowtie} \in \{<, >, \leq, \geq\}$.
 
 The following transformation rules are used to simplify $t_1 \bowtie t_2$:
 \begin{itemize}
@@ -1621,15 +1623,15 @@ The following transformation rules are used to simplify $t_1 \bowtie t_2$:
   This rule eliminates $\lsymb{let}$. It has the form
 
 \begin{AletheXS}
-$i_1$. & $\Gamma$ & \ctxsep & $t_{1} ≈ s_{1}$ & ($\dots$) \\
+$i_1$. & $\Gamma$ & \ctxsep & $t_{1} \ceq s_{1}$ & ($\dots$) \\
 \aletheLineS
-$i_n$. & $\Gamma$ & \ctxsep & $t_{n} ≈ s_{n}$ & ($\dots$) \\
+$i_n$. & $\Gamma$ & \ctxsep & $t_{n} \ceq s_{n}$ & ($\dots$) \\
 \aletheLineS
 $j$. & \spctx{$\Gamma, x_1 \mapsto s_1, \dots,  x_n \mapsto s_n$}
-   & \ctxsep &  $u ≈ u'$ & ($\dots$) \\
+   & \ctxsep &  $u \ceq u'$ & ($\dots$) \\
 \spsep
 $k$. & $\Gamma$ & \ctxsep &
-     $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u) ≈ u'$
+     $(\lsymb{let}\,x_1 = t_1,\, \dots,\, x_n = t_n\,\lsymb{in}\, u) \ceq u'$
      & (\currule{}\;$i_1$, \dots, $i_n$) \\
 \end{AletheXS}
 
@@ -1647,16 +1649,16 @@ $k$. & $\Gamma$ & \ctxsep &
   It has the form
 
 \begin{AletheXS}
-$i_1$. & $\Gamma$ & \ctxsep & $t_{1} ≈ s_{1}$ & ($\dots$) \\
+$i_1$. & $\Gamma$ & \ctxsep & $t_{1} \ceq s_{1}$ & ($\dots$) \\
 \aletheLineS
-$i_n$. & $\Gamma$ & \ctxsep & $t_{n} ≈ s_{n}$ & ($\dots$) \\
+$i_n$. & $\Gamma$ & \ctxsep & $t_{n} \ceq s_{n}$ & ($\dots$) \\
 \aletheLineS
 $j$. & \spctx{$\Gamma, y_1,\dots, y_n,  x_1 \mapsto y_1, \dots ,  x_n \mapsto y_n$}
-   & \ctxsep &  $u ≈ u'$ & ($\dots$) \\
+   & \ctxsep &  $u \ceq u'$ & ($\dots$) \\
 \spsep
-$k$. & $\Gamma$ & \kern-5.5em\ctxsep & % The kern hacking here is to make the rule readable
-     $ \kern-3em (\lsymb{let}\,x_1~=~t_1,\, \dots,\, x_n~=~t_n \lsymb{in}\, u) ≈
-                 (\lsymb{let}\,y_1~=~s_1,\, \dots,\, y_n~=~s_n\,\lsymb{in}\, u')$
+$k$. & $\Gamma$ & \kern-28em\ctxsep & % The kern hacking here is to make the rule readable
+      $\kern-14em \lsymb{let}\,x_1=t_1,\, \dots,\, x_n=t_n \lsymb{in}\, u \ceq
+                    \lsymb{let}\,y_1=s_1,\, \dots,\, y_n=s_n\,\lsymb{in}\, u'$
      & (\currule{}\;$i_1$, \dots, $i_n$) \\
 \end{AletheXS}
 
@@ -1693,20 +1695,20 @@ Then there are two cases:
 
 \begin{AletheXS}
 $i$. & $\Gamma$ & \ctxsep &
-$(\lsymb{distinct}\,\varphi\,\psi) ≈ \neg (\varphi ≈ \psi)$ & \currule \\
+$(\lsymb{distinct}\,\varphi\,\psi) \ceq \neg (\varphi ≈ \psi)$ & \currule \\
 \end{AletheXS}
 and
 
 \begin{AletheXS}
 $i$. & $\Gamma$ & \ctxsep &
-$(\lsymb{distinct}\,\varphi_1\,\varphi_2\,\varphi_3\,\dots) ≈ \bot$ & \currule \\
+$(\lsymb{distinct}\,\varphi_1\,\varphi_2\,\varphi_3\,\dots) \ceq \bot$ & \currule \\
 \end{AletheXS}
 
 For all other sorts the rule is
 
 \begin{AletheXS}
 $i$. & $\Gamma$ & \ctxsep &
-$(\lsymb{distinct}\,t_1\,\dots\, t_n) ≈
+$(\lsymb{distinct}\,t_1\,\dots\, t_n) \ceq
 \bigwedge_{i=1}^{n}\bigwedge_{j=i+1}^{n} t_i\;{\not≈}\;t_j$ & \currule \\
 \end{AletheXS}
 
@@ -1717,7 +1719,7 @@ While Alethe does not prescribe a behavior for this case, most solvers
 produce the following step:
 
 \begin{AletheXS}
-$i$. & $\Gamma$ & \ctxsep & $(\lsymb{distinct}\, t) ≈ \top$ & \currule \\
+$i$. & $\Gamma$ & \ctxsep & $(\lsymb{distinct}\, t) \ceq \top$ & \currule \\
 \end{AletheXS}
 
 \end{RuleDescription}
@@ -1735,21 +1737,21 @@ application of the binary operator. It is never applied to $\land$ or $\lor$.
 Three cases are possible.
 If the operator $\circ$ is left associative, then the rule has the form
 \begin{AletheXS}
-$i$. & $\Gamma$ & \ctxsep & $\bigcirc_{i=1}^{n} t_i ≈ (\dots(( t_1\circ  t_2) \circ  t_3)\circ \cdots  t_n)$
+$i$. & $\Gamma$ & \ctxsep & $\bigcirc_{i=1}^{n} t_i \ceq (\dots(( t_1\circ  t_2) \circ  t_3)\circ \cdots  t_n)$
  & \currule \\
 \end{AletheXS}
 
 If the operator $\circ$ is right associative, then the rule has the form
 
 \begin{AletheXS}
-$i$. & $\Gamma$  & \ctxsep & $\bigcirc_{i=1}^{n} t_i ≈
+$i$. & $\Gamma$  & \ctxsep & $\bigcirc_{i=1}^{n} t_i \ceq
 ( t_1 \circ \cdots \circ ( t_{n-2} \circ ( t_{n-1} \circ  t_n))\dots)$ & \currule \\
 \end{AletheXS}
 
 If the operator is {\em chainable}, then it has the form
 
 \begin{AletheXS}
-$i$. & $\Gamma$ & \ctxsep & $\bigcirc_{i=1}^{n} t_i ≈
+$i$. & $\Gamma$ & \ctxsep & $\bigcirc_{i=1}^{n} t_i \ceq
 ( t_1\circ t_2) \oplus ( t_2 \circ  t_3) \oplus \cdots
 \oplus ( t_{n-1}\circ t_n)$ & \currule \\
 \end{AletheXS}
@@ -2007,6 +2009,108 @@ $i$. & \ctxsep & $
 
 where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 \end{RuleDescription}
+
+\begin{RuleDescription}{aci_simp}
+\begin{AletheX}
+$i$. & \ctxsep & $ t_1 ≈ t_2 $ & (\currule) \\
+\end{AletheX}
+
+\noindent
+where $t_1$ and $t_2$ are equivalent modulo associativity, commutativity, 
+identity elements and idempotency. Checking this rule involves a normalization 
+step of $t_1$ and $t_2$, that exploits the previous properties of the operations 
+involved in both terms. The rule applies to SMT-LIB ACI operators (that is, 
+those that satisfy associativity, commutativity, idempotency and that have an 
+identity element), AC operators (associativity, commutativity and identity 
+elements), as well to operators that satisfy only associativity and that have an 
+identity element. The actual way in which the previous properties are exploited 
+might be solver-dependent, which means that there is no such thing as an 
+``ACI normal form'', standard among any solver producing Alethe certificates.
+
+The operators that can trigger the previous process include:
+\begin{itemize}
+  \item Logical operations: \inlineAlethe{or}, \inlineAlethe{and}.
+  \item Bit vectors: \inlineAlethe{bvor}, \inlineAlethe{bvand}, \inlineAlethe{bvadd}, 
+                                   \inlineAlethe{bvmul}, \inlineAlethe{concat}.
+  \item Arithmetic: \inlineAlethe{-} (binary substraction), \inlineAlethe{+}, \inlineAlethe{*}.
+  \end{itemize}
+
+The process itself can be described with a set of rewriting rules, which capture
+a relation $\Rightarrow$ between terms representing the application of operators
+and their simplified form. In what follows, $op$ will represent an operator with 
+the appropriate property exploited in the rewriting rule being applied; $id$ will 
+represent the $op$'s identity element (if appropriate); we will indicate with 
+$x \not{\Rightarrow}$ that term $x$ cannot be further reduced through 
+$\Rightarrow$ (which, in this case, reduces to check that $x$ is not an application 
+of some ACI operator).
+\begin{itemize}
+\item $op \; x \; id \Rightarrow x$, for $x \not{\Rightarrow}$.
+\item $op \; id \; x \Rightarrow x$, for $x \not{\Rightarrow}$.
+\item $op \; x \; x \Rightarrow x$, for $x \not{\Rightarrow}$.
+\item $op \; x_1 \; x_2 \Rightarrow op \; x_{1'} \; x_2$, where $x_1 \Rightarrow x_{1'}$.
+\item $op \; x \; x_2 \Rightarrow op \; x \; x_{2'}$, where $x_2 \Rightarrow x_{2'}$ 
+                                                           and 
+                                                           $x \not{\Rightarrow}$.
+
+\item $op \; x_1 \; x_2 \Rightarrow op \; x_{1'} \; x_{2'}$, 
+            where 
+            \begin{itemize}
+            \item $x_1 \neq x_2$
+            \item $x_{1'}, \; x_{2'} \in \{ x_1, x_2\}$
+              
+            \item Multi-sets $\{x_{1'}, x_{2'}\}$ and $\{x_1, x_2\}$ are equal.
+              
+              \item $x_1 \not{\Rightarrow}$ and $x_2 \not{\Rightarrow}$.
+              
+              % \item $x_{1'} \ge x_{2'}$, with $\ge$ being a total order among terms
+              %   \textbf{TODO: is there something that we should ask for this order?}
+            \end{itemize}
+\end{itemize}
+
+In the last rule, note that we do not impose some particular order among 
+sub-terms. The intention of the rule is to allow for a particular implementation 
+of a checker for the rule, to take advantage of the commutativity of $op$, if 
+desired.
+
+Also, note that no evaluation of the application of operators (\emph{constant folding})
+is performed by the rule.
+
+\end{RuleDescription}
+
+\begin{RuleExample}
+The following simple \proofRule{aci_simp} step, taken from a \textsf{QF\_UF} 
+problem, serves to illustrate the application of a single reduction rule from 
+$\Rightarrow$:
+\begin{AletheVerb}
+(step t1 (cl (= (and d d) d)) :rule aci_simp)
+\end{AletheVerb}
+The application of the rule exploits the idempotency property of
+the \inlineAlethe{and} operator (third reduction rule from $\Rightarrow$), to 
+conclude that \inlineAlethe{(= (and d d) d)} holds.
+\end{RuleExample}
+
+\begin{RuleExample}
+The following example application of the \proofRule{aci_simp} rule illustrates 
+a situation where the reduction of expressions, using $\Rightarrow$, also involves
+\emph{aci-reduction} of sub-expressions:
+\begin{AletheVerb}
+(step t1 (cl (= (or false (or true true)) (or true false))) :rule aci_simp)
+\end{AletheVerb}
+As in the previous example, the application of the rule exploits an idempotency 
+property, in this case of the \inlineAlethe{or} operator, but over the
+sub-expression \inlineAlethe{(or true true)}. That is, the reduction also 
+employs the fifth reduction rule defining $\Rightarrow$, that allows for the 
+reduction of sub-expressions. Finally, in order to be able to conclude
+that both terms are \emph{aci-compatible}, the reasoning employed exploits
+the last reduction rule of $\Rightarrow$, that allows for an arbitrary order
+of operands of applications of commutative operators. This allows us to conclude that
+\inlineAlethe{(or false true)} (the result of the previous reduction step) is
+aci-compatible with \inlineAlethe{(or true false)}. Note that, as explained
+in the specification of $\Rightarrow$, there is no concrete order of
+operands specified, leaving some degree of freedom for the implementation of
+checkers of the rule. This, as long as the resulting $\Rightarrow$ relation ends up 
+relating expressions that are equivalent modulo commutativity.
+\end{RuleExample}
 
 \clearpage
 \subsection{Index of Rules}
