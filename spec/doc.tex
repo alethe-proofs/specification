@@ -804,6 +804,7 @@ expressed as a concrete proof.
 \tikzset{
      solver/.style={draw, thin},
      system/.style={draw, thin, rounded corners},
+     print/.style={draw, thin, rounded corners},
 }
 
 \begin{figure}[h]
@@ -811,13 +812,21 @@ expressed as a concrete proof.
 \begin{tikzpicture}[node distance=2cm, auto,>=latex', thick,scale=0.8]
     \node[solver] (unsat) {\textsf{Unsat mode}};
     \node[system, right=of unsat] (assume) {\textsf{Assumptions}};
-    \path[->] (unsat) edge[bend left] node[font=\scriptsize] {\texttt{get-proof}} (assume);
+
+    \node[print, right=0.85cm of unsat, yshift=0.8cm] (open) {\inlineAlethe{(}};
+    \path[->] (unsat) edge[out=30, in=180] node[font=\scriptsize, xshift=0.6cm, yshift=0.02cm] {\texttt{get-proof}} (open);
+    \path[->] (open)  edge[out=0, in=150] node[font=\scriptsize] {} (assume);
+
     \path[->] (assume) edge[loop above] node[align=center,font=\scriptsize] {\inlineAlethe{assume},\\\inlineAlethe{define-fun},\\\inlineAlethe{anchor}} (assume);
     \node[system, right=of assume] (step) {\textsf{Steps}};
     \path[->] (assume) edge[bend left] node[font=\scriptsize] {\inlineAlethe{step}} (step);
     \path[->] (step) edge[loop above] node[align=center,font=\scriptsize] {\inlineAlethe{step},\\ \inlineAlethe{define-fun}} (step);
     \path[->] (step) edge[above, bend left] node[font=\scriptsize] {\inlineAlethe{anchor}} (assume);
-    \path[->] (step) edge[above, bend left] node[font=\scriptsize] {\textsf{Last step}} (unsat);
+
+    \node[print, below=0.8cm of assume] (close) {\inlineAlethe{)}};
+
+    \path[->] (step) edge[above, out=240, in=0] node[font=\scriptsize, xshift=-0.8cm, yshift=-0.15cm] {\textsf{Last Step}} (close);
+    \path[->] (close) edge[above, out=180, in=330] node[font=\scriptsize] {} (unsat);
 \end{tikzpicture}
 \label{fig:proof-states}\caption{Abstract view of the transitions in an Alethe proof.}
 \end{figure}
@@ -840,19 +849,20 @@ If there is no error, the proof is printed.
 Since SMT-LIB requires all response to be S-expressions, the solver first
 prints an opening parenthesis '\inlineAlethe{(}'.
 %
-The solver then follows the state machine to print the proof
+The solver then follows the behavior specified by the state machine to print the proof
 as a list of Alethe commands.
 %
 After printing is done, the solver prints an additional
 closing parenthesis '\inlineAlethe{)}'.
 %
-Note that these extra parentheses are printed to ensure that the solver is SMT-LIB
-compliant.  They are not part of the proof, and should only be printed when
+Note that these extra parentheses are printed to ensure that the proof output
+is SMT-LIB compliant.
+They are not part of the proof, and should only be printed when
 interacting with the solver through the SMT-LIB interface.
 For example, if a solver can write proofs directly into a file, it should not
 write these extra parentheses.
 
-The printing state machines ensure a constraint is maintained:
+The printing machine ensure a constraint is maintained:
 assumptions can only appear at either the beginning of a proof or right
 after a subproof is started by the \inlineAlethe{anchor} command.  They cannot
 be mixed with ordinary proof steps.  This simplifies
