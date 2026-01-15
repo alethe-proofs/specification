@@ -862,7 +862,7 @@ interacting with the solver through the SMT-LIB interface.
 For example, if a solver can write proofs directly into a file, it should not
 write these extra parentheses.
 
-The printing machine ensure a constraint is maintained:
+The printing state machine ensures that a constraint is maintained:
 assumptions can only appear at either the beginning of a proof or right
 after a subproof is started by the \inlineAlethe{anchor} command.  They cannot
 be mixed with ordinary proof steps.  This simplifies
