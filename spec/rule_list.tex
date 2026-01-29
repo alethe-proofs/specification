@@ -1964,6 +1964,24 @@ $i$. & \ctxsep & $
 where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 \end{RuleDescription}
 
+\begin{RuleDescription}{miniscope_ite}
+\begin{AletheX}
+$i$. & \ctxsep & $
+\forall x_1, \dots, x_n.(\lsymb{ite}\,\varphi_1\,\varphi_2\,\varphi_3) ≈
+\lsymb{ite}\,\varphi_1\,(\forall x_1, \dots, x_n.\varphi_2)\,(\forall x_1, \dots, x_n.\varphi_3) $ & (\currule) \\
+\end{AletheX}
+
+where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{evaluate}
+\begin{AletheX}
+$i$. & \ctxsep & $ evaluate \; t ≈ t$ & (\currule) \\
+\end{AletheX}
+
+Note this proof rule only applies to atomic sorts, that is, operators on Int, Real, String, Bool or BitVector.
+\end{RuleDescription}
+
 \clearpage
 \subsection{Index of Rules}
 \label{sec:alethe:rules-index}
