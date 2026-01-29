@@ -1964,6 +1964,23 @@ $i$. & \ctxsep & $
 where $\varphi_1$ has no free variable from $\{x_1, \dots, x_n\}$.
 \end{RuleDescription}
 
+\begin{RuleDescription}{arith_poly_norm}
+\begin{AletheX}
+$i$. & \ctxsep & $ t ≈ s $ & (\currule) \\
+\end{AletheX}
+
+This method normalizes arithmetic expressions $t$ and $s$, such that expressions
+representing the same value are identified.
+
+\textbf{TODO}: should we extend $≈$ with every pair that is arith\_poly\_norm?
+
+\textbf{TODO}: should we consider $arith\_poly\_norm \; t ≈ arith\_poly\_norm \; s$ 
+for some function $arith\_poly\_norm$?
+
+\textbf{TODO}: should we force some particular normalization?
+\end{RuleDescription}
+
+
 \clearpage
 \subsection{Index of Rules}
 \label{sec:alethe:rules-index}
