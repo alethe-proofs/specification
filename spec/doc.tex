@@ -290,10 +290,14 @@ Alethe builds on the {\smtlib} language.
 %
 This includes its many-sorted first-order logic.
 The available sorts depend on
-the selected {\smtlib} theory/logic as well as on those defined by the user, but the
-distinguished $\lsymb{Bool}$ sort is always available.
+the selected {\smtlib} theory/logic as well as on those defined by the user.
+However, some sorts are always available.
+This includes a distinguished $\lsymb{Bool}$ sort, and
+the two sorts $\lsymb{Int}$ and $\lsymb{Real}$.
+The reason for this is that values of these sorts are used in the arguments
+of certain rules.
 %
-However, Alethe also extends this logic with Hilbert's choice
+Alethe also extends this logic with Hilbert's choice
 operator $\varepsilon$.
 %
 The term $\varepsilon x.\, \varphi[x]$ stands for a value $v$
@@ -515,6 +519,8 @@ have an arbitrary order after instantiation.
 Nevertheless, consumers of Alethe must consider the possible
 implicit reordering of equalities everywhere.
 
+The SMT solver {\cvcfive} is more strict.  It never applies reordering of
+equalities implicitly.
 
 \subsection{The Syntax}\label{sec:alethe:syntax}
 
@@ -522,7 +528,7 @@ The concrete text representation of the Alethe proofs
 is based on the {\smtlib} standard. Figure~\ref{fig:proof_ex} shows an
 example proof as printed by {\verit} with light edits for readability.
 %
-The format broadly follows the {\smtlib} standard.
+The format broadly follows the surface syntax specified by {\smtlib}.
 %
 Input problems in the {\smtlib} format are scripts.  An {\smtlib} script
 is a list of commands that manipulate the SMT solver.  For example,
@@ -1099,7 +1105,7 @@ Example~\ref{ex:ti:ctx-concrete} gives us the proof
                                       :rule hole)
 (step t6 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y)))
              (not (forall ((x S)) (P x)))
-             (forall ((y S)) (P y)))) :rule equiv_pos2)
+             (forall ((y S)) (P y))) :rule equiv_pos2)
 (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
 \end{AletheVerb}
 
