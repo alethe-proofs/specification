@@ -308,7 +308,11 @@ that contain the free variable $x$, it holds that
 $(\forall x.\,\varphi ≈ \psi)$,
 then $(\varepsilon x.\, \varphi)\approx(\varepsilon x.\, \psi)$ must also hold.
 Note that choice terms can only appear in Alethe proofs, not in {\smtlib} problems.
-%\end{seppara}
+
+A subtle difference between Alethe and {\smtlib} is the handling of variadic operators.
+{\smtlib} handles variadic function application purely as syntactic sugar,
+while the description of Alethe rules treats them as first-class syntax.
+This is described in detail on Page~\pageref{para:variadic}.
 
 \paragraph{Steps.}
 A \index{proof}proof in the Alethe language is an indexed list of \index{step}steps.
@@ -729,6 +733,59 @@ For example, in standard {\smtlib}, the term \inlineAlethe{(+ 5 3)}
 has the sort \inlineAlethe{Int} in the logic \texttt{QF\_LIA}, but
 has the sort \inlineAlethe{Real} in \texttt{QF\_LRA}.
 In Alethe, this term always has the sort \inlineAlethe{Int}.
+
+\paragraph{Variadic Operators}\label{para:variadic}
+{\smtlib} allows certain operators, like \inlineAlethe{and}, to be used with
+a variable number of arguments.  {\smtlib} achieves this by handling applications
+of more than two arguments as syntactic sugar.
+For example, the operator \inlineAlethe{and} is annotated in {\smtlib}
+with the \inlineAlethe{:left-assoc} keyword.  This has the effect that
+a term like \inlineAlethe{(and a b c)} can be desuggared to \inlineAlethe{(and (and a b) c)}.
+
+However, most SMT solvers do not handle these operators by desuggaring.
+Instead, they support variadic operators naively.
+To take this into account, all rules of Alethe operate on {\smtlib} terms
+as they are before desuggaring.
+Consider, for example, the rule \proofRule{and}. This rule implements
+\inlineAlethe{and}-elimination, and takes the index of the argument to extract
+as an argument.  The following is a correct application of the \proofRule{and}
+rule:
+\begin{AletheVerb}
+(assume h1 (and a b c))
+(step t1 (cl b) :rule and :premises h1 :args (2))
+\end{AletheVerb}
+
+\noindent
+If Alethe rules would operate on terms after desuggaring, this step would instead
+conclude with \inlineAlethe{c}.
+
+In the abstract notation of this document, we write these operators using
+infix notation, and we add parentheses to distinguish nested applications.
+For example, the following are two correct applications of the \proofRule{and} rule.
+
+\begin{AletheX}
+$i$. & \ctxsep & $a \land b \land c$ & ($\dots$) \\
+$j$. & \ctxsep & $b$ & (\proofRule{and}\;$i$)\, 2\\
+\end{AletheX}
+
+\vspace{0.5em}
+
+\begin{AletheX}
+$i$. & \ctxsep & $(a \land b) \land c$ & ($\dots$) \\
+$j$. & \ctxsep & $c$ & (\proofRule{and}\;$i$)\, 2\\
+\end{AletheX}
+
+A consequence of this behavior is that Alethe proofs cannot be handled by
+consumers that desuggar terms as suggested by {\smtlib}, because
+the two input terms \inlineAlethe{(and a b c)} and \inlineAlethe{(and (and a b) c)}
+cannot be distinguished after desuggaring.
+One way to work around this is to desuggar these terms like lists in functional
+programming languages.  The operator takes the role of the list-constructor,
+and the neutral element of the operator takes the role of the empty list.
+For example, the term \inlineAlethe{(and a b c)} would desuggar to
+\inlineAlethe{(and (and (and a b) c) true)} and the term
+\inlineAlethe{(and (and a b) c)} would desuggar to
+\inlineAlethe{(and (and (and (and a b) ture) c) true)}.
 
 \paragraph{Subproofs}
 The abstract notation denotes subproofs by marking them with a vertical
