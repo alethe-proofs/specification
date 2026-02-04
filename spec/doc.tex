@@ -310,7 +310,8 @@ then $(\varepsilon x.\, \varphi)\approx(\varepsilon x.\, \psi)$ must also hold.
 Note that choice terms can only appear in Alethe proofs, not in {\smtlib} problems.
 
 A subtle difference between Alethe and {\smtlib} is the handling of variadic operators.
-{\smtlib} handles variadic function application purely as syntactic sugar,
+{\smtlib} handles variadic function application purely as syntactic sugar 
+for chained binary applications of annotated associative functions,
 while the description of Alethe rules treats them as first-class syntax.
 This is described in detail on Page~\pageref{para:variadic}.
 
