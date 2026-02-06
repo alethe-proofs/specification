@@ -9,7 +9,7 @@
 \usepackage{fontsetup}
 
 % minted 3 changed how pygmentize is called to no longer --shell-escape.
-% However, since minted 3 is not widely avaialable, we fall back to minted 2
+% However, since minted 3 is not widely available, we fall back to minted 2
 % as the default.
 \IfFileExists{minted2.sty}{
   \usepackage{minted2}
@@ -27,7 +27,7 @@
 \usepackage[useregional]{datetime2}
 \usepackage{xltabular} % Gives us stretchable, breakable tables. for proofs
 \usepackage{longtable} % Gives us longtables for proof
-\usepackage{environ} % Gives us NewEnviron to define environements with tables
+\usepackage{environ} % Gives us NewEnviron to define environments with tables
 \usepackage{fancyvrb} % Gives us \Verb which can be used in footnotes
 \usepackage{amsthm}
 \usepackage{thmtools}
@@ -39,7 +39,7 @@
 \makeindex[name=rules,options= -s rule_index_style.ist]
 % We provide a command that discards the argument to the index.  This
 % allows us to do the sectioning of the index manually and give different
-% sectin levels to the rule index and the overall index
+% section levels to the rule index and the overall index
 \newcommand\indexsection[1]{}
 \indexsetup{level=\indexsection,firstpagestyle=headings,noclearpage}
 
