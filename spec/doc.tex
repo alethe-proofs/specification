@@ -739,15 +739,24 @@ In Alethe, this term always has the sort \inlineAlethe{Int}.
 {\smtlib} allows certain operators, like \inlineAlethe{and}, to be used with
 a variable number of arguments.  {\smtlib} achieves this by handling applications
 of more than two arguments as syntactic sugar.
+%
 For example, the operator \inlineAlethe{and} is annotated in {\smtlib}
 with the \inlineAlethe{:left-assoc} keyword.  This has the effect that
-a term like \inlineAlethe{(and a b c)} can be desuggared to \inlineAlethe{(and (and a b) c)}.
+a term like \inlineAlethe{(and a b c)} can be desugared to \inlineAlethe{(and (and a b) c)}.
+%
+In other words, after parsing an {\smtlib} S-expression into an abstract
+syntax tree, the variadic application of these applications is broken up
+into binary applications before type checking.
 
-However, most SMT solvers do not handle these operators by desuggaring.
-Instead, they support variadic operators naively.
+However, most SMT solvers do not handle these operators this way.
+Instead, their internal abstract syntax tree maintains the variadic application.
+%
 To take this into account, all rules of Alethe operate on {\smtlib} terms
-as they are before desuggaring.
-Consider, for example, the rule \proofRule{and}. This rule implements
+as they are after parsing.
+%
+Consider, for example, the rule \proofRule{and}.
+%
+This rule implements
 \inlineAlethe{and}-elimination, and takes the index of the argument to extract
 as an argument.  The following is a correct application of the \proofRule{and}
 rule:
@@ -757,7 +766,7 @@ rule:
 \end{AletheVerb}
 
 \noindent
-If Alethe rules would operate on terms after desuggaring, this step would instead
+If Alethe rules would operate on terms after desugaring, this step would instead
 conclude with \inlineAlethe{c}.
 
 In the abstract notation of this document, we write these operators using
@@ -777,15 +786,15 @@ $j$. & \ctxsep & $c$ & (\proofRule{and}\;$i$)\, 2\\
 \end{AletheX}
 
 A consequence of this behavior is that Alethe proofs cannot be handled by
-consumers that desuggar terms as suggested by {\smtlib}, because
+consumers that transform terms as suggested by {\smtlib}, because
 the two input terms \inlineAlethe{(and a b c)} and \inlineAlethe{(and (and a b) c)}
-cannot be distinguished after desuggaring.
-One way to work around this is to desuggar these terms like lists in functional
+cannot be distinguished after desugaring.
+One way to work around this is to desugar these terms like lists in functional
 programming languages.  The operator takes the role of the list-constructor,
 and the neutral element of the operator takes the role of the empty list.
-For example, the term \inlineAlethe{(and a b c)} would desuggar to
+For example, the term \inlineAlethe{(and a b c)} would desugar to
 \inlineAlethe{(and (and (and a b) c) true)} and the term
-\inlineAlethe{(and (and a b) c)} would desuggar to
+\inlineAlethe{(and (and a b) c)} would desugar to
 \inlineAlethe{(and (and (and (and a b) ture) c) true)}.
 
 \paragraph{Subproofs}
