@@ -752,12 +752,12 @@ However, most SMT solvers do not handle these operators this way.
 Instead, their internal abstract syntax tree maintains the variadic application.
 %
 To take this into account, all rules of Alethe operate on {\smtlib} terms
-as they are after parsing.
+before variadic applications are broken into binary applications.
 %
 Consider, for example, the rule \proofRule{and}.
 %
 This rule implements
-\inlineAlethe{and}-elimination, and takes the index of the argument to extract
+\inlineAlethe{and}-elimination, and takes the index of the conjunct to extract
 as an argument.  The following is a correct application of the \proofRule{and}
 rule:
 \begin{AletheVerb}
@@ -795,7 +795,7 @@ and the neutral element of the operator takes the role of the empty list.
 For example, the term \inlineAlethe{(and a b c)} would desugar to
 \inlineAlethe{(and (and (and a b) c) true)} and the term
 \inlineAlethe{(and (and a b) c)} would desugar to
-\inlineAlethe{(and (and (and (and a b) ture) c) true)}.
+\inlineAlethe{(and (and (and (and a b) true) c) true)}.
 
 \paragraph{Subproofs}
 The abstract notation denotes subproofs by marking them with a vertical
