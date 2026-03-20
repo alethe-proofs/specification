@@ -2226,10 +2226,10 @@ $i$. & \ctxsep & $\bvxnor{x}{y} ≈ A_1$ & \currule \\
 in which both $x$ and $y$ must have the same type \bitvec{n}.
 The term ``$A_1$'' is
 \begin{align*}
-\bbterm\;& (\bitof{0}\ x \,\leftrightarrow\, \bitof{0}\ y) \\
-              & (\bitof{1}\ x \,\leftrightarrow\, \bitof{1}\ y) \\ \\
+\bbterm\;& (\bitof{0}\ x \,=\, \bitof{0}\ y) \\
+              & (\bitof{1}\ x \,=\, \bitof{1}\ y) \\ \\
               & \ldots \\
-              & (\bitof{n-1}\ x \,\leftrightarrow\, \bitof{n-1}\ y) \\
+              & (\bitof{n-1}\ x \,=\, \bitof{n-1}\ y) \\
 \end{align*}
 
 Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
@@ -2245,8 +2245,8 @@ then, the rule can be alternatively phrased as:
 \begin{AletheX}
 $i$. & \ctxsep & $\bvxnor{x}{y} ≈ A_2$ & \currule \\
 \end{AletheX}
-with $A_2 := \bbterm\ (x_0 \,\leftrightarrow\, y_0)\
-             \ldots\  (x_{n-1} \,\leftrightarrow\, y_{n-1})$.
+with $A_2 := \bbterm\ (x_0 \,=\, y_0)\
+             \ldots\  (x_{n-1} \,=\, y_{n-1})$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{bitblast_not}
