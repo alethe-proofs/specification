@@ -1863,6 +1863,7 @@ The term ``$A_1$'' is
 \end{RuleDescription}
 
 \begin{RuleDescription}{bitblast_ult}
+
 \begin{AletheX}
 $i$. & \ctxsep & $\bvult{x}{y} ≈ \mathrm{res}_{n-1}$ & \currule \\
 \end{AletheX}
@@ -1885,7 +1886,7 @@ above when $x$ and $y$ are ``\bbterm'' applications. So given that
     y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
   \end{array}
 \]
-then ``$\mathrm{res}$'' can be defined, for $i \geq 0$, as
+then ``$\mathrm{res}_i$'' can be defined, for $i \geq 0$, as
 \[
   \begin{array}{lcl}
     \mathrm{res}_0&=&\neg x_0 \wedge y_0\\
@@ -1897,16 +1898,20 @@ then ``$\mathrm{res}$'' can be defined, for $i \geq 0$, as
 \end{RuleDescription}
 
 \begin{RuleDescription}{bitblast_slt}
+
 \begin{AletheX}
-$i$. & \ctxsep & $\bvslt{x}{y} ≈ \mathrm{res}_{n-1}$ & \currule \\
+$i$. & \ctxsep & $\bvslt{x}{y} ≈ \mathrm{res}$ & \currule \\
 \end{AletheX}
-in which both $x$ and $y$ must have the same type \bitvec{n} and, for
-$i\geq 0$:
+in which both $x$ and $y$ must have the same type \bitvec{n}, where:
+$$ \mathrm{res} = ((\bitof{n - 1}\ x ≈ \bitof{n - 1}\ y)\wedge \mathrm{res}_{n - 2})
+                   \vee
+                    (\bitof{n - 1}\ x \wedge \neg (\bitof{n - 1}\ y)) $$
+and, for $i\geq 0$:
 \[
   \begin{array}{lcl}
-    \mathrm{res}_0&=& \bitof{0}\ x \wedge \neg (\bitof{0}\ y)\\
+    \mathrm{res}_0&=& \neg \bitof{0}\ x \wedge \bitof{0}\ y\\
     \mathrm{res}_{i+1}&=&((\bitof{i + 1}\ x ≈ \bitof{i + 1}\ y)\wedge \mathrm{res}_i)\vee
-                       (\bitof{i+1}\ x \wedge \neg (\bitof{i+1}\ y))
+                       (\neg (\bitof{i+1}\ x) \wedge \bitof{i+1}\ y)
   \end{array}
 \]
 
@@ -1919,12 +1924,16 @@ above when $x$ and $y$ are ``\bbterm'' applications. So given that
     y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
   \end{array}
 \]
-then $\mathrm{res}$ can be defined, for $i \geq 0$, as
+then ``$\mathrm{res}$'' can be defined as:
+$$ \mathrm{res} = ((x_{n - 1} ≈ y_{n - 1})\wedge \mathrm{res}_{n - 2})
+                   \vee
+                    (x_{n - 1} \wedge \neg y_{n - 1}) $$
+where, for $i \geq 0$:
 \[
   \begin{array}{lcl}
     \mathrm{res}_0&=& x_0 \wedge \neg y_0\\
     \mathrm{res}_{i+1}&=&((x_{i+1} ≈ y_{i+1})\wedge
-                          \mathrm{res}_i)\vee (x_{i+1}\wedge \neg y_{i+1})
+                          \mathrm{res}_i)\vee (\neg x_{i+1}\wedge y_{i+1})
   \end{array}
 \]
 
@@ -2226,10 +2235,10 @@ $i$. & \ctxsep & $\bvxnor{x}{y} ≈ A_1$ & \currule \\
 in which both $x$ and $y$ must have the same type \bitvec{n}.
 The term ``$A_1$'' is
 \begin{align*}
-\bbterm\;& (\bitof{0}\ x \,=\, \bitof{0}\ y) \\
-              & (\bitof{1}\ x \,=\, \bitof{1}\ y) \\ \\
+\bbterm\;& (\bitof{0}\ x \,≈\, \bitof{0}\ y) \\
+              & (\bitof{1}\ x \,≈\, \bitof{1}\ y) \\ \\
               & \ldots \\
-              & (\bitof{n-1}\ x \,=\, \bitof{n-1}\ y) \\
+              & (\bitof{n-1}\ x \,≈\, \bitof{n-1}\ y) \\
 \end{align*}
 
 Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
@@ -2245,8 +2254,8 @@ then, the rule can be alternatively phrased as:
 \begin{AletheX}
 $i$. & \ctxsep & $\bvxnor{x}{y} ≈ A_2$ & \currule \\
 \end{AletheX}
-with $A_2 := \bbterm\ (x_0 \,=\, y_0)\
-             \ldots\  (x_{n-1} \,=\, y_{n-1})$.
+with $A_2 := \bbterm\ (x_0 \,≈\, y_0)\
+             \ldots\  (x_{n-1} \,≈\, y_{n-1})$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{bitblast_not}
