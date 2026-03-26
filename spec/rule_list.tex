@@ -2262,13 +2262,12 @@ with $A_2 := \bbterm\ (x_0 \,≈\, y_0)\
 \begin{AletheX}
 $i$. & \ctxsep & $\bvnot{x} ≈ A_1$ & \currule \\
 \end{AletheX}
-in which both $x$ and $y$ must have the same type \bitvec{n}.
 The term ``$A_1$'' is
 \begin{align*}
-\bbterm\;& \neg \bitof{0}\ x \\
-              & \neg \bitof{1}\ x \\ \\
+\bbterm\;& (\neg \bitof{0}\ x) \\
+              & (\neg \bitof{1}\ x) \\ \\
               & \ldots \\
-              & \neg \bitof{n-1}\ x \\
+              & (\neg \bitof{n-1}\ x) \\
 \end{align*}
 
 Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
@@ -2281,10 +2280,97 @@ above when $x$ is a ``$\lsymb{bbterm}$'' application. So given that:
 then, the rule can be alternatively phrased as:
 
 \begin{AletheX}
-$i$. & \ctxsep & $\bvnot{x}{y} ≈ A_2$ & \currule \\
+$i$. & \ctxsep & $\bvnot{x} ≈ A_2$ & \currule \\
 \end{AletheX}
 with $A_2 := \bbterm\ \neg x_0\
              \ldots\  \neg x_{n-1}$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_shl}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvshl{x}{d} ≈ A_1$ & \currule \\
+\end{AletheX}
+Where $d$ is the \emph{width of the shift distance}. For a bitvector $x$ of
+width $n$, the term $A_1$ is:
+\begin{align*}
+\bbterm\;& (\lsymb{ite} \, (0 \ge d) (\bitof{0 - d}\ x) \, \bot) \\
+         & \ldots \\
+         & (\lsymb{ite} \, (n - 1 \ge d) (\bitof{(n - 1) - d}\ x) \, \bot) \\
+\end{align*}
+
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ is a ``$\lsymb{bbterm}$'' application. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvshl{x}{d} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ (\lsymb{ite} \, (0 \ge d) (x_{0 - d}) \, \bot)\
+             \ldots\  (\lsymb{ite} \, ((n -1) \ge d) (x_{(n - 1) - d}) \, \bot)$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_lshr}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvlshr{x}{d} ≈ A_1$ & \currule \\
+\end{AletheX}
+Where $d$ is the \emph{width of the shift distance}. For a bitvector $x$ of
+width $n$, the term $A_1$ is:
+\begin{align*}
+\bbterm\;& (\lsymb{ite} \; (0 < n - d) \; (\bitof{0 + d}\ x) \, \bot) \\
+         & \ldots \\
+         & (\lsymb{ite} \; (n - 1 < n - d) \; (\bitof{(n - 1) + d}\ x) \, \bot) \\
+\end{align*}
+
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ is a ``$\lsymb{bbterm}$'' application. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvlshr{x}{d} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ (\lsymb{ite} \, (0 \ge d) (x_{0 - d}) \, \bot)\
+             \ldots\  (\lsymb{ite} \, ((n -1) \ge d) (x_{(n - 1) - d}) \, \bot)$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_ashr}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvashr{x}{d} ≈ A_1$ & \currule \\
+\end{AletheX}
+Where $d$ is the \emph{width of the shift distance}. For a bitvector $x$ of
+width $n$, the term $A_1$ is:
+\begin{align*}
+\bbterm\;& (\lsymb{ite} \; (0 \ge d) \; (\bitof{0 - d}\ x) \, (\bitof{n - 1}\ x)) \\
+         & \ldots \\
+         & (\lsymb{ite} \; (n - 1 \ge d) \; (\bitof{(n - 1) - d}\ x) \, (\bitof{n - 1}\ x)) \\
+\end{align*}
+
+Where, for a bitvector $x$ using two's complement encoding, $(\bitof{n - 1}\ x)$
+is the boolean codification of $x$'s sign bit. That is, we replicate its sign bit.
+
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ is a ``$\lsymb{bbterm}$'' application. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvashr{x}{d} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ (\lsymb{ite} \, (0 \ge d) (x_{0 - d}) \, x_{n - 1})\
+             \ldots\  (\lsymb{ite} \, ((n -1) \ge d) (x_{(n - 1) - d}) \, x_{n - 1})$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{symm}
