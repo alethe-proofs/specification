@@ -9,7 +9,7 @@
 \usepackage{fontsetup}
 
 % minted 3 changed how pygmentize is called to no longer --shell-escape.
-% However, since minted 3 is not widely avaialable, we fall back to minted 2
+% However, since minted 3 is not widely available, we fall back to minted 2
 % as the default.
 \IfFileExists{minted2.sty}{
   \usepackage{minted2}
@@ -27,7 +27,7 @@
 \usepackage[useregional]{datetime2}
 \usepackage{xltabular} % Gives us stretchable, breakable tables. for proofs
 \usepackage{longtable} % Gives us longtables for proof
-\usepackage{environ} % Gives us NewEnviron to define environements with tables
+\usepackage{environ} % Gives us NewEnviron to define environments with tables
 \usepackage{fancyvrb} % Gives us \Verb which can be used in footnotes
 \usepackage{amsthm}
 \usepackage{thmtools}
@@ -39,7 +39,7 @@
 \makeindex[name=rules,options= -s rule_index_style.ist]
 % We provide a command that discards the argument to the index.  This
 % allows us to do the sectioning of the index manually and give different
-% sectin levels to the rule index and the overall index
+% section levels to the rule index and the overall index
 \newcommand\indexsection[1]{}
 \indexsetup{level=\indexsection,firstpagestyle=headings,noclearpage}
 
@@ -290,10 +290,14 @@ Alethe builds on the {\smtlib} language.
 %
 This includes its many-sorted first-order logic.
 The available sorts depend on
-the selected {\smtlib} theory/logic as well as on those defined by the user, but the
-distinguished $\lsymb{Bool}$ sort is always available.
+the selected {\smtlib} theory/logic as well as on those defined by the user.
+However, some sorts are always available.
+This includes a distinguished $\lsymb{Bool}$ sort, and
+the two sorts $\lsymb{Int}$ and $\lsymb{Real}$.
+The reason for this is that values of these sorts are used in the arguments
+of certain rules.
 %
-However, Alethe also extends this logic with Hilbert's choice
+Alethe also extends this logic with Hilbert's choice
 operator $\varepsilon$.
 %
 The term $\varepsilon x.\, \varphi[x]$ stands for a value $v$
@@ -304,7 +308,12 @@ that contain the free variable $x$, it holds that
 $(\forall x.\,\varphi ≈ \psi)$,
 then $(\varepsilon x.\, \varphi)\approx(\varepsilon x.\, \psi)$ must also hold.
 Note that choice terms can only appear in Alethe proofs, not in {\smtlib} problems.
-%\end{seppara}
+
+A subtle difference between Alethe and {\smtlib} is the handling of variadic operators.
+{\smtlib} handles variadic function application purely as syntactic sugar 
+for chained binary applications of annotated associative functions,
+while the description of Alethe rules treats them as first-class syntax.
+This is described in detail on Page~\pageref{para:variadic}.
 
 \paragraph{Steps.}
 A \index{proof}proof in the Alethe language is an indexed list of \index{step}steps.
@@ -515,6 +524,8 @@ have an arbitrary order after instantiation.
 Nevertheless, consumers of Alethe must consider the possible
 implicit reordering of equalities everywhere.
 
+The SMT solver {\cvcfive} is more strict.  It never applies reordering of
+equalities implicitly.
 
 \subsection{The Syntax}\label{sec:alethe:syntax}
 
@@ -522,7 +533,7 @@ The concrete text representation of the Alethe proofs
 is based on the {\smtlib} standard. Figure~\ref{fig:proof_ex} shows an
 example proof as printed by {\verit} with light edits for readability.
 %
-The format broadly follows the {\smtlib} standard.
+The format broadly follows the surface syntax specified by {\smtlib}.
 %
 Input problems in the {\smtlib} format are scripts.  An {\smtlib} script
 is a list of commands that manipulate the SMT solver.  For example,
@@ -723,6 +734,68 @@ For example, in standard {\smtlib}, the term \inlineAlethe{(+ 5 3)}
 has the sort \inlineAlethe{Int} in the logic \texttt{QF\_LIA}, but
 has the sort \inlineAlethe{Real} in \texttt{QF\_LRA}.
 In Alethe, this term always has the sort \inlineAlethe{Int}.
+
+\paragraph{Variadic Operators}\label{para:variadic}
+{\smtlib} allows certain operators, like \inlineAlethe{and}, to be used with
+a variable number of arguments.  {\smtlib} achieves this by handling applications
+of more than two arguments as syntactic sugar.
+%
+For example, the operator \inlineAlethe{and} is annotated in {\smtlib}
+with the \inlineAlethe{:left-assoc} keyword.  This has the effect that
+a term like \inlineAlethe{(and a b c)} can be desugared to \inlineAlethe{(and (and a b) c)}.
+%
+In other words, after parsing an {\smtlib} S-expression into an abstract
+syntax tree, the variadic application of these applications is broken up
+into binary applications before type checking.
+
+However, most SMT solvers do not handle these operators this way.
+Instead, their internal abstract syntax tree maintains the variadic application.
+%
+To take this into account, all rules of Alethe operate on {\smtlib} terms
+before variadic applications are broken into binary applications.
+%
+Consider, for example, the rule \proofRule{and}.
+%
+This rule implements
+\inlineAlethe{and}-elimination, and takes the index of the conjunct to extract
+as an argument.  The following is a correct application of the \proofRule{and}
+rule:
+\begin{AletheVerb}
+(assume h1 (and a b c))
+(step t1 (cl b) :rule and :premises h1 :args (2))
+\end{AletheVerb}
+
+\noindent
+If Alethe rules would operate on terms after desugaring, this step would instead
+conclude with \inlineAlethe{c}.
+
+In the abstract notation of this document, we write these operators using
+infix notation, and we add parentheses to distinguish nested applications.
+For example, the following are two correct applications of the \proofRule{and} rule.
+
+\begin{AletheX}
+$i$. & \ctxsep & $a \land b \land c$ & ($\dots$) \\
+$j$. & \ctxsep & $b$ & (\proofRule{and}\;$i$)\, 2\\
+\end{AletheX}
+
+\vspace{0.5em}
+
+\begin{AletheX}
+$i$. & \ctxsep & $(a \land b) \land c$ & ($\dots$) \\
+$j$. & \ctxsep & $c$ & (\proofRule{and}\;$i$)\, 2\\
+\end{AletheX}
+
+A consequence of this behavior is that Alethe proofs cannot be handled by
+consumers that transform terms as suggested by {\smtlib}, because
+the two input terms \inlineAlethe{(and a b c)} and \inlineAlethe{(and (and a b) c)}
+cannot be distinguished after desugaring.
+One way to work around this is to desugar these terms like lists in functional
+programming languages.  The operator takes the role of the list-constructor,
+and the neutral element of the operator takes the role of the empty list.
+For example, the term \inlineAlethe{(and a b c)} would desugar to
+\inlineAlethe{(and (and (and a b) c) true)} and the term
+\inlineAlethe{(and (and a b) c)} would desugar to
+\inlineAlethe{(and (and (and (and a b) true) c) true)}.
 
 \paragraph{Subproofs}
 The abstract notation denotes subproofs by marking them with a vertical
@@ -1099,7 +1172,7 @@ Example~\ref{ex:ti:ctx-concrete} gives us the proof
                                       :rule hole)
 (step t6 (cl (= (forall ((x S)) (P x)) (forall ((y S)) (P y)))
              (not (forall ((x S)) (P x)))
-             (forall ((y S)) (P y)))) :rule equiv_pos2)
+             (forall ((y S)) (P y))) :rule equiv_pos2)
 (step t7 (cl) :rule resolution :premises (h1 h2 t5 t6))
 \end{AletheVerb}
 

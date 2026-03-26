@@ -1,12 +1,12 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# This is a thin wraper arround pygmentize that adds support for SMT-LIB/Alethe.
-# More precicely: it parses the command line arguments and uses a custom
+# This is a thin wrapper around pygmentize that adds support for SMT-LIB/Alethe.
+# More precisely: it parses the command line arguments and uses a custom
 # SMT-LIB lexer if the user selects smt-lib as the language.
 # This wrapper was made necessary by version 2.7 of minted:  it started to
-# quote command line arguments hended to pygmentize and thereby made the old
-# tick to use "smtlib2.py -x" as the language unworkable.
+# quote command line arguments handed to pygmentize and thereby made the old
+# trick to use "smtlib2.py -x" as the language unworkable.
 
 import re
 import argparse
@@ -64,7 +64,7 @@ class SMTLibLexer(RegexLexer):
             (r';.*$', Comment.Single),
             # multi-line comment
             (r'#\|', Comment.Multiline, 'multiline-comment'),
-            # commented form (entire sexpr folliwng)
+            # commented form (entire sexpr following)
             (r'#;\s*\(', Comment, 'commented-form'),
             # signifies that the program text that follows is written with the
             # lexical and datum syntax described in r6rs
