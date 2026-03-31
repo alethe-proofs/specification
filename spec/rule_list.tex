@@ -249,6 +249,7 @@ simplifications.}
 \ruleref{bitblast_extract} & Bitblasting of $\lsymb{extract}$. \\
 \ruleref{bitblast_ult} & Bitblasting of $\lsymb{ult}$. \\
 \ruleref{bitblast_add} & Bitblasting of $\lsymb{add}$. \\
+\ruleref{bitblast_neg} & Bitblasting of $\lsymb{add}$. \\
 \end{xltabular}
 
 \begin{xltabular}{\linewidth}{l X}
@@ -1832,7 +1833,83 @@ for any bit-vector $x$ of size $n+1$, where $0\leq k\leq n$.
 
 \end{RuleDescription}
 
+\begin{RuleDescription}{bitblast_concat}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvconcat{x}{y}  ≈ A_1$ & \currule \\
+\end{AletheX}
+The term ``$A_1$'' is
+\begin{align*}
+\bbterm\;& (\bitof{0}\ x) \, \ldots \,(\bitof{n-1}\ x) \\
+              & (\bitof{0}\ y) \, \ldots \, (\bitof{m-1}\ y)
+\end{align*}
+
+Note that the vectors involved in the operation do not need to have the same width.
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ and $y$ are ``$\lsymb{bbterm}$'' applications. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_{n-1}\\
+    y&=&\bbterm\ y_0\ \ldots\ y_{m-1}\\
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvconcat{x}{y} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ x_0 \,\ldots \, x_{n-1}\, y_0 \,\ldots \, y_{m-1}$
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_sext}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvsext{k}{x}  ≈ A_1$ & \currule \\
+\end{AletheX}
+where $x$ has the type \bitvec{n}. The term ``$A_1$'' is:
+\begin{align*}
+\bbterm\;& (\bitof{0}\ x) \, \ldots \,(\bitof{n-1}\ x) \\
+              & (\bitof{n-1}\ x) \, \ldots \, (\bitof{n-1}\ x)
+\end{align*}
+
+That is, the original vector is extended just by repeating its most significant 
+bit $k$ times, such that the resulting vector has width $n + k$, and
+$\bitof{n}\ (\bvsext{k}{x}) = \bitof{n-1}\ x$, ..., 
+$\bitof{n + k}\ (\bvsext{k}{x}) = \bitof{n-1}\ x$.
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ is a ``$\lsymb{bbterm}$'' application. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_{n-1}
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvsext{k}{x} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ x_0 \,\ldots \, x_{n-1}\, x_{n-1} \,\ldots \, x_{n-1}$,
+where, again, the most significant bit of $x$, that is, $x_{n-1}$, is repeated
+$k$ times.
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_eq}
+\begin{AletheX}
+$i$. & \ctxsep & $\bveq{x}{y} ≈ A_1$ & \currule \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type \bitvec{n}.
+The term ``$A_1$'' is
+\begin{align*}
+& (\bitof{0}\ x \,\leftrightarrow\, \bitof{0}\ y) \; \wedge \\
+  & (\bitof{1}\ x \,\leftrightarrow\, \bitof{1}\ y) \; \wedge \\ \\
+  & \ldots \\
+  & (\bitof{n-1}\ x \,\leftrightarrow\, \bitof{n-1}\ y) \\
+\end{align*}
+
+\end{RuleDescription}
+
 \begin{RuleDescription}{bitblast_ult}
+
 \begin{AletheX}
 $i$. & \ctxsep & $\bvult{x}{y} ≈ \mathrm{res}_{n-1}$ & \currule \\
 \end{AletheX}
@@ -1855,10 +1932,52 @@ above when $x$ and $y$ are ``\bbterm'' applications. So given that
     y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
   \end{array}
 \]
-then ``$\mathrm{res}$'' can be defined, for $i \geq 0$, as
+then ``$\mathrm{res}_i$'' can be defined, for $i \geq 0$, as
 \[
   \begin{array}{lcl}
     \mathrm{res}_0&=&\neg x_0 \wedge y_0\\
+    \mathrm{res}_{i+1}&=&((x_{i+1} ≈ y_{i+1})\wedge
+                          \mathrm{res}_i)\vee (\neg x_{i+1}\wedge y_{i+1})
+  \end{array}
+\]
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_slt}
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvslt{x}{y} ≈ \mathrm{res}$ & \currule \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type \bitvec{n}, where:
+$$ \mathrm{res} = ((\bitof{n - 1}\ x ≈ \bitof{n - 1}\ y)\wedge \mathrm{res}_{n - 2})
+                   \vee
+                    (\bitof{n - 1}\ x \wedge \neg (\bitof{n - 1}\ y)) $$
+and, for $i\geq 0$:
+\[
+  \begin{array}{lcl}
+    \mathrm{res}_0&=& \neg \bitof{0}\ x \wedge \bitof{0}\ y\\
+    \mathrm{res}_{i+1}&=&((\bitof{i + 1}\ x ≈ \bitof{i + 1}\ y)\wedge \mathrm{res}_i)\vee
+                       (\neg (\bitof{i+1}\ x) \wedge \bitof{i+1}\ y)
+  \end{array}
+\]
+
+\noindent
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ and $y$ are ``\bbterm'' applications. So given that
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n\\
+    y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
+  \end{array}
+\]
+then ``$\mathrm{res}$'' can be defined as:
+$$ \mathrm{res} = ((x_{n - 1} ≈ y_{n - 1})\wedge \mathrm{res}_{n - 2})
+                   \vee
+                    (x_{n - 1} \wedge \neg y_{n - 1}) $$
+where, for $i \geq 0$:
+\[
+  \begin{array}{lcl}
+    \mathrm{res}_0&=& x_0 \wedge \neg y_0\\
     \mathrm{res}_{i+1}&=&((x_{i+1} ≈ y_{i+1})\wedge
                           \mathrm{res}_i)\vee (\neg x_{i+1}\wedge y_{i+1})
   \end{array}
@@ -1890,7 +2009,7 @@ and, for $i\geq 0$:
 
 \noindent
 Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
-above when $x$ and $y$ are ``$\lsymb{bbT}$'' applications. So given that:
+above when $x$ and $y$ are ``$\lsymb{bbterm}$'' applications. So given that:
 \[
   \begin{array}{lcl}
     x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n\\
@@ -1913,6 +2032,305 @@ and ``$\mathrm{carry}_k$'' being defined, for $k \geq 0$, as:
   \end{array}
 \]
 
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_neg}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvneg{x} ≈ A_1$ & \currule \\
+\end{AletheX}
+The term ``$A_1$'' is
+\begin{align*}
+\bbterm\;& (((\neg\bitof{0}\ x) \,\lsymb{xor}\,\bot)\,\lsymb{xor}\,\mathrm{carry}_0) \\
+              & (((\neg\bitof{1}\ x) \,\lsymb{xor}\,\bot)\,\lsymb{xor}\,\mathrm{carry}_1) \\
+              & \ldots \\
+              & (((\neg\bitof{n - 1}\ x) \,\lsymb{xor}\, \bot)\,\lsymb{xor}\,\mathrm{carry}_{n-1})
+\end{align*}
+and, for $i\geq 0$:
+\[
+  \begin{array}{lcl}
+    \mathrm{carry}_0&=&\top\\
+    \mathrm{carry}_{i+1}&=&((\neg\bitof{i}\ x) \wedge \bot)
+                            \vee 
+                            (((\neg\bitof{i}\ x)\,\lsymb{xor}\, \bot)\wedge \mathrm{carry}_i)
+  \end{array}
+\]
+
+\noindent
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ is a ``$\lsymb{bbT}$'' application. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n\\
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvneg{x}{y} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ ((\neg x_0 \,\lsymb{xor}\, \bot)\,\lsymb{xor}\,\mathrm{carry}_0)\ 
+              \ldots\ ((\neg x_{n-1}\,\lsymb{xor}\, \bot)\,\lsymb{xor}\,\mathrm{carry}_{n-1})$, 
+and $\mathrm{carry}_k$ being defined, for $k \geq 0$, as:
+\[
+  \begin{array}{lcl}
+    \mathrm{carry}_0&=&\bot\\
+    \mathrm{carry}_{i+1}&=&(\neg x_i\wedge \bot)\vee((\neg x_i\,\lsymb{xor}\, \bot) 
+                            \wedge \mathrm{carry}_i)
+  \end{array}
+\]
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_mult}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvmult{x}{y} ≈ A_1$ & \currule \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type \bitvec{n}.
+We perform bit-blasting following the \emph{shift add multiplier} way of computing.
+That is, the term ``$A_1$'' is:
+\begin{align*}
+\bbterm\;& \mathrm{res}^{n-1}_0 \dots \mathrm{res}^{n-1}_{n-1}
+\end{align*}
+% TODO: fix this, F refers to:
+\newcolumntype{F}[1]{>{$\displaystyle} #1 <{$}}
+
+in which, for $i,j\geq 0$,
+      \[
+        \begin{array}{lcl}
+          \mathrm{res}^0_i&=&\mathrm{sh}^0_i\\[1ex]
+          \mathrm{res}^j_0&=&\mathrm{sh}^0_0\\[1ex]
+          \mathrm{res}^{j+1}_i&=&\mathrm{res}^j_i\, \lsymb{xor} \, 
+                                \mathrm{sh}^{j+1}_i \, \lsymb{xor} \, \mathrm{carry}^{j+1}_i\\[1ex]
+          \mathrm{carry}^0_i&=&\bot\\[1ex]
+          \mathrm{carry}^{j+1}_{i+1}&=&\left\{
+                                        \begin{tabular}{F{l}l}
+                                          \mathrm{res}^j_i \wedge 
+                                          \mathrm{sh}^{j+1}_i \vee
+                                          ((\mathrm{res}^j_i \, \lsymb{xor} \, 
+                                            \mathrm{sh}^{j+1}_i) \wedge 
+                                            \mathrm{carry}^{j+1}_i)&if $j < i$\\
+                                          \bot & otherwise\\
+                                        \end{tabular}\right.\\[3ex]
+          \mathrm{sh}^j_i&=&\left\{
+                             \begin{tabular}{F{l}l}
+                               x_{i-j}\wedge y_j&if $j \leq i$\\
+                               \bot & otherwise\\
+                             \end{tabular}\right.
+        \end{array}
+      \]
+      Example mult for $n = 4$:
+      \[
+        \left[
+          \begin{tabular}{F{l}F{c}F{l}}
+            \mathrm{res}^3_0&=&(x_0 \wedge y_0);\\
+            \mathrm{res}^3_1&=&\underbrace{(x_1\wedge y_0) \, \lsymb{xor} \,
+                                (x_0\wedge y_1)} \, \lsymb{xor} \, 
+                                \underbrace{\mathrm{carry}^3_1};\\
+                            &&\qquad\,\underbrace{\mathrm{res}^0_1 \, \lsymb{xor} \,
+                               \mathrm{sh}^1_1}\qquad\qquad\
+                               \bot\\
+                            &&\qquad\quad\ \,\mathrm{res}^2_1\\
+            \mathrm{res}^3_2&=&\underbrace{(x_2\wedge y_0) \, \lsymb{xor} \,
+                                (x_1\wedge y_1)} \, \lsymb{xor} \, 
+                                \underbrace{\mathrm{carry}^1_2} \, 
+                                \lsymb{xor} \, 
+                                \underbrace{(x_0\wedge y_2)} \, \lsymb{xor} \,
+                                \underbrace{\mathrm{carry}^3_2};\\
+                            &&\qquad\,\underbrace{\mathrm{res}^0_2 \, 
+                               \lsymb{xor} \,
+                               \mathrm{sh}^1_2}\qquad\mathrm{res}^0_1
+                               \wedge
+                               \mathrm{sh}^1_1
+                               \dots
+                               \quad\mathrm{sh}^2_2\qquad\quad\bot\\
+                            &&\qquad\qquad
+                               \underbrace{\mathrm{res}^1_2\qquad\qquad\qquad\qquad}\\
+                            &&\qquad\qquad\qquad\qquad\mathrm{res}^2_2\\
+             \mathrm{res}^3_3&=&\underbrace{(x_3\wedge y_0) \, \lsymb{xor} \,
+                                 (x_2\wedge y_1)} \, \lsymb{xor} \,
+                                 \underbrace{\mathrm{carry}^1_3}
+                                 \, \lsymb{xor} \,
+                                 \underbrace{(x_1\wedge y_2)}
+                                 \, \lsymb{xor} \,
+                                 \underbrace{\mathrm{carry}^2_3}
+                                 \, \lsymb{xor} \, 
+                                 \underbrace{(x_0\wedge y_3)} \,
+                                 \lsymb{xor} \, \underbrace{\mathrm{carry}^3_3};\\
+                            &&\qquad\
+                               \underbrace{\mathrm{res}^0_3 \, \lsymb{xor} \,
+                               \mathrm{sh}^1_3\qquad\qquad
+                               \dots}\qquad\quad\mathrm{sh}^2_3\ \ \ \mathrm{res}^1_2\wedge\mathrm{sh}^2_2\dots\quad\mathrm{sh}^3_3\qquad\quad\bot\\
+                            &&\qquad\qquad\qquad\underbrace{\mathrm{res}^1_3\qquad\qquad\qquad\qquad\qquad\qquad\qquad}\\
+            &&\qquad\qquad\qquad\qquad\qquad\qquad\quad\mathrm{res}^2_3
+          \end{tabular}
+        \right]
+      \]
+      with
+      \[
+      \begin{tabular}{F{l}cF{l}l}
+        \mathrm{carry}^1_3&=&\mathrm{res}^0_2 \wedge \mathrm{sh}^1_2 \vee 
+                              ((\mathrm{res}^0_2 \, \lsymb{xor} \,
+                              \mathrm{sh}^1_2) \wedge \mathrm{carry}^1_2)\\[1ex]
+\mathrm{carry}^1_2&=&\mathrm{res}^0_1 \wedge \mathrm{sh}^1_1 \vee 
+                      ((\mathrm{res}^0_1 \, \lsymb{xor} \,
+                      \mathrm{sh}^1_1)\wedge\underbrace{\mathrm{carry}^1_1})\\
+        &&\qquad\qquad\qquad\qquad\qquad\qquad\quad\!\bot\\[1ex]
+\mathrm{carry}^2_3&=&\mathrm{res}^1_2\wedge\mathrm{sh}^2_2\vee
+                      ((\mathrm{res}^1_2 \, \lsymb{xor} \, \mathrm{sh}^2_2)
+                      \wedge\underbrace{\mathrm{carry}^2_2})\\
+                          &&\qquad\qquad\qquad\qquad\qquad\qquad\quad\!\bot\\[1ex]
+      \end{tabular}
+\]
+
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_and}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvand{x}{y} ≈ A_1$ & \currule \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type \bitvec{n}.
+The term ``$A_1$'' is
+\begin{align*}
+\bbterm\;& (\bitof{0}\ x \,\wedge\, \bitof{0}\ y) \\
+              & (\bitof{1}\ x \,\wedge\, \bitof{1}\ y) \\ \\
+              & \ldots \\
+              & (\bitof{n-1}\ x \,\wedge\, \bitof{n-1}\ y) \\
+\end{align*}
+
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ and $y$ are ``$\lsymb{bbterm}$'' applications. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n\\
+    y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvand{x}{y} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ (x_0 \,\wedge\, y_0)\
+             \ldots\  (x_{n-1} \,\wedge\, y_{n-1})$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_or}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvor{x}{y} ≈ A_1$ & \currule \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type \bitvec{n}.
+The term ``$A_1$'' is
+\begin{align*}
+\bbterm\;& (\bitof{0}\ x \,\vee\, \bitof{0}\ y) \\
+              & (\bitof{1}\ x \,\vee\, \bitof{1}\ y) \\ \\
+              & \ldots \\
+              & (\bitof{n-1}\ x \,\vee\, \bitof{n-1}\ y) \\
+\end{align*}
+
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ and $y$ are ``$\lsymb{bbterm}$'' applications. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n\\
+    y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvor{x}{y} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ (x_0 \,\vee\, y_0)\
+             \ldots\  (x_{n-1} \,\vee\, y_{n-1})$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_xor}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvxor{x}{y} ≈ A_1$ & \currule \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type \bitvec{n}.
+The term ``$A_1$'' is
+\begin{align*}
+\bbterm\;& (\bitof{0}\ x \,\lsymb{xor}\, \bitof{0}\ y) \\
+              & (\bitof{1}\ x \,\lsymb{xor}\, \bitof{1}\ y) \\ \\
+              & \ldots \\
+              & (\bitof{n-1}\ x \,\lsymb{xor}\, \bitof{n-1}\ y) \\
+\end{align*}
+
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ and $y$ are ``$\lsymb{bbterm}$'' applications. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n\\
+    y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvxor{x}{y} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ (x_0 \,\lsymb{xor}\, y_0)\
+             \ldots\  (x_{n-1} \,\lsymb{xor}\, y_{n-1})$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_xnor}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvxnor{x}{y} ≈ A_1$ & \currule \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type \bitvec{n}.
+The term ``$A_1$'' is
+\begin{align*}
+\bbterm\;& (\bitof{0}\ x \,≈\, \bitof{0}\ y) \\
+              & (\bitof{1}\ x \,≈\, \bitof{1}\ y) \\ \\
+              & \ldots \\
+              & (\bitof{n-1}\ x \,≈\, \bitof{n-1}\ y) \\
+\end{align*}
+
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ and $y$ are ``$\lsymb{bbterm}$'' applications. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n\\
+    y&=&\bbterm\ y_0\ \ldots\ y_i\ \ldots \ y_j\ \ldots\ y_n\\
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvxnor{x}{y} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ (x_0 \,≈\, y_0)\
+             \ldots\  (x_{n-1} \,≈\, y_{n-1})$.
+\end{RuleDescription}
+
+\begin{RuleDescription}{bitblast_not}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvnot{x} ≈ A_1$ & \currule \\
+\end{AletheX}
+in which both $x$ and $y$ must have the same type \bitvec{n}.
+The term ``$A_1$'' is
+\begin{align*}
+\bbterm\;& \neg \bitof{0}\ x \\
+              & \neg \bitof{1}\ x \\ \\
+              & \ldots \\
+              & \neg \bitof{n-1}\ x \\
+\end{align*}
+
+Alternatively, the rule may also be phrased as a ``short-circuiting'' of the
+above when $x$ is a ``$\lsymb{bbterm}$'' application. So given that:
+\[
+  \begin{array}{lcl}
+    x&=&\bbterm\ x_0\ \ldots\ x_i\ \ldots \ x_j\ \ldots\ x_n
+  \end{array}
+\]
+then, the rule can be alternatively phrased as:
+
+\begin{AletheX}
+$i$. & \ctxsep & $\bvnot{x} ≈ A_2$ & \currule \\
+\end{AletheX}
+with $A_2 := \bbterm\ \neg x_0\
+             \ldots\  \neg x_{n-1}$.
 \end{RuleDescription}
 
 \begin{RuleDescription}{symm}
