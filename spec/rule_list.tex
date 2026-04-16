@@ -2373,6 +2373,18 @@ with $A_2 := \bbterm\ (\lsymb{ite} \, (0 \ge d) (x_{0 - d}) \, x_{n - 1})\
              \ldots\  (\lsymb{ite} \, ((n -1) \ge d) (x_{(n - 1) - d}) \, x_{n - 1})$.
 \end{RuleDescription}
 
+\begin{RuleDescription}{bitblast_div}
+\begin{AletheX}
+$i$. & \ctxsep & $\bvdiv{num}{den} ≈ A_1$ & \currule \\
+\end{AletheX}
+For bitvectors $num$ and $den$ of width $n$, and let $zero$ represent a bitvector 
+of width $n$ whose bits are all 0. Then, the term $A_1$ is:
+\begin{align*}
+A_1 & =\left\{ zero, \mathrm{if \; num \; = \;zero} \right.\\[3ex] \\
+\end{align*}
+
+\end{RuleDescription}
+
 \begin{RuleDescription}{symm}
 \begin{AletheX}
 $i$. & \ctxsep & $ \varphi ≈ \psi$ & ($\dots$) \\
