@@ -1,0 +1,20 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: xu-cheng/texlive-action@v3
+      with:
+        run: |
+          cd spec
+          latexmk -interaction=nonstopmode -pdf -shell-escape -lualatex doc
+    - uses: actions/upload-artifact@v7
+      with:
+        path: spec/doc.pdf
+        archive: false
