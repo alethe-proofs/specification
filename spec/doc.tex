@@ -601,9 +601,10 @@ An Alethe proof is a list of commands.
                         & \grOr  & \grNT{nonpositive\_decimal} \\
  \grNT{premises\_annotation} &\grRule & \textAlethe{:premises (}\; \grNT{symbol}^{+}\textAlethe{)} \\
  \grNT{args\_annotation}     &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{step\_arg}^{+}\,\textAlethe{)}  \\
- \grNT{step\_arg}            &\grRule & \grNT{symbol}\;\grOr\;\\
-                                     && \textAlethe{(}\; \grNT{symbol}\; \grNT{proof\_term}\,\textAlethe{)}\;\grOr\; \\
-                                     && \textAlethe{(@list} \; \grNT{proof\_term}^{+} \textAlethe{)}\\
+ \grNT{step\_arg}            &\grRule & \grNT{proof\_term}\grOr\;
+                                     \textAlethe{(@list} \;
+                                        \grNT{proof\_term}^{+}
+                                        \textAlethe{)}\grOr\; \textAlethe{@list}\\
     
  \grNT{context\_annotation}  &\grRule & \textAlethe{:args}\,\textAlethe{(}\,\grNT{context\_assignment}^{+}\,\textAlethe{)}  \\
  \grNT{context\_assignment}  &\grRule & \grNT{sorted\_var} \\
@@ -1808,19 +1809,21 @@ standard.\footnote{See \url{https://smt-lib.github.io/theories-FixedSizeBitVecto
 
 \subsection{RARE rules}
 \label{sec:alethe:rare_rules}
-\emph{RARE} is a domain-specific language that allows for the definition 
-of rewrite rules. There are 2 versions of the language, RARE 1.0
-and RARE 2.0. The Alethe standard allows for steps in proof certificates to refer 
-to rewrite rules specified in terms of the RARE 2.0 language (see
-\inlineAlethe{rare_rewrite}, rule \ref{rule:rare_rewrite}, and 
-\inlineAlethe{multi_rare_rewrite}, rule \ref{rule:multi_rare_rewrite}). In turn, 
-RARE 2.0 is defined as a subset of the features of the so-called 
-\emph{Eunoia} language: a language used to meta-program the \emph{Ethos}
-proofs checker. For details about the RARE 2.0 rewriting rules specification
-language, Eunoia and Ethos, see \url{https://github.com/alethe-proofs/rare2-rules/}.
+\emph{RARE} is a domain-specific language for defining rewrite rules.
+%
+There are 2 versions of the language, RARE 1.0 and RARE 2.0. The Alethe standard
+allows for steps in proof certificates to refer to rewrite rules specified in
+terms of the RARE 2.0 language (see \inlineAlethe{rare_rewrite}, rule
+\ref{rule:rare_rewrite}, and \inlineAlethe{multi_rare_rewrite}, rule
+\ref{rule:multi_rare_rewrite}). In turn, RARE 2.0 is defined as a fragment of
+the \emph{Eunoia} logical framework.
+%
+For details about the RARE 2.0 rewriting rules specification language and
+Eunoia, see \url{https://github.com/alethe-proofs/rare2-rules/}.
+%
 Rules \ref{rule:rare_rewrite} and \ref{rule:multi_rare_rewrite}, in
-section \ref{apx:rules}, introduce generic interfaces to be able to refer to 
-arbitrary rewriting rules specified with RARE 2.0.
+Section \ref{apx:rules}, introduce generic interfaces to be able to refer to
+arbitrary rewrite rules specified with RARE 2.0.
 
 \section{The Alethe Rules}
 \label{apx:rules}
