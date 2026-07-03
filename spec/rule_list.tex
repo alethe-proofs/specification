@@ -2539,18 +2539,18 @@ $i_2$. & & \ctxsep & $t_2 \ceq t_2' $ & ($\dots$) \\
 \aletheLineS
 $i_n$. & & \ctxsep & $t_n \ceq t_n' $ & ($\dots$) \\
 $j$.   & & \ctxsep & $t \ceq s$
-    & (\currule\; $i_1$, $\dots$, $i_n$) [$\lsymb{rule},\; a_1,\; \dots,\;a_m$] \\
+    & (\currule\; $i_1$, $\dots$, $i_n$) [$\lsymb{rule\_id},\; a_1,\; \dots,\;a_m$] \\
 \end{AletheXS}
 
 This rule refers to the application of the RARE 2.0 rewrite identified by the
 string literal
-$\lsymb{rule}$ and which justifies concluding $t ≈ s$..
+$\lsymb{rule\_id}$ and which justifies concluding $t ≈ s$..
 %
 As described
 in Section \ref{sec:alethe:rare_rules}, a RARE rewrite rule is defined using a
 domain-specific language, called RARE.
 %
-The \currule step is correct when its premises $i_1,\dots,i_n$ match the
+The \currule{} step is correct when its premises $i_1,\dots,i_n$ match the
 conditions established in the specification of the RARE rewrite, if any, and its
 conclusion matches the conclusion the conclusion established in the
 specification instantiated with the given arguments $a_1\dots,a_m$, if any.
