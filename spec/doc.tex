@@ -1811,19 +1811,16 @@ standard.\footnote{See \url{https://smt-lib.github.io/theories-FixedSizeBitVecto
 \label{sec:alethe:rare_rules}
 \emph{RARE} is a domain-specific language for defining rewrite rules.
 %
-There are 2 versions of the language, RARE 1.0 and RARE 2.0. The Alethe standard
-allows for steps in proof certificates to refer to rewrite rules specified in
-terms of the RARE 2.0 language (see \inlineAlethe{rare_rewrite}, rule
-\ref{rule:rare_rewrite}, and \inlineAlethe{multi_rare_rewrite}, rule
-\ref{rule:multi_rare_rewrite}). In turn, RARE 2.0 is defined as a fragment of
-the \emph{Eunoia} logical framework.
+There are two versions of the language, RARE 1.0 and RARE 2.0, and RARE 2.0 is
+defined as a fragment of the \emph{Eunoia} logical framework.
 %
 For details about the RARE 2.0 rewriting rules specification language and
 Eunoia, see \url{https://github.com/alethe-proofs/rare2-rules/}.
 %
-Rules \ref{rule:rare_rewrite} and \ref{rule:multi_rare_rewrite}, in
-Section \ref{apx:rules}, introduce generic interfaces to be able to refer to
-arbitrary rewrite rules specified with RARE 2.0.
+The Alethe standard allows for steps in proof certificates to refer to rewrite
+rules specified in terms of the RARE 2.0 language. Generic interfaces are
+provided by the rules \proofRule{rare_rewrite}, for a single rewrite, and
+\proofRule{multi_rare_rewrite}, for multiple rewrites in the same step.
 
 \section{The Alethe Rules}
 \label{apx:rules}
