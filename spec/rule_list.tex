@@ -2533,53 +2533,31 @@ relating expressions that are equivalent modulo commutativity.
 
 \begin{RuleDescription}{rare_rewrite}
 \label{rule:rare_rewrite}
-\begin{AletheX}
-$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $\lsymb{rule}$) \\
-\end{AletheX}
-
-This rule refers to the application of the RARE 2.0 rewrite rule 
-$\lsymb{rule}$, which should justify the conclusion $t ≈ s$. As described
-in section \ref{sec:alethe:rare_rules}, a RARE rewrite rule is defined using a 
-domain-specific language, called RARE. We assume that 
-the producer of the Alethe proof certificate has at its disposal an arbitrary set of 
-rules, written in RARE, for elaboration purposes of (some of) the equational 
-reasoning steps in the proof. The rule name $\lsymb{rule}$
-invoked in the previous rule must match with the name of some RARE rewrite rule 
-in this set of rules. Also, the conclusion of the RARE rule invoked must
-match with that of the application of rule \currule{} (that is, 
-$ t ≈ s $).
-
-The instantiation of the rewrite rule could require arbitrary arguments, with 
-rule-dependent semantics. These arguments can be passed after the name of the 
-invoked rewrite rule. For the purpose of providing these arguments, they must be 
-wrapped into a list, marked with the $\lsymb{@list}$ terminal symbol. In this
-case, the rule invocation would be as follows:
-
-\begin{AletheX}
-$i$. & \ctxsep & $ t ≈ s $ & (\currule \; $\lsymb{rule}$, 
-                                           ($\lsymb{@list} \; x_1, \dots, x_n)$)
-\end{AletheX}
-
-Where $x_1, \dots, x_n$, with $ n \geq 1$, are arbitrary arguments required by 
-rule $\lsymb{rule}$. Note that the arguments are not required to have the same
-type.
-
-Finally, RARE rewrite rules can have premises, which can be also invoked when
-applying a \currule{} step, as follows:
-
 \begin{AletheXS}
-$i_1$. & \ctxsep & $ t_1 ≈ s_1 $ & ($\dots$) \\
+$i_1$. & & \ctxsep & $t_1 \ceq t_1'$ & ($\dots$) \\
+$i_2$. & & \ctxsep & $t_2 \ceq t_2' $ & ($\dots$) \\
 \aletheLineS
-$i_n$. & \ctxsep & $ t_n ≈ s_n $ & ($\dots$) \\
-$j$. & \ctxsep & $ t ≈ s $ & (\currule \; $i_1\; \dots i_n$)\; 
-                             $\lsymb{rule} \; \dots$ \\
+$i_n$. & & \ctxsep & $t_n \ceq t_n' $ & ($\dots$) \\
+$j$.   & & \ctxsep & $t \ceq s$
+    & (\currule\; $i_1$, $\dots$, $i_n$) [$\lsymb{rule\_id},\; a_1,\; \dots,\;a_m$] \\
 \end{AletheXS}
 
-In this case, for the application of \currule{} to be valid, each premise must 
-match with those of the rewrite rule referred, in the same order as invoked.
-Also, the conclusion $ t ≈ s $ must match with that of the rewrite rule invoked.
-It is possible to provide arbitrary arguments, as indicated in the previous 
-case of \currule.
+This rule refers to the application of the RARE 2.0 rewrite identified by the
+string literal
+$\lsymb{rule\_id}$ and which justifies concluding $t ≈ s$..
+%
+As described
+in Section \ref{sec:alethe:rare_rules}, a RARE rewrite rule is defined using a
+domain-specific language, called RARE.
+%
+The \currule{} step is correct when its premises $i_1,\dots,i_n$ match the
+conditions established in the specification of the RARE rewrite, if any, and its
+conclusion matches the conclusion the conclusion established in the
+specification instantiated with the given arguments $a_1\dots,a_m$, if any.
+
+An important detail is that RARE admits a list semantics for associative
+operators, so some $a_k$ may correspond to a list of terms, which is represented
+as $(\lsymb{@list} \; a_{k,1}, \dots, a_{k,l})$.
 
 \end{RuleDescription}
 
