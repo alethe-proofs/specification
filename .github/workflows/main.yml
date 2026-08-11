@@ -17,3 +17,9 @@ jobs:
     - uses: actions/upload-artifact@v7
       with:
         path: spec/doc.pdf
+    - name: Rebuild Webpage
+      uses: benc-uk/workflow-dispatch@v1
+      with:
+        workflow: 87249859
+        repo: alethe-proofs/alethe-proofs.github.io
+        token: '${{ secrets.ALETHE_SPEC_TOKEN }}'
