@@ -31,6 +31,12 @@
 \usepackage{fancyvrb} % Gives us \Verb which can be used in footnotes
 \usepackage{amsthm}
 \usepackage{thmtools}
+% Workarround for a 2026 bug: https://github.com/muzimuzhi/thmtools/issues/75
+\makeatletter
+\@ifundefined{newcounteralias}{}{%
+  \renewcommand\thmt@autorefsetup{\@xa\def\csname\thmt@envname autorefname\@xa\endcsname\@xa{\thmt@thmname}}%
+}
+\makeatother
 \usepackage{ccicons} % Gives us CC icons for title page
 \usepackage[nottoc,notlot,notlof]{tocbibind}
 
