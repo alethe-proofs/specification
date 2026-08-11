@@ -17,4 +17,3 @@ jobs:
     - uses: actions/upload-artifact@v7
       with:
         path: spec/doc.pdf
-        archive: false
