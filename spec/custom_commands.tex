@@ -97,7 +97,7 @@ headformat={\NAME~\NUMBER:\NOTE},%
 break
 ]{proof-rule-style}
 
-\declaretheorem[name=Rule,style=proof-rule-style,sibling=ProofRuleCounter]{inner-rule}
+\declaretheorem[name=Rule,style=proof-rule-style,sibling=ProofRuleCounter]{innerRule}
 
 \DeclareNewSectionCommand[
   style=section,
@@ -116,14 +116,14 @@ break
 \renewcommand\currule{\proofRule{#1}}
 \index[rules]{#1}
 
-\begin{inner-rule}[\detokenize{#1}]\label{rule:#1}
+\begin{innerRule}[\detokenize{#1}]\label{rule:#1}
 
 \BODY
-\end{inner-rule}
+\end{innerRule}
 }
 
 \theoremstyle{definition}
-\newtheorem{RuleExample}{Example}[inner-rule]
+\newtheorem{RuleExample}{Example}[innerRule]
 
 % TODO: synchronize colors!
 \definecolor{SmtBlue}{HTML}{00007f}
