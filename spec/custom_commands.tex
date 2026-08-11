@@ -99,13 +99,18 @@ break
 
 \declaretheorem[name=Rule,style=proof-rule-style,sibling=ProofRuleCounter]{inner-rule}
 
-\makeatletter
-\newcommand{\ruleparagraph}{%
-  \@startsection{paragraph}{4}%
-  {\z@}{1ex \@plus 0.5ex \@minus .2ex}{-1em}%
-  {\normalfont\normalsize\bfseries}%
-}
-\makeatother
+\DeclareNewSectionCommand[
+  style=section,
+  level=4,
+  indent=0pt,
+  beforeskip=3.25ex plus 1ex minus .2ex,
+  afterskip=-1em,
+  font=\bfseries,
+  tocstyle=section,
+  tocindent=10em,
+  toclevel=4,
+  tocnumwidth=5em
+]{ruleparagraph}
 
 \NewEnviron{RuleDescription}[1]{%
 \renewcommand\currule{\proofRule{#1}}

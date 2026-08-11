@@ -6,3 +6,6 @@ doc:
 
 nonstop:
 	latexmk -interaction=nonstopmode -pdf -shell-escape -lualatex doc
+
+clean:
+	latexmk -C -lualatex doc
