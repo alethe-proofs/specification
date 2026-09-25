@@ -1212,6 +1212,17 @@ $i$. & $\Gamma$ & \ctxsep   &
 \end{AletheXS}
 \end{RuleDescription}
 
+\begin{RuleDescription}{and_intro}
+\begin{AletheXS}
+$i_1$. & & \ctxsep & $\varphi_1$ & ($\dots$) \\
+$i_2$. & & \ctxsep & $\varphi_2 $ & ($\dots$) \\
+\aletheLineS
+$i_n$. & & \ctxsep & $\varphi_n$ & ($\dots$) \\
+$j$.   & & \ctxsep & $\varphi_1 \land \varphi_2 \land \cdots \land \varphi_n$
+    & (\currule\; $i_1$, $\dots$, $i_n$)\\
+\end{AletheXS}
+\end{RuleDescription}
+
 \begin{RuleDescription}{and_simplify}
 This rule simplifies an $\land$ term by applying equivalence-preserving
 transformations until a fixed point is reached. Hence, the general form is
