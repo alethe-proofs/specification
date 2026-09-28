@@ -19,6 +19,7 @@ jobs:
         path: spec/doc.pdf
     - name: Rebuild Webpage
       uses: benc-uk/workflow-dispatch@v1
+      if: github.ref == 'refs/heads/main'
       with:
         workflow: 87249859
         repo: alethe-proofs/alethe-proofs.github.io
