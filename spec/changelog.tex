@@ -26,8 +26,9 @@ Proof rules:
         preprocess \inlineAlethe{let} expressions similar to the \proofRule{bind}
         rule used with ordinary quantifiers.
   \item Addition of miniscoping rules: \proofRule{miniscope_split}, \proofRule{miniscope_distribute}, \proofRule{miniscope_ite}
-  \item Addition of the \proofRule{shuffle} to permute the arguments of a
+  \item Addition of the \proofRule{shuffle} rule to permute the arguments of a
         commutative operator.
+  \item Addition of \proofRule{and_intro} to introduce a conjunction.
   \item Clarify that \proofRule{distinct_elim} cannot be applied to only one
         argument due to SMT-LIB restrictions.
 \end{itemize}
